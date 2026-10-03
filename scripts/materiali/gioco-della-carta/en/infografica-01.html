@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Winners and Establishable Cards</title>
+<link rel="stylesheet" href="../../base.css">
+<link rel="stylesheet" href="../../infografica.css">
+</head>
+<body>
+<div class="foglio">
+  <header>
+    <div class="occhiello">Card play</div>
+    <h1 class="display">Winners and Establishable Cards</h1>
+    <p class="sotto">As soon as dummy comes down, declarer asks: how many tricks do I have? Where can I find more?</p>
+    <div class="marchio"><img src="../../../../public/logo-bridgelab.svg" alt=""></div>
+  </header>
+
+  <main>
+    <div class="due">
+      <section class="riquadro">
+        <div class="tit"><span class="num">1</span><h2 class="display">Winner</h2></div>
+        <p>A card that, <b>played now</b>, wins the trick. Also called a <b>sure trick</b>.</p>
+        <div class="esempio">
+          <span data-carte="S:AK32" style="--w:32px"></span>
+          <div class="esito"><span class="chip verde">2 winners</span><span style="font-size:11px;color:var(--tenue)">the ace and the king</span></div>
+        </div>
+      </section>
+      <section class="riquadro">
+        <div class="tit"><span class="num">2</span><h2 class="display">Establishable card</h2></div>
+        <p>A card that <b>will become</b> a winner after some work. Here the ace is missing: keep leading the suit until an opponent takes it.</p>
+        <div class="esempio">
+          <span data-carte="S:KQJ10" data-cede="0" style="--w:32px"></span>
+          <div class="esito"><span class="chip rosso">0 winners</span><span class="chip oro">3 establishable</span></div>
+        </div>
+      </section>
+    </div>
+
+    <section class="riquadro" style="padding-bottom:12px">
+      <div class="due" style="gap:18px">
+        <div>
+          <div class="tit"><span class="num">3</span><h2 class="display">Establishing by force</h2></div>
+          <p>Lead the suit one card at a time until the opponents take their higher honors. <b>It is the only technique that always works</b>: one hundred percent of the time.</p>
+        </div>
+        <div>
+          <div class="tit"><span class="num">4</span><h2 class="display">Equal cards</h2></div>
+          <p>Touching cards have the same power: in <b>AKQJ</b> the jack wins just like the ace, 4 winners. It works <b>across both hands</b> too: with AQ2 in dummy, South's king is a winner.</p>
+          <div style="display:flex;gap:14px;align-items:center;margin-top:6px">
+            <div data-figura="S:AQ2/K43" style="--fs:15px"></div>
+            <p style="font-size:11.5px"><span class="chip verde">3 winners</span><br>as long as two honors never fall on the same trick</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="riquadro">
+      <div class="due" style="grid-template-columns: 3fr 4fr; gap:14px">
+        <div>
+          <div class="tit"><span class="num">5</span><h2 class="display">The long side rules</h2></div>
+          <div class="regola">Never more tricks than cards in the long hand.</div>
+          <div class="figure tre">
+            <div class="fig"><div data-figura="S:J109/AKQ"></div><div class="conto">3 on each side<br><b>3 tricks</b></div></div>
+            <div class="fig"><div data-figura="H:109/AKQJ2"></div><div class="conto">South has 5<br><b>5 tricks</b></div></div>
+            <div class="fig"><div data-figura="D:AKJ942/Q103"></div><div class="conto">North has 6<br><b>6 tricks</b></div></div>
+          </div>
+        </div>
+        <div>
+          <div class="tit"><span class="num">6</span><h2 class="display">How many can you establish?</h2></div>
+          <div class="regola">Cards in the long hand, minus the missing honors.</div>
+          <div class="figure quattro">
+            <div class="fig"><div data-figura="C:KQ92/J103"></div><div class="conto">A missing<br>4 − 1 = <b>3</b></div></div>
+            <div class="fig"><div data-figura="C:KQ954/J103"></div><div class="conto">A missing<br>5 − 1 = <b>4</b></div></div>
+            <div class="fig"><div data-figura="H:Q9854/J1032"></div><div class="conto">A K missing<br>5 − 2 = <b>3</b></div></div>
+            <div class="fig"><div data-figura="S:KJ9863/Q102"></div><div class="conto">A missing<br>6 − 1 = <b>5</b></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">7</span><h2 class="display">Declarer's plan, after the opening lead</h2></div>
+      <div class="passi">
+        <div class="passo"><h3>1 · Count your winners</h3><p>Suit by suit, across both hands.</p></div>
+        <div class="passo"><h3>2 · Find what to establish</h3><p>Start with the suit that can give <b>the most tricks</b>.</p></div>
+        <div class="passo"><h3>3 · Establish, then cash</h3><p>Don't rush to play your winners: you need them later.</p></div>
+      </div>
+      <p class="nota">Careful: sometimes, once the suit is established, you must regain the lead before you can cash it.</p>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">8</span><h2 class="display">Let's try: South declares, West leads</h2></div>
+      <div class="smazzata">
+        <div class="tavolo">
+          <span class="etichetta">NORTH · DUMMY</span>
+          <div data-mano="AQ8.76.K65.K10932" class="in-riga"></div>
+          <span class="etichetta">SOUTH · DECLARER</span>
+          <div data-mano="K62.A982.A43.QJ6" class="in-riga"></div>
+          <span class="attacco" style="grid-column:1/-1;justify-self:center">West leads the Q♦</span>
+        </div>
+        <div>
+          <table>
+            <tr><th>Suit</th><th style="text-align:center">Winners</th><th style="text-align:center">Establishable</th><th></th></tr>
+            <tr><td><span class="s-S">♠</span> Spades</td><td class="n">3</td><td class="n">—</td><td style="font-size:11.5px;color:var(--tenue)">A K Q</td></tr>
+            <tr><td><span class="s-H">♥</span> Hearts</td><td class="n">1</td><td class="n">—</td><td style="font-size:11.5px;color:var(--tenue)">A</td></tr>
+            <tr><td><span class="s-D">♦</span> Diamonds</td><td class="n">2</td><td class="n">—</td><td style="font-size:11.5px;color:var(--tenue)">A K</td></tr>
+            <tr><td><span class="s-C">♣</span> Clubs</td><td class="n">0</td><td class="n">4</td><td style="font-size:11.5px;color:var(--tenue)">5 − 1: the ace is missing</td></tr>
+            <tr class="tot"><td>Total</td><td class="n">6</td><td class="n">+ 4</td><td class="n" style="text-align:left">= 10 tricks</td></tr>
+          </table>
+          <div class="gioco">
+            <span>South wins the lead</span><span class="freccia">→</span>
+            <span>plays <b>clubs</b> at once until the ace is gone</span><span class="freccia">→</span>
+            <span>wins any return and cashes out</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer><span>BridgeLab · Card play</span><span>bridgelab.it</span></footer>
+</div>
+<script src="../../carte.js"></script>
+</body>
+</html>

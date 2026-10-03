@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Play Plan with Trumps</title>
+<link rel="stylesheet" href="../../base.css">
+<link rel="stylesheet" href="../../infografica.css">
+<style>
+  main { gap: 7px; }
+  .riquadro { padding: 8px 14px; }
+  .attacchi { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
+  .att-box { padding: 6px 10px; border-radius: 9px; background: var(--figb-velo); font-size: 11.5px; line-height: 1.4; }
+  .att-box h3 { font-size: 12.5px; color: var(--figb); font-weight: 700; margin-bottom: 2px; }
+  .att-box .mano { --fs: 12px; margin: 3px 0; }
+  .fig4 { display: grid; justify-items: center; gap: 4px; padding: 6px; border-radius: 10px; background: var(--avorio); --fs: 12.5px; }
+  .fig4 .conto, .fig .conto { font-size: 11px; text-align: center; color: #2c3242; line-height: 1.35; }
+  .prob { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+  .prob .fig { --fs: 12.5px; }
+  .aprire { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+  .aprire .coppia { --fs: 11.5px; padding: 6px 8px; }
+  .aprire .coppia .chi { width: 14px; }
+  .aprire .conto { font-size: 10.5px; line-height: 1.35; color: #2c3242; margin-top: 3px; }
+  .coppia.stretta { --fs: 12px; }
+  /* l'inglese è più lungo: un filo meno di respiro */
+  main { gap: 5px; }
+  .riquadro { padding-top: 7px; padding-bottom: 7px; }
+</style>
+</head>
+<body>
+<div class="foglio">
+  <header>
+    <div class="occhiello">Card play</div>
+    <h1 class="display">The Play Plan with Trumps</h1>
+    <p class="sotto">The opponents can ruff too. The plan decides when to draw trumps, when to wait, what comes first.</p>
+    <div class="marchio"><img src="../../../../public/logo-bridgelab.svg" alt=""></div>
+  </header>
+
+  <main>
+    <section class="riquadro">
+      <div class="tit"><span class="num">1</span><h2 class="display">On defense: leading against a trump contract</h2></div>
+      <div class="attacchi">
+        <div class="att-box"><h3>Quick tricks</h3>A long suit helps little: declarer will ruff it. <b>Two touching honors</b> are enough to lead from a sequence.<div data-mano="KQ7.62.J9732.A72" class="in-riga"></div>against 4♥: the <b>K♠</b>, better than the 2♦.</div>
+        <div class="att-box"><h3>Looking for a ruff</h3>Lead a short suit to get a ruff. From two cards, <b>always the higher</b>: from 74 the 7, from 102 the 10, from A9 the ace.<div data-mano="2.A62.J982.Q8752" class="in-riga"></div>against 4♥: the <b>2♠</b>.</div>
+        <div class="att-box" style="display:grid;gap:4px;align-content:start"><h3>Never underlead an ace</h3><div class="fig4" style="background:#fff"><div data-figura4="C:9732/AJ1064/Q85/K"></div></div>Against 4♥ the J♣ lets South's singleton king win, and the ace never scores.</div>
+      </div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">2</span><h2 class="display">Declarer: draw trumps?</h2></div>
+      <div class="regola blu">With long side-suit winners or establishable cards, draw trumps: otherwise they'll get ruffed.</div>
+      <div class="prob">
+        <div class="fig"><div data-figura="H:K54/A2"></div><div class="conto">5 cards: a ruff<br>is very unlikely</div></div>
+        <div class="fig"><div data-figura="H:K732/A4"></div><div class="conto">6 cards: still<br>a low risk</div></div>
+        <div class="fig"><div data-figura="H:KQJ3/A42"></div><div class="conto">7 cards: the third round<br>survives under 50%</div></div>
+        <div class="fig"><div data-figura="H:732/KQJ104"></div><div class="conto">after losing the ace:<br>maybe one trick, not two</div></div>
+      </div>
+      <p class="nota" style="margin-top:4px">Spades are trumps, hearts are the side suit: the more cards your side holds, the likelier an honor gets ruffed.</p>
+    </section>
+
+    <div class="due">
+      <section class="riquadro">
+        <div class="tit"><span class="num">3</span><h2 class="display">Only short winners? Ruff</h2></div>
+        <div class="coppia stretta">
+          <div class="r"><span class="chi">NORTH</span><div data-mano="AK8.A743.732.J92" class="in-riga"></div></div>
+          <div class="r"><span class="chi">SOUTH</span><div data-mano="6532.8.AK854.853" class="in-riga"></div></div>
+          <div class="att">2♦ · West leads the Q♥</div>
+        </div>
+        <p style="margin-top:5px;font-size:11.5px">You need 8 tricks; the side suits give 3. Drawing trumps, diamonds take 4, never 5. So: A♥, heart ruffed with the 4; spade to the ace, heart ruffed with the 5; spade to the king, heart ruffed with the 8. Hearts 4-4: <b>8 tricks</b>.</p>
+      </section>
+
+      <section class="riquadro">
+        <div class="tit"><span class="num">4</span><h2 class="display">Wait to draw trumps</h2></div>
+        <div class="coppia stretta">
+          <div class="r"><span class="chi">NORTH</span><div data-mano="82.83.A92.Q97543" class="in-riga"></div></div>
+          <div class="r"><span class="chi">SOUTH</span><div data-mano="AKQJ95.A92.873.A" class="in-riga"></div></div>
+          <div class="att">4♠ · West leads the 2♣</div>
+        </div>
+        <p style="margin-top:5px;font-size:11.5px">9 tricks, and drawing trumps leaves 9. At once <b>A♥ and a heart</b>; later a heart ruffed in dummy: <b>10 tricks</b>. Even one round of trumps would be fatal: on lead with a heart, a defender plays a trump and the ruff is gone.</p>
+        <div class="regola" style="margin:5px 0 0">Wait to draw trumps if you need ruffs in the short hand.</div>
+      </section>
+    </div>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">5</span><h2 class="display">Setting up a ruff</h2></div>
+      <div class="aprire">
+        <div><div class="coppia"><div class="r"><span class="chi">N</span><div data-mano="xxx.32.." data-parziale class="in-riga"></div></div><div class="r"><span class="chi">S</span><div data-mano="AKQ32.A74.." data-parziale class="in-riga"></div></div></div><p class="conto">A♥ and a heart, then a heart ruffed in dummy.</p></div>
+        <div><div class="coppia"><div class="r"><span class="chi">N</span><div data-mano="xxxx.85.." data-parziale class="in-riga"></div></div><div class="r"><span class="chi">S</span><div data-mano="AKQ64.932.." data-parziale class="in-riga"></div></div></div><p class="conto">Duck a heart twice: then ruff the third.</p></div>
+        <div><div class="coppia"><div class="r"><span class="chi">N</span><div data-mano="xxx.K6.." data-parziale class="in-riga"></div></div><div class="r"><span class="chi">S</span><div data-mano="AKQ32.Q52.." data-parziale class="in-riga"></div></div></div><p class="conto">K♥, lose to the ace, cash the queen and ruff.</p></div>
+        <div><div class="coppia"><div class="r"><span class="chi">N</span><div data-mano="xx.K7.." data-parziale class="in-riga"></div></div><div class="r"><span class="chi">S</span><div data-mano="AKQ743.A53.." data-parziale class="in-riga"></div></div></div><p class="conto">K♥, A♥, then a heart ruff.</p></div>
+      </div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">6</span><h2 class="display">Urgent things first</h2></div>
+      <div class="lato">
+        <div class="tavolino" style="--fs:11.5px"><div data-compatta data-smazzata="K952.853.AQ5.K65;A4.KQJ4.J984.984;87.1097.10732.A1072;QJ1063.A62.K6.QJ3"></div></div>
+        <div>
+          <p style="font-size:11.5px">4♠, West leads the K♥. Win and draw trumps, and the defense takes two hearts, the A♠ and the A♣: down one. Instead, after the A♥, South cashes <b>K♦, Q♦, A♦</b> discarding a heart: the third heart can now be ruffed.</p>
+          <div class="regola blu" style="margin:6px 0 0">When your plan gives up the lead, always ask what the opponents will do next.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer><span>BridgeLab · Card play</span><span>bridgelab.it</span></footer>
+</div>
+<script src="../../carte.js"></script>
+</body>
+</html>

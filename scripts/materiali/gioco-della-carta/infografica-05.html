@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Il gioco con l'atout</title>
+<link rel="stylesheet" href="../base.css">
+<link rel="stylesheet" href="../infografica.css">
+<style>
+  main { gap: 8px; }
+  .riquadro { padding: 9px 15px; }
+  .defs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
+  .def { padding: 7px 10px; border-radius: 9px; background: var(--figb-velo); font-size: 11.5px; line-height: 1.4; }
+  .def b { color: var(--figb); }
+  .caso { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 14px; align-items: center; }
+  .caso .att { font-size: 10.5px; color: var(--tenue); text-align: center; margin-top: 3px; }
+</style>
+</head>
+<body>
+<div class="foglio">
+  <header>
+    <div class="occhiello">Il gioco della carta</div>
+    <h1 class="display">Il gioco con l'atout</h1>
+    <p class="sotto">Un seme diventa privilegiato: chi non ha più carte nel colore giocato può prendere con una carta d'atout.</p>
+    <div class="marchio"><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+  </header>
+
+  <main>
+    <section class="riquadro">
+      <div class="tit"><span class="num">1</span><h2 class="display">Atout, taglio e fit</h2></div>
+      <div class="defs">
+        <div class="def"><b>Tagliare</b>: prendere con una carta d'atout quando non si hanno più carte del colore giocato.</div>
+        <div class="def"><b>Fit</b>: la coppia ha almeno 8 carte in un colore. Conviene l'atout quando la coppia ha più atout degli avversari.</div>
+        <div class="def"><b>Anche un colore debole</b> rende, se è atout: con <span class="s-H">♥</span> QJ10987 si fanno almeno 4 prese.</div>
+      </div>
+      <div class="regola" style="margin:7px 0 0">Nel colore d'atout le affrancabili certe contano come vincenti.</div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">2</span><h2 class="display">Battere le atout</h2></div>
+      <div class="caso">
+        <div>
+          <div class="tavolino"><div data-smazzata="874.109.KQJ2.AK63;AKQ92.432.63.1052;J1065.86.10987.QJ4;3.AKQJ75.A54.987"></div></div>
+          <div class="att">4♥ · Ovest attacca A♠ e K♠</div>
+        </div>
+        <div>
+          <p>Sud taglia il K♠. Se incassasse subito le quadri, Ovest taglierebbe al terzo giro. Prima <b>tre giri di cuori</b> per togliere le atout ai difensori, poi le quadri senza paura: <b>12 prese</b>, 6 a cuori, 4 a quadri, 2 a fiori. A senz'atout avrebbe perso le prime cinque.</p>
+          <div class="regola blu" style="margin:7px 0 6px">Le vincenti a lato delle atout sono relative: si incassano tranquilli solo dopo aver battuto le atout.</div>
+          <p style="font-size:11.5px"><b>Potere di controllo</b>: con il taglio Sud ha fermato le picche di Ovest. Non ha guadagnato prese: 5 cuori incassate più 1 taglio fanno sempre 6.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">3</span><h2 class="display">Allungare le atout</h2></div>
+      <div class="caso">
+        <div>
+          <div class="tavolino"><div data-smazzata="1095.4.A762.A10842;2.KJ87.J1054.KQJ7;864.Q10952.Q83.93;AKQJ73.A63.K9.65"></div></div>
+          <div class="att">4♠ · Ovest attacca K♣</div>
+        </div>
+        <div>
+          <p>Vincenti: 6 picche, 1 cuori, 2 quadri, 1 fiori. Ma le picche possono darne <b>8</b> invece di 6, tagliando con quelle del morto:</p>
+          <ol class="passi-mini">
+            <li>A♣, A♥ e cuori tagliata al morto.</li>
+            <li>Picche per un onore della mano, poi cuori tagliata al morto.</li>
+            <li>Rientro con il K♦, battuta delle atout, A♦: <b>12 prese</b>.</li>
+          </ol>
+          <div class="regola blu" style="margin:7px 0 0">Non sempre si battono subito: prima i tagli dalla parte corta, cioè dalla mano con meno atout.</div>
+          <p class="nota">C'è allungamento solo se il taglio aggiunge almeno una presa a quelle che il colore darebbe comunque.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">4</span><h2 class="display">Affrancare con i tagli</h2></div>
+      <div class="caso">
+        <div>
+          <div class="coppia">
+            <div class="r"><span class="chi">NORD</span><div data-mano="KJ4.A7.65.A98753" class="in-riga"></div></div>
+            <div class="r"><span class="chi">SUD</span><div data-mano="AQ8652.986.A3.K2" class="in-riga"></div></div>
+            <div class="att">4♠ · Ovest attacca K♦</div>
+          </div>
+        </div>
+        <div>
+          <p>Ad atout si può affrancare di lunga <b>senza cedere la presa</b>: le cartine che si dovrebbero perdere si tagliano.</p>
+          <ol class="passi-mini">
+            <li>A♦, due giri di atout.</li>
+            <li>K♣, A♣ e una fiori tagliata in mano: se le fiori avversarie sono 3-2, cadono tutte.</li>
+            <li>Le tre fiori del morto sono franche, con l'<b>Asso di cuori</b> per arrivarci: <b>13 prese</b>.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer><span>BridgeLab · Il gioco della carta</span><span>bridgelab.it</span></footer>
+</div>
+<script src="../carte.js"></script>
+</body>
+</html>

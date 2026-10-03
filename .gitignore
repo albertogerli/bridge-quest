@@ -107,6 +107,7 @@ validazione-smazzate.json
 # Reviewed course corrections and English downloads are runtime assets, not reports.
 !public/infografiche/fiori/*-rev2022.pdf
 !public/infografiche/en/*/*.pdf
+!public/materiali/**/*.pdf
 
 # Screenshot delle esecuzioni di Playwright: si rigenerano a ogni prova.
 # Aggiunto il 26/09/2026 spostando il progetto fuori da iCloud Drive, dove

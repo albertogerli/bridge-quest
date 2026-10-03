@@ -1,0 +1,84 @@
+/* Infografiche A4: una pagina per lezione, 794×1123. */
+  @page { size: A4; margin: 0; }
+  body { width: 794px; overflow-x: hidden; }
+  .foglio { width: 794px; min-height: 1123px; padding: 0 0 10px; display: flex; flex-direction: column; }
+
+  header {
+    position: relative; overflow: hidden;
+    background: linear-gradient(135deg, var(--figb-scuro), var(--figb) 55%, var(--figb-chiaro));
+    color: #fff; padding: 20px 30px 18px;
+  }
+  header::after {
+    content: "♠ ♥ ♦ ♣"; position: absolute; right: -6px; top: -22px;
+    font-size: 120px; letter-spacing: -6px; opacity: 0.07; white-space: nowrap;
+  }
+  .occhiello { font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--oro); }
+  h1 { font-size: 40px; font-weight: 800; line-height: 1; margin: 5px 0 6px; }
+  .sotto { color: #fff; font-size: 13.5px; opacity: 0.9; max-width: 560px; line-height: 1.4; }
+  .marchio { position: absolute; right: 26px; bottom: 18px; display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; opacity: 0.95; }
+  .marchio img { height: 26px; background: #fff; border-radius: 6px; padding: 3px 6px; }
+
+  main { padding: 12px 22px 0; display: grid; gap: 8px; flex: 1; align-content: start; }
+  .riquadro { background: var(--carta); border: 1px solid var(--linea); border-radius: 12px; padding: 10px 14px; }
+  .tit { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+  .num {
+    width: 22px; height: 22px; border-radius: 50%; background: var(--figb); color: #fff;
+    display: grid; place-items: center; font-size: 12px; font-weight: 700; flex: none;
+  }
+  .tit h2 { font-size: 16.5px; font-weight: 700; }
+  p, li { font-size: 12px; line-height: 1.4; color: #2c3242; }
+  b { color: var(--inchiostro); }
+
+  .due { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 9px; }
+  .esempio { display: flex; align-items: center; gap: 12px; margin-top: 6px; padding: 6px 10px; border-radius: 10px; background: var(--avorio); }
+  .esempio .esito { display: grid; gap: 3px; }
+
+  .regola {
+    margin: 0 0 7px; padding: 6px 11px; border-left: 4px solid var(--oro); background: var(--oro-velo);
+    border-radius: 0 8px 8px 0; font-size: 12.5px; font-weight: 600; color: var(--inchiostro);
+  }
+  .figure { display: grid; gap: 10px; }
+  .figure.tre { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .figure.quattro { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .figure .fig { --fs: 13.5px; }
+  .fig { display: grid; justify-items: center; gap: 4px; padding: 7px 6px; --fs: 15px; border-radius: 10px; background: var(--avorio); }
+  .fig .conto { font-size: 12px; text-align: center; color: var(--tenue); line-height: 1.3; }
+  .fig .conto b { font-size: 15px; color: var(--figb); }
+
+  .passi { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; counter-reset: p; }
+  .passo { position: relative; padding: 7px 11px; border-radius: 10px; background: var(--figb-velo); }
+  .passo h3 { font-size: 12.5px; font-weight: 700; color: var(--figb); margin-bottom: 3px; }
+  .passo p { font-size: 12px; }
+  .nota { margin-top: 5px; font-size: 11.5px; color: var(--tenue); }
+
+  .smazzata { display: grid; grid-template-columns: 1fr; gap: 9px; }
+  .tavolo { display: grid; grid-template-columns: auto 1fr auto 1fr; align-items: center; gap: 8px 10px; padding: 8px 14px; border-radius: 12px;
+    background: radial-gradient(circle at 50% 40%, #1f7a4f, #135c3a); color: #fff; }
+  .tavolo .mano { background: #fff; color: var(--inchiostro); border-radius: 8px; padding: 4px 10px; --fs: 13.5px; }
+  .tavolo .etichetta { white-space: nowrap; font-size: 10px; font-weight: 700; letter-spacing: 0.12em; opacity: 0.85; }
+  .attacco { font-size: 11px; background: rgba(255,255,255,0.14); border-radius: 999px; padding: 3px 10px; }
+  table { border-collapse: collapse; width: 100%; font-size: 12.5px; }
+  th { text-align: left; font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--tenue); font-weight: 600; padding: 0 6px 5px; }
+  td { padding: 3px 6px; border-top: 1px solid var(--linea); }
+  td.n { text-align: center; font-weight: 700; font-variant-numeric: tabular-nums; }
+  tr.tot td { font-weight: 700; border-top: 2px solid var(--inchiostro); }
+  tr.tot td.n { color: var(--figb); font-size: 15px; }
+  .gioco { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 5px; align-items: center; font-size: 11.5px; color: #2c3242; }
+  .gioco .freccia { color: var(--oro); font-weight: 700; }
+
+  footer { margin: 6px 24px 0; display: flex; justify-content: space-between; font-size: 10.5px; color: var(--tenue); }
+
+/* Nord e Sud su due righe, con l'attacco sotto */
+.coppia { display: grid; gap: 3px; padding: 8px 10px; border-radius: 10px; background: var(--avorio); --fs: 13px; align-content: start; }
+.coppia .r { display: flex; align-items: center; gap: 8px; }
+.coppia .chi { min-width: 30px; font-size: 10px; font-weight: 700; color: var(--tenue); letter-spacing: 0.06em; }
+.coppia .att { font-size: 10.5px; color: var(--tenue); margin-left: 38px; }
+/* smazzata a croce dentro un riquadro chiaro */
+.tavolino { display: flex; justify-content: center; padding: 6px 8px; border-radius: 10px; background: var(--avorio); --fs: 12px; }
+.tavolino .mano { gap: 0; }
+.regola.blu { border-left-color: var(--figb); background: var(--figb-velo); }
+ol.passi-mini { margin: 4px 0 0 16px; display: grid; gap: 2px; }
+ol.passi-mini li { font-size: 12px; }
+.lato { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 14px; align-items: center; }
+.tavolino .smazzata4 { row-gap: 2px; column-gap: 14px; }
+.tavolino .mano.in-riga { gap: 10px; }

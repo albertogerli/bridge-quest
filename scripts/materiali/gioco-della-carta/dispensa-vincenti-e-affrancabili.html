@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Vincenti e affrancabili — dispensa</title>
+<link rel="stylesheet" href="../base.css">
+<link rel="stylesheet" href="../dispensa.css">
+</head>
+<body>
+
+<header class="testata">
+  <div class="occhiello">Il gioco della carta · Dispensa</div>
+  <h1 class="display">Vincenti e affrancabili</h1>
+  <p class="sotto">Che cosa distingue una carta vincente da una che lo diventerà, e come il giocante conta le prese prima di giocare la prima carta.</p>
+  <img src="../../../public/logo-bridgelab.svg" alt="">
+</header>
+
+<h2>La differenza tra carte vincenti e carte affrancabili</h2>
+<p>Si dice <b>vincente</b> (intendendo anche «assoluta») o <b>franca</b> (in gergo anche: buona) una carta che, se giocata in quel momento, è in grado di aggiudicarsi una presa. Si dice carta <b>affrancabile</b> una carta che potrebbe diventare vincente in un secondo momento e dopo un’opportuna manovra.</p>
+<p>A titolo di esempio:</p>
+<ul>
+  <li>se in un seme avete AK32, potrete affermare di avere 2 vincenti;</li>
+  <li>se in un seme avete KQJ10, potrete affermare di non avere alcuna vincente.</li>
+</ul>
+<div class="esempio">
+  <span class="etichetta">Esempio</span>
+  <div class="figure">
+    <div class="fig"><span data-carte="S:AK32" style="--w:34px"></span><span class="conto"><b>2 vincenti</b></span></div>
+    <div class="fig"><span data-carte="S:KQJ10" data-cede="0" style="--w:34px"></span><span class="conto"><b>0 vincenti</b> · 3 affrancabili</span></div>
+  </div>
+</div>
+<p>Questo non significa che nel secondo caso non otterrete prima o poi delle prese: significa solo che non c’è alcuna carta che vi consenta di realizzare immediatamente una presa. Sempre nel caso specifico, potete contare 3 carte affrancabili giocando, alla prima occasione, una carta alla volta finché l’avversario non realizzerà la presa con l’Asso; dopodiché le restanti carte possono rappresentare delle prese. Questa manovra viene definita</p>
+<div class="regola blu"><b>Affrancamento di forza</b>: è l’unica manovra di affrancamento che ha una probabilità di successo pari al 100%.</div>
+
+<div class="esempio">
+  <span class="etichetta">Esempio</span>
+  <div class="corpo">
+    <div class="mano-sola" data-mano="KQ65.AKJ3.K4.AKQ"></div>
+    <div class="testo">
+      <p class="domanda">Proviamo a contare le vincenti di questa mano.</p>
+      <p>Zero a Picche, due a Cuori, zero a Quadri, tre a Fiori.</p>
+    </div>
+  </div>
+</div>
+
+<h3>Carte equivalenti</h3>
+<p>Carte di valore contiguo (KQJ…, QJ109…, AKQJ…, J1098…) si definiscono <b>equivalenti</b>; quindi sono da considerare vincenti gli Assi, i Re se sono in compagnia del relativo Asso, le Dame se sono accompagnate dall’Asso e dal Re, e così via: la figura AKQJ contiene 4 vincenti, perché il J vincerà la presa tanto quanto l’Asso.</p>
+
+<h2>Il punto di vista del giocante</h2>
+<p>Uno dei 4 giocatori, individuato secondo un criterio di assegnazione che vedremo in seguito, è colui che decide le carte da giocare per sé e per il compagno che, subito dopo l’attacco, scopre le sue carte e viene definito nel gergo bridgistico «morto».</p>
+<p>È definito <b>giocante</b> e il suo obiettivo è quello di realizzare, gestendo le 26 carte che possiede tra mano e morto, il maggior numero di prese, ma almeno un numero minimo predefinito (con modalità che verranno affrontate in seguito).</p>
+<p>Avere un ben preciso numero di prese da realizzare lo induce a organizzare le sue manovre con un certo criterio e a trovare le strategie vincenti per raggiungere lo scopo. Solitamente il conto delle vincenti porta a un numero di prese molto lontano dall’obiettivo, quindi ci sarà da lavorare per affrancare prese nuove.</p>
+<p>Subito dopo aver ricevuto l’attacco da parte dell’avversario seduto alla sua sinistra, quando vede tutte e 26 le carte a disposizione (le sue 13 che ha in mano e le 13 del compagno «morto», scoperte sul tavolo), il giocante potrà valutare con certezza assoluta (cosa che i difensori non possono fare) quali carte sono vincenti alla luce di nuove equivalenze, a livello di coppia.</p>
+
+<div class="esempio">
+  <span class="etichetta">Esempio</span>
+  <div class="corpo">
+    <div class="fig" data-figura="S:AQ2/K43" style="--fs:16px"></div>
+    <div class="testo"><p>Sud è giocante: quando vede che il morto porta AQ scopre che il suo Re è una carta vincente (così pure la Dama del morto). In questo caso ogni onore fornirà una presa, purché il giocante abbia cura di non giocarli nella stessa presa.</p></div>
+  </div>
+</div>
+
+<div class="regola">Dopo aver visto il morto, la prima operazione del giocante è contare le prese vincenti a disposizione, distintamente seme per seme.</div>
+
+<div class="esempio">
+  <span class="etichetta">Esempio</span>
+  <div class="figure">
+    <div class="fig" data-figura="S:AQ2/KJ83"></div>
+    <div class="fig" data-figura="H:832/AKQJ"></div>
+  </div>
+  <p>Dal punto di vista delle prese realizzabili queste situazioni sono identiche: quattro prese saranno assicurate sempre. L’unica differenza è che nel primo caso per due volte sarà in presa Nord, mentre nel secondo caso sarà sempre in presa Sud.</p>
+</div>
+
+<p>Quando si vuole calcolare quante vincenti si possiedono in un colore, si deve tener conto di due fattori:</p>
+<ul>
+  <li>il numero di vincenti;</li>
+  <li>il numero di carte possedute nel colore dalla mano che ne ha di più, dato che indica il numero massimo di volte in cui sarà possibile giocare nel colore.</li>
+</ul>
+<div class="regola">Il numero massimo di prese realizzabili in un seme è pari o inferiore al numero di carte possedute dalla mano che ne ha di più (<b>lato lungo</b>).</div>
+
+<div class="esempio">
+  <span class="etichetta">Esempio</span>
+  <div class="figure">
+    <div class="fig"><div data-figura="S:J109/AKQ"></div><span class="conto"><b>3 prese</b></span></div>
+    <div class="fig"><div data-figura="H:109/AKQJ2"></div><span class="conto"><b>5 prese</b></span></div>
+    <div class="fig"><div data-figura="D:AKJ942/Q103"></div><span class="conto"><b>6 prese</b></span></div>
+  </div>
+  <p>Nel primo caso ci sono 6 carte vincenti, ma con solo tre carte sia in Nord sia in Sud si faranno solo 3 prese; nel secondo se ne faranno 5, grazie a Sud che ha 5 carte; nel terzo 6, grazie a Nord che ha 6 carte.</p>
+</div>
+
+<div class="regola blu">Seconda operazione: individuare il colore o i colori da cui si potrebbero affrancare altre prese.</div>
+<p>Ciascuna coppia dovrà utilizzare al meglio le carte che possiede in maniera da realizzare il massimo numero di prese (obiettivo del gioco).</p>
+<p>La strategia migliore non è quella di affrettarsi a giocare le vincenti, ma quella di giocare nei colori che presentano carte da affrancare, per poi realizzare le vincenti e le carte divenute franche a seguito della suddetta manovra.</p>
+<p>Precedentemente abbiamo visto che l’affrancamento di colori in cui si possiedono «quasi» tutti gli onori è semplice da eseguire, in quanto la manovra consiste nel giocare ripetutamente nel colore fino a quando gli avversari non incassano gli onori superiori a quelli che si possiedono (affrancamento di forza).</p>
+<p>Come vedremo anche successivamente:</p>
+<div class="regola">In alcuni casi, una volta portata a termine con successo una manovra di affrancamento, per poter incassare le prese sarà necessario vincere una delle prese successive.</div>
+
+<div class="esempio">
+  <span class="etichetta">Esempi</span>
+  <p class="domanda">Avendo queste carte potremo affrancare…</p>
+  <div class="figure">
+    <div class="fig"><div data-figura="C:J103/KQ92"></div><span class="conto">4 − 1 = <b>3 prese</b></span></div>
+    <div class="fig"><div data-figura="C:J103/KQ954"></div><span class="conto">5 − 1 = <b>4 prese</b></span></div>
+    <div class="fig"><div data-figura="H:J1032/Q9854"></div><span class="conto">5 − 2 = <b>3 prese</b></span></div>
+    <div class="fig"><div data-figura="S:Q102/KJ9863"></div><span class="conto">6 − 1 = <b>5 prese</b></span></div>
+  </div>
+</div>
+
+<div class="regola blu">Il primo colore da muovere è quello che può fornirci il maggior numero di carte affrancate.</div>
+
+<div class="esempio">
+  <span class="etichetta">Esempio</span>
+  <div class="corpo">
+    <div style="display:grid;gap:6px;justify-items:center">
+      <span style="font-size:8pt;font-weight:700;color:var(--tenue);letter-spacing:.1em">NORD</span>
+      <div class="mano-sola" data-mano="AQ8.76.K65.K10932"></div>
+      <div class="mano-sola" data-mano="K62.A982.A43.QJ6"></div>
+      <span style="font-size:8pt;font-weight:700;color:var(--tenue);letter-spacing:.1em">SUD</span>
+    </div>
+    <div class="testo">
+      <p>L’attacco di Ovest è Q♦.</p>
+      <p>Sud conta le vincenti, colore per colore: a Picche 3; a Cuori 1; a Quadri 2; a Fiori… zero. Ma le Fiori sono una grande sorgente di prese, una volta ceduto l’Asso (si affrancano 4 delle 5 carte di Nord).</p>
+      <p><b>Esecuzione</b>: Sud vince l’attacco e gioca immediatamente Fiori, e continua finché non scende l’Asso. Vincerà qualsiasi ritorno e incasserà in totale 10 prese (4 Fiori affrancate + le 6 vincenti già contate).</p>
+    </div>
+  </div>
+</div>
+
+<script src="../carte.js"></script>
+</body>
+</html>

@@ -78,6 +78,14 @@ def main():
         lesson_ids = list_lesson_ids(course_dir)
 
         for lid in lesson_ids:
+            # Le infografiche disegnate da HTML (scripts/materiali/) hanno le
+            # carte esatte per costruzione: un'immagine generata non le
+            # sostituisce mai. Si rifanno con rendi-gioco-della-carta.mjs.
+            if course == "fiori" and (PROJECT_ROOT / "scripts" / "materiali" / "gioco-della-carta" / f"infografica-{lid.zfill(2)}.html").exists():
+                print(f"  lezione {lid}: disegnata da HTML, SKIP")
+                total_skipped += 1
+                continue
+
             src = pick_source(course_dir, lid)
             if src is None:
                 print(f"  lezione {lid}: nessuna versione gpt, SKIP")

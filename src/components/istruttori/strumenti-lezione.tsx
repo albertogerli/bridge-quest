@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "@/components/link";
-import { Archive, ChevronRight, FlaskConical, Presentation, Printer, Users, Wand2, Library, Layers } from "lucide-react";
+import { Archive, BookOpen, ChevronRight, FlaskConical, Presentation, Printer, Users, Wand2, Library, Layers } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useT } from "@/contexts/traduzioni-provider";
 
@@ -62,6 +62,12 @@ export const STRUMENTI_LEZIONE: Strumento[] = [
     titolo: "Libreria",
     descrizione: "Materiale già pronto, preparato dagli altri insegnanti",
     icona: Library,
+  },
+  {
+    href: "/istruttori/materiali",
+    titolo: "Materiali del corso",
+    descrizione: "Slide e dispense ufficiali, da proiettare o da stampare",
+    icona: BookOpen,
   },
   {
     href: "/istruttori/dispensa",

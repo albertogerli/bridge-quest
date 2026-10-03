@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Affrancamenti di lunga e di posizione</title>
+<link rel="stylesheet" href="../base.css">
+<link rel="stylesheet" href="../infografica.css">
+<style>
+  .modi { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .modo { border-radius: 8px; padding: 5px 10px; background: var(--figb-velo); display: flex; gap: 8px; align-items: baseline; }
+  .modo h3 { white-space: nowrap; font-size: 13px; color: var(--figb); font-weight: 700; }
+  .modo p { font-size: 11.5px; }
+  .modo.gia { background: var(--avorio); }
+  .modo.gia h3 { color: var(--tenue); }
+  .fig4 { display: grid; justify-items: center; gap: 4px; padding: 6px 6px; border-radius: 10px; background: var(--avorio); --fs: 13px; }
+  .fig4 .conto { font-size: 11px; text-align: center; color: #2c3242; line-height: 1.35; }
+  .fig4 .conto b { color: var(--figb); }
+  .smazzata-mini { --fs: 12px; padding: 6px 8px; border-radius: 10px; background: var(--avorio); display: flex; justify-content: center; }
+  .smazzata-mini .mano { gap: 0; }
+  .passi-mini { display: grid; gap: 3px; margin-top: 6px; }
+  .passi-mini li { font-size: 11.5px; margin-left: 16px; }
+  main { gap: 7px; }
+  .riquadro { padding: 8px 14px; }
+  .regola.blu { border-left-color: var(--figb); background: var(--figb-velo); }
+</style>
+</head>
+<body>
+<div class="foglio">
+  <header>
+    <div class="occhiello">Il gioco della carta</div>
+    <h1 class="display">Affrancamenti di lunga e di posizione</h1>
+    <p class="sotto">Oltre alla forza, si creano prese con la lunghezza del colore e con la posizione degli onori avversari.</p>
+    <div class="marchio"><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+  </header>
+
+  <main>
+    <div class="due">
+      <div style="display:grid;gap:8px;align-content:start">
+      <section class="riquadro">
+      <div class="tit"><span class="num">1</span><h2 class="display">Tre modi per affrancare</h2></div>
+      <div class="modi" style="grid-template-columns:1fr">
+        <div class="modo gia"><h3>Di forza</h3><p>Carte equivalenti: si cede l'onore più alto. Già visto.</p></div>
+        <div class="modo"><h3>Di lunga</h3><p>Si gioca il colore finché gli avversari non ne hanno più.</p></div>
+        <div class="modo"><h3>Di posizione</h3><p>L'onore fa presa se quello avversario è nel posto giusto.</p></div>
+      </div>
+    </section>
+
+      <section class="riquadro">
+        <div class="tit"><span class="num">2</span><h2 class="display">Di lunga</h2></div>
+        <p>Quando la coppia ha <b>più carte degli avversari</b> (ne bastano 7), le ultime diventano franche anche se basse. Conta la <b>lunghezza</b> del lato lungo e la <b>divisione</b> dei resti.</p>
+        <div class="figure" style="grid-template-columns:1fr 1fr;margin-top:7px">
+          <div class="fig4"><div data-figura4="C:762/1085/J9/AKQ43"></div><div class="conto">A K Q, poi il 4 e il 3<br>sono franchi: <b>5 prese</b></div></div>
+          <div class="fig4"><div data-figura4="D:109762/AQ/KJ/8543"></div><div class="conto">due giri: cadono gli onori<br>Nord ha <b>3 prese</b> affrancate</div></div>
+        </div>
+        <div class="regola" style="margin:7px 0 0">I colori lunghi danno sempre prese, anche se sono «brutti».</div>
+      </section>
+      </div>
+
+      <section class="riquadro">
+        <div class="tit"><span class="num">3</span><h2 class="display">Tieni le comunicazioni</h2></div>
+        <p>Le carte affrancate bisogna poterle incassare. Ovest attacca 10♥: per fare 13 prese Sud vince <b>con l'Asso o il Re</b>, non con il Fante.</p>
+        <div class="smazzata-mini" style="margin-top:6px"><div data-smazzata="963.Q4.52.A97642;J7.109865.1084.J53;Q1054.732.QJ93.108;AK82.AKJ.AK76.KQ"></div></div>
+        <ol class="passi-mini">
+          <li>K♥, poi K♣ e Q♣.</li>
+          <li>J♥ per la Q♥: si entra al morto.</li>
+          <li>A♣ e le fiori affrancate: resti 3-2, 13 prese.</li>
+        </ol>
+      </section>
+    </div>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">4</span><h2 class="display">Di posizione: l'onore conta su dove sta quello avversario</h2></div>
+      <div class="figure tre">
+        <div class="fig4"><div data-figura4="H:AQ5/?/?/863"></div><div class="conto"><b>Impasse</b>: piccola verso la Dama.<br>Riesce se il Re è in Ovest.</div></div>
+        <div class="fig4"><div data-figura4="H:K85/?/?/763"></div><div class="conto">Piccola verso il Re isolato.<br>Riesce se l'Asso è in Ovest.</div></div>
+        <div class="fig4"><div data-figura4="S:A63/?/?/QJ10"></div><div class="conto">Si gioca la Dama: se Ovest copre,<br>Fante e 10 sono promossi. Riesce se il Re è in Ovest.</div></div>
+      </div>
+      <p class="nota">Se l'onore avversario è nel posto sbagliato non si può fare niente: ma il tentativo riesce circa una volta su due.</p>
+    </section>
+
+    <div class="due">
+      <section class="riquadro">
+        <div class="tit"><span class="num">5</span><h2 class="display">Onore o cartina?</h2></div>
+        <div class="regola blu">Chiediti se saresti contento che l'avversario coprisse il tuo onore. Se non ci guadagni niente, non giocarlo per primo.</div>
+        <div style="display:flex;gap:12px;align-items:center">
+          <div class="fig" style="--fs:14px"><div data-figura="C:A543/Q72"></div></div>
+          <p style="font-size:11.5px">Partire con la Dama non affranca niente: gli avversari hanno J, 10 e 9. Si gioca <b>piccola verso la Dama</b> sperando nel Re in Est.</p>
+        </div>
+      </section>
+
+      <section class="riquadro">
+        <div class="tit"><span class="num">6</span><h2 class="display">In difesa: onore su onore</h2></div>
+        <div class="regola blu">In seconda posizione: piccola su piccola, onore su onore.</div>
+        <div style="display:flex;gap:12px;align-items:center">
+          <div class="fig4" style="--fs:13px"><div data-figura4="D:AQ94/K83/1072/J65"></div></div>
+          <p style="font-size:11.5px">Se Sud parte con il <b>J</b>, Ovest copre con il <b>K</b>: si affranca il 10 di Est. Se Sud parte con il 5, Ovest gioca piccola.</p>
+        </div>
+      </section>
+    </div>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">7</span><h2 class="display">Il fermo</h2></div>
+      <div style="display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center">
+        <div class="fig4"><div data-figura4="S:87/9432/QJ/AK1065"></div></div>
+        <div>
+          <p>Una carta o un gruppo di carte che impedisce agli avversari di fare tutte le prese nel colore. Qui cadono Dama e Fante di Est, ma <b>il 9 di Ovest vince la quarta presa</b>: basta che Ovest scarti una cartina prima e il fermo sparisce.</p>
+          <div class="regola" style="margin:7px 0 0">In difesa: se il morto ha un colore lungo e il compagno ne ha meno di te, non scartarne neanche una.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer><span>BridgeLab · Il gioco della carta</span><span>bridgelab.it</span></footer>
+</div>
+<script src="../carte.js"></script>
+</body>
+</html>

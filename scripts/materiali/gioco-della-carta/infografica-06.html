@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Il piano di gioco con l'atout</title>
+<link rel="stylesheet" href="../base.css">
+<link rel="stylesheet" href="../infografica.css">
+<style>
+  main { gap: 7px; }
+  .riquadro { padding: 8px 14px; }
+  .attacchi { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
+  .att-box { padding: 6px 10px; border-radius: 9px; background: var(--figb-velo); font-size: 11.5px; line-height: 1.4; }
+  .att-box h3 { font-size: 12.5px; color: var(--figb); font-weight: 700; margin-bottom: 2px; }
+  .att-box .mano { --fs: 12px; margin: 3px 0; }
+  .fig4 { display: grid; justify-items: center; gap: 4px; padding: 6px; border-radius: 10px; background: var(--avorio); --fs: 12.5px; }
+  .fig4 .conto, .fig .conto { font-size: 11px; text-align: center; color: #2c3242; line-height: 1.35; }
+  .prob { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+  .prob .fig { --fs: 12.5px; }
+  .aprire { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+  .aprire .coppia { --fs: 11.5px; padding: 6px 8px; }
+  .aprire .coppia .chi { width: 14px; }
+  .aprire .conto { font-size: 10.5px; line-height: 1.35; color: #2c3242; margin-top: 3px; }
+  .coppia.stretta { --fs: 12px; }
+</style>
+</head>
+<body>
+<div class="foglio">
+  <header>
+    <div class="occhiello">Il gioco della carta</div>
+    <h1 class="display">Il piano di gioco con l'atout</h1>
+    <p class="sotto">Il taglio ce l'hanno anche gli avversari. Il piano decide quando battere le atout, quando aspettare e cosa fare prima.</p>
+    <div class="marchio"><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+  </header>
+
+  <main>
+    <section class="riquadro">
+      <div class="tit"><span class="num">1</span><h2 class="display">In difesa: l'attacco contro l'atout</h2></div>
+      <div class="attacchi">
+        <div class="att-box"><h3>Prese rapide</h3>Affrancare il colore lungo serve a poco: il giocante lo taglierà. Bastano <b>due onori contigui</b> per attaccare di sequenza.<div data-mano="KQ7.62.J9732.A72" class="in-riga"></div>contro 4♥: <b>K♠</b>, meglio del 2♦.</div>
+        <div class="att-box"><h3>Cercare il taglio</h3>Da un colore corto, sperando di tagliare. Da due carte <b>sempre la più alta</b>: con 74 il 7, con 102 il 10, con A9 l'Asso.<div data-mano="2.A62.J982.Q8752" class="in-riga"></div>contro 4♥: il <b>2♠</b>.</div>
+        <div class="att-box" style="display:grid;gap:4px;align-content:start"><h3>Mai sotto l'Asso</h3><div class="fig4" style="background:#fff"><div data-figura4="C:9732/AJ1064/Q85/K"></div></div>Contro 4♥ il J♣ regala a Sud il Re secco, e l'Asso non farà più presa.</div>
+      </div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">2</span><h2 class="display">Il giocante: battere le atout?</h2></div>
+      <div class="regola blu">Se hai vincenti o affrancabili lunghe a lato, batti le atout: altrimenti te le tagliano.</div>
+      <div class="prob">
+        <div class="fig"><div data-figura="H:K54/A2"></div><div class="conto">5 carte: il taglio<br>è quasi impossibile</div></div>
+        <div class="fig"><div data-figura="H:K732/A4"></div><div class="conto">6 carte: rischio<br>ancora basso</div></div>
+        <div class="fig"><div data-figura="H:KQJ3/A42"></div><div class="conto">7 carte: al terzo giro<br>meno di una su due</div></div>
+        <div class="fig"><div data-figura="H:732/KQJ104"></div><div class="conto">ceduto l'Asso:<br>una presa forse, due no</div></div>
+      </div>
+      <p class="nota" style="margin-top:4px">Picche atout, cuori a lato: la probabilità che un onore venga tagliato cresce con le carte della linea.</p>
+    </section>
+
+    <div class="due">
+      <section class="riquadro">
+        <div class="tit"><span class="num">3</span><h2 class="display">Solo vincenti corte? Taglia</h2></div>
+        <div class="coppia stretta">
+          <div class="r"><span class="chi">NORD</span><div data-mano="AK8.A743.732.J92" class="in-riga"></div></div>
+          <div class="r"><span class="chi">SUD</span><div data-mano="6532.8.AK854.853" class="in-riga"></div></div>
+          <div class="att">2♦ · Ovest attacca Q♥</div>
+        </div>
+        <p style="margin-top:5px;font-size:11.5px">Servono 8 prese, i colori a lato ne danno 3. Battendo le atout le quadri ne fanno 4, mai 5. Allora: A♥ e cuori tagliata col 4, picche per l'Asso e cuori tagliata col 5, picche per il Re e cuori tagliata con l'8. Con le cuori 4-4, <b>8 prese</b>.</p>
+      </section>
+
+      <section class="riquadro">
+        <div class="tit"><span class="num">4</span><h2 class="display">Aspetta a battere</h2></div>
+        <div class="coppia stretta">
+          <div class="r"><span class="chi">NORD</span><div data-mano="82.83.A92.Q97543" class="in-riga"></div></div>
+          <div class="r"><span class="chi">SUD</span><div data-mano="AKQJ95.A92.873.A" class="in-riga"></div></div>
+          <div class="att">4♠ · Ovest attacca 2♣</div>
+        </div>
+        <p style="margin-top:5px;font-size:11.5px">9 prese, e battendo le atout restano 9. Subito <b>A♥ e cuori</b>; poi una cuori tagliata al morto: <b>10 prese</b>. Anche un solo giro d'atout sarebbe fatale: in presa a cuori, l'avversario gioca atout e il taglio sparisce.</p>
+        <div class="regola" style="margin:5px 0 0">Aspetta a battere se ti servono tagli dalla parte corta.</div>
+      </section>
+    </div>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">5</span><h2 class="display">Costruire il taglio</h2></div>
+      <div class="aprire">
+        <div><div class="coppia"><div class="r"><span class="chi">N</span><div data-mano="xxx.32.." data-parziale class="in-riga"></div></div><div class="r"><span class="chi">S</span><div data-mano="AKQ32.A74.." data-parziale class="in-riga"></div></div></div><p class="conto">A♥ e cuori, poi una cuori tagliata al morto.</p></div>
+        <div><div class="coppia"><div class="r"><span class="chi">N</span><div data-mano="xxxx.85.." data-parziale class="in-riga"></div></div><div class="r"><span class="chi">S</span><div data-mano="AKQ64.932.." data-parziale class="in-riga"></div></div></div><p class="conto">Cuori a cedere, due volte: poi si taglia la terza.</p></div>
+        <div><div class="coppia"><div class="r"><span class="chi">N</span><div data-mano="xxx.K6.." data-parziale class="in-riga"></div></div><div class="r"><span class="chi">S</span><div data-mano="AKQ32.Q52.." data-parziale class="in-riga"></div></div></div><p class="conto">K♥, cedi l'Asso, incassa la Dama e taglia.</p></div>
+        <div><div class="coppia"><div class="r"><span class="chi">N</span><div data-mano="xx.K7.." data-parziale class="in-riga"></div></div><div class="r"><span class="chi">S</span><div data-mano="AKQ743.A53.." data-parziale class="in-riga"></div></div></div><p class="conto">K♥, A♥, poi cuori tagliata.</p></div>
+      </div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">6</span><h2 class="display">Prima l'urgente</h2></div>
+      <div class="lato">
+        <div class="tavolino" style="--fs:11.5px"><div data-compatta data-smazzata="K952.853.AQ5.K65;A4.KQJ4.J984.984;87.1097.10732.A1072;QJ1063.A62.K6.QJ3"></div></div>
+        <div>
+          <p style="font-size:11.5px">4♠, Ovest attacca K♥. Se Sud prende e batte atout, i difensori incassano due cuori, l'A♠ e l'A♣: battuto. Invece, in presa con l'A♥, Sud incassa <b>K♦, Q♦ e A♦</b> e scarta una cuori: al terzo giro di cuori potrà tagliare.</p>
+          <div class="regola blu" style="margin:6px 0 0">Quando il piano prevede di cedere la presa, chiediti sempre cosa farà l'avversario dopo.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer><span>BridgeLab · Il gioco della carta</span><span>bridgelab.it</span></footer>
+</div>
+<script src="../carte.js"></script>
+</body>
+</html>
