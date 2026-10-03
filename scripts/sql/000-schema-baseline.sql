@@ -16,7 +16,7 @@
 -- Rigenerare e committare dopo OGNI modifica allo schema, insieme allo script
 -- che l'ha causata.
 --
--- Estratto il: 2026-10-02
+-- Estratto il: 2026-10-03
 -- ============================================================================
 
 SET check_function_bodies = false;
@@ -2932,12 +2932,34 @@ CREATE OR REPLACE FUNCTION public.handle_new_user()
  SECURITY DEFINER
  SET search_path TO 'public'
 AS $function$
-  BEGIN
-    INSERT INTO public.profiles (id, display_name)
-    VALUES (NEW.id, COALESCE(NEW.raw_user_meta_data->>'display_name', 'Bridgista'));
-    RETURN NEW;
-  END;
-  $function$
+declare
+  m jsonb := coalesce(new.raw_user_meta_data, '{}'::jsonb);
+  v_nome text := coalesce(nullif(left(btrim(m->>'display_name'), 80), ''), 'Bridgista');
+  v_tipo text := m->>'profile_type';
+begin
+  if v_tipo is null or v_tipo not in ('junior', 'giovane', 'adulto', 'senior') then
+    v_tipo := 'adulto';
+  end if;
+
+  begin
+    insert into public.profiles (id, display_name, bbo_username, asd_code, asd_name, profile_type, platform)
+    values (
+      new.id,
+      v_nome,
+      nullif(left(btrim(m->>'bbo_username'), 40), ''),
+      nullif(left(btrim(m->>'asd_code'), 20), ''),
+      nullif(left(btrim(m->>'asd_name'), 120), ''),
+      v_tipo,
+      nullif(left(btrim(m->>'platform'), 20), '')
+    );
+  exception when others then
+    insert into public.profiles (id, display_name)
+    values (new.id, v_nome);
+  end;
+
+  return new;
+end;
+$function$
 ;
 
 CREATE OR REPLACE FUNCTION public.i_miei_esercizi()
@@ -7162,7 +7184,6 @@ GRANT EXECUTE ON FUNCTION public.get_review_items_state() TO authenticated;
 GRANT EXECUTE ON FUNCTION public.get_review_items_state() TO service_role;
 REVOKE ALL ON FUNCTION public.handle_new_user() FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.handle_new_user() TO authenticated;
-GRANT EXECUTE ON FUNCTION public.handle_new_user() TO service_role;
 REVOKE ALL ON FUNCTION public.i_miei_esercizi() FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.i_miei_esercizi() TO authenticated;
 GRANT EXECUTE ON FUNCTION public.i_miei_esercizi() TO service_role;
