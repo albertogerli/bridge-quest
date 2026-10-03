@@ -264,30 +264,24 @@ export function useAuth() {
       email: email.trim(),
       password,
       options: {
-        data: { display_name: displayName },
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
-
-    if (error) return { error };
-
-    // Upsert profile with additional info (handles case where auto-trigger hasn't created row yet)
-    if (data.user) {
-      const { error: erroreProfilo } = await supabase
-        .from("profiles")
-        .upsert({
-          id: data.user.id,
+        // TUTTO IL PROFILO VIAGGIA QUI, nei metadati, e lo scrive il trigger
+        // `handle_new_user` (scripts/sql/profilo-da-registrazione-2026-10.sql).
+        // Prima c'era un upsert dal client subito dopo: con i privilegi per
+        // colonna su `profiles` falliva sempre, e da agosto a ottobre 2026 i
+        // nuovi iscritti hanno perso associazione, utente BBO e fascia d'età.
+        data: {
           display_name: displayName,
           bbo_username: bboUsername || null,
           asd_code: asdCode || null,
           asd_name: asdName || null,
           profile_type: profileType || "adulto",
           platform: getPlatform(),
-        }, { onConflict: "id" });
-      // L'account esiste comunque: non si blocca la registrazione, ma un
-      // profilo senza nome né associazione va saputo, non scoperto dopo.
-      if (erroreProfilo) segnalaSalvoRete("auth:registrazione-profilo", erroreProfilo);
-    }
+        },
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+
+    if (error) return { error };
 
     return { data, error: null };
   };
