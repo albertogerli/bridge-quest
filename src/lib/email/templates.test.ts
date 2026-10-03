@@ -13,6 +13,7 @@ const TUTTE: EmailKind[] = [
   "compito_in_scadenza",
   "recupero_password",
   "recupero_non_registrato",
+  "completa_profilo",
 ];
 
 describe("le email di ciclo di vita", () => {
@@ -197,5 +198,22 @@ describe("recupero password", () => {
     expect(it_.html).toContain(`href="${link}"`);
     expect(it_.text).toContain(link);
     expect(en.subject).not.toBe(it_.subject);
+  });
+});
+
+describe("completa_profilo", () => {
+  it("chiede scusa, porta al profilo e non ha la disiscrizione", () => {
+    const e = renderEmail("completa_profilo", { name: "Anna" });
+    expect(e.transactional).toBe(true);
+    expect(e.html).toContain("/profilo");
+    expect(e.html).toContain("errore tecnico");
+    expect(e.html).not.toContain("Non voglio più questi promemoria");
+  });
+
+  it("in inglese per chi ha scelto l'inglese", () => {
+    const e = renderEmail("completa_profilo", { name: "Anna", lingua: "en" });
+    expect(e.subject).toContain("profile");
+    expect(e.html).toContain("Your club");
+    expect(e.html).toContain('lang="en"');
   });
 });
