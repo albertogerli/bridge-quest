@@ -30,6 +30,7 @@ import re
 import subprocess
 import sys
 import threading
+import time
 import urllib.error
 import urllib.request
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -151,6 +152,62 @@ def _quanti_avvelenati() -> int:
         return _consecutivi
 
 
+# ── BEN APPESO ──────────────────────────────────────────────────────────────
+# Il terzo modo di guastarsi, e l'unico che nessuno riavviava. Il 03/10/2026
+# BEN è rimasto vivo ma muto per otto ore: il processo c'era (quindi
+# `sorveglia` non scattava), non rispondeva 400 (quindi nemmeno
+# l'avvelenamento), e ogni richiesta finiva in timeout dopo 22 secondi. I tornei
+# di licita si fermavano, Sentry lo diceva (BRIDGELAB-22), e il riavvio l'ha
+# fatto una persona.
+#
+# DUE CAUTELE, perché un riavvio in più costa tre minuti di BEN assente:
+#  - nei primi minuti dall'avvio i timeout non contano: BEN carica la rete e
+#    le prime richieste tardano davvero (misurato il 24/08/2026);
+#  - raggiunta la soglia si bussa alla radice di BEN con un tempo breve. Se
+#    risponde, è lento e non appeso — una `Simulation` pesante, non un guasto —
+#    e non si esce.
+#
+# Qualunque risposta di BEN, anche un errore, azzera il conto: vuol dire che
+# il motore c'è.
+SOGLIA_APPESO = int(os.environ.get("BEN_SOGLIA_APPESO", "5"))
+GRAZIA_AVVIO = float(os.environ.get("BEN_GRAZIA_AVVIO", "240"))
+_avvio = time.monotonic()
+_appesi = 0
+
+
+def _bussa() -> bool:
+    """BEN risponde in fretta alla sua radice? Stessa sonda di `/healthz`."""
+    try:
+        with urllib.request.urlopen(f"{UPSTREAM}/", timeout=5) as r:
+            return r.status == 200
+    except Exception:
+        return False
+
+
+def _registra_scadenza(muto: bool) -> None:
+    """Conta le richieste rimaste senza risposta; una risposta qualsiasi azzera."""
+    global _appesi
+    with _avvelenato:
+        if not muto:
+            _appesi = 0
+            return
+        if time.monotonic() - _avvio < GRAZIA_AVVIO:
+            return
+        _appesi += 1
+        n = _appesi
+    if n >= SOGLIA_APPESO and not _bussa():
+        _log(
+            f"BEN appeso: {n} richieste di fila senza risposta e la radice non "
+            "risponde. Esco così Railway riavvia."
+        )
+        _esci(1)
+
+
+def _quanti_appesi() -> int:
+    with _avvelenato:
+        return _appesi
+
+
 def _log(msg: str) -> None:
     print(f"[guard] {msg}", flush=True)
 
@@ -185,10 +242,12 @@ class Guardia(BaseHTTPRequestHandler):
             # nessuno si accorgeva del guasto. Ora tiene conto anche di come
             # stanno andando le richieste che contano.
             avvelenati = _quanti_avvelenati()
-            sano = vivo and avvelenati < SOGLIA_SONDA
-            corpo = b'{"ben":%s,"avvelenati":%d}' % (
+            appesi = _quanti_appesi()
+            sano = vivo and avvelenati < SOGLIA_SONDA and appesi < SOGLIA_SONDA
+            corpo = b'{"ben":%s,"avvelenati":%d,"appesi":%d}' % (
                 b"true" if vivo else b"false",
                 avvelenati,
+                appesi,
             )
             self._rispondi(200 if sano else 503, corpo)
             return
@@ -211,10 +270,12 @@ class Guardia(BaseHTTPRequestHandler):
                 corpo = r.read()
                 tipo = r.headers.get("Content-Type", "application/json")
                 self._rispondi(r.status, corpo, tipo)
+                _registra_scadenza(False)
                 _registra_esito(r.status, corpo)
         except urllib.error.HTTPError as e:
             corpo = e.read() or b'{"error":"upstream"}'
             self._rispondi(e.code, corpo)
+            _registra_scadenza(False)
             # Dopo aver risposto: se BEN è avvelenato questo fa uscire il
             # processo, e l'utente ha comunque avuto la sua risposta.
             _registra_esito(e.code, corpo)
@@ -239,6 +300,8 @@ class Guardia(BaseHTTPRequestHandler):
             else:
                 _log(f"upstream non raggiungibile: {e}")
                 self._rispondi(502, b'{"error":"ben unavailable"}')
+            # Dopo aver risposto, come per l'avvelenamento.
+            _registra_scadenza(True)
 
     # BEN espone anche delle POST (`/cuebid`, `/cuebidscores`): l'app non le
     # usa e non vengono inoltrate.

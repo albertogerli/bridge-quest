@@ -107,6 +107,37 @@ casi.append(("un 400 legittimo NON conta, per quanti ne arrivino", guard._quanti
 casi.append(("...e non fa uscire nessuno", list(uscite), []))
 guard._consecutivi = 0
 
+# ── BEN appeso ──────────────────────────────────────────────────────────────
+# Il guasto del 03/10/2026: processo vivo, nessuna risposta. Si esce solo se
+# le richieste mute si ripetono E la radice non risponde; un BEN lento ma vivo
+# non si riavvia, e nemmeno uno appena partito.
+guard._appesi = 0
+guard._avvio = time.monotonic()
+guard.GRAZIA_AVVIO = 60
+for _ in range(guard.SOGLIA_APPESO + 3):
+    guard._registra_scadenza(True)
+casi.append(("appeso: durante la grazia d'avvio non si conta", guard._quanti_appesi(), 0))
+
+guard.GRAZIA_AVVIO = 0
+guard.UPSTREAM = "http://127.0.0.1:18099"  # nessuno risponde, nemmeno alla radice
+for _ in range(guard.SOGLIA_APPESO - 1):
+    guard._registra_scadenza(True)
+casi.append(("appeso: sotto soglia NON esce", list(uscite), []))
+casi.append(("...ma la sonda dice già 503", chiama("/healthz"), 503))
+guard._registra_scadenza(True)
+casi.append(("appeso: soglia raggiunta e radice muta -> ESCE", list(uscite), [1]))
+
+uscite.clear()
+guard._appesi = 0
+guard.UPSTREAM = upstream_vero  # il finto BEN risponde alla radice: è lento, non appeso
+for _ in range(guard.SOGLIA_APPESO + 2):
+    guard._registra_scadenza(True)
+casi.append(("lento ma vivo: la radice risponde -> NON esce", list(uscite), []))
+
+guard._registra_scadenza(False)
+casi.append(("una risposta qualsiasi azzera le mute", guard._quanti_appesi(), 0))
+casi.append(("sonda serena dopo l'azzeramento", chiama("/healthz"), 200))
+
 # ── Il config derivato ──────────────────────────────────────────────────────
 # Le due righe che cambiamo decidono quanto dura una dichiarazione difficile.
 # Il rischio vero non è sbagliare il numero: è colpire la riga sbagliata —
