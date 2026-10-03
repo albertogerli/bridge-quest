@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Aperture di 1 a colore. Le risposte</title>
+<link rel="stylesheet" href="../base.css">
+<link rel="stylesheet" href="../infografica.css">
+<style>
+  main { gap: 7px; }
+  .riquadro { padding: 8px 15px; }
+  p, li { font-size: 12.5px; }
+  .tipi { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
+  .tipo { padding: 7px 10px; border-radius: 9px; background: var(--figb-velo); }
+  .tipo h3 { font-size: 13px; font-weight: 700; color: var(--figb); }
+  .tipo p { font-size: 11.5px; }
+  .tabella { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .tabella th { text-align: left; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--tenue); font-weight: 600; padding: 0 6px 4px; }
+  .tabella td { padding: 4px 6px; border-top: 1px solid var(--linea); vertical-align: top; }
+  .tabella td.asta { font-weight: 700; white-space: nowrap; }
+  .tabella td.pt { font-weight: 700; color: var(--figb); white-space: nowrap; }
+  .es { display: grid; gap: 3px; padding: 7px 10px; border-radius: 10px; background: var(--avorio); --fs: 12.5px; }
+  .es .asta { font-size: 10.5px; font-weight: 700; color: var(--tenue); letter-spacing: 0.04em; }
+  .es .risp { font-size: 11.5px; }
+  .es .risp b { color: var(--figb); }
+  .scala { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
+  .gradino { padding: 7px 10px; border-radius: 9px; background: var(--figb-velo); font-size: 11.5px; line-height: 1.4; }
+  .gradino b { color: var(--figb); display: block; font-size: 12.5px; }
+</style>
+</head>
+<body>
+<div class="foglio">
+  <header>
+    <div class="occhiello">Corso Fiori</div>
+    <h1 class="display">Aperture di 1 a colore. Le risposte</h1>
+    <p class="sotto">Il rispondente cerca il fit e misura la forza: ogni risposta dice all'apertore se può fermarsi o deve continuare.</p>
+    <div class="marchio"><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+  </header>
+
+  <main>
+    <section class="riquadro">
+      <div class="tit"><span class="num">1</span><h2 class="display">Tre tipi di risposta</h2></div>
+      <div class="tipi">
+        <div class="tipo"><h3>Limitative</h3><p>Mostrano un minimo e un massimo: l'apertore può passare.</p></div>
+        <div class="tipo"><h3>Invitanti</h3><p>Mostrano un limite ma chiedono all'apertore se ha qualcosa in più.</p></div>
+        <div class="tipo"><h3>Forzanti</h3><p>Il colore nuovo: l'apertore non può passare.</p></div>
+      </div>
+      <div class="regola" style="margin:7px 0 0">Con 5 punti o più non si passa mai: l'apertore può avere fino a 20 punti, e con 25 in linea c'è la manche.</div>
+    </section>
+
+    <div class="due">
+      <section class="riquadro">
+        <div class="tit"><span class="num">2</span><h2 class="display">Gli appoggi</h2></div>
+        <table class="tabella">
+          <tr><th>Risposta</th><th>Punti</th><th>Significato</th></tr>
+          <tr><td class="asta">1♦ – 2♦</td><td class="pt">5-9</td><td>limitativo: col minimo la manche è lontana</td></tr>
+          <tr><td class="asta">1♥ – 3♥</td><td class="pt">10-11</td><td>invitante: manche se l'apertore ha 14+</td></tr>
+          <tr><td class="asta">1♠ – 4♠</td><td class="pt">max 11</td><td>fit 4+ e mano adatta ai tagli</td></tr>
+        </table>
+        <p class="nota" style="margin-top:4px">Su 1♥ e 1♠ bastano 3 carte per appoggiare; su 1♦ ne servono 4. Gli appoggi non sono forzanti.</p>
+        <div class="es" style="margin-top:5px">
+          <span class="asta">IL COMPAGNO APRE 1♦</span>
+          <div data-mano="Q53.A5.Q874.7654" class="in-riga"></div>
+          <span class="risp">→ <b>2♦</b>: 7 punti e quattro quadri.</span>
+        </div>
+      </section>
+
+      <section class="riquadro">
+        <div class="tit"><span class="num">3</span><h2 class="display">La legge di rivalutazione</h2></div>
+        <div class="regola blu">Con fit di 4+ carte e mano sbilanciata, il rispondente aggiunge ai punti onori: carte d'atout meno carte del colore più corto.</div>
+        <div class="es">
+          <span class="asta">IL COMPAGNO APRE 1♥</span>
+          <div data-mano="8.KJ72.KQ74.7642" class="in-riga"></div>
+          <span class="risp">9 punti onori + (4 − 1) = <b>12</b> → <b>4♥</b>.</span>
+        </div>
+        <p class="nota" style="margin-top:5px">Non vale con la 4333: senza un colore corto non ci sono tagli da fare.</p>
+      </section>
+    </div>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">4</span><h2 class="display">I colori nuovi: forzanti</h2></div>
+      <div class="due" style="gap:12px">
+        <div>
+          <table class="tabella">
+            <tr><th>Risposta</th><th>Punti</th><th>Significato</th></tr>
+            <tr><td class="asta">1♣ – 1♥</td><td class="pt">5+</td><td>«uno su uno»: 4+ carte, nessun massimo. L'apertore deve parlare ancora</td></tr>
+            <tr><td class="asta">1♠ – 2♦</td><td class="pt">12+</td><td>«due su uno»: forzante fino a manche</td></tr>
+          </table>
+          <p class="nota" style="margin-top:4px">In apertura 1♥ e 1♠ sono quinte; in risposta bastano quattro carte.</p>
+        </div>
+        <div>
+          <div class="es">
+            <span class="asta">IL COMPAGNO APRE 1♣</span>
+            <div data-mano="82.KJ72.Q92.7642" class="in-riga"></div>
+            <span class="risp">→ <b>1♥</b>: mostra le quattro cuori. Il compagno appoggia, dice 1♠ o si descrive.</span>
+          </div>
+          <ul style="margin:6px 0 0 16px;display:grid;gap:1px">
+            <li style="font-size:11.5px">Due quinte: prima il colore più alto.</li>
+            <li style="font-size:11.5px">Una quinta e una quarta: prima la quinta.</li>
+            <li style="font-size:11.5px">Due quarte: prima la più economica.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="regola" style="margin:6px 0 0">Non saltare se puoi dire il colore a livello 1: 1♥ mostra 5 punti o più, anche 17.</div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">5</span><h2 class="display">Le risposte a senza atout</h2></div>
+      <div class="due" style="gap:12px">
+        <table class="tabella">
+          <tr><th>Risposta</th><th>Punti</th><th>Significato</th></tr>
+          <tr><td class="asta">1NT</td><td class="pt">5-10</td><td>non forzante; nega 4 carte nei colori dichiarabili a livello 1. Non promette bilanciata</td></tr>
+          <tr><td class="asta">2NT</td><td class="pt">11</td><td>invitante; esclude fit nei nobili</td></tr>
+          <tr><td class="asta">3NT</td><td class="pt">12-15</td><td>manche: bilanciata, senza nobili giocabili</td></tr>
+        </table>
+        <div class="es" style="align-self:center">
+          <span class="asta">IL COMPAGNO APRE 1♥</span>
+          <div data-mano="32.4.QJ973.KQ852" class="in-riga"></div>
+          <span class="risp">Due quinte ma solo 8 punti: per il livello 2 non bastano. → <b>1NT</b>.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">6</span><h2 class="display">Prima di rispondere, la scaletta</h2></div>
+      <div class="scala">
+        <div class="gradino"><b>1 · Ho il fit?</b>Lo comunico subito, al livello giusto per i miei punti.</div>
+        <div class="gradino"><b>2 · Altrimenti, un colore nuovo?</b>Lo dico: è forzante e non ha massimo.</div>
+        <div class="gradino"><b>3 · Né l'uno né l'altro?</b>Rispondo a senza atout, secondo i punti.</div>
+      </div>
+    </section>
+  </main>
+
+  <footer><span>BridgeLab · Corso Fiori</span><span>bridgelab.it</span></footer>
+</div>
+<script src="../carte.js"></script>
+</body>
+</html>

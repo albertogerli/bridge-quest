@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Opening and Response</title>
+<link rel="stylesheet" href="../../base.css">
+<link rel="stylesheet" href="../../infografica.css">
+<style>
+  main { gap: 11px; }
+  .riquadro { padding: 12px 15px; }
+  p, li { font-size: 13px; }
+  .esempi { display: grid; gap: 4px; margin-top: 6px; }
+  .es { display: flex; align-items: center; gap: 10px; padding: 4px 8px; border-radius: 8px; background: var(--avorio); --fs: 12.5px; }
+  .es .r { margin-left: auto; font-weight: 700; color: var(--figb); white-space: nowrap; font-size: 13px; }
+  .es .perche { font-size: 11px; color: var(--tenue); white-space: nowrap; }
+  .risposte { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; margin-top: 6px; }
+  .gruppo { padding: 7px 10px; border-radius: 9px; }
+  .gruppo h3 { font-size: 12.5px; font-weight: 700; margin-bottom: 3px; }
+  .gruppo.conclusive { background: var(--figb-velo); } .gruppo.conclusive h3 { color: var(--figb); }
+  .gruppo.invitanti { background: var(--oro-velo); } .gruppo.invitanti h3 { color: #8a6a1c; }
+  .righe { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 10px; font-size: 12px; }
+  .righe b { font-weight: 800; white-space: nowrap; }
+  .asta { display: inline-block; white-space: nowrap; font-weight: 700; font-size: 13px; padding: 3px 10px; border-radius: 999px; background: #fff; border: 1px solid var(--linea); }
+  .asta .f { color: var(--oro); margin: 0 5px; }
+  .stay { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin-top: 6px; }
+  .stay div { padding: 6px 8px; border-radius: 9px; background: var(--figb-velo); font-size: 11.5px; line-height: 1.3; text-align: center; }
+  .stay div b { display: block; font-size: 15px; color: var(--figb); }
+  .scenari { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin-top: 6px; }
+  .scenari div { padding: 6px 9px; border-radius: 9px; background: var(--avorio); font-size: 11.5px; line-height: 1.35; }
+  .lato { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 14px; align-items: center; }
+</style>
+</head>
+<body>
+<div class="foglio">
+  <header>
+    <div class="occhiello">Beginner course</div>
+    <h1 class="display">Opening and Response</h1>
+    <p class="sotto">1NT and 2NT describe the hand almost completely: responder adds up the points and picks the contract.</p>
+    <div class="marchio"><img src="../../../../public/logo-bridgelab.svg" alt=""></div>
+  </header>
+
+  <main>
+    <section class="riquadro">
+      <div class="tit"><span class="num">1</span><h2 class="display">The 1NT opening</h2></div>
+      <div class="regola">15, 16 or 17 HCP and a balanced hand (4-3-3-3, 4-4-3-2, 5-3-3-2): open 1NT, which takes priority over a suit opening.</div>
+      <p>It promises at least two cards in every suit.</p>
+      <div class="esempi">
+        <div class="es"><div data-mano="KQ76.AQ62.KQ7.98" class="in-riga"></div><span class="perche">16 HCP, 4-4-3-2</span><span class="r">1NT</span></div>
+        <div class="es"><div data-mano="J6.KQ7.KJ2.AJ854" class="in-riga"></div><span class="perche">15 HCP, 5-3-3-2</span><span class="r">1NT</span></div>
+      </div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">2</span><h2 class="display">Responder is the captain</h2></div>
+      <p>Responder knows opener holds 15–17, adds their own points and chooses the level. Responses are sign-offs, invitations or forcing bids.</p>
+      <div class="risposte">
+        <div class="gruppo conclusive">
+          <h3>Sign-offs · opener passes</h3>
+          <div class="righe">
+            <b>2♥ 2♠</b><span>weak hand (0–7) with 5+ cards: part score</span>
+            <b>3NT</b><span>game values, no fit</span>
+            <b>4♥ 4♠</b><span>a sure fit and game values</span>
+          </div>
+        </div>
+        <div class="gruppo invitanti">
+          <h3>Invitations · opener decides</h3>
+          <div class="righe">
+            <b>2NT</b><span>with 8 HCP: opener passes with 15, bids 3NT with 16–17</span>
+            <b>3♥ 3♠</b><span>"raise with a maximum, otherwise pass"</span>
+          </div>
+        </div>
+      </div>
+      <div class="esempi">
+        <div class="es"><span style="font-size:11px;color:var(--tenue)">over 1NT</span><div data-mano="AQ8743.K5.J42.76" class="in-riga"></div><span class="perche">10 HCP, 6 spades: fit and game</span><span class="r">4♠</span></div>
+        <div class="es"><span style="font-size:11px;color:var(--tenue)">over 1NT</span><div data-mano="876.J109652.42.76" class="in-riga"></div><span class="perche">1 HCP, 6 hearts: 2♥ beats 1NT</span><span class="r">2♥</span></div>
+      </div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">3</span><h2 class="display">Stayman: 2♣</h2></div>
+      <p>With <b>at least 8 HCP</b> and a four- or five-card major, responder asks: "do you have four hearts or four spades?"</p>
+      <div class="stay">
+        <div><b>2♦</b>neither 4 hearts nor 4 spades</div>
+        <div><b>2♥</b>4 hearts, fewer than 4 spades</div>
+        <div><b>2♠</b>4 spades, fewer than 4 hearts</div>
+        <div><b>2NT</b>4 hearts and 4 spades</div>
+      </div>
+      <div class="lato" style="margin-top:7px">
+        <div class="es"><div data-mano="KJ76.A842.65.K83" class="in-riga"></div></div>
+        <p style="font-size:12px"><span class="asta">1NT<span class="f">–</span>2♣<span class="f">–</span>2♥<span class="f">–</span>4♥</span> 4-4 fit found, game values.</p>
+      </div>
+      <div class="lato" style="margin-top:6px">
+        <div class="es"><span style="font-size:11px;color:var(--tenue)">opener</span><div data-mano="AK86.Q93.KJ7.A84" class="in-riga"></div></div>
+        <p style="font-size:12px">Over 2♣ opener bids <b>2♠</b>: four spades and fewer than four hearts.</p>
+      </div>
+      <div class="scenari">
+        <div><b>4-4 fit found</b>: game, or slam.</div>
+        <div><b>No fit</b>: play in notrump, at the level the points allow.</div>
+        <div><b>A 5-3 fit still possible</b>: responder bids the five-card suit.</div>
+      </div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">4</span><h2 class="display">The 2NT opening</h2></div>
+      <div class="regola">21, 22 or 23 HCP and a balanced hand: no singletons, no voids, no six-card suits.</div>
+      <div class="due" style="gap:14px">
+        <div class="righe" style="align-content:start">
+          <b>Pass</b><span>part-score hand</span>
+          <b>3♥ 3♠</b><span>5+ card suit, game values: opener raises with a fit, otherwise bids 3NT</span>
+          <b>3♣</b><span>Stayman: 3♦ no four-card major, 3♥ four hearts, 3♠ four spades, 3NT both</span>
+          <b>3NT</b><span>game with no four-card major: to play</span>
+        </div>
+        <div>
+          <div class="es"><div data-mano="95.J965.865.AJ92" class="in-riga"></div></div>
+          <p style="margin-top:5px;font-size:12px"><span class="asta">2NT<span class="f">–</span>3♣<span class="f">–</span>3♥<span class="f">–</span>4♥</span></p>
+          <div class="es" style="margin-top:8px"><span style="font-size:11px;color:var(--tenue)">over 2NT</span><div data-mano="43.K52.AJ952.976" class="in-riga"></div><span class="r">3NT</span></div>
+          <p class="nota" style="margin-top:5px">8 HCP, no four-card major: the side holds 29–31, so play 3NT. This direct 3NT denies a four-card major; opener's 3NT after 3♣ shows both.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer><span>BridgeLab · Beginner course</span><span>bridgelab.it</span></footer>
+</div>
+<script src="../../carte.js"></script>
+</body>
+</html>

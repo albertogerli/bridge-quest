@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>L'apertore descrive</title>
+<link rel="stylesheet" href="../base.css">
+<link rel="stylesheet" href="../infografica.css">
+<style>
+  main { gap: 9px; }
+  .riquadro { padding: 9px 15px; }
+  p, li { font-size: 12.5px; }
+  .tipi { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
+  .tipo { padding: 7px 10px; border-radius: 9px; background: var(--figb-velo); }
+  .tipo h3 { font-size: 13px; font-weight: 700; color: var(--figb); }
+  .tipo p { font-size: 11.5px; }
+  .fasce { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 7px; margin-bottom: 6px; }
+  .fascia { padding: 8px 12px; border-radius: 10px; background: var(--figb-velo); }
+  .fascia.rov { background: var(--oro-velo); }
+  .fascia b { display: block; font-family: "Bricolage Grotesque", sans-serif; font-size: 17px; color: var(--figb); line-height: 1.1; }
+  .fascia.rov b { color: #8a6a1c; }
+  .fascia span { font-size: 11.5px; }
+  .es { display: grid; gap: 3px; padding: 7px 10px; border-radius: 10px; background: var(--avorio); --fs: 12.5px; }
+  .es .asta { font-size: 10.5px; font-weight: 700; color: var(--tenue); letter-spacing: 0.04em; }
+  .es .risp { font-size: 11.5px; }
+  .es .risp b { color: var(--figb); }
+  .esempi { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 7px; margin-top: 6px; }
+  .tabella { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .tabella th { text-align: left; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--tenue); font-weight: 600; padding: 0 6px 4px; }
+  .tabella td { padding: 4px 6px; border-top: 1px solid var(--linea); vertical-align: top; }
+  .tabella td.cosa { font-weight: 700; white-space: nowrap; }
+  .tabella td.val { font-weight: 700; color: var(--figb); white-space: nowrap; }
+</style>
+</head>
+<body>
+<div class="foglio">
+  <header>
+    <div class="occhiello">Corso Fiori</div>
+    <h1 class="display">L'apertore descrive</h1>
+    <p class="sotto">Alla seconda dichiarazione l'apertore racconta quanto è forte e com'è fatta la sua mano: al compagno ne servono due per capirlo.</p>
+    <div class="marchio"><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+  </header>
+
+  <main>
+    <section class="riquadro">
+      <div class="tit"><span class="num">1</span><h2 class="display">Decidere o descrivere?</h2></div>
+      <div class="tipi">
+        <div class="tipo"><h3>Risposta non forzante</h3><p>L'apertore <b>decide</b>: passo, invito o manche.</p></div>
+        <div class="tipo"><h3>Risposta 1 su 1</h3><p>Descrive <b>forza e distribuzione</b>.</p></div>
+        <div class="tipo"><h3>Risposta 2 su 1</h3><p>Descrive <b>solo la distribuzione</b>: la manche è già garantita.</p></div>
+      </div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">2</span><h2 class="display">Diritto e Rovescio</h2></div>
+      <div class="fasce">
+        <div class="fascia"><b>Diritto · 12-15</b><span>Si descrive restando entro il Livello di Guardia.</span></div>
+        <div class="fascia rov"><b>Rovescio · 16-20</b><span>Supera il Livello di Guardia per mostrare la forza in più.</span></div>
+      </div>
+      <div class="regola blu"><b>Livello di Guardia</b>: l'ultimo contratto oltre il quale, senza fit e con soli 18-19 punti in linea, non c'è più certezza di un risultato ragionevole.</div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">3</span><h2 class="display">Diritto dopo una risposta 1 su 1</h2></div>
+      <div class="fasce" style="margin-bottom:0">
+        <div class="fascia"><b>Bilanciata</b><span>Livello di Guardia = <b style="display:inline;font-size:13px">1NT</b></span></div>
+        <div class="fascia"><b>Sbilanciata</b><span>Livello di Guardia = <b style="display:inline;font-size:13px">2 nel colore d'apertura</b></span></div>
+      </div>
+      <div class="esempi">
+        <div class="es">
+          <span class="asta">1♥ – 1♠ – ?</span>
+          <div data-mano="J7.KQ943.AQ65.J7" class="in-riga"></div>
+          <span class="risp">Sbilanciata, guardia a 2♥: le quadri stanno sotto → <b>2♦</b>.</span>
+        </div>
+        <div class="es">
+          <span class="asta">1♣ – 1♠ – ?</span>
+          <div data-mano="AK7.QJ43.42.KJ86" class="in-riga"></div>
+          <span class="risp">Bilanciata, guardia a 1NT: le cuori starebbero sopra → <b>1NT</b>.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">4</span><h2 class="display">Rovescio: si supera la guardia</h2></div>
+      <div class="regola" style="margin:0">Dopo una risposta 1 su 1, con mano di Rovescio l'apertore si descrive sempre superando il Livello di Guardia.</div>
+      <div class="esempi">
+        <div class="es">
+          <span class="asta">1♣ – 1♦ – ?</span>
+          <div data-mano="AKJ7.Q43.4.AKJ86" class="in-riga"></div>
+          <span class="risp">Le picche a salto → <b>2♠</b>: almeno 16 punti, quattro picche e fiori lunghe.</span>
+        </div>
+        <div class="es">
+          <span class="asta">1♥ – 1♠ – ?</span>
+          <div data-mano="A7.AQ943.4.AKJ86" class="in-riga"></div>
+          <span class="risp">Entro la guardia sarebbe 2♣; il salto → <b>3♣</b> mostra la forza.</span>
+        </div>
+        <div class="es">
+          <span class="asta">1♦ – 1♠ – ?</span>
+          <div data-mano="A987.AK3.KQ874.6" class="in-riga"></div>
+          <span class="risp">16 punti e quattro picche: appoggio a livello 3 → <b>3♠</b>.</span>
+        </div>
+        <div class="es" style="align-content:center">
+          <span class="asta">BILANCIATA DI 18-20</span>
+          <span class="risp">Troppo per 1NT, troppo poco per aprire 2NT: salto a <b>2NT</b> (1♥ – 1♠ – 2NT).</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="due">
+      <section class="riquadro">
+        <div class="tit"><span class="num">5</span><h2 class="display">Dopo un 2 su 1</h2></div>
+        <p style="font-size:11.5px">La risposta è forzante fino a manche: l'apertore descrive, senza distinguere Diritto e Rovescio.</p>
+        <div class="es" style="margin-top:5px">
+          <span class="asta">OVEST 1♦ – EST 2♣ – OVEST ?</span>
+          <div data-mano="93.AK73.KQJ5.983" class="in-riga"></div>
+          <span class="risp">Niente da aggiungere, ma si descrive → <b>2♥</b>. Est, rassicurato nel colore che lo preoccupava, dirà 3NT.</span>
+        </div>
+      </section>
+
+      <section class="riquadro">
+        <div class="tit"><span class="num">6</span><h2 class="display">Poi il rispondente</h2></div>
+        <p style="font-size:11.5px">Dopo una risposta 1 su 1, sentite due dichiarazioni dell'apertore:</p>
+        <table class="tabella" style="margin-top:3px">
+          <tr><td class="cosa">1NT, vecchio colore al minimo</td><td class="val">non forzante</td></tr>
+          <tr><td class="cosa">2NT, vecchio colore a salto</td><td class="val">invitante</td></tr>
+          <tr><td class="cosa">colore nuovo</td><td class="val">forzante</td></tr>
+        </table>
+        <p class="nota" style="margin-top:4px">Il colore nuovo è l'unico modo per far parlare ancora l'apertore: fa da pungolo e non richiede lunghezza.</p>
+      </section>
+    </div>
+  </main>
+
+  <footer><span>BridgeLab · Corso Fiori</span><span>bridgelab.it</span></footer>
+</div>
+<script src="../carte.js"></script>
+</body>
+</html>

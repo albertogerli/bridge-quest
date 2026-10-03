@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>L'apertura e la risposta</title>
+<link rel="stylesheet" href="../base.css">
+<link rel="stylesheet" href="../infografica.css">
+<style>
+  main { gap: 11px; }
+  .riquadro { padding: 12px 15px; }
+  p, li { font-size: 13px; }
+  .esempi { display: grid; gap: 4px; margin-top: 6px; }
+  .es { display: flex; align-items: center; gap: 10px; padding: 4px 8px; border-radius: 8px; background: var(--avorio); --fs: 12.5px; }
+  .es .r { margin-left: auto; font-weight: 700; color: var(--figb); white-space: nowrap; font-size: 13px; }
+  .es .perche { font-size: 11px; color: var(--tenue); white-space: nowrap; }
+  .risposte { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; margin-top: 6px; }
+  .gruppo { padding: 7px 10px; border-radius: 9px; }
+  .gruppo h3 { font-size: 12.5px; font-weight: 700; margin-bottom: 3px; }
+  .gruppo.conclusive { background: var(--figb-velo); } .gruppo.conclusive h3 { color: var(--figb); }
+  .gruppo.invitanti { background: var(--oro-velo); } .gruppo.invitanti h3 { color: #8a6a1c; }
+  .righe { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 10px; font-size: 12px; }
+  .righe b { font-weight: 800; white-space: nowrap; }
+  .asta { display: inline-block; white-space: nowrap; font-weight: 700; font-size: 13px; padding: 3px 10px; border-radius: 999px; background: #fff; border: 1px solid var(--linea); }
+  .asta .f { color: var(--oro); margin: 0 5px; }
+  .stay { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin-top: 6px; }
+  .stay div { padding: 6px 8px; border-radius: 9px; background: var(--figb-velo); font-size: 11.5px; line-height: 1.3; text-align: center; }
+  .stay div b { display: block; font-size: 15px; color: var(--figb); }
+  .scenari { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin-top: 6px; }
+  .scenari div { padding: 6px 9px; border-radius: 9px; background: var(--avorio); font-size: 11.5px; line-height: 1.35; }
+  .lato { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 14px; align-items: center; }
+</style>
+</head>
+<body>
+<div class="foglio">
+  <header>
+    <div class="occhiello">Corso Fiori</div>
+    <h1 class="display">L'apertura e la risposta</h1>
+    <p class="sotto">1SA e 2SA dicono quasi tutto della mano: il rispondente somma i punti e decide il contratto.</p>
+    <div class="marchio"><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+  </header>
+
+  <main>
+    <section class="riquadro">
+      <div class="tit"><span class="num">1</span><h2 class="display">L'apertura di 1SA</h2></div>
+      <div class="regola">15, 16 o 17 punti e mano bilanciata (4-3-3-3, 4-4-3-2, 5-3-3-2): si apre 1SA, che prevale sull'apertura a colore.</div>
+      <p>Promette almeno due carte in ogni colore.</p>
+      <div class="esempi">
+        <div class="es"><div data-mano="KQ76.AQ62.KQ7.98" class="in-riga"></div><span class="perche">16 punti, 4-4-3-2</span><span class="r">1SA</span></div>
+        <div class="es"><div data-mano="J6.KQ7.KJ2.AJ854" class="in-riga"></div><span class="perche">15 punti, 5-3-3-2</span><span class="r">1SA</span></div>
+      </div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">2</span><h2 class="display">Il rispondente è il capitano</h2></div>
+      <p>Sa che l'apertore ha 15–17: somma i suoi punti e sceglie il livello. Le risposte sono conclusive, invitanti o forzanti.</p>
+      <div class="risposte">
+        <div class="gruppo conclusive">
+          <h3>Conclusive · l'apertore passa</h3>
+          <div class="righe">
+            <b>2♥ 2♠</b><span>mano debole (0–7) con 5+ carte: parziale</span>
+            <b>3SA</b><span>punti per la manche, senza fit</span>
+            <b>4♥ 4♠</b><span>fit sicuro e punti per la manche</span>
+          </div>
+        </div>
+        <div class="gruppo invitanti">
+          <h3>Invitanti · l'apertore decide</h3>
+          <div class="righe">
+            <b>2SA</b><span>con 8 punti: l'apertore passa con 15, dice 3SA con 16–17</span>
+            <b>3♥ 3♠</b><span>«rialza con il massimo, altrimenti passa»</span>
+          </div>
+        </div>
+      </div>
+      <div class="esempi">
+        <div class="es"><span style="font-size:11px;color:var(--tenue)">su 1SA</span><div data-mano="AQ8743.K5.J42.76" class="in-riga"></div><span class="perche">10 punti, 6 picche: fit e manche</span><span class="r">4♠</span></div>
+        <div class="es"><span style="font-size:11px;color:var(--tenue)">su 1SA</span><div data-mano="876.J109652.42.76" class="in-riga"></div><span class="perche">1 punto, 6 cuori: meglio 2♥ che 1SA</span><span class="r">2♥</span></div>
+      </div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">3</span><h2 class="display">La Stayman: 2♣</h2></div>
+      <p>Con <b>almeno 8 punti</b> e una nobile quarta o quinta, il rispondente chiede: «hai quattro carte di cuori o di picche?»</p>
+      <div class="stay">
+        <div><b>2♦</b>né 4 cuori né 4 picche</div>
+        <div><b>2♥</b>4 cuori, meno di 4 picche</div>
+        <div><b>2♠</b>4 picche, meno di 4 cuori</div>
+        <div><b>2SA</b>4 cuori e 4 picche</div>
+      </div>
+      <div class="lato" style="margin-top:7px">
+        <div class="es"><div data-mano="KJ76.A842.65.K83" class="in-riga"></div></div>
+        <p style="font-size:12px"><span class="asta">1SA<span class="f">–</span>2♣<span class="f">–</span>2♥<span class="f">–</span>4♥</span> fit 4-4 trovato, punti per la manche.</p>
+      </div>
+      <div class="lato" style="margin-top:6px">
+        <div class="es"><span style="font-size:11px;color:var(--tenue)">apertore</span><div data-mano="AK86.Q93.KJ7.A84" class="in-riga"></div></div>
+        <p style="font-size:12px">Su 2♣ risponde <b>2♠</b>: quattro picche e meno di quattro cuori.</p>
+      </div>
+      <div class="scenari">
+        <div><b>Fit 4-4 trovato</b>: manche, o slam.</div>
+        <div><b>Fit non trovato</b>: si gioca a senz'atout, al livello dei punti.</div>
+        <div><b>Fit 5-3 ancora possibile</b>: il rispondente dichiara la sua quinta.</div>
+      </div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">4</span><h2 class="display">L'apertura di 2SA</h2></div>
+      <div class="regola">21, 22 o 23 punti e mano bilanciata: niente singoli, vuoti o colori di sei carte.</div>
+      <div class="due" style="gap:14px">
+        <div class="righe" style="align-content:start">
+          <b>Passo</b><span>mano da parziale</span>
+          <b>3♥ 3♠</b><span>colore di 5+ carte, forza di manche: l'apertore rialza con il fit, altrimenti 3SA</span>
+          <b>3♣</b><span>Stayman: 3♦ nessuna quarta nobile, 3♥ quattro cuori, 3♠ quattro picche, 3SA entrambe</span>
+          <b>3SA</b><span>manche senza quarte nobili: si gioca lì</span>
+        </div>
+        <div>
+          <div class="es"><div data-mano="95.J965.865.AJ92" class="in-riga"></div></div>
+          <p style="margin-top:5px;font-size:12px"><span class="asta">2SA<span class="f">–</span>3♣<span class="f">–</span>3♥<span class="f">–</span>4♥</span></p>
+          <div class="es" style="margin-top:8px"><span style="font-size:11px;color:var(--tenue)">su 2SA</span><div data-mano="43.K52.AJ952.976" class="in-riga"></div><span class="r">3SA</span></div>
+          <p class="nota" style="margin-top:5px">8 punti, nessuna quarta nobile: la linea ha 29–31 punti, si gioca 3SA. Questo 3SA diretto nega le quarte; il 3SA dell'apertore dopo 3♣ le mostra entrambe.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer><span>BridgeLab · Corso Fiori</span><span>bridgelab.it</span></footer>
+</div>
+<script src="../carte.js"></script>
+</body>
+</html>

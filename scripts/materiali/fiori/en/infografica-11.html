@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Overcall</title>
+<link rel="stylesheet" href="../../base.css">
+<link rel="stylesheet" href="../../infografica.css">
+<style>
+  main { gap: 8px; }
+  .riquadro { padding: 9px 14px; }
+  .tipi { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
+  .tipo { padding: 7px 10px; border-radius: 9px; background: var(--figb-velo); }
+  .tipo h3 { font-size: 13px; color: var(--figb); font-weight: 700; margin-bottom: 2px; }
+  .tipo p { font-size: 11.5px; }
+  .casi { display: grid; gap: 7px; }
+  .casi.due-col { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .caso { display: grid; gap: 3px; padding: 7px 10px; border-radius: 10px; background: var(--avorio); }
+  .caso .asta { font-size: 11px; font-weight: 600; color: var(--tenue); letter-spacing: 0.02em; }
+  .caso .mano { --fs: 13px; }
+  .casi[style*="--fs"] .mano { --fs: 12px; }
+  .caso .esito { font-size: 11.5px; line-height: 1.35; color: #2c3242; }
+  .caso .esito b.dich { color: var(--figb); font-size: 13px; }
+  .regola.blu { border-left-color: var(--figb); background: var(--figb-velo); }
+  .contro-semi { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin: 2px 0 7px; }
+  .contro-semi div { padding: 5px 8px; border-radius: 8px; background: var(--avorio); font-size: 11.5px; text-align: center; }
+  .contro-semi b { display: block; font-size: 13px; color: var(--figb); }
+</style>
+</head>
+<body>
+<div class="foglio">
+  <header>
+    <div class="occhiello">Beginner course</div>
+    <h1 class="display">The Overcall</h1>
+    <p class="sotto">How to enter the opponents' auction: three ways, each with its own requirements.</p>
+    <div class="marchio"><img src="../../../../public/logo-bridgelab.svg" alt=""></div>
+  </header>
+
+  <main>
+    <section class="riquadro">
+      <div class="tit"><span class="num">1</span><h2 class="display">Three ways to compete</h2></div>
+      <p style="margin-bottom:6px">An overcall is the first call other than Pass by the side opposite the opener. It is a <b>free choice</b>: you come in only when it pays.</p>
+      <div class="tipi">
+        <div class="tipo"><h3>Double</h3><p>Short in the opponent's suit, the other three suits playable. 12–16 points.</p></div>
+        <div class="tipo"><h3>1NT</h3><p>Like a 1NT opening: 15–17 balanced, with a <b>stopper</b> in opener's suit.</p></div>
+        <div class="tipo"><h3>Suit overcall</h3><p>A very good suit, or plenty of points that fit neither the double nor 1NT. 16/17 at most.</p></div>
+      </div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">2</span><h2 class="display">The takeout double</h2></div>
+      <div class="regola blu">The double asks partner to choose a suit and bid it at the level partner thinks you can play.</div>
+      <div class="contro-semi">
+        <div><b>over 1♣ or 1♦</b>both majors: 4-4 or 4-3, never 4-2</div>
+        <div><b>over 1♥</b>promises 4 spades</div>
+        <div><b>over 1♠</b>promises 4 hearts</div>
+      </div>
+      <div class="casi due-col">
+        <div class="caso"><span class="asta">South opens 1♦, West to bid</span><div data-mano="KJ98.AQ74.5.K983" class="in-riga"></div><span class="esito"><b class="dich">Double</b>: both four-card majors, a singleton diamond and the right strength.</span></div>
+        <div class="caso"><span class="asta">South opens 1♣, your call</span><div data-mano="9854.K4.A765.AJ3" class="in-riga"></div><span class="esito"><b class="dich">Pass</b>: the points are there, but hearts are missing. Partner would feel betrayed.</span></div>
+      </div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">3</span><h2 class="display">The doubler's partner</h2></div>
+      <div class="regola">Advancer must pick a suit: the minimum for bidding at the cheapest level is zero points.</div>
+      <div class="casi" style="grid-template-columns:repeat(3, minmax(0, 1fr));--fs:12px">
+        <div class="caso"><span class="asta">1♦ – Double – Pass – ?</span><div data-mano="54.J986.952.Q532" class="in-riga"></div><span class="esito"><b class="dich">1♥</b>: never pass. 1♦ doubled would be a disaster.</span></div>
+        <div class="caso"><span class="asta">1♦ – Double – Pass – ?</span><div data-mano="KJ954.A76.95.K64" class="in-riga"></div><span class="esito"><b class="dich">4♠</b>: bid as if you could see partner's cards, at least 4-3 in the majors.</span></div>
+        <div class="caso"><span class="asta">1♦ – Double – Pass – ?</span><div data-mano="K42.Q86.AJ10.K954" class="in-riga"></div><span class="esito"><b class="dich">3NT</b>: enough points, no major fit, a diamond stopper.</span></div>
+      </div>
+    </section>
+
+    <div class="due">
+      <section class="riquadro">
+        <div class="tit"><span class="num">4</span><h2 class="display">The 1NT overcall</h2></div>
+        <p>Same strength and shape as a 1NT opening. The opponents already have a suit to lead, so you <b>need a stopper</b> in opener's suit.</p>
+        <div class="caso" style="margin-top:6px"><span class="asta">South opens 1♥, West to bid</span><div data-mano="AJ5.KJ7.AJ1053.K8" class="in-riga"></div><span class="esito"><b class="dich">1NT</b>: 17 points, balanced, a heart stopper.</span></div>
+      </section>
+
+      <section class="riquadro">
+        <div class="tit"><span class="num">5</span><h2 class="display">The suit overcall</h2></div>
+        <p><b>At the one level</b>: 8–16 points, 5 cards with at least one honor (rarely 4 with two honors), or any 6 cards.</p>
+        <div class="caso" style="margin-top:5px"><span class="asta">South opens 1♦</span><div data-mano="82.AKJ1042.86.983" class="in-riga"></div><span class="esito"><b class="dich">1♥</b>: 8 points, all of them in the suit.</span></div>
+      </section>
+    </div>
+
+    <div class="due">
+      <section class="riquadro">
+        <div class="tit"><span class="num">6</span><h2 class="display">Suit overcall, two level</h2></div>
+        <p>10–16 points, usually <b>6 cards</b> with at least one honor. Exception: over 1♠, five hearts are enough, with an honor and 13+ points.</p>
+        <div class="caso" style="margin-top:5px"><span class="asta">South opens 1♠</span><div data-mano="54.98.KQJ862.A76" class="in-riga"></div><span class="esito"><b class="dich">2♦</b>: six cards with honors, 10 points.</span></div>
+        <p class="nota">Above 16/17 points don't overcall: double first, then bid your suit.</p>
+      </section>
+
+      <section class="riquadro">
+        <div class="tit"><span class="num">7</span><h2 class="display">The overcaller's partner</h2></div>
+        <p>Advancer starts from the <b>guaranteed minimum</b>. With <b>9+ points</b> never pass: 16 + 9 = 25, game is possible. You may raise with only three cards.</p>
+        <div class="regola" style="margin:8px 0 0">Before you bid a suit, remember partner will lead it. If that makes your hair stand on end, the overcall is wrong.</div>
+        <p class="nota">In competitive auctions, 70% of the time opener's side buys the contract: every overcall guides the defense.</p>
+      </section>
+    </div>
+  </main>
+
+  <footer><span>BridgeLab · Beginner course</span><span>bridgelab.it</span></footer>
+</div>
+<script src="../../carte.js"></script>
+</body>
+</html>

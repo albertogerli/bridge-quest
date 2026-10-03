@@ -80,8 +80,8 @@ def main():
         for lid in lesson_ids:
             # Le infografiche disegnate da HTML (scripts/materiali/) hanno le
             # carte esatte per costruzione: un'immagine generata non le
-            # sostituisce mai. Si rifanno con rendi-gioco-della-carta.mjs.
-            if course == "fiori" and (PROJECT_ROOT / "scripts" / "materiali" / "gioco-della-carta" / f"infografica-{lid.zfill(2)}.html").exists():
+            # sostituisce mai. Si rifanno con rendi-materiali.mjs.
+            if course == "fiori" and (PROJECT_ROOT / "scripts" / "materiali" / "fiori" / f"infografica-{lid.zfill(2)}.html").exists():
                 print(f"  lezione {lid}: disegnata da HTML, SKIP")
                 total_skipped += 1
                 continue

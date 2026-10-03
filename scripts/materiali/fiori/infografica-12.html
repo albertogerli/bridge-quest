@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Sviluppi dopo l'intervento avversario</title>
+<link rel="stylesheet" href="../base.css">
+<link rel="stylesheet" href="../infografica.css">
+<style>
+  main { gap: 8px; }
+  .riquadro { padding: 9px 14px; }
+  .cambi { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 7px; }
+  .cambio { padding: 7px 10px; border-radius: 9px; background: var(--figb-velo); }
+  .cambio > b { display: block; color: var(--figb); font-size: 16px; font-family: "Bricolage Grotesque", sans-serif; line-height: 1.1; }
+  .cambio span b { color: var(--inchiostro); }
+  .cambio span { font-size: 11.5px; line-height: 1.35; color: #2c3242; }
+  .casi { display: grid; gap: 7px; }
+  .casi.due-col { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .caso { display: grid; gap: 3px; padding: 7px 10px; border-radius: 10px; background: var(--avorio); }
+  .caso .asta { font-size: 11px; font-weight: 600; color: var(--tenue); letter-spacing: 0.02em; }
+  .caso .mano { --fs: 13px; }
+  .caso .esito { font-size: 11.5px; line-height: 1.35; color: #2c3242; }
+  .caso .esito b.dich { color: var(--figb); font-size: 13px; }
+  .regola.blu { border-left-color: var(--figb); background: var(--figb-velo); }
+  .tabella { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 3px 12px; margin: 4px 0 7px; font-size: 12px; }
+  .tabella dt { font-weight: 700; color: var(--figb); white-space: nowrap; }
+  .tabella dd { color: #2c3242; }
+</style>
+</head>
+<body>
+<div class="foglio">
+  <header>
+    <div class="occhiello">Corso Fiori</div>
+    <h1 class="display">Sviluppi dopo l'intervento avversario</h1>
+    <p class="sotto">Come proseguire quando l'avversario interviene: chi parla adesso lo fa liberamente.</p>
+    <div class="marchio"><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+  </header>
+
+  <main>
+    <section class="riquadro">
+      <div class="tit"><span class="num">1</span><h2 class="display">Dichiarazioni obbligate e libere</h2></div>
+      <p style="margin-bottom:6px">Senza intervento il rispondente deve «tenere aperto» anche con 5 punti: l'apertore potrebbe averne 20. Dopo l'intervento l'apertore riparlerà comunque, quindi chi dichiara lo fa <b>liberamente</b>.</p>
+      <div class="regola">Una dichiarazione libera mostra sempre una mano contenta di dichiarare: requisiti non minimi.</div>
+      <div class="cambi">
+        <div class="cambio"><b>a</b><span>Con 4–5 punti e mano nulla <b>si passa</b>.</span></div>
+        <div class="cambio"><b>b</b><span>I Senza non sono più d'obbligo: promettono il <b>fermo</b> nel colore avversario.</span></div>
+        <div class="cambio"><b>c</b><span>Ogni colore nuovo è <b>almeno quinto</b>.</span></div>
+        <div class="cambio"><b>d</b><span>Si aggiungono il <b>Contro</b> (su un colore) e il <b>Surcontro</b> (sul Contro).</span></div>
+      </div>
+      <div class="caso" style="margin-top:7px"><span class="asta">1♦ – 1♠ – ?</span><div data-mano="Jxx.Kx.Qxxx.Qxxx" class="in-riga"></div><span class="esito"><b class="dich">Passo</b>: senza intervento avresti detto 2♦. Ora non sei obbligato: con 7 punti senza niente di speciale, decide il compagno.</span></div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">2</span><h2 class="display">Su intervento di Contro</h2></div>
+      <div class="regola blu">Il Surcontro (11+ punti, qualunque mano) è l'unica dichiarazione forte. La descrizione si rimanda al giro dopo.</div>
+      <dl class="tabella">
+        <dt>Colore nuovo</dt><dd>non forzante: proposta di contratto, almeno 5–6 buone carte, meno di 11 punti</dd>
+        <dt>Appoggi</dt><dd>come senza intervento, ma sempre con meno di 11 punti</dd>
+        <dt>1NT</dt><dd>7–10 punti, contenti di giocarlo, con i fermi nei colori del contrante</dd>
+      </dl>
+      <div class="casi due-col">
+        <div class="caso"><span class="asta">1♥ – Contro – ?</span><div data-mano="Kx.Jx.AQx.KQJ10xx" class="in-riga"></div><span class="esito"><b class="dich">Surcontro</b>, non 2♣: dopo il Contro 2♣ mostrerebbe meno di 11 punti.</span></div>
+        <div class="caso"><span class="asta">1♥ – Contro – ?</span><div data-mano="xx.Jx.xxx.KQ10xxx" class="in-riga"></div><span class="esito"><b class="dich">2♣</b>: «sarei contento di giocare 2♣». Buon colore sesto, niente Surcontro.</span></div>
+      </div>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">3</span><h2 class="display">Su intervento a colore</h2></div>
+      <div class="regola blu">Un colore nuovo è forzante e almeno quinto. Il Contro promette 8+ punti (illimitato) e cerca i fit 4-4.</div>
+      <div class="casi due-col">
+        <div class="caso"><span class="asta">1♦ – 1♠ – ?</span><div data-mano="xx.AQxxx.Qx.KJxx" class="in-riga"></div><span class="esito"><b class="dich">2♥</b>: il colore è quinto e i punti bastano per il livello due.</span></div>
+        <div class="caso" style="align-content:center"><span class="esito"><b class="dich">Contro</b>: «vorrei giocare nei colori rimasti». Con i punti per parlare ma senza la lunghezza per un colore nuovo, chiede all'apertore di dichiarare altri colori, o i Senza se può.</span></div>
+      </div>
+      <p class="nota">Gli appoggi restano quelli di sempre: per appoggiare non servono 5 carte.</p>
+    </section>
+
+    <section class="riquadro">
+      <div class="tit"><span class="num">4</span><h2 class="display">Il comportamento dell'apertore</h2></div>
+      <div class="regola">Con le mani normali, bilanciate o sbilanciate, l'apertore passa. Con fit quarto appoggia il compagno, secondo la sua forza.</div>
+      <p style="margin-bottom:6px">Ridichiara liberamente solo con una sbilanciata di Diritto con un'<b>ottima monocolore</b> o una <b>bicolore di almeno 10 carte</b>; con la bilanciata 18–20 e il fermo dice i Senza al livello minimo. Un colore ridichiarato spontaneamente è sempre un «signor colore».</p>
+      <div class="casi due-col">
+        <div class="caso"><span class="asta">1♦ – 1♥ – 1♠ – 2♥ – ?</span><div data-mano="Jx.Kx.AQxxx.Qxxx" class="in-riga"></div><span class="esito"><b class="dich">Passo</b>: una bicolore al minimo di punti e di distribuzione è una mano normale.</span></div>
+        <div class="caso"><span class="asta">1♣ – Passo – 1♥ – 1♠ – ?</span><div data-mano="AQxx.x.Qx.KQxxxx" class="in-riga"></div><span class="esito"><b class="dich">Passo</b>: sbilanciata di Diritto, ma senza un colore eccezionale né fit.</span></div>
+      </div>
+    </section>
+  </main>
+
+  <footer><span>BridgeLab · Corso Fiori</span><span>bridgelab.it</span></footer>
+</div>
+<script src="../carte.js"></script>
+</body>
+</html>

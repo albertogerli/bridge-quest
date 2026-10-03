@@ -9,7 +9,7 @@ mostrata parziale, oppure solo Nord-Sud. Le correzioni vanno decise da chi ha
 scritto il materiale.
 
 Sorgenti: `scripts/materiali/gioco-della-carta/`. Per rigenerare tutto:
-`node scripts/materiali/rendi-gioco-della-carta.mjs`.
+`node scripts/materiali/rendi-materiali.mjs`.
 
 ## Mani impossibili
 
@@ -59,3 +59,32 @@ alla voce dell'insegnante). Vanno lette e approvate, oppure tolte.
   «urlate».
 - Le infografiche delle lezioni 1–6 sono riassunti nuovi, scritti dal testo
   ufficiale. Usano solo esempi le cui mani tornano.
+
+# Corso Fiori, lezioni 0 e 7–12: incongruenze nel database
+
+Rifacendo le infografiche delle altre lezioni del corso Fiori (fonte: i
+moduli in produzione, `lesson_modules`), sono emerse incongruenze fra teoria e
+quiz della stessa lezione, o con lo standard. **Le infografiche seguono la
+teoria del database**; le correzioni vanno fatte sul database (UPDATE), non
+qui.
+
+| Lezione | Cosa non torna |
+|---|---|
+| 0 | «Attacca il giocatore alla sinistra del Mazziere»: attacca chi siede alla sinistra del **giocante**. L'infografica non lo dice. |
+| 7, 8 | 2SA = 21–23 e 2♣ forte = 24+ («FIGB Fiori 2022»). Altri materiali del progetto usano 20–21 e 22+: va deciso quale vale. |
+| 8 | Stayman: c'è la risposta 2SA = quattro cuori e quattro picche (e 3SA dopo 3♣ su 2SA). Nello standard del progetto 2SA su Stayman non esiste. |
+| 8 | La teoria dice che 2♥/2♠ su 1SA sono naturali e conclusivi; il quiz dello stesso modulo tratta 2♥ come transfer per le picche. |
+| 9 | Teoria: si risponde da 5 punti, 1SA 5–10, appoggio 5–9. Quiz: 6+, 1SA 6–9, appoggio 6–9. |
+| 10 | Teoria: due fasce (diritto 12–15, rovescio 16–20). Quiz: tre fasce (12–15, 16–18, 19+). |
+| 10 | Esempio «1♣ – 1♠ … dite 1♠»: probabilmente la risposta era 1♦ o 1♥. |
+| 11 | Mano ♠KJ98 ♥AQ74 ♦5 ♣K983, Contro su 1♦: «eventuale tolleranza delle quadri», ma quadri è il colore avversario e la mano ha il singolo. |
+| 11 | Quiz: Contro su 1♥ con ♠AK5 (tre picche), mentre la regola dice che il Contro su 1♥ garantisce quattro picche. |
+| 11 | Mano ♠KJ954 ♥A76 ♦95 ♣K64: «almeno 12 punti», ma ne ha 11. |
+| 12 | «Il Contro promette 8+»; il quiz dice 9+. |
+| 12 | Mano ♠xx ♥AQxx ♦Q10xx ♣Qxx dopo 1♦ – 1♥: Contro senza quattro picche. |
+| 12 | Quiz 1♦ – 1♠ con 11 punti: 2♦ «appoggio invitante», ma con 10–11 l'appoggio è a livello 3. |
+| 12 | Mano ♠x ♥xx ♦AKJxxx ♣AQx: 12 carte. |
+
+Inglese: «The Double Bid» (lezione 11) andrebbe «takeout double»; il titolo
+della lezione 12 usa «intervention», in ACBL si dice «overcall» o
+«competitive bidding».
