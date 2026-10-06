@@ -72,7 +72,7 @@ END $$;
 REVOKE ALL ON FUNCTION public.sync_review_items(jsonb, text) FROM PUBLIC, anon;
 GRANT EXECUTE ON FUNCTION public.sync_review_items(jsonb, text) TO authenticated;
 
-INSERT INTO public.script_applicati (nome) VALUES ('conflitto-ripasso-2026-10.sql')
-ON CONFLICT (nome) DO NOTHING;
+insert into public.script_applicati (nome) values ('conflitto-ripasso-2026-10.sql')
+on conflict (nome) do nothing;
 
 COMMIT;
