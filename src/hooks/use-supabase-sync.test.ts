@@ -167,8 +167,8 @@ it("continua a segnalare gli errori di permessi", async () => {
   expect(statuses).toEqual(["error"]);
 });
 
-it("rilegge le revisioni dopo un conflitto invece di confermare una sovrascrittura", async () => {
-  f.write.mockRejectedValueOnce(new SyncWriteError("40001", "reviews"));
+it.each(["PT409", "40001"])("rilegge le revisioni dopo un conflitto (%s) invece di confermare una sovrascrittura", async (codice) => {
+  f.write.mockRejectedValueOnce(new SyncWriteError(codice, "reviews"));
   renderHook(() => useSupabaseSync());
   await flush();
   expect(statuses).toEqual(["error"]);

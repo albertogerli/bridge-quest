@@ -103,7 +103,9 @@ export function useSupabaseSync() {
     } catch (error) {
       if (!isCurrent()) return;
       // Re-read and merge on the next initial-sync attempt; never overwrite a newer revision.
-      if (error instanceof SyncWriteError && error.code === "40001") hasDoneInitialSync.current = false;
+      // PT409 dal 06/10/2026 (conflitto-ripasso-2026-10.sql); 40001 finché
+      // qualche scheda resta aperta sulla versione vecchia della funzione.
+      if (error instanceof SyncWriteError && (error.code === "PT409" || error.code === "40001")) hasDoneInitialSync.current = false;
       // `segnalaSalvoRete` e non `reportError`: qui arrivano anche i guasti
       // di rete di chi gioca dal telefono, DOPO che retrySafeSyncRequest ha
       // già riprovato con attesa crescente. Il progresso resta in locale e

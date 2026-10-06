@@ -245,6 +245,7 @@ describe("code-less profile failures through the real Supabase SDK", () => {
     ...[
       { label: "permissions", code: "42501", status: 403 },
       { label: "revision conflict", code: "40001", status: 409 },
+      { label: "revision conflict (PostgREST PT409)", code: "PT409", status: 409 },
       { label: "PostgREST auth error", code: "PGRST301", status: 401 },
     ].map(item => ({ ...item, failure: () => new Response(JSON.stringify({
       code: item.code, message: privatePayload, details: privatePayload, hint: privatePayload,
