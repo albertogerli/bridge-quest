@@ -16,7 +16,7 @@
 -- Rigenerare e committare dopo OGNI modifica allo schema, insieme allo script
 -- che l'ha causata.
 --
--- Estratto il: 2026-10-03
+-- Estratto il: 2026-10-07
 -- ============================================================================
 
 SET check_function_bodies = false;
@@ -4299,7 +4299,7 @@ BEGIN
   -- Retry after a lost response is a no-op, even with the preceding revision.
   IF current_state->'items' = normalized THEN RETURN current_state->>'revision'; END IF;
   IF p_expected_revision IS DISTINCT FROM current_state->>'revision' THEN
-    RAISE EXCEPTION 'Review conflict: reload before retry' USING ERRCODE = '40001';
+    RAISE EXCEPTION 'Review conflict: reload before retry' USING ERRCODE = 'PT409';
   END IF;
   DELETE FROM public.review_items WHERE user_id = owner;
   INSERT INTO public.review_items(user_id, lesson_id, module_id, question, wrong_count, box, last_review, next_review)
