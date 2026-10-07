@@ -661,11 +661,12 @@ export function renderEmail(kind: EmailKind, ctx: EmailContext, unsubUrl?: strin
       };
     }
     case "completa_profilo": {
-      // UN NOSTRO ERRORE, NON UN PROMEMORIA. Da agosto a ottobre 2026 la
-      // registrazione non salvava associazione, utente BBO e fascia d'età
-      // (privilegi per colonna su `profiles`, Sentry BRIDGELAB-21). Il tono è
-      // quello di chi chiede scusa: niente XP, niente urgenza finta. Per
-      // questo è transazionale: è un messaggio sul suo account, non marketing.
+      // Da agosto a ottobre 2026 la registrazione non salvava associazione,
+      // utente BBO e fascia d'età (privilegi per colonna su `profiles`, Sentry
+      // BRIDGELAB-21). Il tono è leggero per scelta (Alberto, 07/10/2026: «la
+      // direi un po' più soft»): si dice il vero — quei dati potrebbero non
+      // essere stati salvati — senza farne il centro del messaggio. Niente
+      // XP, niente urgenza finta. Transazionale: riguarda il suo account.
       const profilo = `${SITE}/profilo`;
       const voce = (icona: string, titolo: string, perche: string) => `
         <tr><td style="padding:0 0 10px;">
@@ -687,44 +688,44 @@ export function renderEmail(kind: EmailKind, ctx: EmailContext, unsubUrl?: strin
           voce("💻", "Your BBO username", "So friends recognize you and you can play with them on Bridge Base Online too.") +
           voce("🎂", "Your age group", "So lessons and examples speak to you in the right tone. In your profile it's called “Playing style”."),
       );
-      const heading = T("Ci manca un pezzo del tuo profilo", "A piece of your profile is missing");
+      const heading = T("Un ultimo tocco al tuo profilo", "One last touch to your profile");
       const bodyHtml = T(
         `
-        <p style="margin:0 0 14px;">${hi}, al momento dell'iscrizione a Bridge LAB ci hai detto qualcosa di te. Per un <strong>nostro errore tecnico</strong>, fra agosto e ottobre alcune di queste informazioni non sono state salvate. Ci dispiace: il problema è risolto, ma i dati persi non possiamo recuperarli da soli.</p>
-        <p style="margin:0 0 16px;">Ti bastano trenta secondi per reinserirli dal tuo profilo:</p>
+        <p style="margin:0 0 14px;">${hi}! Ti scriviamo per un piccolo controllo: alcune informazioni che ci hai dato all'iscrizione potrebbero non essere arrivate fino al tuo profilo.</p>
+        <p style="margin:0 0 16px;">Dai un'occhiata, ti bastano trenta secondi:</p>
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${voci}</table>
-        <p style="margin:6px 0 0;">Se li hai già sistemati, puoi ignorare questo messaggio. Grazie della pazienza!</p>`,
+        <p style="margin:6px 0 0;">Se è già tutto a posto, perfetto: puoi ignorare questo messaggio. Buon gioco!</p>`,
         `
-        <p style="margin:0 0 14px;">${hi}, when you joined Bridge LAB you told us a few things about yourself. Because of <strong>a technical error on our side</strong>, between August and October some of that information was not saved. We're sorry: the problem is fixed, but we can't recover the missing details on our own.</p>
-        <p style="margin:0 0 16px;">It takes thirty seconds to add them back from your profile:</p>
+        <p style="margin:0 0 14px;">${hi}! A quick check-in: some of the details you gave us when you signed up may not have made it to your profile.</p>
+        <p style="margin:0 0 16px;">Take a look, it only takes thirty seconds:</p>
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${voci}</table>
-        <p style="margin:6px 0 0;">If you've already updated them, you can ignore this message. Thanks for your patience!</p>`,
+        <p style="margin:6px 0 0;">If everything is already in place, great: you can ignore this message. Enjoy your game!</p>`,
       );
       return {
-        subject: T("Ci manca un pezzo del tuo profilo BridgeLab", "A piece of your BridgeLab profile is missing"),
+        subject: T("Un ultimo tocco al tuo profilo BridgeLab", "One last touch to your BridgeLab profile"),
         html: layout({
           preheader: T(
-            "Un nostro errore ha perso associazione, nome BBO e fascia d'età: bastano trenta secondi per reinserirli.",
-            "An error on our side lost your club, BBO name and age group: thirty seconds to add them back.",
+            "Associazione, nome su BBO e fascia d'età: trenta secondi per controllarli.",
+            "Your club, BBO name and age group: thirty seconds to check them.",
           ),
-          emoji: "🧩", heading, bodyHtml,
-          ctaLabel: T("Completa il profilo", "Complete your profile"), ctaUrl: profilo,
+          emoji: "✨", heading, bodyHtml,
+          ctaLabel: T("Controlla il profilo", "Check your profile"), ctaUrl: profilo,
           lingua: ctx.lingua,
         }),
         text: textFallback(
           T(
             [
-              `${hi.replace(/<[^>]+>/g, "")}, per un nostro errore tecnico fra agosto e ottobre alcune informazioni della tua iscrizione non sono state salvate: associazione, nome su BBO, fascia d'età.`,
+              `${hi.replace(/<[^>]+>/g, "")}! Alcune informazioni che ci hai dato all'iscrizione potrebbero non essere arrivate fino al tuo profilo: associazione, nome su BBO, fascia d'età.`,
               "",
-              "Ci dispiace. Ti bastano trenta secondi per reinserirle dal tuo profilo. Se le hai già sistemate, ignora questo messaggio.",
+              "Dai un'occhiata, ti bastano trenta secondi. Se è già tutto a posto, puoi ignorare questo messaggio.",
             ],
             [
-              `${hi.replace(/<[^>]+>/g, "")}, because of a technical error on our side, between August and October some details from your sign-up were not saved: your club, BBO username and age group.`,
+              `${hi.replace(/<[^>]+>/g, "")}! Some of the details you gave us at sign-up may not have made it to your profile: your club, BBO username and age group.`,
               "",
-              "We're sorry. It takes thirty seconds to add them back from your profile. If you've already done it, ignore this message.",
+              "Take a look, it only takes thirty seconds. If everything is already in place, you can ignore this message.",
             ],
           ),
-          T("Completa il profilo", "Complete your profile"), profilo, undefined, ctx.lingua,
+          T("Controlla il profilo", "Check your profile"), profilo, undefined, ctx.lingua,
         ),
         transactional: true,
       };
