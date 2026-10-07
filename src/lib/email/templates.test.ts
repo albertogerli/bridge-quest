@@ -202,11 +202,11 @@ describe("recupero password", () => {
 });
 
 describe("completa_profilo", () => {
-  it("chiede scusa, porta al profilo e non ha la disiscrizione", () => {
+  it("invita a controllare il profilo, ci porta, e non ha la disiscrizione", () => {
     const e = renderEmail("completa_profilo", { name: "Anna" });
     expect(e.transactional).toBe(true);
     expect(e.html).toContain("/profilo");
-    expect(e.html).toContain("errore tecnico");
+    expect(e.html).toContain("potrebbero non essere arrivate");
     expect(e.html).not.toContain("Non voglio più questi promemoria");
   });
 
