@@ -82,7 +82,7 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
           >
             {t("Impara il bridge.")}
             <br />
-            {t("E poi giocaci.")}
+            {t("Poi gioca.")}
           </motion.h1>
           <motion.p
             initial={false}
