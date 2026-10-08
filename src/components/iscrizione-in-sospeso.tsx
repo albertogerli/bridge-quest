@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useSharedAuth } from "@/contexts/auth-provider";
-import { joinClass } from "@/lib/instructors";
+import { CodiceClasseNonValido, joinClass } from "@/lib/instructors";
 import { useRouter } from "@/hooks/use-router-lingua";
 import { segnalaSalvoRete } from "@/lib/report-error";
 import { usePercorso } from "@/hooks/use-lingua";
@@ -30,7 +30,17 @@ export function IscrizioneInSospeso() {
     } catch {}
     joinClass(codice)
       .then((classe) => router.replace(`/classi/${classe.id}`))
-      .catch((err) => segnalaSalvoRete("iscrizione-in-sospeso", err));
+      .catch((err) => {
+        // Codice sbagliato o classe chiusa: prima falliva in silenzio, e
+        // l'allievo restava nella home senza sapere che non era entrato
+        // (Sentry BRIDGELAB-23/25). Lo si porta dove può correggerlo, con il
+        // codice già scritto e la spiegazione.
+        if (err instanceof CodiceClasseNonValido) {
+          router.replace(`/classi?codice=${encodeURIComponent(codice)}&errore=codice`);
+          return;
+        }
+        segnalaSalvoRete("iscrizione-in-sospeso", err);
+      });
   }, [user, router, percorso]);
   return null;
 }

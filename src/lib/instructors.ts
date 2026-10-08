@@ -561,6 +561,14 @@ export async function setInviteActive(classId: string, active: boolean): Promise
 // Student: joining / leaving / listing classes
 // ----------------------------------------------------------------------------
 
+/** Il codice non apre nessuna classe: sbagliato, scaduto o iscrizioni chiuse. */
+export class CodiceClasseNonValido extends Error {
+  constructor() {
+    super("Codice non valido o classe chiusa alle iscrizioni");
+    this.name = "CodiceClasseNonValido";
+  }
+}
+
 /** Join a class by its invite code via a SECURITY DEFINER RPC. A direct SELECT
  *  on classes would be hidden by RLS (the student isn't a member yet), so the
  *  RPC does the lookup + self-join atomically. Returns the joined class. */
@@ -570,8 +578,11 @@ export async function joinClass(inviteCode: string): Promise<ClassRoom> {
 
   const { data, error } = await supabase.rpc("join_class_by_code", { p_code: code });
   if (error) {
-    // P0002 (no_data_found) => bad/closed code; anything else is unexpected.
-    throw new Error("Codice non valido o classe chiusa alle iscrizioni");
+    // P0002: codice sbagliato, scaduto, o classe chiusa alle iscrizioni — un
+    // errore di chi scrive, da spiegare a lui e non da mandare a Sentry. Il
+    // resto (rete, sessione) è un guasto vero e conserva la sua identità.
+    if (error.code === "P0002") throw new CodiceClasseNonValido();
+    throw error;
   }
   // RETURNS classes: supabase gives the row object (or array on some versions).
   const row = Array.isArray(data) ? data[0] : data;

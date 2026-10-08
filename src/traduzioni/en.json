@@ -2479,5 +2479,8 @@
   "In attesa dell'insegnante": "Waiting for your teacher",
   "Non serve rimandare il codice: quando l'insegnante ti approva, la classe compare qui.": "No need to send the code again: once your teacher approves you, the class appears here.",
   "richiesta inviata il {data}": "request sent on {data}",
-  "Poi gioca.": "Then play."
+  "Poi gioca.": "Then play.",
+  "Codice non valido o classe chiusa alle iscrizioni. Controllalo con il tuo insegnante.": "Invalid code, or the class is closed to new students. Check it with your teacher.",
+  "Il codice {codice} non apre nessuna classe: forse c'è un errore di battitura, o le iscrizioni sono chiuse. Controllalo con il tuo insegnante.": "The code {codice} doesn't open any class: there may be a typo, or enrollment is closed. Check it with your teacher.",
+  "Non riesco a iscriverti adesso. Controlla la connessione e riprova.": "I can't enroll you right now. Check your connection and try again."
 }
