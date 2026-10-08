@@ -16,7 +16,7 @@
 -- Rigenerare e committare dopo OGNI modifica allo schema, insieme allo script
 -- che l'ha causata.
 --
--- Estratto il: 2026-10-07
+-- Estratto il: 2026-10-08
 -- ============================================================================
 
 SET check_function_bodies = false;
@@ -3474,6 +3474,22 @@ AS $function$
     )
   ORDER BY random()
   LIMIT 1;
+$function$
+;
+
+CREATE OR REPLACE FUNCTION public.mie_richieste_in_attesa()
+ RETURNS TABLE(class_id uuid, nome text, insegnante text, dal timestamp with time zone)
+ LANGUAGE sql
+ STABLE SECURITY DEFINER
+ SET search_path TO ''
+AS $function$
+  select c.id, c.name, p.display_name, m.joined_at
+  from public.class_members m
+  join public.classes c on c.id = m.class_id
+  left join public.profiles p on p.id = c.instructor_id
+  where m.student_id = (select auth.uid())
+    and m.status = 'pending'
+  order by m.joined_at desc;
 $function$
 ;
 
@@ -7259,6 +7275,9 @@ GRANT EXECUTE ON FUNCTION public.log_user_login() TO service_role;
 REVOKE ALL ON FUNCTION public.mano_da_fare(p_slug text) FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.mano_da_fare(p_slug text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.mano_da_fare(p_slug text) TO service_role;
+REVOKE ALL ON FUNCTION public.mie_richieste_in_attesa() FROM PUBLIC, anon, authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.mie_richieste_in_attesa() TO authenticated;
+GRANT EXECUTE ON FUNCTION public.mie_richieste_in_attesa() TO service_role;
 REVOKE ALL ON FUNCTION public.mie_sfide_coppie() FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.mie_sfide_coppie() TO authenticated;
 GRANT EXECUTE ON FUNCTION public.mie_sfide_coppie() TO service_role;

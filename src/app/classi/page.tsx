@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "@/components/link";
 import { motion } from "motion/react";
@@ -13,9 +13,11 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { useEnrolledClasses } from "@/store/use-classes-store";
-import { getStudentAssignments, joinClass, statoMiaIscrizione, type MemberStatus } from "@/lib/instructors";
+import { getStudentAssignments, joinClass, mieRichiesteInAttesa, statoMiaIscrizione, type MemberStatus, type RichiestaInAttesa } from "@/lib/instructors";
+import { useAlRitorno } from "@/hooks/use-al-ritorno";
 import { segnalaSalvoRete } from "@/lib/report-error";
 import { useT } from "@/contexts/traduzioni-provider";
+import { useLingua } from "@/hooks/use-lingua";
 
 export default function ClassiPage() {
   return (
@@ -27,6 +29,7 @@ export default function ClassiPage() {
 
 function ClassiContent() {
   const t = useT();
+  const { lingua } = useLingua();
   /**
    * `?codice=` arriva dal QR della locandina appesa in bacheca. Riempie il
    * campo, NON iscrive: inquadrare un cartello non è un consenso a entrare da
@@ -72,6 +75,27 @@ function ClassiContent() {
     };
   }, [idClassi]);
 
+  /**
+   * Le richieste mandate e non ancora decise. Senza, bastava ricaricare la
+   * pagina perché dicesse «Non sei ancora iscritto a nessuna classe», e chi
+   * aveva appena inserito il codice lo reinseriva pensando che non fosse
+   * partito niente (feedback del 07/10/2026). Si rileggono anche al ritorno
+   * sulla pagina: quando l'insegnante approva, la classe compare da sola.
+   */
+  const [richieste, setRichieste] = useState<RichiestaInAttesa[]>([]);
+  const leggiRichieste = useCallback(() => {
+    mieRichiesteInAttesa()
+      .then(setRichieste)
+      .catch((err) => segnalaSalvoRete("classi:richieste-in-attesa", err));
+  }, []);
+  useEffect(() => {
+    leggiRichieste();
+  }, [leggiRichieste]);
+  useAlRitorno(() => {
+    leggiRichieste();
+    if (richieste.length > 0) void refresh();
+  });
+
   async function handleJoin() {
     const trimmed = code.trim();
     if (trimmed.length < 6) return;
@@ -87,6 +111,7 @@ function ClassiContent() {
       // poi aspettava che la classe comparisse più sotto, e non compariva.
       setEsito({ nome: c.name, stato: await statoMiaIscrizione(c.id) });
       setCode("");
+      leggiRichieste();
       await refresh();
     } catch (err) {
       setJoinError(err instanceof Error ? err.message : "Impossibile iscriversi alla classe");
@@ -177,7 +202,28 @@ function ClassiContent() {
         </div>
       )}
 
-      {isLoaded && classes.length === 0 && (
+      {richieste.length > 0 && (
+        <div className="mb-6 rounded-2xl border border-amber-400/60 bg-card p-4">
+          <p className="mb-2 text-sm font-semibold">{t("In attesa dell'insegnante")}</p>
+          <ul className="space-y-1.5">
+            {richieste.map((r) => (
+              <li key={r.class_id} className="text-sm text-muted-foreground">
+                <span className="font-medium text-foreground">{r.nome}</span>
+                {r.insegnante ? ` · ${r.insegnante}` : ""}
+                {" — "}
+                {t("richiesta inviata il {data}", {
+                  data: new Date(r.dal).toLocaleDateString(lingua === "en" ? "en-US" : "it-IT", { day: "numeric", month: "long" }),
+                })}
+              </li>
+            ))}
+          </ul>
+          <p className="mt-2 text-xs text-muted-foreground">
+            {t("Non serve rimandare il codice: quando l'insegnante ti approva, la classe compare qui.")}
+          </p>
+        </div>
+      )}
+
+      {isLoaded && classes.length === 0 && richieste.length === 0 && (
         <p className="py-8 text-center text-sm text-muted-foreground">
           {t("Non sei ancora iscritto a nessuna classe.")}
         </p>

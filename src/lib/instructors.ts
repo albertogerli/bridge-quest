@@ -510,6 +510,28 @@ export async function statoMiaIscrizione(classId: string): Promise<MemberStatus 
   return (data?.status as MemberStatus | undefined) ?? null;
 }
 
+/** Una richiesta di iscrizione che l'insegnante non ha ancora deciso. */
+export interface RichiestaInAttesa {
+  class_id: string;
+  nome: string;
+  insegnante: string | null;
+  dal: string;
+}
+
+/**
+ * Le proprie richieste di iscrizione in attesa, con il nome della classe.
+ *
+ * Da una RPC e non da `classes`: chi è in attesa non è ancora membro, e la
+ * policy di `classes` il nome lo mostra solo agli iscritti attivi
+ * (`scripts/sql/richieste-in-attesa-2026-10.sql`).
+ */
+export async function mieRichiesteInAttesa(): Promise<RichiestaInAttesa[]> {
+  const supabase = createClient();
+  const { data, error } = await supabase.rpc("mie_richieste_in_attesa");
+  if (error) throw error;
+  return (data ?? []) as RichiestaInAttesa[];
+}
+
 /** Generate a fresh invite code for a class (e.g. the old one leaked). */
 export async function regenerateInviteCode(classId: string): Promise<string> {
   const supabase = createClient();
