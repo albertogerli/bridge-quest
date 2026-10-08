@@ -510,7 +510,6 @@
   "Due chat separate: i compagni non sono gli stessi.": "Two separate chats: the classmates aren't the same.",
   "Due mani progettate per consolidare le basi. La prima è facile con suggerimenti, la seconda più impegnativa senza aiuti.": "Two hands built to settle the basics. The first is easy, with hints; the second is harder, with none.",
   "Duplica": "Duplicate",
-  "E poi giocalo.": "And then play it.",
   "E se non ho cuori?": "What if I have no hearts?",
   "Ecco i tuoi progressi!": "Here's how you're doing!",
   "Ecco qualche idea per riprendere": "Here are a few ways to pick it back up",
@@ -2479,5 +2478,6 @@
   "Il piano di gioco a senz'atout": "The No Trump Play Plan",
   "In attesa dell'insegnante": "Waiting for your teacher",
   "Non serve rimandare il codice: quando l'insegnante ti approva, la classe compare qui.": "No need to send the code again: once your teacher approves you, the class appears here.",
-  "richiesta inviata il {data}": "request sent on {data}"
+  "richiesta inviata il {data}": "request sent on {data}",
+  "E poi giocaci.": "And then play it."
 }
