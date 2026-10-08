@@ -52,6 +52,8 @@ export function getProgressSnapshot(): ProgressSnapshot {
 export function useSupabaseSync() {
   const { user, profile, loading } = useSharedAuth();
   const hasDoneInitialSync = useRef(false);
+  /** Riletture immediate dopo un conflitto, di fila: oltre due si torna al giro dei 30 s. */
+  const rilettureDiFila = useRef(0);
   const userIdRef = useRef<string | null>(null);
   const generation = useRef(0);
   const supabase = createClient();
@@ -94,6 +96,7 @@ export function useSupabaseSync() {
       const outcome = await writer.current.push(userId, getProgressSnapshot(), force);
       if (!isCurrent()) return;
       if (outcome.status === "saved") {
+        rilettureDiFila.current = 0;
         window.dispatchEvent(new CustomEvent("bq_sync_status", { detail: "saved" }));
       } else if (outcome.status === "cancelled") {
         // L'interfaccia può ancora mostrare l'utente mentre l'auth si aggiorna.
@@ -103,9 +106,26 @@ export function useSupabaseSync() {
     } catch (error) {
       if (!isCurrent()) return;
       // Re-read and merge on the next initial-sync attempt; never overwrite a newer revision.
+      // IL CONFLITTO DI REVISIONE NON È UN GUASTO. Vuol dire che il ripasso è
+      // stato salvato altrove (un'altra scheda, il telefono) dopo l'ultima
+      // lettura: si rilegge, si unisce e si risalva. Succede di continuo a chi
+      // usa due dispositivi, e mandarlo a Sentry (BRIDGELAB-24) era rumore.
+      // Si rilegge SUBITO invece di aspettare il giro dei trenta secondi.
       // PT409 dal 06/10/2026 (conflitto-ripasso-2026-10.sql); 40001 finché
       // qualche scheda resta aperta sulla versione vecchia della funzione.
-      if (error instanceof SyncWriteError && (error.code === "PT409" || error.code === "40001")) hasDoneInitialSync.current = false;
+      //
+      // AL MASSIMO DUE DI FILA. Se il conflitto si ripetesse a ogni rilettura
+      // (un altro dispositivo che salva di continuo), rileggere subito
+      // all'infinito rifarebbe dal browser il ciclo che PostgREST faceva nel
+      // database. Oltre il secondo si aspetta il giro normale dei 30 secondi.
+      if (error instanceof SyncWriteError && (error.code === "PT409" || error.code === "40001")) {
+        hasDoneInitialSync.current = false;
+        if (rilettureDiFila.current < 2) {
+          rilettureDiFila.current++;
+          window.dispatchEvent(new Event("bq_sync_retry"));
+        }
+        return;
+      }
       // `segnalaSalvoRete` e non `reportError`: qui arrivano anche i guasti
       // di rete di chi gioca dal telefono, DOPO che retrySafeSyncRequest ha
       // già riprovato con attesa crescente. Il progresso resta in locale e
@@ -123,6 +143,9 @@ export function useSupabaseSync() {
     if (loading || !user || !profile || profile.id !== user.id || userIdRef.current !== user.id) return;
     let cancelled = false;
     let initializing = false;
+    // Una rilettura chiesta mentre questa era in corso (il conflitto arriva dal
+    // push che sta DENTRO initialSync): si fa appena finisce, non si scarta.
+    let rileggiDopo = false;
 
     const initialSync = async () => {
       if (cancelled || initializing || hasDoneInitialSync.current) return;
@@ -261,12 +284,20 @@ export function useSupabaseSync() {
         window.dispatchEvent(new CustomEvent("bq_sync_status", { detail: "error" }));
       } finally {
         initializing = false;
+        if (rileggiDopo && !cancelled) {
+          rileggiDopo = false;
+          void initialSync();
+        }
       }
     };
 
     void initialSync();
     const retryInitial = setInterval(() => { void initialSync(); }, 30_000);
-    const retry = () => { if (!hasDoneInitialSync.current) void initialSync(); else void pushToSupabase(user.id); };
+    const retry = () => {
+      if (hasDoneInitialSync.current) void pushToSupabase(user.id);
+      else if (initializing) rileggiDopo = true;
+      else void initialSync();
+    };
     window.addEventListener("bq_sync_retry", retry);
     window.addEventListener("online", retry);
     return () => { cancelled = true; clearInterval(retryInitial); window.removeEventListener("bq_sync_retry", retry); window.removeEventListener("online", retry); };

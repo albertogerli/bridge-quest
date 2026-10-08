@@ -167,14 +167,23 @@ it("continua a segnalare gli errori di permessi", async () => {
   expect(statuses).toEqual(["error"]);
 });
 
-it.each(["PT409", "40001"])("rilegge le revisioni dopo un conflitto (%s) invece di confermare una sovrascrittura", async (codice) => {
+it.each(["PT409", "40001"])("dopo un conflitto (%s) rilegge subito e risalva, senza segnalarlo", async (codice) => {
   f.write.mockRejectedValueOnce(new SyncWriteError(codice, "reviews"));
   renderHook(() => useSupabaseSync());
   await flush();
-  expect(statuses).toEqual(["error"]);
-  await retry();
+  await flush();
   expect(f.read).toHaveBeenCalledTimes(2);
-  expect(statuses).toEqual(["error", "saved"]);
+  expect(f.report).not.toHaveBeenCalled();
+  expect(statuses).not.toContain("error");
+  expect(statuses.at(-1)).toBe("saved");
+});
+
+it("un conflitto che si ripete sempre non diventa un ciclo: al massimo due riletture immediate", async () => {
+  f.write.mockRejectedValue(new SyncWriteError("PT409", "reviews"));
+  renderHook(() => useSupabaseSync());
+  for (let i = 0; i < 6; i++) await flush();
+  expect(f.read).toHaveBeenCalledTimes(3);
+  expect(f.report).not.toHaveBeenCalled();
 });
 
 it("non mostra all'account nuovo il fallimento tardivo di quello precedente", async () => {

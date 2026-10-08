@@ -13,7 +13,7 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { useEnrolledClasses } from "@/store/use-classes-store";
-import { getStudentAssignments, joinClass, mieRichiesteInAttesa, statoMiaIscrizione, type MemberStatus, type RichiestaInAttesa } from "@/lib/instructors";
+import { CodiceClasseNonValido, getStudentAssignments, joinClass, mieRichiesteInAttesa, statoMiaIscrizione, type MemberStatus, type RichiestaInAttesa } from "@/lib/instructors";
 import { useAlRitorno } from "@/hooks/use-al-ritorno";
 import { segnalaSalvoRete } from "@/lib/report-error";
 import { useT } from "@/contexts/traduzioni-provider";
@@ -42,7 +42,15 @@ function ClassiContent() {
 
   const [code, setCode] = useState(codiceDalQr?.trim().toUpperCase().slice(0, 6) ?? "");
   const [joining, setJoining] = useState(false);
-  const [joinError, setJoinError] = useState<string | null>(null);
+  // Arrivati qui dalla registrazione o da un link con un codice che non apre
+  // nessuna classe: si dice subito, con il codice già nella casella.
+  const [joinError, setJoinError] = useState<string | null>(
+    searchParams.get("errore") === "codice"
+      ? t("Il codice {codice} non apre nessuna classe: forse c'è un errore di battitura, o le iscrizioni sono chiuse. Controllalo con il tuo insegnante.", {
+          codice: (codiceDalQr ?? "").toUpperCase(),
+        })
+      : null,
+  );
   /**
    * Il nome della classe e come è andata: entrato, oppure in attesa.
    *
@@ -114,7 +122,12 @@ function ClassiContent() {
       leggiRichieste();
       await refresh();
     } catch (err) {
-      setJoinError(err instanceof Error ? err.message : "Impossibile iscriversi alla classe");
+      if (err instanceof CodiceClasseNonValido) {
+        setJoinError(t("Codice non valido o classe chiusa alle iscrizioni. Controllalo con il tuo insegnante."));
+      } else {
+        segnalaSalvoRete("classi:iscrizione", err);
+        setJoinError(t("Non riesco a iscriverti adesso. Controlla la connessione e riprova."));
+      }
     } finally {
       setJoining(false);
     }

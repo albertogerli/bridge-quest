@@ -21,7 +21,7 @@ import { type ReactNode } from "react";
 import { useT } from "@/contexts/traduzioni-provider";
 import { homeDi, linguaDaPercorso, localizzaHref } from "@/lib/lingua";
 import { AvvisoPassword } from "@/components/avviso-password";
-import { joinClass } from "@/lib/instructors";
+import { CodiceClasseNonValido, joinClass } from "@/lib/instructors";
 type Mode = "login" | "signup";
 type ProfileType = "junior" | "giovane" | "adulto" | "senior";
 
@@ -196,7 +196,13 @@ function LoginContent() {
               // Ricarica intera, come per il resto dell'accesso: la sessione appena creata va letta dal server.
               window.location.href = localizzaHref(`/classi/${classe.id}`, linguaDaPercorso(window.location.pathname));
               return;
-            } catch {
+            } catch (err) {
+              // Codice sbagliato: inutile metterlo da parte per dopo, fallirebbe
+              // di nuovo in silenzio. Si va dove si può correggere.
+              if (err instanceof CodiceClasseNonValido) {
+                window.location.href = localizzaHref(`/classi?codice=${encodeURIComponent(codiceClasse)}&errore=codice`, linguaDaPercorso(window.location.pathname));
+                return;
+              }
               try { localStorage.setItem("bq_codice_classe", codiceClasse); } catch {}
             }
           }
