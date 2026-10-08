@@ -44,6 +44,7 @@ import { copiaTesto } from "@/lib/appunti";
 import { segnalaSalvoRete } from "@/lib/report-error";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { StrumentiLezione } from "@/components/istruttori/strumenti-lezione";
+import { useAlRitorno } from "@/hooks/use-al-ritorno";
 
 export default function ClassDetailPage({
   params,
@@ -187,6 +188,10 @@ export default function ClassDetailPage({
     void load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [classId]);
+
+  // Richieste di iscrizione, allievi nuovi, compiti assegnati da un'altra
+  // scheda: compaiono anche se la pagina era già aperta (vedi useAlRitorno).
+  useAlRitorno(() => void aggiornaSenzaSchermataDiCaricamento(), 30_000, detail !== null);
 
   async function handleRegenerate() {
     if (!confirm("Rigenerare il codice invito? Quello attuale smetterà di funzionare.")) return;

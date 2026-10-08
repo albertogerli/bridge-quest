@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "@/components/link";
 import { motion } from "motion/react";
 import { GraduationCap, Users, ArrowRight, Sparkles } from "lucide-react";
@@ -10,6 +10,7 @@ import { STRUMENTI_LEZIONE } from "@/components/istruttori/strumenti-lezione";
 import { getMyClasses, getClassDetail, ClasseNonTrovata, ETICHETTE_STATO, type ClassRoom } from "@/lib/instructors";
 import { reportError } from "@/lib/report-error";
 import { useT } from "@/contexts/traduzioni-provider";
+import { useAlRitorno } from "@/hooks/use-al-ritorno";
 
 /**
  * La home di chi insegna.
@@ -44,46 +45,57 @@ export function HomeInsegnante({
   const [inAttesa, setInAttesa] = useState<Record<string, number>>({});
   const [caricando, setCaricando] = useState(true);
 
-  useEffect(() => {
-    let vivo = true;
-    void (async () => {
-      try {
-        const elenco = await getMyClasses();
-        if (!vivo) return;
-        setClassi(elenco);
+  /**
+   * Classi e richieste in attesa. Si rilegge anche dopo il primo caricamento
+   * (`useAlRitorno`): le richieste sono il motivo principale per cui si apre
+   * questa pagina, e una richiesta arrivata mentre era aperta non deve restare
+   * invisibile fino a un ricaricamento che nessuno fa.
+   */
+  const vivo = useRef(true);
+  const carica = useCallback(async () => {
+    try {
+      const elenco = await getMyClasses();
+      if (!vivo.current) return;
+      setClassi(elenco);
 
-        /**
-         * Il conteggio delle richieste costa una lettura per classe, ma solo
-         * per quelle in cui l'approvazione è manuale: sulle altre non ci può
-         * essere nessuno in attesa, e chiederlo sarebbe traffico per una
-         * risposta nota.
-         */
-        const daControllare = elenco.filter(
-          (c) => !c.approvazione_automatica && c.stato !== "archiviata",
-        );
-        const conteggi: Record<string, number> = {};
-        await Promise.all(
-          daControllare.map(async (c) => {
-            try {
-              const d = await getClassDetail(c.id);
-              if (d.inAttesa.length > 0) conteggi[c.id] = d.inAttesa.length;
-            } catch (err) {
-              // Eliminata fra l'elenco e questa lettura: non c'è niente in attesa.
-              if (!(err instanceof ClasseNonTrovata)) reportError("home-insegnante:attesa", err);
-            }
-          }),
-        );
-        if (vivo) setInAttesa(conteggi);
-      } catch (err) {
-        reportError("home-insegnante:classi", err);
-      } finally {
-        if (vivo) setCaricando(false);
-      }
-    })();
-    return () => {
-      vivo = false;
-    };
+      /**
+       * Il conteggio delle richieste costa una lettura per classe, ma solo
+       * per quelle in cui l'approvazione è manuale: sulle altre non ci può
+       * essere nessuno in attesa, e chiederlo sarebbe traffico per una
+       * risposta nota.
+       */
+      const daControllare = elenco.filter(
+        (c) => !c.approvazione_automatica && c.stato !== "archiviata",
+      );
+      const conteggi: Record<string, number> = {};
+      await Promise.all(
+        daControllare.map(async (c) => {
+          try {
+            const d = await getClassDetail(c.id);
+            if (d.inAttesa.length > 0) conteggi[c.id] = d.inAttesa.length;
+          } catch (err) {
+            // Eliminata fra l'elenco e questa lettura: non c'è niente in attesa.
+            if (!(err instanceof ClasseNonTrovata)) reportError("home-insegnante:attesa", err);
+          }
+        }),
+      );
+      if (vivo.current) setInAttesa(conteggi);
+    } catch (err) {
+      reportError("home-insegnante:classi", err);
+    } finally {
+      if (vivo.current) setCaricando(false);
+    }
   }, []);
+
+  useEffect(() => {
+    vivo.current = true;
+    void carica();
+    return () => {
+      vivo.current = false;
+    };
+  }, [carica]);
+
+  useAlRitorno(() => void carica());
 
   const attive = classi.filter((c) => c.stato !== "archiviata");
   const totaleInAttesa = Object.values(inAttesa).reduce((a, b) => a + b, 0);
