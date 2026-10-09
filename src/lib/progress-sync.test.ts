@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { addFetchInstrumentationHandler, resetInstrumentationHandlers } from "@sentry/core";
-import { assertSyncResult, createProgressWriter, readProgress, writeProgress, SyncAuthError, SyncSessionChangedError, SyncWriteError, type ProgressSnapshot } from "./progress-sync";
+import { assertSyncResult, createProgressWriter, readProgress, ripassoPerIlServer, writeProgress, SyncAuthError, SyncSessionChangedError, SyncWriteError, type ProgressSnapshot, type ReviewProgress } from "./progress-sync";
 import { describeError } from "./describe-error";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { AuthApiError, AuthRetryableFetchError, AuthSessionMissingError, createClient } from "@supabase/supabase-js";
@@ -386,5 +386,38 @@ describe("session interruption versus real authentication errors", () => {
     await expect(writeProgress(f.db, "synthetic-a", snapshot, "previous", () => false)).rejects.toBeInstanceOf(SyncSessionChangedError);
     expect(f.getSession).not.toHaveBeenCalled();
     expect(f.request).not.toHaveBeenCalled();
+  });
+});
+
+describe("ripassoPerIlServer", () => {
+  const voce = (over: Partial<ReviewProgress> = {}): ReviewProgress => ({
+    lessonId: 3, moduleId: "m1", question: "Q", wrongCount: 1, box: 2, lastReview: "2026-10-01", nextReview: "2026-10-03", ...over,
+  });
+
+  it("una sola voce per lezione+modulo: vince la più recente (era il doppione rifiutato, 22023)", () => {
+    const fuori = ripassoPerIlServer([
+      voce({ question: "testo vecchio", lastReview: "2026-09-01" }),
+      voce({ question: "testo nuovo", lastReview: "2026-10-05" }),
+      voce({ lessonId: "3", question: "testo nuovo", lastReview: "2026-10-02" }),
+    ]);
+    expect(fuori).toHaveLength(1);
+    expect(fuori[0].question).toBe("testo nuovo");
+    expect(fuori[0].lastReview).toBe("2026-10-05");
+  });
+
+  it("porta scatola e conteggio nei limiti del server e scarta le voci senza identità", () => {
+    const fuori = ripassoPerIlServer([
+      voce({ box: 9, wrongCount: -2 }),
+      voce({ moduleId: "", lessonId: 4 }),
+      voce({ lessonId: "", moduleId: "m2" }),
+    ]);
+    expect(fuori).toEqual([expect.objectContaining({ box: 5, wrongCount: 0, moduleId: "m1" })]);
+  });
+
+  it("non manda mai più di mille voci, e tiene le più recenti", () => {
+    const tante = Array.from({ length: 1200 }, (_, i) => voce({ moduleId: `m${i}`, lastReview: `2026-${String(1 + (i % 12)).padStart(2, "0")}-01` }));
+    const fuori = ripassoPerIlServer(tante);
+    expect(fuori).toHaveLength(1000);
+    expect(fuori.every((v) => (v.lastReview ?? "") >= "2026-02-01")).toBe(true);
   });
 });

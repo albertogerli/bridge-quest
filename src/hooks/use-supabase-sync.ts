@@ -219,14 +219,17 @@ export function useSupabaseSync() {
           const remoteBadgeIds = badges ? badges.map((b) => b.badge_id) : [];
           const mergedBadges = [...new Set([...localBadges, ...remoteBadgeIds])];
 
-          // MERGE review items: union by key, keep the one with latest lastReview
+          // MERGE review items: union by key, keep the one with latest lastReview.
+          // Chiave lezione+modulo, la stessa di `use-spaced-review`: con anche
+          // la domanda, due testi della stessa domanda diventavano due voci, e
+          // al primo aggiornamento un doppione che il server rifiuta (22023).
           const reviewMap = new Map<string, typeof localReviewItems[number]>();
           for (const item of localReviewItems) {
-            reviewMap.set(`${item.lessonId}-${item.moduleId}-${item.question || ""}`, item);
+            reviewMap.set(`${item.lessonId}-${item.moduleId}`, item);
           }
           if (reviews && reviews.length > 0) {
             for (const r of reviews) {
-              const key = `${r.lessonId}-${r.moduleId}-${r.question || ""}`;
+              const key = `${r.lessonId}-${r.moduleId}`;
               const existing = reviewMap.get(key);
               const remoteItem = {
                 lessonId: r.lessonId,
@@ -280,7 +283,13 @@ export function useSupabaseSync() {
         // Both sides empty — nothing to do
       } catch (err) {
         if (cancelled || userIdRef.current !== user.id || localStorage.getItem("bq_progress_owner") !== user.id) return;
-        if (!(err instanceof SyncSessionChangedError)) reportError("sync:initial", err);
+        // Una LETTURA rimasta senza risposta (stato 0: rete assente, richiesta
+        // interrotta cambiando pagina, Safari che descrive il guasto in
+        // un'altra lingua) non è niente che si possa correggere lato server, e
+        // il primo sync la ripete da solo ogni 30 secondi. A Sentry vanno le
+        // risposte vere del server: permessi, errori, conflitti (BRIDGELAB-26).
+        const senzaRisposta = err instanceof SyncWriteError && err.status === 0;
+        if (!(err instanceof SyncSessionChangedError) && !senzaRisposta) reportError("sync:initial", err);
         window.dispatchEvent(new CustomEvent("bq_sync_status", { detail: "error" }));
       } finally {
         initializing = false;

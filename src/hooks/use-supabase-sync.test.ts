@@ -159,6 +159,18 @@ it("sessione assente in lettura: nessun merge/scrittura e ripresa al ritorno del
   expect(statuses).toEqual(["error", "saved"]);
 });
 
+it("una lettura senza risposta (stato 0) non va a Sentry, un rifiuto del server sì", async () => {
+  f.read.mockRejectedValueOnce(new SyncWriteError("client_error", "read-modules", 0));
+  const { unmount } = renderHook(() => useSupabaseSync());
+  await flush();
+  expect(f.report).not.toHaveBeenCalled();
+  unmount();
+  f.read.mockRejectedValueOnce(new SyncWriteError("42501", "read-modules", 403));
+  renderHook(() => useSupabaseSync());
+  await flush();
+  expect(f.report).toHaveBeenCalledWith("sync:initial", expect.objectContaining({ code: "42501" }));
+});
+
 it("continua a segnalare gli errori di permessi", async () => {
   f.write.mockRejectedValueOnce(new SyncWriteError("42501", "reviews"));
   renderHook(() => useSupabaseSync());
