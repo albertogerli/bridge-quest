@@ -10,6 +10,40 @@ export interface ProgressSnapshot {
   profile: string; memoryBest: number | null; textSize: string; animSpeed: string;
   sound: boolean; totalMinutes: number; badges: string[]; reviewItems: ReviewProgress[];
 }
+/**
+ * Il ripasso come lo accetta `sync_review_items`, ripulito prima dell'invio.
+ *
+ * PERCHÉ. Il server rifiuta TUTTO il salvataggio (SQLSTATE 22023) se una sola
+ * voce non va: un doppione, una scatola fuori da 1–5, un identificativo vuoto,
+ * più di mille voci. Il telefono di un allievo ci finiva dentro a ogni
+ * salvataggio (Sentry BRIDGELAB-24, 09/10/2026): il modulo del ripasso
+ * distingue le voci per lezione+modulo, l'unione del sync per
+ * lezione+modulo+domanda, e due voci della stessa domanda con testi diversi
+ * potevano diventare identiche al primo aggiornamento.
+ *
+ * Una voce per lezione+modulo — la stessa regola di `use-spaced-review` — e,
+ * fra due, vince quella ripassata più di recente; a parità, l'ultima scritta.
+ */
+export function ripassoPerIlServer(items: ReviewProgress[]): ReviewProgress[] {
+  const perChiave = new Map<string, ReviewProgress>();
+  for (const item of items) {
+    if (!item || typeof item !== "object") continue;
+    const lezione = String(item.lessonId ?? "");
+    const modulo = typeof item.moduleId === "string" ? item.moduleId : "";
+    if (lezione.length < 1 || lezione.length > 100 || modulo.length < 1 || modulo.length > 100) continue;
+    const box = Number.isInteger(item.box) ? Math.min(Math.max(item.box as number, 1), 5) : 1;
+    const wrongCount = Number.isInteger(item.wrongCount) && item.wrongCount > 0 ? item.wrongCount : 0;
+    const pulita: ReviewProgress = { ...item, box, wrongCount };
+    const chiave = `${lezione}::${modulo}`;
+    const prima = perChiave.get(chiave);
+    if (!prima || (pulita.lastReview ?? "") >= (prima.lastReview ?? "")) perChiave.set(chiave, pulita);
+  }
+  // Oltre mille il server rifiuta tutto: si tengono le più recenti.
+  return [...perChiave.values()]
+    .sort((x, y) => (y.lastReview ?? "").localeCompare(x.lastReview ?? ""))
+    .slice(0, 1000);
+}
+
 export type SyncOutcome = { status: "saved"; reviewRevision: string } | { status: "unchanged" } | { status: "cancelled" };
 
 /** Expected interruption, not a network or permissions error. Never acknowledge it. */
@@ -192,7 +226,7 @@ export async function writeProgress(db: SupabaseClient, owner: string, snapshot:
 
   // One transaction, optimistic revision check, and authenticated owner derived in SQL.
   // Never blind-retry this RPC: a lost response may follow a committed revision.
-  const reviews = await db.rpc("sync_review_items", { p_items: snapshot.reviewItems, p_expected_revision: reviewRevision }).setHeader("Authorization", authorization);
+  const reviews = await db.rpc("sync_review_items", { p_items: ripassoPerIlServer(snapshot.reviewItems), p_expected_revision: reviewRevision }).setHeader("Authorization", authorization);
   assertCurrent(isCurrent);
   assertSyncResult(reviews, "reviews");
   if (typeof reviews.data !== "string") throw new Error("Sync review revision missing");
