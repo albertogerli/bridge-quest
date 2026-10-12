@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState, use } from "react";
 import { RisposteClasse } from "@/components/istruttori/risposte-classe";
-import { Briciole } from "@/components/briciole";
+import { BricioleClasse } from "@/components/istruttori/briciole-classe";
 import dynamic from "next/dynamic";
 import { AnimatePresence } from "motion/react";
 import { useValidatedSmazzate } from "@/store/use-smazzate-store";
@@ -34,6 +34,9 @@ import {
 import { NotaSmazzata } from "@/components/istruttori/nota-smazzata";
 import { useT } from "@/contexts/traduzioni-provider";
 import { contrattoLeggibile } from "@/lib/contratto-leggibile";
+import { useAlRitorno } from "@/hooks/use-al-ritorno";
+import { segnalaSalvoRete } from "@/lib/report-error";
+import { classificaCompito } from "@/lib/riepiloghi-classe";
 
 /** Cell state for the heatmap. */
 type Cell =
@@ -82,6 +85,22 @@ export default function AssignmentResultsPage({
       active = false;
     };
   }, [classId, assignmentId]);
+
+  /**
+   * I risultati arrivano mentre la pagina è aperta: è il caso normale, con
+   * l'insegnante che guarda la classe giocare (Trevissoi, ottobre 2026: «se
+   * dobbiamo dare uno strumento in tempo reale, non deve essere necessario il
+   * refresh»). Si rileggono iscritti e risultati senza svuotare la pagina; un
+   * errore qui lascia quello che si vedeva, al giro dopo si riprova.
+   */
+  useAlRitorno(() => {
+    void Promise.all([getClassDetail(classId), getAssignmentResults(assignmentId)])
+      .then(([detail, res]) => {
+        setMembers(detail.members);
+        setResults(res);
+      })
+      .catch((err) => segnalaSalvoRete("istruttori/compito:aggiorna", err));
+  }, 20_000, !loading && !error);
 
   // Lookup: `${studentId}|${smazzataId}` -> latest result row
   const resultMap = useMemo(() => {
@@ -205,6 +224,13 @@ export default function AssignmentResultsPage({
     .filter((x) => x.quanti > 0)
     .sort((a, b) => b.mediana - a.mediana);
 
+  /** La classifica di questo compito, dagli stessi esiti della griglia. */
+  const classifica = classificaCompito(members, smazzataIds, (studentId, id) => {
+    const r = resultMap.get(`${studentId}|${id}`);
+    return r ? { score: r.score } : null;
+  });
+  const qualcunoHaGiocato = classifica.some((r) => r.giocate > 0);
+
   // Per-hand difficulty signal: how many students went down on each hand.
   const downPerHand = smazzataIds.map(
     (id) => members.filter((m) => cellFor(m.student_id, id).state === "down").length
@@ -246,13 +272,7 @@ export default function AssignmentResultsPage({
 
   return (
     <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6">
-      <Briciole
-        percorso={[
-          { etichetta: "Le tue classi", href: "/istruttori" },
-          { etichetta: "La classe", href: `/istruttori/${classId}` },
-          { etichetta: assignment.title },
-        ]}
-      />
+      <BricioleClasse classId={classId} pagina={assignment.title} />
       <h1 className="mb-1 font-display text-3xl font-bold text-foreground sm:text-4xl">
         {assignment.title}
       </h1>
@@ -333,6 +353,38 @@ export default function AssignmentResultsPage({
               </tr>
             </tbody>
           </table>
+        </div>
+      )}
+
+      {/* ── Classifica di questo compito ── */}
+      {members.length > 0 && qualcunoHaGiocato && (
+        <div className="mt-8">
+          <h2 className="mb-1 font-display text-xl font-bold text-foreground">
+            {t("Classifica di questo compito")}
+          </h2>
+          <p className="mb-3 text-sm text-muted-foreground">
+            {t("La vedi solo tu: prima i contratti mantenuti, poi le mani giocate, poi le prese in più o in meno. Si aggiorna da sola mentre la classe gioca.")}
+          </p>
+          <ol className="divide-y divide-border rounded-lg border border-border">
+            {classifica.map((r, i) => (
+              <li key={r.studentId} className="flex flex-wrap items-center gap-x-4 gap-y-1 px-4 py-2 text-sm">
+                <span className="w-6 text-right font-semibold tabular-nums text-muted-foreground">{i + 1}.</span>
+                <span className="min-w-0 flex-1 font-medium">{r.nome}</span>
+                {r.giocate === 0 ? (
+                  <span className="text-muted-foreground">{t("non ha ancora giocato")}</span>
+                ) : (
+                  <>
+                    <span className="tabular-nums">
+                      {t("{m} mantenuti su {g}", { m: r.mantenute, g: r.giocate })}
+                    </span>
+                    <span className="w-16 text-right tabular-nums text-muted-foreground">
+                      {r.saldo > 0 ? `+${r.saldo}` : r.saldo === 0 ? "=" : r.saldo}
+                    </span>
+                  </>
+                )}
+              </li>
+            ))}
+          </ol>
         </div>
       )}
 

@@ -72,17 +72,17 @@ export default function DiventaIstruttorePage() {
     <div className="mx-auto w-full max-w-2xl px-4 py-10 sm:px-6">
       <div className="flex items-center gap-2">
         <p className="text-xs font-semibold uppercase tracking-wide text-[#c8a44e]">
-          {t("Portale Istruttori")}
+          {t("Portale Insegnanti")}
         </p>
         <span className="rounded-full bg-[#c8a44e]/15 px-2 py-0.5 text-[12px] font-bold uppercase tracking-wider text-[#7a5a0f] dark:text-[#c8a44e]">
           {t("Beta")}
         </span>
       </div>
       <h1 className="mb-2 font-display text-3xl font-bold text-foreground sm:text-4xl">
-        {t("Diventa istruttore")}
+        {t("Diventa insegnante")}
       </h1>
       <p className="mb-6 text-sm text-muted-foreground">
-        {t("Il Portale Istruttori ti permette di creare classi virtuali, assegnare compiti (mani da giocare e materiale da studiare) e seguire i progressi dei tuoi allievi. Le richieste vengono approvate manualmente dallo staff FIGB.")}
+        {t("Il Portale Insegnanti ti permette di creare classi virtuali, assegnare compiti (mani da giocare e materiale da studiare) e seguire i progressi dei tuoi allievi. Le richieste vengono approvate manualmente dallo staff FIGB.")}
       </p>
 
       {(loading || authLoading) && (
@@ -97,14 +97,14 @@ export default function DiventaIstruttorePage() {
             <Card>
               <CardContent className="flex flex-col items-center gap-3 py-10 text-center">
                 <span className="text-4xl">✅</span>
-                <p className="font-display text-lg font-semibold">{t("Sei già istruttore")}</p>
+                <p className="font-display text-lg font-semibold">{t("Sei già insegnante")}</p>
                 {request?.review_message && (
                   <p className="max-w-sm rounded-lg border border-primary/20 bg-primary/5 p-3 text-sm text-foreground">
                     💬 {request.review_message}
                   </p>
                 )}
                 <Link href="/istruttori">
-                  <Button>{t("Vai al Portale Istruttori")}</Button>
+                  <Button>{t("Vai al Portale Insegnanti")}</Button>
                 </Link>
               </CardContent>
             </Card>

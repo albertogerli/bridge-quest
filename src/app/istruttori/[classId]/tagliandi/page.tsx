@@ -3,7 +3,7 @@
 import { use, useEffect, useMemo, useState } from "react";
 import { Printer } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Briciole } from "@/components/briciole";
+import { BricioleClasse } from "@/components/istruttori/briciole-classe";
 import { createClient } from "@/lib/supabase/client";
 import { reportError } from "@/lib/report-error";
 import { invitoAttivo, indirizzoAula } from "@/lib/inviti-aula";
@@ -95,13 +95,7 @@ export default function TagliandiPage({
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6">
       <div className="print:hidden">
-        <Briciole
-          percorso={[
-            { etichetta: "Le tue classi", href: "/istruttori" },
-            { etichetta: "La classe", href: `/istruttori/${classId}` },
-            { etichetta: "Tagliandi" },
-          ]}
-        />
+        <BricioleClasse classId={classId} pagina={"Tagliandi"} />
         <div className="mb-6 flex flex-wrap items-center gap-3">
           <Button onClick={() => window.print()}>
             <Printer className="mr-2 h-4 w-4" aria-hidden="true" />

@@ -111,7 +111,13 @@ const icons: Record<string, (active: boolean) => React.ReactNode> = {
   ),
 };
 
-export function DesktopNav() {
+/**
+ * `variante`: «barra» è la colonna fissa di sempre (solo da desktop);
+ * «pannello» è la stessa navigazione dentro il menù a scomparsa della
+ * modalità corso (`intestazione-corso.tsx`), su ogni schermo. Un componente
+ * solo: due copie dello stesso menù divergono alla prima voce aggiunta.
+ */
+export function DesktopNav({ variante = "barra" }: { variante?: "barra" | "pannello" } = {}) {
   // Vedi `use-permessi.ts`: solo le funzioni ludiche non ancora aperte
   // spariscono dal menu. La didattica resta, e la restrizione si spiega dentro
   // la pagina.
@@ -154,7 +160,14 @@ export function DesktopNav() {
   };
 
   return (
-    <nav className="hidden lg:flex flex-col w-[220px] shrink-0 h-screen sticky top-0 bg-card border-r border-border" aria-label={t("Navigazione principale")}>
+    <nav
+      className={
+        variante === "pannello"
+          ? "flex flex-col w-full h-full bg-card"
+          : "hidden lg:flex flex-col w-[220px] shrink-0 h-screen sticky top-0 bg-card border-r border-border"
+      }
+      aria-label={t("Navigazione principale")}
+    >
       {/* Logo */}
       <div className="px-4 pt-4 pb-3">
         {/* eslint-disable-next-line @next/next/no-img-element -- SVG: next/image non ottimizza gli SVG */}

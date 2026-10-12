@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useRef, useState, use, useEffect } from "react";
-import { Briciole } from "@/components/briciole";
+import { BricioleClasse } from "@/components/istruttori/briciole-classe";
 import { useRouter } from "@/hooks/use-router-lingua";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -185,15 +185,9 @@ export default function NuovoCompitoPage({
 
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-8 pb-44 sm:px-6 lg:pb-28">
-      <Briciole
-        percorso={[
-          { etichetta: "Le tue classi", href: "/istruttori" },
-          { etichetta: "La classe", href: `/istruttori/${classId}` },
-          { etichetta: "Nuovo compito" },
-        ]}
-      />
+      <BricioleClasse classId={classId} pagina={"Compito su misura"} />
       <h1 className="mb-6 font-display text-3xl font-bold text-foreground sm:text-4xl">
-        {t("Nuovo compito")}
+        {t("Compito su misura")}
       </h1>
 
       {/* Assignment meta */}

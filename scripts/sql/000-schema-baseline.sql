@@ -16,7 +16,7 @@
 -- Rigenerare e committare dopo OGNI modifica allo schema, insieme allo script
 -- che l'ha causata.
 --
--- Estratto il: 2026-10-08
+-- Estratto il: 2026-10-12
 -- ============================================================================
 
 SET check_function_bodies = false;
@@ -1540,6 +1540,7 @@ declare
   v_posti jsonb;
   v_occupante uuid;
   v_nome text;
+  v_mio text;
 begin
   if p_posto not in ('north', 'south', 'east', 'west') then
     return jsonb_build_object('esito', 'posto-inesistente');
@@ -1566,6 +1567,16 @@ begin
     return jsonb_build_object('esito', 'posti-dall-insegnante');
   end if;
 
+  -- Il posto si sceglie una volta: cambiarlo vorrebbe dire vedere le carte di
+  -- un altro posto. Rifare la stessa scelta è innocuo.
+  v_mio := v_posti ->> auth.uid()::text;
+  if v_mio is not null and not public.is_instructor_of_class(v_class) then
+    if v_mio = p_posto then
+      return jsonb_build_object('esito', 'seduto', 'posto', p_posto);
+    end if;
+    return jsonb_build_object('esito', 'posto-gia-scelto', 'posto', v_mio);
+  end if;
+
   select key::uuid into v_occupante
     from jsonb_each_text(v_posti)
    where value = p_posto
@@ -1576,8 +1587,8 @@ begin
     return jsonb_build_object('esito', 'occupato', 'da', coalesce(v_nome, 'un compagno'));
   end if;
 
-  -- Chi si sposta lascia libero il posto di prima: senza, resterebbe seduto in
-  -- due punti e il tavolo mostrerebbe cinque persone su quattro sedie.
+  -- (Solo l'insegnante arriva qui già seduto.) Chi si sposta lascia libero il
+  -- posto di prima: senza, resterebbe seduto in due punti.
   v_posti := (
     select coalesce(jsonb_object_agg(key, value), '{}'::jsonb)
       from jsonb_each_text(v_posti)
@@ -3252,17 +3263,22 @@ CREATE OR REPLACE FUNCTION public.live_table_open(p_class_id uuid)
  STABLE SECURITY DEFINER
  SET search_path TO 'public'
 AS $function$
-  SELECT t.id
-  FROM public.live_tables t
-  WHERE t.class_id = p_class_id
-    AND t.closed_at IS NULL
-    AND (
+  select t.id
+  from public.live_tables t
+  where t.class_id = p_class_id
+    and t.closed_at is null
+    and (
       t.instructor_id = auth.uid()
-      OR EXISTS (SELECT 1 FROM public.class_members m
-                 WHERE m.class_id = t.class_id AND m.student_id = auth.uid())
+      or (
+        exists (select 1 from public.class_members m
+                 where m.class_id = t.class_id
+                   and m.student_id = auth.uid()
+                   and m.status = 'active')
+        and greatest(t.created_at, coalesce(t.updated_at, t.created_at)) > now() - interval '8 hours'
+      )
     )
-  ORDER BY t.created_at DESC
-  LIMIT 1;
+  order by t.created_at desc
+  limit 1;
 $function$
 ;
 
@@ -3272,53 +3288,124 @@ CREATE OR REPLACE FUNCTION public.live_table_play(p_table_id uuid, p_seat text, 
  SECURITY DEFINER
  SET search_path TO 'public'
 AS $function$
-DECLARE
-  t public.live_tables%ROWTYPE;
+declare
+  t public.live_tables%rowtype;
   v_is_owner boolean; v_my_seat text; v_seat text;
   v_in_mano boolean; v_gia_uscita boolean;
-BEGIN
-  SELECT * INTO t FROM public.live_tables WHERE id = p_table_id FOR UPDATE;
-  IF NOT FOUND OR t.closed_at IS NOT NULL THEN
-    RETURN jsonb_build_object('ok', false, 'errore', 'tavolo non disponibile');
-  END IF;
+  v_giocate jsonb; v_n int; v_k int;
+  v_attacco text; v_ha_seme boolean;
+  v_contratto text; v_atout text; v_leader text; v_turno text;
+  v_presa jsonb; v_vince jsonb; v_carta jsonb; i int; j int;
+  posti constant text[] := array['north','east','south','west'];
+  ranghi constant text[] := array['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
+begin
+  select * into t from public.live_tables where id = p_table_id for update;
+  if not found or t.closed_at is not null then
+    return jsonb_build_object('ok', false, 'errore', 'tavolo non disponibile');
+  end if;
 
   v_is_owner := (t.instructor_id = auth.uid());
   v_my_seat  := t.seat_of ->> auth.uid()::text;
-  v_seat := CASE WHEN v_is_owner THEN coalesce(p_seat, v_my_seat) ELSE v_my_seat END;
+  v_seat := case when v_is_owner then coalesce(p_seat, v_my_seat) else v_my_seat end;
 
-  IF v_seat IS NULL OR v_seat NOT IN ('north','east','south','west') THEN
-    RETURN jsonb_build_object('ok', false, 'errore', 'nessun posto assegnato');
-  END IF;
+  if v_seat is null or v_seat <> all (posti) then
+    return jsonb_build_object('ok', false, 'errore', 'nessun posto assegnato');
+  end if;
 
-  IF NOT v_is_owner AND NOT EXISTS (
-    SELECT 1 FROM public.class_members m
-    WHERE m.class_id = t.class_id AND m.student_id = auth.uid()
-  ) THEN
-    RETURN jsonb_build_object('ok', false, 'errore', 'non fai parte di questa classe');
-  END IF;
+  if not v_is_owner and not exists (
+    select 1 from public.class_members m
+    where m.class_id = t.class_id and m.student_id = auth.uid() and m.status = 'active'
+  ) then
+    return jsonb_build_object('ok', false, 'errore', 'non fai parte di questa classe');
+  end if;
 
-  SELECT EXISTS (
-    SELECT 1 FROM jsonb_array_elements(t.hands -> v_seat) c
-    WHERE c ->> 'suit' = p_card ->> 'suit' AND c ->> 'rank' = p_card ->> 'rank'
-  ) INTO v_in_mano;
+  select exists (
+    select 1 from jsonb_array_elements(t.hands -> v_seat) c
+    where c ->> 'suit' = p_card ->> 'suit' and c ->> 'rank' = p_card ->> 'rank'
+  ) into v_in_mano;
 
-  SELECT EXISTS (
-    SELECT 1 FROM jsonb_array_elements(t.played) g
-    WHERE g -> 'card' ->> 'suit' = p_card ->> 'suit'
-      AND g -> 'card' ->> 'rank' = p_card ->> 'rank'
-  ) INTO v_gia_uscita;
+  v_giocate := coalesce(t.played, '[]'::jsonb);
+  select exists (
+    select 1 from jsonb_array_elements(v_giocate) g
+    where g -> 'card' ->> 'suit' = p_card ->> 'suit'
+      and g -> 'card' ->> 'rank' = p_card ->> 'rank'
+  ) into v_gia_uscita;
 
-  IF NOT v_in_mano OR v_gia_uscita THEN
-    RETURN jsonb_build_object('ok', false, 'errore', 'carta non giocabile');
-  END IF;
+  if not v_in_mano or v_gia_uscita then
+    return jsonb_build_object('ok', false, 'errore', 'carta non giocabile');
+  end if;
 
-  UPDATE public.live_tables
-  SET played = played || jsonb_build_array(jsonb_build_object('seat', v_seat, 'card', p_card)),
+  if not v_is_owner then
+    v_n := jsonb_array_length(v_giocate);
+    if v_n >= 52 then
+      return jsonb_build_object('ok', false, 'errore', 'mano finita');
+    end if;
+    v_k := v_n % 4;
+
+    -- Rispondere al seme: il seme d'attacco della presa in corso, se il posto
+    -- ne ha ancora carte non giocate.
+    if v_k > 0 then
+      v_attacco := v_giocate -> (v_n - v_k) -> 'card' ->> 'suit';
+      if p_card ->> 'suit' <> v_attacco then
+        select exists (
+          select 1 from jsonb_array_elements(t.hands -> v_seat) c
+          where c ->> 'suit' = v_attacco
+            and not exists (
+              select 1 from jsonb_array_elements(v_giocate) g
+              where g -> 'card' ->> 'suit' = c ->> 'suit' and g -> 'card' ->> 'rank' = c ->> 'rank'
+            )
+        ) into v_ha_seme;
+        if v_ha_seme then
+          return jsonb_build_object('ok', false, 'errore', 'devi rispondere al seme');
+        end if;
+      end if;
+    end if;
+
+    -- Il turno, solo se si sa chi dichiara: attacca chi gli sta a sinistra,
+    -- poi chi vince ogni presa (con l'atout del contratto).
+    if t.declarer = any (posti) then
+      v_contratto := upper(regexp_replace(coalesce(t.contract, ''), '[\s️]', '', 'g'));
+      v_contratto := regexp_replace(v_contratto, 'X{1,2}$', '');
+      v_atout := case substr(v_contratto, 2)
+        when 'S' then 'spade' when '♠' then 'spade'
+        when 'H' then 'heart' when '♥' then 'heart'
+        when 'D' then 'diamond' when '♦' then 'diamond'
+        when 'C' then 'club' when '♣' then 'club'
+        else null end;
+      v_leader := posti[(array_position(posti, t.declarer) % 4) + 1];
+
+      i := 0;
+      while i + 4 <= v_n loop
+        v_vince := v_giocate -> i;
+        for j in 1..3 loop
+          v_carta := v_giocate -> (i + j);
+          if (v_carta -> 'card' ->> 'suit') = (v_vince -> 'card' ->> 'suit') then
+            if array_position(ranghi, v_carta -> 'card' ->> 'rank') > array_position(ranghi, v_vince -> 'card' ->> 'rank') then
+              v_vince := v_carta;
+            end if;
+          elsif v_atout is not null and (v_carta -> 'card' ->> 'suit') = v_atout then
+            v_vince := v_carta;
+          end if;
+        end loop;
+        v_leader := v_vince ->> 'seat';
+        i := i + 4;
+      end loop;
+
+      v_turno := case when v_k = 0 then v_leader
+        else posti[(array_position(posti, v_giocate -> (v_n - 1) ->> 'seat') % 4) + 1] end;
+      if v_seat <> v_turno then
+        return jsonb_build_object('ok', false, 'errore', 'non tocca a te', 'turno', v_turno);
+      end if;
+    end if;
+  end if;
+
+  update public.live_tables
+  set played = v_giocate || jsonb_build_array(jsonb_build_object('seat', v_seat, 'card', p_card)),
       updated_at = now()
-  WHERE id = p_table_id;
+  where id = p_table_id;
 
-  RETURN jsonb_build_object('ok', true, 'seat', v_seat);
-END
+  return jsonb_build_object('ok', true, 'seat', v_seat);
+end
 $function$
 ;
 
@@ -7087,7 +7174,6 @@ GRANT EXECUTE ON FUNCTION public.aula_ruota(p_tavolo_id uuid) TO anon;
 GRANT EXECUTE ON FUNCTION public.aula_ruota(p_tavolo_id uuid) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.aula_ruota(p_tavolo_id uuid) TO service_role;
 REVOKE ALL ON FUNCTION public.aula_siediti(p_tavolo_id uuid, p_posto text) FROM PUBLIC, anon, authenticated, service_role;
-GRANT EXECUTE ON FUNCTION public.aula_siediti(p_tavolo_id uuid, p_posto text) TO anon;
 GRANT EXECUTE ON FUNCTION public.aula_siediti(p_tavolo_id uuid, p_posto text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.aula_siediti(p_tavolo_id uuid, p_posto text) TO service_role;
 REVOKE ALL ON FUNCTION public.aula_stato(p_sessione_id uuid) FROM PUBLIC, anon, authenticated, service_role;

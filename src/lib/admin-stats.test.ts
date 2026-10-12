@@ -291,7 +291,7 @@ describe("computeStats", () => {
     expect(s.platformLogins30d).toEqual({ ios: 1, android: 1, pwa: 0, web: 0, unknown: 1 });
   });
 
-  it("riporta i conteggi del portale istruttori così come ricevuti", () => {
+  it("riporta i conteggi del portale insegnanti così come ricevuti", () => {
     const s = baseStats();
     expect(s.instructors).toBe(1);
     expect(s.classes).toBe(4);

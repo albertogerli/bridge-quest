@@ -164,6 +164,8 @@ export type EsitoPosto =
   | { esito: "non-della-classe" }
   | { esito: "posto-inesistente" }
   | { esito: "posti-dall-insegnante" }
+  /** Già seduto altrove: il posto si sceglie una volta (`posto-fisso-2026-10.sql`). */
+  | { esito: "posto-gia-scelto"; posto: Position }
   | { esito: "errore" };
 
 /**

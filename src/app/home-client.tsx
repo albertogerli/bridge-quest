@@ -36,7 +36,8 @@ import { FindAsdBanner } from "@/components/home/banners/find-asd-banner";
 import { useLocalStats } from "@/hooks/use-local-stats";
 import { useGameStore, useHasHydrated } from "@/store/use-game-store";
 import { GraduationCap, Zap } from "lucide-react";
-import { reportError } from "@/lib/report-error";
+import { reportError, segnalaSalvoRete } from "@/lib/report-error";
+import { mieRichiesteInAttesa, type RichiestaInAttesa } from "@/lib/instructors";
 import { InstructorCard } from "@/components/home/instructor-card";
 import { useT } from "@/contexts/traduzioni-provider";
 import { AvvisoRichiesteAmicizia } from "@/components/avviso-richieste-amicizia";
@@ -65,7 +66,26 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
   const t = useT();
   const { user, profile: authProfile, loading: authLoading } = useSharedAuth();
   // Solo per chi ha fatto l'accesso: vedi `useEnrolledClasses`.
-  const { classes: classiIscritte } = useEnrolledClasses(!!user);
+  const { classes: classiIscritte, isLoaded: classiCaricate, error: erroreClassi } = useEnrolledClasses(!!user);
+  /**
+   * Le richieste di iscrizione ancora in attesa. Chi ha appena messo il codice
+   * del suo insegnante ed è in attesa non ha classi attive: senza questo
+   * finiva nell'avvio guidato «Il tuo primo torneo» e nella home generale,
+   * cioè in un percorso che il suo insegnante non ha scelto (feedback
+   * Trevissoi del 12/10/2026, punto 3.6).
+   */
+  const [richiesteInAttesa, setRichiesteInAttesa] = useState<RichiestaInAttesa[] | null>(null);
+  useEffect(() => {
+    if (!user) return;
+    let vivo = true;
+    mieRichiesteInAttesa()
+      .then((r) => { if (vivo) setRichiesteInAttesa(r); })
+      .catch((err) => {
+        segnalaSalvoRete("home:richieste-in-attesa", err);
+        if (vivo) setRichiesteInAttesa([]);
+      });
+    return () => { vivo = false; };
+  }, [user]);
   const { courses, isLoaded: catalogLoaded } = useCatalog();
   const stats = useLocalStats();
   const profile = useProfile();
@@ -260,7 +280,19 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
    * infinita se il profilo non arrivasse.
    */
   const insegnaGia = authProfile?.role === "instructor" || authProfile?.role === "admin";
-  if (showOnboarding && !insegnaGia) {
+  /**
+   * NEMMENO PER CHI ARRIVA DA UNA CLASSE. Chi è iscritto a un corso, o ha
+   * appena chiesto di entrarci con il codice, segue il percorso del suo
+   * insegnante: l'avvio guidato generico lo porterebbe altrove. Finché classi
+   * e richieste non sono arrivate non si mostra niente di generico — un
+   * istante — invece di mostrare l'avvio e poi toglierlo.
+   */
+  let codiceInSospeso = false;
+  try { codiceInSospeso = !!localStorage.getItem("bq_codice_classe"); } catch {}
+  const arrivaDaUnaClasse =
+    codiceInSospeso || classiIscritte.length > 0 || (richiesteInAttesa?.length ?? 0) > 0;
+  const classiNote = !user || ((classiCaricate || erroreClassi !== null) && richiesteInAttesa !== null);
+  if (showOnboarding && !insegnaGia && classiNote && !arrivaDaUnaClasse) {
     return <PrimaManoOnboarding onDismiss={handleOnboardingComplete} />;
   }
 
@@ -338,6 +370,23 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
   return (
     <div>
       <AvvisoRichiesteAmicizia className="mx-4 mt-4 sm:mx-auto sm:max-w-3xl" />
+      {/*
+        In attesa dell'insegnante: la prima cosa da sapere, prima di tutto il
+        resto della bacheca. Porta alla classe, dove si vede lo stato.
+      */}
+      {!insegna && classiIscritte.length === 0 && richiesteInAttesa && richiesteInAttesa.length > 0 && (
+        <Link
+          href={`/classi/${richiesteInAttesa[0].class_id}`}
+          className="mx-4 mt-4 block rounded-2xl border border-amber-400/60 bg-card p-4 sm:mx-auto sm:max-w-3xl"
+        >
+          <span className="block text-sm font-semibold text-foreground">
+            {t("La tua richiesta per «{nome}» è in attesa dell'insegnante", { nome: richiesteInAttesa[0].nome })}
+          </span>
+          <span className="block text-xs text-muted-foreground">
+            {t("Appena ti accetta, trovi qui la tua classe con i compiti.")}
+          </span>
+        </Link>
+      )}
       {/* Referral code handler (reads ?ref= from URL) */}
       <Suspense fallback={null}>
         <ReferralHandler onReferralBonus={handleReferralBonus} />

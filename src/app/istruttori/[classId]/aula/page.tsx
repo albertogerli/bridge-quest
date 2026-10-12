@@ -5,7 +5,7 @@ import Link from "@/components/link";
 import { LayoutGrid, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Briciole } from "@/components/briciole";
+import { BricioleClasse } from "@/components/istruttori/briciole-classe";
 import { PulsanteSegnalazione } from "@/components/pulsante-segnalazione";
 import { SondaggioAula } from "@/components/istruttori/sondaggio-aula";
 import { IngressoAula } from "@/components/istruttori/ingresso-aula";
@@ -194,13 +194,7 @@ export default function AulaPage({ params }: { params: Promise<{ classId: string
 
   return (
     <div className="mx-auto w-full max-w-3xl px-4 py-8 sm:px-6">
-      <Briciole
-        percorso={[
-          { etichetta: "Le tue classi", href: "/istruttori" },
-          { etichetta: "La classe", href: `/istruttori/${classId}` },
-          { etichetta: "Aula" },
-        ]}
-      />
+      <BricioleClasse classId={classId} pagina={"Aula"} />
       <h1 className="mb-1 flex items-center gap-2 font-display text-3xl font-bold">
         <LayoutGrid className="h-6 w-6 text-primary" aria-hidden="true" />
         {t("Aula")}

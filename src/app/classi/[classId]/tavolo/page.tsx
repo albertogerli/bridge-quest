@@ -30,6 +30,9 @@ const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3",
 const ETICHETTA: Record<Position, string> = {
   north: "Nord", east: "Est", south: "Sud", west: "Ovest",
 };
+const NOME_SEME: Record<Suit, string> = {
+  spade: "picche", heart: "cuori", diamond: "quadri", club: "fiori",
+};
 
 /**
  * Il tavolo condiviso, lato allievo.
@@ -56,6 +59,10 @@ export default function TavoloAllievoPage({
   const [videoAcceso, setVideoAcceso] = useState(false);
   const [cercato, setCercato] = useState(false);
   const [errore, setErrore] = useState("");
+  // Una carta alla volta: il doppio clic giocava la carta al primo tocco e
+  // al secondo riceveva «carta non giocabile» — un falso allarme dopo una
+  // giocata riuscita (Trevissoi, feedback 4, punto 3.5).
+  const [giocando, setGiocando] = useState(false);
 
   /**
    * Si RICHIEDE finché un tavolo non c'è.
@@ -179,18 +186,88 @@ export default function TavoloAllievoPage({
     ? getValidCards(stato.hands[stato.seat] ?? [], gioco?.presaCorrente ?? [])
     : [];
   const playableSet = new Set(miePlayable.map((c) => `${c.suit}-${c.rank}`));
+  const manoFinita = !!stato?.seat && (stato.hands[stato.seat]?.length ?? 0) === 0 && (stato.played?.length ?? 0) > 0;
 
-  const gioca = async (carta: Card) => {
-    if (!tableId) return;
-    setErrore("");
-    const esito = await playLiveCard(tableId, carta);
-    if (!esito.ok) setErrore(esito.errore ?? "Carta non giocabile.");
+  /**
+   * PERCHÉ una carta non si può giocare, detto prima di chiederlo al database.
+   * Le carte della propria mano restano tutte toccabili: una carta spenta che
+   * non risponde non insegna niente, una che dice «devi rispondere a cuori»
+   * insegna la regola.
+   */
+  const motivoNonGiocabile = (carta: Card): string | null => {
+    if (!gioco || !stato?.seat) return null;
+    if (manoFinita) return t("La mano è finita.");
+    if (gioco.turno !== stato.seat) {
+      return t("Non tocca a te: ora gioca {chi}.", { chi: t(ETICHETTA[gioco.turno]) });
+    }
+    if (!playableSet.has(`${carta.suit}-${carta.rank}`)) {
+      const attacco = gioco.presaCorrente[0]?.card.suit;
+      if (attacco) {
+        return t("Devi rispondere a {seme}: hai ancora carte di quel seme.", { seme: t(NOME_SEME[attacco]) });
+      }
+    }
+    return null;
   };
 
+  /** Le risposte del database, in parole che dicono cosa fare. */
+  const spiegaRifiuto = (codice: string | undefined, carta: Card): string | null => {
+    switch (codice) {
+      case "carta non giocabile": {
+        // Già giocata (tipicamente da un doppio clic, o da un'altra scheda):
+        // non c'è niente da dire, solo da rileggere il tavolo.
+        const giaUscita = (stato?.played ?? []).some(
+          (g) => g.card.suit === carta.suit && g.card.rank === carta.rank,
+        );
+        return giaUscita ? null : t("Questa carta non è più nella tua mano: aggiorno il tavolo.");
+      }
+      case "nessun posto assegnato":
+        return t("Prima siediti: scegli il tuo posto qui sopra.");
+      case "tavolo non disponibile":
+        return t("L'insegnante ha chiuso il tavolo.");
+      case "non fai parte di questa classe":
+        return t("Non risulti iscritto a questa classe.");
+      // Gli stessi controlli dell'interfaccia, ripetuti dal server
+      // (gioco-regole-server-2026-10.sql): arrivano qui solo se la vista era
+      // rimasta indietro rispetto al tavolo.
+      case "non tocca a te":
+        return t("Non tocca a te: aggiorno il tavolo.");
+      case "devi rispondere al seme":
+        return t("Devi rispondere al seme della presa: hai ancora carte di quel seme.");
+      case "mano finita":
+        return t("La mano è finita.");
+      default:
+        return codice ?? t("Non è stato possibile giocare la carta. Riprova.");
+    }
+  };
+
+  const gioca = async (carta: Card) => {
+    if (!tableId || giocando) return;
+    const motivo = motivoNonGiocabile(carta);
+    if (motivo) {
+      setErrore(motivo);
+      return;
+    }
+    setErrore("");
+    setGiocando(true);
+    try {
+      const esito = await playLiveCard(tableId, carta);
+      if (!esito.ok) {
+        setErrore(spiegaRifiuto(esito.errore, carta) ?? "");
+        const aggiornato = await getLiveTable(tableId);
+        if (aggiornato) setStato(aggiornato);
+      }
+    } finally {
+      setGiocando(false);
+    }
+  };
+
+  const altreVisibili = visibili.filter((p) => p !== stato?.seat);
+  const miaVisibile = !!stato?.seat && visibili.includes(stato.seat);
+
   return (
-    <div className="min-h-screen px-4 py-6 max-w-2xl mx-auto">
-      <header className="mb-4 text-center">
-        <h1 className="text-xl font-bold font-display">{stato?.titolo ?? "Tavolo della classe"}</h1>
+    <div className="min-h-screen px-4 py-4 max-w-2xl mx-auto">
+      <header className="mb-3 text-center">
+        <h1 className="text-xl font-bold font-display">{stato?.titolo ?? t("Tavolo della classe")}</h1>
         {stato?.seat ? (
           <p className="text-sm text-muted-foreground mt-1">
             {t("Sei")}<strong>{ETICHETTA[stato.seat]}</strong>
@@ -243,109 +320,149 @@ export default function TavoloAllievoPage({
       */}
       <SondaggioAllievo classId={classId} />
 
+      {/*
+        UN BLOCCO SOLO per tutto quello che serve mentre si gioca: contratto,
+        chi dichiara, il proprio posto, le prese, la presa in corso con ogni
+        carta vicino a chi l'ha giocata, il turno e la propria mano. Prima
+        erano quattro riquadri impilati, e su uno schermo da PC la mano finiva
+        sotto la piega (Trevissoi, feedback 4, punto 3.2).
+      */}
       {stato?.contract && (
-        <p className="text-center text-lg font-bold text-figb mb-4">
-          {contrattoLeggibile(stato.contract)}
-          {stato.declarer ? ` — dichiara ${ETICHETTA[stato.declarer]}` : ""}
-        </p>
-      )}
-
-      {gioco && (
-        <div className="rounded-2xl border border-border bg-card p-3 mb-4 text-center">
-          <p className="text-xs text-muted-foreground mb-1">
-            Presa {gioco.prese.length + 1} · Nord-Sud {gioco.preseNs} · Est-Ovest {gioco.preseEw}
-          </p>
-          <div className="flex items-center justify-center gap-3 min-h-[2rem]">
-            {gioco.presaCorrente.map((p, i) => (
-              <span key={i} className="text-lg font-mono flex items-center gap-1">
-                <SuitSymbol suit={p.card.suit} size="xs" />
-                {p.card.rank}
-              </span>
-            ))}
-            {gioco.presaCorrente.length === 0 && (
-              <span className="text-xs text-muted-foreground">presa nuova</span>
+        <section className="mb-4 rounded-2xl border-2 border-figb/30 bg-card p-3 sm:p-4">
+          <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+            <p className="text-2xl font-bold text-figb font-display">
+              {contrattoLeggibile(stato.contract)}
+              {stato.declarer && (
+                <span className="ml-2 text-sm font-semibold text-muted-foreground">
+                  {t("dichiara {chi}", { chi: t(ETICHETTA[stato.declarer]) })}
+                </span>
+              )}
+            </p>
+            {gioco && (
+              <p className="text-sm tabular-nums text-muted-foreground">
+                {t("Presa {n}", { n: Math.min(gioco.prese.length + 1, 13) })} · {t("Nord-Sud")} <strong className="text-foreground">{gioco.preseNs}</strong> · {t("Est-Ovest")} <strong className="text-foreground">{gioco.preseEw}</strong>
+              </p>
             )}
           </div>
-          {/*
-            ANNUNCIATO, non solo scritto. Di chi sia il turno cambia da solo —
-            lo decide una carta giocata da un'altra persona — e chi non guarda
-            lo schermo in quel momento non ha modo di accorgersene. È l'unica
-            cosa del tavolo che cambia senza che sia stato l'utente a farla
-            cambiare, ed è quella che serve sapere.
 
-            `polite` e non `assertive`: interrompere la lettura di una mano per
-            dire che tocca a un altro è peggio che dirlo un momento dopo.
-          */}
-          <p className="text-sm font-semibold mt-1" aria-live="polite" role="status">
-            {tocca ? "Tocca a te" : `Gioca ${ETICHETTA[gioco.turno]}`}
-          </p>
-        </div>
+          {gioco && (
+            <div className="my-3 grid grid-cols-3 grid-rows-3 items-center justify-items-center gap-1 rounded-xl bg-muted/40 py-2 text-sm">
+              {(["north", "west", "east", "south"] as Position[]).map((pos) => {
+                const giocata = gioco.presaCorrente.find((g) => g.position === pos);
+                const area =
+                  pos === "north" ? "col-start-2 row-start-1"
+                  : pos === "south" ? "col-start-2 row-start-3"
+                  : pos === "west" ? "col-start-1 row-start-2"
+                  : "col-start-3 row-start-2";
+                return (
+                  <div key={pos} className={`${area} flex flex-col items-center leading-tight`}>
+                    <span className={`text-xs font-semibold uppercase tracking-wide ${pos === stato.seat ? "text-figb" : "text-muted-foreground"}`}>
+                      {pos === stato.seat ? t("Tu") : t(ETICHETTA[pos])}
+                    </span>
+                    <span className="flex min-h-8 items-center gap-0.5 text-xl font-bold">
+                      {giocata ? (
+                        <>
+                          <SuitSymbol suit={giocata.card.suit} size="sm" />
+                          {giocata.card.rank}
+                        </>
+                      ) : (
+                        <span className="text-muted-foreground/50">·</span>
+                      )}
+                    </span>
+                  </div>
+                );
+              })}
+              {/*
+                ANNUNCIATO, non solo scritto: il turno cambia per una carta
+                giocata da un altro, e chi non guarda lo schermo in quel momento
+                non ha modo di accorgersene. `polite`: non interrompe.
+              */}
+              <p
+                className={`col-start-2 row-start-2 text-center font-semibold ${tocca ? "text-figb" : ""}`}
+                aria-live="polite"
+                role="status"
+              >
+                {manoFinita ? t("Mano finita") : tocca ? t("Tocca a te") : t("Gioca {chi}", { chi: t(ETICHETTA[gioco.turno]) })}
+              </p>
+            </div>
+          )}
+
+          {errore && <p className="mb-2 text-center text-sm font-medium text-destructive" role="alert">{errore}</p>}
+
+          {miaVisibile && stato.seat && (
+            <div>
+              <p className="mb-1 flex items-baseline justify-between text-sm">
+                <span className="font-semibold text-figb">
+                  {t("La tua mano")} · {t(ETICHETTA[stato.seat])}
+                </span>
+                <span className="text-xs text-muted-foreground">{handHcp(stato.hands[stato.seat] ?? [])} PO</span>
+              </p>
+              <div className="space-y-1">
+                {SUITS.map((suit) => {
+                  const delSeme = (stato.hands[stato.seat!] ?? [])
+                    .filter((c) => c.suit === suit)
+                    .sort((a, b) => RANK_ORDER.indexOf(a.rank) - RANK_ORDER.indexOf(b.rank));
+                  return (
+                    <div key={suit} className="flex flex-wrap items-center gap-1">
+                      <span className="w-6 shrink-0"><SuitSymbol suit={suit} size="md" /></span>
+                      {delSeme.length === 0 && <span className="text-xl text-muted-foreground">—</span>}
+                      {delSeme.map((c) => {
+                        const giocabile = playableSet.has(`${c.suit}-${c.rank}`);
+                        return (
+                          <button
+                            key={`${c.suit}-${c.rank}`}
+                            onClick={() => void gioca(c)}
+                            disabled={giocando}
+                            aria-label={`${c.rank} ${t(NOME_SEME[c.suit])}`}
+                            className={`min-h-11 min-w-10 rounded-lg border px-1.5 text-2xl font-bold transition-colors ${
+                              giocabile
+                                ? "border-figb bg-figb/10 hover:bg-figb/20"
+                                : "border-border bg-background opacity-60"
+                            }`}
+                          >
+                            {c.rank}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </section>
       )}
 
-      {errore && <p className="text-sm text-destructive text-center mb-3">{errore}</p>}
+      {!stato?.contract && errore && <p className="text-sm text-destructive text-center mb-3">{errore}</p>}
 
       {visibili.length === 0 ? (
         <p className="py-16 text-center text-sm text-muted-foreground">
           {t("L'insegnante non ha ancora scoperto nessuna mano.")}
         </p>
       ) : (
-        <div className="grid gap-3 sm:grid-cols-2">
-          {visibili.map((p) => (
-            <div
-              key={p}
-              className={`rounded-2xl border-2 p-4 ${
-                p === stato?.seat ? "border-figb bg-figb/5" : "border-border bg-card"
-              }`}
-            >
-              <div className="flex items-baseline justify-between mb-2">
-                <span className="font-bold text-lg">
-                  {ETICHETTA[p]}
-                  {p === stato?.seat && (
-                    <span className="ml-2 text-xs font-semibold text-figb">la tua mano</span>
-                  )}
-                </span>
-                <span className="text-xs text-muted-foreground">
-                  {handHcp(stato?.hands[p] ?? [])} PO
-                </span>
-              </div>
-              {SUITS.map((suit) => {
-                const delSeme = (stato?.hands[p] ?? [])
-                  .filter((c) => c.suit === suit)
-                  .sort((a, b) => RANK_ORDER.indexOf(a.rank) - RANK_ORDER.indexOf(b.rank));
-                if (delSeme.length === 0) {
+        altreVisibili.length > 0 && (
+          <div className="grid gap-2 sm:grid-cols-2">
+            {altreVisibili.map((p) => (
+              <div key={p} className="rounded-xl border border-border bg-card px-3 py-2">
+                <div className="mb-1 flex items-baseline justify-between">
+                  <span className="font-bold">{t(ETICHETTA[p])}</span>
+                  <span className="text-xs text-muted-foreground">{handHcp(stato?.hands[p] ?? [])} PO</span>
+                </div>
+                {SUITS.map((suit) => {
+                  const delSeme = (stato?.hands[p] ?? [])
+                    .filter((c) => c.suit === suit)
+                    .sort((a, b) => RANK_ORDER.indexOf(a.rank) - RANK_ORDER.indexOf(b.rank));
                   return (
-                    <p key={suit} className="text-xl font-mono flex items-center gap-2 leading-snug">
-                      <SuitSymbol suit={suit} size="sm" />—
+                    <p key={suit} className="flex items-center gap-1.5 text-lg font-semibold leading-snug">
+                      <SuitSymbol suit={suit} size="sm" />
+                      {delSeme.length === 0 ? "—" : delSeme.map((c) => c.rank).join(" ")}
                     </p>
                   );
-                }
-                return (
-                  <div key={suit} className="flex items-center gap-2 flex-wrap leading-snug">
-                    <SuitSymbol suit={suit} size="sm" />
-                    {delSeme.map((c) => {
-                      const mia = p === stato?.seat;
-                      const giocabile = mia && playableSet.has(`${c.suit}-${c.rank}`);
-                      return (
-                        <button
-                          key={`${c.suit}-${c.rank}`}
-                          disabled={!giocabile}
-                          onClick={() => gioca(c)}
-                          className={`text-xl font-mono px-1 rounded ${
-                            giocabile
-                              ? "bg-figb/10 hover:bg-figb/20 border border-figb/40"
-                              : mia ? "opacity-50" : ""
-                          }`}
-                        >
-                          {c.rank}
-                        </button>
-                      );
-                    })}
-                  </div>
-                );
-              })}
-            </div>
-          ))}
-        </div>
+                })}
+              </div>
+            ))}
+          </div>
+        )
       )}
 
       <p className="text-center text-xs text-muted-foreground mt-6">

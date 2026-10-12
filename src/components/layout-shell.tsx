@@ -25,6 +25,8 @@ import { useExitIntent } from "@/hooks/use-exit-intent";
 import type { UserProfile } from "@/hooks/use-profile";
 import { configureStatusBar } from "@/lib/native-bridge";
 import { IscrizioneInSospeso } from "@/components/iscrizione-in-sospeso";
+import { IntestazioneCorso } from "@/components/intestazione-corso";
+import { useModalitaCorso } from "@/hooks/use-modalita-corso";
 
 // Overlay one-shot presenti nel layout condiviso (quindi in TUTTE le route) ma
 // invisibili al primo paint: caricarli staticamente costava a ogni pagina il
@@ -106,6 +108,8 @@ function LayoutShellInner({ children }: { children: React.ReactNode }) {
     }
   }, [pathname]);
   const accessibile = isPublic || (ospite === true && apertaAgliOspiti(pathname));
+  // Insegnanti e allievi dentro un corso: niente colonne laterali (vedi l'hook).
+  const modalitaCorso = useModalitaCorso();
   const [profile, setProfile] = useState<UserProfile>("adulto");
   const { showExitModal, setShowExitModal } = useExitIntent();
   // Una volta armato resta montato: così l'animazione di chiusura del Dialog
@@ -201,48 +205,9 @@ function LayoutShellInner({ children }: { children: React.ReactNode }) {
     );
   }
 
-  return (
-    <div className="flex min-h-svh bg-background safe-area-top" data-profile={profile}>
-      {/* Left nav - desktop only. Chi non ha né account né la prova avviata
-          non la vede: ogni voce lo porterebbe al login, e mostrare una fila
-          di porte chiuse è chiedere prima di aver dato. */}
-      {(user || ospite) && <DesktopNav />}
-
-      {/* Center: main content */}
-      <div className="flex-1 flex flex-col min-w-0">
-        <SyncNotice />
-        {/* pb-28: il bottone "Gioca" e' alto 60px e sporge di 24 sopra la barra
-            (-mt-6), piu' la sua ombra. Con pb-20 copriva l'ultima riga di
-            contenuto su OGNI schermata — "4 CORSI" nella landing, il titolo
-            "Pratica" su Gioca, "Completa il mondo precedente" su Lezioni. */}
-        <main id="main-content" className="flex-1 pb-28 lg:pb-6">
-          {/*
-            IL RITORNO STA QUI, non nelle singole pagine.
-            Delle ventidue pagine sotto le classi ne avevano uno vero due, e
-            dove c'era non era la stessa cosa: nella pagina della classe
-            compariva solo in caso di errore, nel tavolo di studio «Indietro»
-            vuol dire annulla l'ultima carta. Mettendolo nella cornice non si
-            può né dimenticare né spostare, e la regola su dove porta è una
-            funzione con i suoi test (`navigazione-indietro.ts`).
-          */}
-          {ritorno && (
-            <div className="mx-auto w-full max-w-6xl px-4 pt-3">
-              <TornaIndietro href={ritorno.href} etichetta={t(ritorno.etichetta)} />
-            </div>
-          )}
-          {children}
-        </main>
-        <div className="hidden lg:block">
-          <SiteFooter />
-        </div>
-        {(user || ospite) && <BottomNav />}
-      </div>
-
-      {/* Right sidebar - desktop only */}
-      <div className="hidden lg:block px-6 pt-6">
-        <DesktopSidebar />
-      </div>
-
+  // Gli strati che stanno sopra a qualunque pagina, in entrambe le cornici.
+  const sovrapposti = (
+    <>
       {/* Cookie consent banner */}
       <CookieBanner />
 
@@ -260,6 +225,83 @@ function LayoutShellInner({ children }: { children: React.ReactNode }) {
           }}
         />
       )}
+    </>
+  );
+
+  const ritornoEContenuto = (
+    <>
+      {/*
+        IL RITORNO STA QUI, non nelle singole pagine.
+        Delle ventidue pagine sotto le classi ne avevano uno vero due, e
+        dove c'era non era la stessa cosa: nella pagina della classe
+        compariva solo in caso di errore, nel tavolo di studio «Indietro»
+        vuol dire annulla l'ultima carta. Mettendolo nella cornice non si
+        può né dimenticare né spostare, e la regola su dove porta è una
+        funzione con i suoi test (`navigazione-indietro.ts`).
+      */}
+      {ritorno && (
+        <div className="mx-auto w-full max-w-6xl px-4 pt-3">
+          <TornaIndietro href={ritorno.href} etichetta={t(ritorno.etichetta)} />
+        </div>
+      )}
+      {children}
+    </>
+  );
+
+  /**
+   * MODALITÀ CORSO: un'intestazione con il menù dietro un tasto e «Esci» a
+   * destra, poi il contenuto a tutta larghezza. Niente colonna sinistra né
+   * destra. La barra in basso del telefono resta: è lì che si naviga dal
+   * telefono, e toglierla non libererebbe spazio a nessuno.
+   */
+  if (modalitaCorso) {
+    return (
+      <div className="flex min-h-svh flex-col bg-background safe-area-top" data-profile={profile}>
+        <IntestazioneCorso />
+        <div className="flex-1 flex flex-col min-w-0">
+          <SyncNotice />
+          <main id="main-content" className="flex-1 pb-28 lg:pb-6">
+            {ritornoEContenuto}
+          </main>
+          <div className="hidden lg:block">
+            <SiteFooter />
+          </div>
+          <BottomNav />
+        </div>
+        {sovrapposti}
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex min-h-svh bg-background safe-area-top" data-profile={profile}>
+      {/* Left nav - desktop only. Chi non ha né account né la prova avviata
+          non la vede: ogni voce lo porterebbe al login, e mostrare una fila
+          di porte chiuse è chiedere prima di aver dato. */}
+      {(user || ospite) && <DesktopNav />}
+
+      {/* Center: main content */}
+      <div className="flex-1 flex flex-col min-w-0">
+        <SyncNotice />
+        {/* pb-28: il bottone "Gioca" e' alto 60px e sporge di 24 sopra la barra
+            (-mt-6), piu' la sua ombra. Con pb-20 copriva l'ultima riga di
+            contenuto su OGNI schermata — "4 CORSI" nella landing, il titolo
+            "Pratica" su Gioca, "Completa il mondo precedente" su Lezioni. */}
+        <main id="main-content" className="flex-1 pb-28 lg:pb-6">
+          {ritornoEContenuto}
+        </main>
+        <div className="hidden lg:block">
+          <SiteFooter />
+        </div>
+        {(user || ospite) && <BottomNav />}
+      </div>
+
+      {/* Right sidebar - desktop only */}
+      <div className="hidden lg:block px-6 pt-6">
+        <DesktopSidebar />
+      </div>
+
+      {sovrapposti}
     </div>
   );
 }

@@ -27,6 +27,7 @@ import { ETICHETTE_STATO } from "@/lib/instructors";
 import { createClass } from "@/lib/instructors";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { StrumentiLezione } from "@/components/istruttori/strumenti-lezione";
+import { ElencoAllieviTutte } from "@/components/istruttori/elenco-allievi-tutte";
 import { useT } from "@/contexts/traduzioni-provider";
 import { createClient } from "@/lib/supabase/client";
 import { segnalaSalvoRete } from "@/lib/report-error";
@@ -68,7 +69,7 @@ export default function IstruttoriPage() {
           supabase.from("class_members").select("student_id", { count: "exact", head: true }).eq("class_id", id).eq("status", "active"),
           supabase.from("assignments").select("id", { count: "exact", head: true }).eq("class_id", id),
         ]);
-        if (m.error || a.error) segnalaSalvoRete("istruttori:storico", m.error ?? a.error);
+        if (m.error || a.error) segnalaSalvoRete("insegnanti:storico", m.error ?? a.error);
         return [id, { allievi: m.count ?? 0, compiti: a.count ?? 0 }] as const;
       }),
     ).then((righe) => {
@@ -119,7 +120,7 @@ export default function IstruttoriPage() {
         <div>
           <div className="flex items-center gap-2">
             <p className="text-xs font-semibold uppercase tracking-wide text-[#7a5a0f] dark:text-[#c8a44e]">
-              {t("Portale Istruttori")}
+              {t("Portale Insegnanti")}
             </p>
             <span className="rounded-full bg-[#c8a44e]/15 px-2 py-0.5 text-[12px] font-bold uppercase tracking-wider text-[#7a5a0f] dark:text-[#c8a44e]">
               {t("Beta")}
@@ -222,6 +223,11 @@ export default function IstruttoriPage() {
             </Link>
           </motion.div>
         ))}
+      </div>
+
+      {/* Gli allievi di tutte le classi attive: visualizzare, stampare, esportare. */}
+      <div className="mt-8">
+        <ElencoAllieviTutte classi={attive} />
       </div>
 
       {/* Strumenti per la lezione: stessi della home, definiti una volta sola.

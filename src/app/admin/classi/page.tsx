@@ -78,7 +78,7 @@ export default function AdminClassesPage() {
     <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6">
       <div className="mb-1 flex items-center gap-3">
         <h1 className="font-display text-3xl font-bold text-foreground sm:text-4xl">{t("Classi")}</h1>
-        <Link href="/admin/istruttori" className="text-sm text-primary hover:underline">→ Richieste istruttori</Link>
+        <Link href="/admin/istruttori" className="text-sm text-primary hover:underline">→ Richieste insegnanti</Link>
       </div>
       <p className="mb-6 text-sm text-muted-foreground">
         {t("Tutte le classi create sulla piattaforma.")}
@@ -142,7 +142,7 @@ export default function AdminClassesPage() {
                         <div>
                           <CardTitle className="text-lg">{c.name}</CardTitle>
                           <p className="text-sm text-muted-foreground">
-                            {t("Istruttore:")} <span className="font-medium text-foreground">{c.instructor_name ?? "—"}</span>{" "}
+                            {t("Insegnante:")} <span className="font-medium text-foreground">{c.instructor_name ?? "—"}</span>{" "}
                             ({c.instructor_email}) {c.asd_code && `· ASD ${c.asd_code}`}
                           </p>
                         </div>

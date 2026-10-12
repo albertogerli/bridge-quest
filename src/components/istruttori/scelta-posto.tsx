@@ -114,6 +114,10 @@ export function SceltaPosto({
       case "non-della-classe":
         setMessaggio(t("Non risulti iscritto a questa classe."));
         break;
+      case "posto-gia-scelto":
+        // Cambiare posto vorrebbe dire vedere le carte di un altro giocatore.
+        setMessaggio(t("Hai già scelto il tuo posto. Se devi cambiarlo, chiedilo all'insegnante."));
+        break;
       default:
         setMessaggio(t("Non sono riuscito a farti sedere. Riprova."));
     }
