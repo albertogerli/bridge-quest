@@ -2397,7 +2397,7 @@
   "Mostra la password": "Show password",
   "Almeno 6 caratteri. Evita password semplici o già usate altrove (come «123456» o «password»): il sistema le rifiuta.": "At least 6 characters. Avoid simple passwords or ones used elsewhere (like “123456” or “password”): the system rejects them.",
   "Scrivila di nuovo": "Type it again",
-  "Le due password non coincidono.": "The two passwords don't match.",
+  "Le due password non coincidono.": "The two passwords are different.",
   "La password deve avere almeno 6 caratteri": "The password must be at least 6 characters",
   "Inserisci il tuo nome": "Enter your name",
   "Stai per eliminare il tuo account": "You're about to delete your account",

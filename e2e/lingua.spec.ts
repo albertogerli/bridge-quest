@@ -22,7 +22,7 @@ test.describe("la lingua nell'indirizzo", () => {
     // pagina vera e non un «non trovato» col titolo giusto. In inglese si
     // chiama «Learn»: da quando la navigazione è tradotta, cercare «Impara»
     // qui fallirebbe — ed è giusto così, il test ha colto il cambiamento.
-    await expect(page.getByRole("link", { name: "Learn" }).first()).toBeVisible({
+    await expect(page.getByRole("link", { name: "Path" }).first()).toBeVisible({
       timeout: 45_000,
     });
   });
@@ -97,17 +97,17 @@ test.describe("le stringhe tradotte", () => {
 
     await page.goto("/en");
     await expect(
-      page.getByRole("link", { name: "Learn" }).first(),
+      page.getByRole("link", { name: "Path" }).first(),
       "sotto /en la navigazione deve essere tradotta"
     ).toBeVisible({ timeout: 45_000 });
 
     await page.goto("/");
     await expect(
-      page.getByRole("link", { name: "Impara" }).first(),
+      page.getByRole("link", { name: "Percorso" }).first(),
       "in italiano deve restare italiana"
     ).toBeVisible({ timeout: 45_000 });
     // E l'inglese non deve comparire dove non c'entra.
-    await expect(page.getByRole("link", { name: "Learn" })).toHaveCount(0);
+    await expect(page.getByRole("link", { name: "Path" })).toHaveCount(0);
   });
 
   test("una frase non ancora tradotta resta in italiano, non sparisce", async ({ page }) => {
