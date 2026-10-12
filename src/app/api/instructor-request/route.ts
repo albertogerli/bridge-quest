@@ -109,11 +109,11 @@ async function sendAdminEmail(input: {
 
   const from = process.env.RESEND_FROM || "BridgeLab <onboarding@resend.dev>";
   const html = `
-    <h2>Nuova richiesta istruttore</h2>
-    <p><strong>${escapeHtml(input.applicantName)}</strong> (${escapeHtml(input.applicantEmail)}) ha richiesto l'accesso al Portale Istruttori.</p>
+    <h2>Nuova richiesta insegnante</h2>
+    <p><strong>${escapeHtml(input.applicantName)}</strong> (${escapeHtml(input.applicantEmail)}) ha richiesto l'accesso al Portale Insegnanti.</p>
     ${input.asdCode ? `<p>ASD: ${escapeHtml(input.asdCode)}</p>` : ""}
     ${input.message ? `<p>Messaggio:<br>${escapeHtml(input.message)}</p>` : ""}
-    <p>Approva o rifiuta da: <a href="https://bridgelab.it/admin/istruttori">Pannello richieste istruttori</a></p>
+    <p>Approva o rifiuta da: <a href="https://bridgelab.it/admin/istruttori">Pannello richieste insegnanti</a></p>
   `;
 
   try {
@@ -126,7 +126,7 @@ async function sendAdminEmail(input: {
       body: JSON.stringify({
         from,
         to: [ADMIN_EMAIL],
-        subject: `Richiesta istruttore: ${input.applicantName}`,
+        subject: `Richiesta insegnante: ${input.applicantName}`,
         html,
         reply_to: input.applicantEmail,
       }),

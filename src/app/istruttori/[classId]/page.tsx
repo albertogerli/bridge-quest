@@ -24,6 +24,7 @@ import { ElencoAdesioni } from "@/components/istruttori/elenco-adesioni";
 import { IngressoAula } from "@/components/istruttori/ingresso-aula";
 import { invitoClasse, linkWhatsApp } from "@/lib/whatsapp";
 import {
+  compitiSvoltiPerAllievo,
   getClassDetail,
   regenerateInviteCode,
   setInviteActive,
@@ -45,6 +46,7 @@ import { segnalaSalvoRete } from "@/lib/report-error";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { StrumentiLezione } from "@/components/istruttori/strumenti-lezione";
 import { useAlRitorno } from "@/hooks/use-al-ritorno";
+import { ElencoAllieviEsporta } from "@/components/istruttori/elenco-allievi-esporta";
 
 export default function ClassDetailPage({
   params,
@@ -56,6 +58,23 @@ export default function ClassDetailPage({
   const { classId } = use(params);
 
   const [detail, setDetail] = useState<ClassDetail | null>(null);
+  /** Compiti svolti per allievo, per l'elenco da stampare ed esportare. */
+  const [svolti, setSvolti] = useState<Map<string, number>>(new Map());
+  const idCompiti = detail?.assignments.map((a) => a.id).join(",") ?? "";
+  useEffect(() => {
+    if (!detail || detail.assignments.length === 0) return;
+    let vivo = true;
+    compitiSvoltiPerAllievo(detail.assignments)
+      .then((m) => {
+        if (vivo) setSvolti(m);
+      })
+      .catch((err) => segnalaSalvoRete("istruttori/classe:compiti-svolti", err));
+    return () => {
+      vivo = false;
+    };
+    // Si rilegge quando cambiano i compiti, non a ogni aggiornamento della pagina.
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- dipende da idCompiti, l'elenco degli id
+  }, [idCompiti]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -398,7 +417,7 @@ export default function ClassDetailPage({
                 </span>
                 <div className="ml-auto flex gap-2">
                   <Button size="sm" disabled={busy} onClick={() => void decidiSelezionate("approva")}>
-                    {t("Falle entrare")}
+                    {t("Accetta le selezionate")}
                   </Button>
                   <Button
                     size="sm"
@@ -443,7 +462,7 @@ export default function ClassDetailPage({
                 </span>
                 <div className="ml-auto flex gap-2">
                   <Button size="sm" disabled={busy} onClick={() => void decidi(m.student_id, "approva")}>
-                    {t("Fallo entrare")}
+                    {t("Accetta")}
                   </Button>
                   <Button
                     size="sm"
@@ -517,7 +536,7 @@ export default function ClassDetailPage({
             spingere la pagina di lato (controllo del 28/09/2026). */}
         <TabsList className="max-w-full overflow-x-auto justify-start">
           <TabsTrigger value="compiti">Compiti ({assignments.length})</TabsTrigger>
-          <TabsTrigger value="lezioni">{t("Lezioni")}</TabsTrigger>
+          <TabsTrigger value="lezioni">{t("Mani delle lezioni")}</TabsTrigger>
           <TabsTrigger value="allievi">Allievi ({members.length})</TabsTrigger>
           <TabsTrigger value="classifica">{t("Classifica")}</TabsTrigger>
           <TabsTrigger value="chat">{t("Chat")}</TabsTrigger>
@@ -542,14 +561,14 @@ export default function ClassDetailPage({
                 {t("Nessun compito ancora.")}
               </p>
               <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
-                {t("Il modo più rapido: assegna una lezione intera, con le sue mani già dentro. Oppure scegli tu le mani una per una.")}
+                {t("Due modi per dare da giocare alla classe. «Mani di una lezione»: un tocco e gli allievi trovano come compito tutte le smazzate di una lezione del corso. «Compito su misura»: scegli tu le mani, una per una.")}
               </p>
               <div className="mt-4 flex flex-wrap justify-center gap-2">
                 <Button onClick={() => setScheda("lezioni")}>
-                  {t("Assegna una lezione")}
+                  {t("Mani di una lezione")}
                 </Button>
                 <Link href={`/istruttori/${classId}/nuovo-compito`}>
-                  <Button variant="outline">{t("Scegli le mani")}</Button>
+                  <Button variant="outline">{t("Compito su misura")}</Button>
                 </Link>
               </div>
             </div>
@@ -577,6 +596,21 @@ export default function ClassDetailPage({
 
         {/* Allievi */}
         <TabsContent value="allievi" className="mt-4">
+          {members.length + inAttesa.length > 0 && (
+            <div className="mb-3">
+              <ElencoAllieviEsporta
+                titolo={`${t("Allievi")} · ${classRoom.name}`}
+                righe={[...members, ...inAttesa].map((m) => ({
+                  nome: m.display_name ?? t("Allievo senza nome"),
+                  classe: classRoom.name,
+                  stato: m.status === "pending" ? t("in attesa") : t("iscritto"),
+                  iscrittoIl: new Date(m.joined_at).toLocaleDateString("it-IT"),
+                  compitiSvolti: svolti.get(m.student_id) ?? 0,
+                  compitiAssegnati: assignments.length,
+                }))}
+              />
+            </div>
+          )}
           {members.length === 0 ? (
             <p className="py-8 text-center text-sm text-muted-foreground">
               {t("Nessun allievo iscritto. Condividi il codice invito per farli entrare.")}
@@ -609,7 +643,7 @@ export default function ClassDetailPage({
         {/* Lezioni: assegnare in blocco */}
         <TabsContent value="lezioni" className="mt-4">
           <p className="mb-4 text-sm text-muted-foreground">
-            {t("Un tocco assegna tutte le mani della lezione. Per un compito su misura c'è «Nuovo compito».")}
+            {t("Qui si assegnano come compito le smazzate di una lezione del corso: un tocco su «Assegna» e la classe le trova tutte da giocare. Non manda la teoria né le dispense, solo le mani. Per scegliere tu le mani una per una c'è «Compito su misura».")}
           </p>
           <AssegnaLezioni classId={classId} onCambiato={() => void aggiornaSenzaSchermataDiCaricamento()} />
         </TabsContent>

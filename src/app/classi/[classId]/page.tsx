@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, use } from "react";
+import { useCallback, useEffect, useState, use } from "react";
 import { Briciole } from "@/components/briciole";
 import Link from "@/components/link";
 import { Badge } from "@/components/ui/badge";
@@ -25,6 +25,9 @@ import { Button } from "@/components/ui/button";
 import { useCatalog } from "@/store/use-catalog-store";
 import { SondaggioAllievo } from "@/components/sondaggio-allievo";
 import { useT } from "@/contexts/traduzioni-provider";
+import { useAlRitorno } from "@/hooks/use-al-ritorno";
+import { statoClasseAllievo, type StatoClasseAllievo } from "@/lib/classe-allievo";
+import { segnalaSalvoRete } from "@/lib/report-error";
 
 export default function StudentClassPage({
   params,
@@ -53,6 +56,24 @@ export default function StudentClassPage({
   const [tavoloAperto, setTavoloAperto] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  /**
+   * Attivo, in attesa, respinto o non iscritto. Prima la pagina dava per
+   * scontato «attivo», e chi era in attesa vedeva tre messaggi sbagliati
+   * (vedi `classe-allievo.ts`). Si rilegge al ritorno sulla pagina: quando
+   * l'insegnante approva, la classe si apre da sola.
+   */
+  const [iscrizione, setIscrizione] = useState<StatoClasseAllievo | null>(null);
+  const leggiIscrizione = useCallback(() => {
+    statoClasseAllievo(classId)
+      .then(setIscrizione)
+      .catch((err) => segnalaSalvoRete("classe-allievo:stato", err));
+  }, [classId]);
+  useEffect(() => {
+    leggiIscrizione();
+  }, [leggiIscrizione]);
+  useAlRitorno(leggiIscrizione, 30_000, iscrizione !== null && iscrizione.stato !== "active");
+  const attivo = iscrizione?.stato === "active";
+
   useEffect(() => {
     let vivo = true;
     const cerca = () => {
@@ -69,6 +90,7 @@ export default function StudentClassPage({
   }, [classId]);
 
   useEffect(() => {
+    if (!attivo) return;
     let active = true;
     (async () => {
       setLoading(true);
@@ -89,7 +111,7 @@ export default function StudentClassPage({
     return () => {
       active = false;
     };
-  }, [classId]);
+  }, [classId, attivo]);
 
   function isDone(a: Assignment): boolean {
     const done = progress.get(a.id);
@@ -110,17 +132,48 @@ export default function StudentClassPage({
 
   const todo = assignments.filter((a) => !isDone(a));
   const completed = assignments.filter(isDone);
+  const nomeClasse = classRoom?.name ?? iscrizione?.nome ?? t("La tua classe");
+
+  if (iscrizione && !attivo) {
+    return (
+      <div className="mx-auto w-full max-w-3xl px-4 py-8 sm:px-6">
+        <Briciole percorso={[{ etichetta: "Le mie classi", href: "/classi" }, { etichetta: nomeClasse }]} />
+        <h1 className="mb-6 font-display text-3xl font-bold text-foreground sm:text-4xl">{nomeClasse}</h1>
+        <div className="rounded-2xl border border-amber-400/60 bg-card p-5">
+          <p className="font-semibold">
+            {iscrizione.stato === "pending"
+              ? t("La tua richiesta è in attesa dell'insegnante")
+              : iscrizione.stato === "rejected"
+                ? t("La tua richiesta non è stata accettata")
+                : t("Non sei iscritto a questa classe")}
+          </p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {iscrizione.stato === "pending"
+              ? t("Appena ti accetta, qui trovi i compiti, la chat e i materiali del corso. Non serve rimandare il codice.")
+              : iscrizione.stato === "rejected"
+                ? t("Se pensi sia un errore, parlane con il tuo insegnante.")
+                : t("Per entrare ti serve il codice che ti ha dato il tuo insegnante.")}
+          </p>
+          {iscrizione.stato !== "pending" && (
+            <Link href="/classi" className="mt-3 inline-block text-sm font-semibold text-primary">
+              {t("Le mie classi →")}
+            </Link>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto w-full max-w-3xl px-4 py-8 sm:px-6">
       <Briciole
         percorso={[
           { etichetta: "Le mie classi", href: "/classi" },
-          { etichetta: classRoom?.name ?? "Classe" },
+          { etichetta: nomeClasse },
         ]}
       />
       <h1 className="mb-6 font-display text-3xl font-bold text-foreground sm:text-4xl">
-        {classRoom?.name ?? "Classe"}
+        {nomeClasse}
       </h1>
 
       <SondaggioAllievo classId={classId} />
@@ -172,7 +225,7 @@ export default function StudentClassPage({
         </div>
       ) : assignments.length === 0 ? (
         <p className="py-8 text-center text-sm text-muted-foreground">
-          {t("Il tuo istruttore non ha ancora assegnato compiti.")}
+          {t("Il tuo insegnante non ha ancora assegnato compiti.")}
         </p>
       ) : (
         <div className="space-y-8">
@@ -195,13 +248,21 @@ export default function StudentClassPage({
         </div>
       )}
 
-      {/* Class leaderboard */}
-      <section className="mt-8">
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-          🏆 Classifica della classe
-        </h2>
-        <ClassLeaderboard classId={classId} highlightUserId={profile?.id} />
-      </section>
+      {/*
+        LA CLASSIFICA SOLO SE L'INSEGNANTE L'HA PUBBLICATA. Si vedeva sempre,
+        anche quando l'insegnante non aveva ancora raccolto niente, e agli
+        allievi in attesa dava un errore. L'interruttore è quello che già
+        decide se nel confronto compaiono i nomi: una classifica è proprio
+        quello (feedback Trevissoi del 12/10/2026).
+      */}
+      {attivo && classRoom?.risultati_nominativi && (
+        <section className="mt-8">
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+            🏆 {t("Classifica della classe")}
+          </h2>
+          <ClassLeaderboard classId={classId} highlightUserId={profile?.id} />
+        </section>
+      )}
 
       {/*
         I MATERIALI, RAGGIUNTI DALLA CLASSE.

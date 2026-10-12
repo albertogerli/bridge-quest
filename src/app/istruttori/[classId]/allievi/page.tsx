@@ -4,7 +4,7 @@ import { use, useCallback, useEffect, useState } from "react";
 import Link from "@/components/link";
 import { Printer, Upload, UserMinus, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Briciole } from "@/components/briciole";
+import { BricioleClasse } from "@/components/istruttori/briciole-classe";
 import { createClient } from "@/lib/supabase/client";
 import { segnalaSalvoRete } from "@/lib/report-error";
 import {
@@ -228,13 +228,7 @@ export default function AllieviPage({
   return (
     <div className="mx-auto w-full max-w-3xl px-4 py-8 sm:px-6">
       <div className="print:hidden">
-        <Briciole
-          percorso={[
-            { etichetta: "Le tue classi", href: "/istruttori" },
-            { etichetta: "La classe", href: `/istruttori/${classId}` },
-            { etichetta: "Allievi e tavoli" },
-          ]}
-        />
+        <BricioleClasse classId={classId} pagina={"Allievi e tavoli"} />
         <h1 className="mb-1 font-display text-3xl font-bold">{t("Allievi e tavoli")}</h1>
         <p className="mb-6 text-sm text-muted-foreground">
           {t("Carica il tuo elenco da Excel — salvato come CSV — e componi i tavoli. Di ogni allievo conserviamo")}{" "}

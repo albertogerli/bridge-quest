@@ -148,7 +148,7 @@ function ClassiContent() {
           {t("Corsi e compiti")}
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          {t("Iscriviti con il codice del tuo istruttore e gioca le smazzate assegnate.")}
+          {t("Iscriviti con il codice del tuo insegnante e gioca le smazzate assegnate.")}
         </p>
       </div>
 

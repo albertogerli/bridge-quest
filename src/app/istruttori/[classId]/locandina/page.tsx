@@ -265,12 +265,46 @@ export default function LocandinaPage({ params }: { params: Promise<{ classId: s
         </div>
 
         {/* ── L'anteprima, che è il foglio vero rimpicciolito ────────────── */}
-        <div className="overflow-x-auto">
-          <div className="origin-top-left scale-[0.55] sm:scale-75" style={{ width: 794 }}>
-            <div className="shadow-xl">
-              <FoglioLocandina ref={foglio} testi={testi} facoltativi={facoltativi} logoAsd={logoAsd} qrSvg={svg} />
-            </div>
-          </div>
+        <AnteprimaIntera>
+          <FoglioLocandina ref={foglio} testi={testi} facoltativi={facoltativi} logoAsd={logoAsd} qrSvg={svg} />
+        </AnteprimaIntera>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Il foglio A4 (794×1123) rimpicciolito quanto basta per vederlo TUTTO: largo
+ * quanto la colonna e alto quanto lo schermo, senza scorrere né scaricarlo
+ * (feedback Trevissoi 4, punto 2.7). Con una scala fissa il riquadro restava
+ * grande quanto il foglio vero — una trasformazione non cambia l'ingombro — e
+ * la locandina si vedeva a metà sotto uno spazio vuoto.
+ */
+function AnteprimaIntera({ children }: { children: React.ReactNode }) {
+  const contenitore = useRef<HTMLDivElement>(null);
+  const [scala, setScala] = useState(0.6);
+  useEffect(() => {
+    const el = contenitore.current;
+    if (!el) return;
+    const misura = () => {
+      const perLarghezza = el.clientWidth / 794;
+      const perAltezza = (window.innerHeight - 140) / 1123;
+      setScala(Math.max(0.3, Math.min(1, perLarghezza, perAltezza)));
+    };
+    misura();
+    const osservatore = new ResizeObserver(misura);
+    osservatore.observe(el);
+    window.addEventListener("resize", misura);
+    return () => {
+      osservatore.disconnect();
+      window.removeEventListener("resize", misura);
+    };
+  }, []);
+  return (
+    <div ref={contenitore} className="min-w-0 lg:sticky lg:top-20 lg:self-start">
+      <div style={{ width: 794 * scala, height: 1123 * scala }} className="mx-auto">
+        <div className="origin-top-left shadow-xl" style={{ width: 794, transform: `scale(${scala})` }}>
+          {children}
         </div>
       </div>
     </div>

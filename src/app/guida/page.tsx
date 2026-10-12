@@ -151,8 +151,8 @@ const SECTIONS: Section[] = [
       },
       {
         emoji: "👨‍🏫",
-        title: "Per gli istruttori",
-        desc: "Il Portale Istruttori: crei classi, assegni compiti (anche importando le tue smazzate da file PBN), rivedi le mani giocate carta per carta e scopri gli errori ricorrenti di ogni allievo.",
+        title: "Per gli insegnanti",
+        desc: "Il Portale Insegnanti: crei classi, assegni compiti (anche importando le tue smazzate da file PBN), rivedi le mani giocate carta per carta e scopri gli errori ricorrenti di ogni allievo.",
         href: "/diventa-istruttore",
         cta: "Richiedi l'accesso",
       },

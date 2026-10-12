@@ -242,10 +242,28 @@ export async function getMyClasses(): Promise<ClassRoom[]> {
     .from("classes")
     .select("*")
     .eq("instructor_id", user.id)
-    .order("created_at", { ascending: false });
+    // In ordine di creazione, la più vecchia per prima (Trevissoi, ottobre
+    // 2026: «FIFO»). La nuova in testa spostava tutte le altre a ogni corso
+    // aperto, e chi ritrovava le classi a memoria per posizione si perdeva.
+    .order("created_at", { ascending: true });
 
   if (error) throw error;
   return (data ?? []) as ClassRoom[];
+}
+
+/**
+ * Solo il nome di una classe, per le briciole delle sottopagine.
+ *
+ * «Le tue classi › La classe › Allievi e tavoli» non diceva QUALE classe
+ * (Trevissoi, ottobre 2026): chi ne ha quattro aperte perdeva il filo appena
+ * entrava in una sottopagina. Una lettura minima, la stessa riga che le RLS
+ * già mostrano all'insegnante della classe.
+ */
+export async function nomeClasse(classId: string): Promise<string | null> {
+  const supabase = createClient();
+  const { data, error } = await supabase.from("classes").select("name").eq("id", classId).maybeSingle();
+  if (error) throw error;
+  return (data?.name as string | undefined) ?? null;
 }
 
 /** Full instructor view of one class: class + active members + assignments.
@@ -851,6 +869,31 @@ export async function getAssignmentResults(
   });
   if (error) throw error;
   return (data ?? []) as AssignmentResultRow[];
+}
+
+/**
+ * Quanti compiti ha svolto ciascun allievo, per l'elenco da esportare.
+ *
+ * Svolto = ha giocato tutte le mani del compito (o, per un compito di soli
+ * esercizi, ha consegnato qualcosa). Una lettura per compito, con la stessa
+ * RPC della griglia dei risultati: niente che l'insegnante non veda già.
+ */
+export async function compitiSvoltiPerAllievo(assignments: Assignment[]): Promise<Map<string, number>> {
+  const svolti = new Map<string, number>();
+  const tutte = await Promise.all(assignments.map((a) => getAssignmentResults(a.id).then((righe) => ({ a, righe }))));
+  for (const { a, righe } of tutte) {
+    const mani = new Map<string, Set<string>>();
+    for (const r of righe) {
+      const set = mani.get(r.student_id) ?? new Set<string>();
+      set.add(r.smazzata_id);
+      mani.set(r.student_id, set);
+    }
+    const servono = a.smazzata_ids.length;
+    for (const [studente, giocate] of mani) {
+      if (servono === 0 || giocate.size >= servono) svolti.set(studente, (svolti.get(studente) ?? 0) + 1);
+    }
+  }
+  return svolti;
 }
 
 /** Record a student's result for one hand of an assignment. Writes to the shared

@@ -39,6 +39,12 @@ export function VideoTavolo({
   const [telecamera, setTelecamera] = useState(true);
   const [riquadri, setRiquadri] = useState<Riquadro[]>([]);
   const [problema, setProblema] = useState<string | null>(null);
+  // Il proprio flusso ANCHE come stato, per l'anteprima «Tu». Collegarlo solo
+  // al `ref` non bastava: il <video> dell'anteprima nasce DOPO l'accensione
+  // (prima si vede solo il pulsante), quindi al momento di `getUserMedia` il
+  // ref era vuoto e il riquadro restava nero — chi accendeva la telecamera
+  // non si vedeva e concludeva che non funzionasse (feedback 4, punto 3.3).
+  const [mioFlussoVisibile, setMioFlussoVisibile] = useState<MediaStream | null>(null);
   const mioVideo = useRef<HTMLVideoElement>(null);
   const mioFlusso = useRef<MediaStream | null>(null);
   const maglia = useRef<ReturnType<typeof creaMaglia> | null>(null);
@@ -47,6 +53,7 @@ export function VideoTavolo({
     maglia.current?.chiudi();
     maglia.current = null;
     mioFlusso.current = null;
+    setMioFlussoVisibile(null);
     setRiquadri([]);
     setAcceso(false);
   }, []);
@@ -65,12 +72,14 @@ export function VideoTavolo({
       const nome = (err as { name?: string })?.name;
       if (nome === "NotAllowedError") setProblema(t("Hai negato l'accesso alla telecamera. Puoi cambiarlo dalle impostazioni del browser."));
       else if (nome === "NotFoundError") setProblema(t("Non trovo una telecamera su questo dispositivo."));
+      else if (nome === "NotReadableError") setProblema(t("La telecamera è già usata da un'altra applicazione (Zoom, Meet, Teams…): chiudila e riprova."));
+      else if (nome === "SecurityError") setProblema(t("Il browser non permette la telecamera su questa pagina."));
       else { setProblema(t("Non riesco ad accendere la telecamera.")); reportError("video-tavolo:accendi", err); }
       return;
     }
 
     mioFlusso.current = flusso;
-    if (mioVideo.current) mioVideo.current.srcObject = flusso;
+    setMioFlussoVisibile(flusso);
     setAcceso(true);
 
     const supabase = createClient();
@@ -127,7 +136,7 @@ export function VideoTavolo({
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
         <Riquadrino
           titolo={t("Tu")}
-          flusso={null}
+          flusso={mioFlussoVisibile}
           rif={mioVideo}
           spento={!telecamera}
           t={t}

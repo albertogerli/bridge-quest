@@ -24,6 +24,7 @@ import {
 import type { CardData } from "@/components/bridge/playing-card";
 import { classifyPlayErrors } from "@/lib/play-error-classifier";
 import { BiddingPanel } from "@/components/bridge/bidding-panel";
+import { senzaLicita } from "@/lib/gioco-della-carta";
 import { PannelloMinibridge } from "@/components/bridge/pannello-minibridge";
 import { PulsanteSegnalazione } from "@/components/pulsante-segnalazione";
 import { Cronometro, ripulisci } from "@/lib/tempi";
@@ -283,7 +284,7 @@ export default function CompitoPage({
                     Contratto {contrattoLeggibile(hand.contract)} ·{" "}
                     {hand.lesson > 0
                       ? `Lezione ${getLessonDisplayNumber(hand.lesson)}`
-                      : "Mano dell'istruttore"}
+                      : "Mano dell'insegnante"}
                   </p>
                   {isDown && (
                     <p className="mt-0.5 text-xs font-bold text-red-600">
@@ -582,7 +583,7 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
           <p className="mt-1 text-xs text-muted-foreground">
             {smazzata.lesson > 0
               ? `Lezione ${getLessonDisplayNumber(smazzata.lesson)} · `
-              : "Mano dell'istruttore · "}
+              : "Mano dell'insegnante · "}
             Board {smazzata.board}
           </p>
         </motion.div>
@@ -669,7 +670,8 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
             </motion.div>
           )}
 
-          {!minibridge && smazzata.bidding && (!isMobile || game.phase === "ready") && (
+          {/* Nel gioco della carta (Fiori 1–6) la dichiarazione non si è ancora fatta: niente licita. */}
+          {!minibridge && smazzata.bidding && !senzaLicita(smazzata.lesson) && (!isMobile || game.phase === "ready") && (
             <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.25 }} className="w-full shrink-0 lg:w-48">
               <BiddingPanel bidding={smazzata.bidding} />
             </motion.div>

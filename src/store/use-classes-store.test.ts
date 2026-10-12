@@ -20,7 +20,7 @@ afterEach(cleanup);
 
 describe.each([
   { label: "allievo", hook: useEnrolledClasses, load: vi.mocked(getMyEnrolledClasses) },
-  { label: "istruttore", hook: useMyClasses, load: vi.mocked(getMyClasses) },
+  { label: "insegnante", hook: useMyClasses, load: vi.mocked(getMyClasses) },
 ])("caricamento classi $label", ({ hook, load }) => {
   it("si ferma sull'errore e consente un nuovo tentativo esplicito", async () => {
     // The second unresolved result bounds the OLD infinite retry loop, so a

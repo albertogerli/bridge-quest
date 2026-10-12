@@ -86,7 +86,7 @@ export default function AdminInstructorRequestsPage() {
   return (
     <div className="mx-auto w-full max-w-3xl px-4 py-8 sm:px-6">
       <h1 className="mb-1 font-display text-3xl font-bold text-foreground sm:text-4xl">
-        {t("Richieste istruttori")}
+        {t("Richieste insegnanti")}
       </h1>
       <p className="mb-6 text-sm text-muted-foreground">
         {t("Approva o rifiuta le candidature al Portale Istruttori.")}

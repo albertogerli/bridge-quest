@@ -24,7 +24,7 @@ export default function ScuolaPage() {
       href: "/classi",
       emoji: "🎒",
       title: "Le mie classi",
-      desc: "I compiti assegnati dai tuoi istruttori e la chat di classe.",
+      desc: "I compiti assegnati dai tuoi insegnanti e la chat di classe.",
     },
   ];
 
@@ -32,7 +32,7 @@ export default function ScuolaPage() {
     cards.push({
       href: "/istruttori",
       emoji: "👨‍🏫",
-      title: "Portale Istruttori",
+      title: "Portale Insegnanti",
       desc: "Crea classi, assegna compiti e segui i progressi degli allievi.",
       highlight: true,
     });
@@ -40,8 +40,8 @@ export default function ScuolaPage() {
     cards.push({
       href: "/diventa-istruttore",
       emoji: "✋",
-      title: "Diventa istruttore",
-      desc: "Insegni bridge? Richiedi l'accesso al portale istruttori.",
+      title: "Diventa insegnante",
+      desc: "Insegni bridge? Richiedi l'accesso al portale insegnanti.",
     });
   }
 
@@ -50,13 +50,13 @@ export default function ScuolaPage() {
       href: "/admin/classi",
       emoji: "🗂️",
       title: "Tutte le classi (admin)",
-      desc: "Vedi tutte le classi create, con istruttore, allievi e compiti.",
+      desc: "Vedi tutte le classi create, con insegnante, allievi e compiti.",
     });
     cards.push({
       href: "/admin/istruttori",
       emoji: "📋",
-      title: "Richieste istruttori",
-      desc: "Approva o rifiuta le candidature a istruttore.",
+      title: "Richieste insegnanti",
+      desc: "Approva o rifiuta le candidature a insegnante.",
     });
     cards.push({
       href: "/admin/segnalazioni",
