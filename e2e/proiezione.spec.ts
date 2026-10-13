@@ -1,7 +1,6 @@
-import { createClient } from "@supabase/supabase-js";
 import { expect, test } from "./test";
-import { leggiEnv } from "./env";
-import { login, testCreds } from "./helpers";
+import { login } from "./helpers";
+import { comeInsegnante } from "./ruolo";
 
 /**
  * La vista proiezione, con due finestre vere.
@@ -13,20 +12,15 @@ import { login, testCreds } from "./helpers";
  * catena intera, che è quella che sta davanti alla classe.
  *
  * L'utente di prova nasce senza ruolo, e `/istruttori` è dietro un controllo di
- * ruolo lato server: qui lo si promuove a insegnante. Non serve rimetterlo
- * com'era — `global-teardown` lo cancella comunque a fine giro.
+ * ruolo lato server: qui lo si promuove a insegnante, e a fine file lo si
+ * rimette com'era (vedi `ruolo.ts`).
  */
+let ripristina: (() => Promise<void>) | undefined;
 test.beforeAll(async () => {
-  const env = leggiEnv(["NEXT_PUBLIC_SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY"]);
-  const admin = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {
-    auth: { persistSession: false },
-  });
-  const { email } = testCreds();
-  // L'id si prende da `auth.users`: `profiles` non ha la colonna email, e
-  // cercarlo lì fallirebbe in silenzio lasciando il test senza ruolo.
-  const { data } = await admin.auth.admin.listUsers({ perPage: 200 });
-  const id = data?.users.find((u) => u.email === email)?.id;
-  if (id) await admin.from("profiles").update({ role: "instructor" }).eq("id", id);
+  ripristina = await comeInsegnante();
+});
+test.afterAll(async () => {
+  await ripristina?.();
 });
 
 test("alla finestra proiettata arrivano solo le mani scoperte", async ({ page, context }) => {

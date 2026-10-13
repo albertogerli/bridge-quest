@@ -23,11 +23,35 @@ export { expect, type Page, type Locator } from '@playwright/test';
  * serviceWorkers: "block" })`, o si prepari a un fallimento che in locale
  * non riesce a riprodurre.
  */
-export const test = base.extend<{ isolatedAnalytics: void }>({
+export const test = base.extend<{ isolatedAnalytics: void; diagnosiPagina: void }>({
   isolatedAnalytics: [async ({ context }, use) => {
     await context.route('https://www.googletagmanager.com/gtag/js?*', route =>
       route.fulfill({ status: 200, contentType: 'application/javascript', body: '/* isolated analytics fixture */' })
     );
+    await use();
+  }, { auto: true }],
+
+  /**
+   * Quello che la traccia non dice: una finestra di dialogo, una pagina che
+   * crolla, un errore non gestito. Il 13/10/2026 le notturne hanno visto
+   * navigazioni che non partivano affatto — nessuna richiesta in rete — e la
+   * traccia non bastava a dire perché. Le righe finiscono nel log del passo.
+   *
+   * Il dialogo si chiude come farebbe Playwright da solo (dismiss): un
+   * ascoltatore che non lo chiudesse bloccherebbe la pagina.
+   */
+  diagnosiPagina: [async ({ context }, use, info) => {
+    const etichetta = `[diagnosi] ${info.title}:`;
+    const segui = (p: import('@playwright/test').Page) => {
+      p.on('dialog', d => {
+        console.log(`${etichetta} dialogo ${d.type()} «${d.message()}» su ${p.url()}`);
+        void d.dismiss().catch(() => {});
+      });
+      p.on('crash', () => console.log(`${etichetta} la pagina è crollata su ${p.url()}`));
+      p.on('pageerror', e => console.log(`${etichetta} errore in pagina: ${e.message.slice(0, 300)}`));
+    };
+    context.pages().forEach(segui);
+    context.on('page', segui);
     await use();
   }, { auto: true }],
 });

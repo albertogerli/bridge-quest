@@ -1,17 +1,13 @@
 import { expect, test } from "./test";
-import { createClient } from "@supabase/supabase-js";
-import { leggiEnv } from "./env";
-import { login, testCreds } from "./helpers";
+import { login } from "./helpers";
+import { comeInsegnante } from "./ruolo";
 
+let ripristina: (() => Promise<void>) | undefined;
 test.beforeAll(async () => {
-  const env = leggiEnv(["NEXT_PUBLIC_SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY"]);
-  const admin = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {
-    auth: { persistSession: false },
-  });
-  const { email } = testCreds();
-  const { data } = await admin.auth.admin.listUsers({ perPage: 200 });
-  const id = data?.users.find((u) => u.email === email)?.id;
-  if (id) await admin.from("profiles").update({ role: "instructor" }).eq("id", id);
+  ripristina = await comeInsegnante();
+});
+test.afterAll(async () => {
+  await ripristina?.();
 });
 
 /**
