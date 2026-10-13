@@ -14,6 +14,7 @@ const TUTTE: EmailKind[] = [
   "recupero_password",
   "recupero_non_registrato",
   "completa_profilo",
+  "insegnante_approvato",
 ];
 
 describe("le email di ciclo di vita", () => {
@@ -215,5 +216,22 @@ describe("completa_profilo", () => {
     expect(e.subject).toContain("profile");
     expect(e.html).toContain("Your club");
     expect(e.html).toContain('lang="en"');
+  });
+});
+
+describe("«sei insegnante»", () => {
+  it("porta al portale insegnanti, nella lingua di chi legge", () => {
+    expect(renderEmail("insegnante_approvato", {}).html).toContain("/istruttori");
+    expect(renderEmail("insegnante_approvato", { lingua: "en" }).html).toContain("/en/istruttori");
+  });
+
+  it("riporta il messaggio di chi ha approvato, ripulito", () => {
+    const e = renderEmail("insegnante_approvato", { messaggioRevisione: "Benvenuto <b>Marco</b>" });
+    expect(e.html).toContain("Benvenuto &lt;b&gt;Marco&lt;/b&gt;");
+    expect(e.text).toContain("Benvenuto <b>Marco</b>");
+  });
+
+  it("è transazionale", () => {
+    expect(renderEmail("insegnante_approvato", {}, "https://x/unsub").transactional).toBe(true);
   });
 });

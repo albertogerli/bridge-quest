@@ -16,7 +16,8 @@ export type EmailKind =
   | "compito_in_scadenza"
   | "recupero_password"
   | "recupero_non_registrato"
-  | "completa_profilo";
+  | "completa_profilo"
+  | "insegnante_approvato";
 
 export interface EmailContext {
   name?: string | null;
@@ -43,6 +44,8 @@ export interface EmailContext {
   compitoMani?: number;
   /** compito_in_scadenza: fra quanti giorni scade. 0 = oggi. */
   giorniAllaScadenza?: number;
+  /** insegnante_approvato: due righe facoltative di chi ha approvato. */
+  messaggioRevisione?: string | null;
   /** recupero_password: il link monouso generato da Supabase. */
   linkRecupero?: string | null;
 }
@@ -423,6 +426,49 @@ export function renderEmail(kind: EmailKind, ctx: EmailContext, unsubUrl?: strin
             ["Someone asked to reset the Bridge LAB password for this address, but there is no account yet.", "", "If this wasn't you, ignore this email."]
           ),
           T("Registrati", "Sign up"), registrati
+        ),
+        transactional: true,
+      };
+    }
+
+    /**
+     * La richiesta di insegnare è stata accettata.
+     *
+     * Prima di questa email l'approvazione era muta: l'insegnante doveva
+     * tornare da sé su /diventa-istruttore per scoprire di essere stato
+     * accolto, e chi non tornava restava convinto di essere ancora in attesa.
+     * Transazionale: risponde a una domanda che ha fatto lui.
+     */
+    case "insegnante_approvato": {
+      const portale = `${SITE}${ctx.lingua === "en" ? "/en" : ""}/istruttori`;
+      const nota = ctx.messaggioRevisione?.trim()
+        ? `<p style="margin:0 0 14px;padding:12px 14px;background:${C.ivory};border:1px solid ${C.border};border-radius:12px;">${esc(ctx.messaggioRevisione.trim())}</p>`
+        : "";
+      const heading = T("Sei insegnante su BridgeLab", "You're a teacher on BridgeLab");
+      const bodyHtml = T(
+        `
+        <p style="margin:0 0 14px;">${hi}! La tua richiesta di insegnare su BridgeLab è stata accettata.</p>
+        ${nota}
+        <p style="margin:0;">Da ora trovi il <strong>Portale Insegnanti</strong>: lì crei la classe per la Lezione Zero, prepari la locandina e assegni le mani ai tuoi allievi.</p>`,
+        `
+        <p style="margin:0 0 14px;">${hi}! Your request to teach on BridgeLab has been approved.</p>
+        ${nota}
+        <p style="margin:0;">You now have the <strong>Teacher Portal</strong>: create the class for your Lesson Zero, prepare the poster and assign hands to your students.</p>`
+      );
+      return {
+        subject: T("La tua richiesta è stata accettata: sei insegnante su BridgeLab", "Your request was approved: you're a teacher on BridgeLab"),
+        html: layout({
+          preheader: T("Il Portale Insegnanti è aperto per te.", "The Teacher Portal is open for you."),
+          emoji: "🎓", heading, bodyHtml,
+          ctaLabel: T("Apri il Portale Insegnanti", "Open the Teacher Portal"), ctaUrl: portale,
+          lingua: ctx.lingua,
+        }),
+        text: textFallback(
+          T(
+            [`${hi.replace(/<[^>]+>/g, "")}! La tua richiesta di insegnare su BridgeLab è stata accettata.`, ...(ctx.messaggioRevisione?.trim() ? ["", ctx.messaggioRevisione.trim()] : []), "", "Da ora trovi il Portale Insegnanti: lì crei la classe, prepari la locandina e assegni le mani."],
+            [`${hi.replace(/<[^>]+>/g, "")}! Your request to teach on BridgeLab has been approved.`, ...(ctx.messaggioRevisione?.trim() ? ["", ctx.messaggioRevisione.trim()] : []), "", "You now have the Teacher Portal: create your class, prepare the poster and assign hands."]
+          ),
+          T("Apri il Portale Insegnanti", "Open the Teacher Portal"), portale
         ),
         transactional: true,
       };
