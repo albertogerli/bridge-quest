@@ -44,7 +44,7 @@ test("il riepilogo compare a mano finita", async ({ page }) => {
   const mazziere = intestazione.includes("apri tu")
     ? "Sud"
     : intestazione.replace(/.*apre\s+/, "").trim();
-  const colonnaDealer = page.getByText("dealer", { exact: true }).locator("xpath=..");
+  const colonnaDealer = page.getByText("mazziere", { exact: true }).locator("xpath=..");
   await expect(colonnaDealer).toContainText(mazziere);
 
   // Un contratto qualunque: 1♣ è sempre lecito come prima dichiarazione.
