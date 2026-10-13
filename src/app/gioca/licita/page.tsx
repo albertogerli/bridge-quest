@@ -12,7 +12,7 @@ import type { Card, Position, Suit } from "@/lib/bridge-engine";
 import { DEAL_TEMPLATES, generateDeals, handHcp } from "@/lib/deal-generator";
 import { calcTableAndPar, type DdsTable } from "@/lib/dds-table";
 import type { Strain } from "@/lib/minibridge";
-import { valutaLicita, type EsitoLicita, type Metro } from "@/lib/stelle-licita";
+import { contestoDaEsito, valutaLicita, type EsitoLicita, type Metro } from "@/lib/stelle-licita";
 import { benBid } from "@/lib/ben-client";
 import { Asta } from "@/components/bridge/asta";
 import { AttesaDichiarazione } from "@/components/bridge/attesa-dichiarazione";
@@ -21,7 +21,7 @@ import { ConfrontoCampoPannello } from "@/components/bridge/confronto-campo";
 import { RiepilogoMano } from "@/components/bridge/riepilogo-mano";
 import { RisultatoDoppioMorto } from "@/components/bridge/risultato-doppio-morto";
 import { Stelle } from "@/components/bridge/stelle";
-import { contrattiDaRivedere } from "@/lib/riepilogo-mano";
+import { tabelleFineMano } from "@/lib/riepilogo-mano";
 import {
   confrontoCampo, evDelContratto, manoDaFare, registraRisultato, riferimento,
   type ConfrontoCampo, type ManoCondivisa, riferimentoUnico } from "@/lib/mani-condivise";
@@ -138,7 +138,10 @@ export default function LicitaPage() {
 
     if (!e) {
       // Passo generale: zero, e il riferimento dice quanto si è lasciato sul tavolo.
-      const voto = valutaLicita(0, mano.riferimento, mano.metro);
+      const voto = valutaLicita(0, mano.riferimento, mano.metro, undefined, {
+        contesto: contestoDaEsito(null),
+        tr: t,
+      });
       setContrattoFinale("Passo generale");
       setGiocato(null);
       setEsito(voto);
@@ -167,7 +170,12 @@ export default function LicitaPage() {
           })
         : null) ?? e.punteggio;
 
-    const voto = valutaLicita(perStelle, mano.riferimento, mano.metro, e.punteggio);
+    // Il contesto dice al commento chi ha giocato e se è caduto: senza, un
+    // sacrificio troppo caro veniva spiegato come una manche mancata.
+    const voto = valutaLicita(perStelle, mano.riferimento, mano.metro, e.punteggio, {
+      contesto: contestoDaEsito(e),
+      tr: t,
+    });
     setContrattoFinale(
       `${e.contratto} di ${ETICHETTA[e.declarer]} — ${e.prese} prese` +
         (e.lato === "ns" ? "" : " (dichiarano gli avversari)")
@@ -537,14 +545,13 @@ export default function LicitaPage() {
                 <RiepilogoMano
                   deal={mano.deal}
                   vulnerability={mano.vulnerability}
-                  // Le due migliori per loro: senza, non si capisce se la mano
-                  // era vostra, e un parziale che li tiene fuori da una manche
-                  // sembra un risultato mediocre.
-                  avversari={contrattiDaRivedere({
+                  {...tabelleFineMano({
                     table: mano.table,
-                    lato: "ew",
-                    ancheSenzaContratto: true,
                     vulnerability: mano.vulnerability,
+                    giocato,
+                    // Il vostro contratto porta il voto in cima: vedi
+                    // `tabelleFineMano`, che lo mette sulla riga giusta.
+                    stelleDelVoto: esito.stelle,
                     // UN METRO SOLO per tutta la tabella — il miglior
                     // contratto della smazzata, chiunque lo dichiari — così le
                     // stelle vogliono dire la stessa cosa sopra e sotto. Sul
@@ -552,41 +559,31 @@ export default function LicitaPage() {
                     // prendeva tre stelle anche cadendo di due, e chi legge
                     // capiva «avevano una bella mano»: l'opposto della verità.
                     // Vedi `riferimentoUnico`.
-                    riferimento: mano.condivisa
-                      ? riferimentoUnico(mano.condivisa).punteggio
-                      : Math.max(mano.riferimento, -mano.riferimento),
-                    metro: mano.condivisa
-                      ? riferimentoUnico(mano.condivisa).metro
-                      : mano.metro,
-                    giocato: giocato?.lato === "ew" ? giocato : null,
-                    ev: mano.condivisa ? (c) => evDelContratto(mano.condivisa!, c) : undefined,
-                  }).slice(0, 2)}
-                  contratti={contrattiDaRivedere({
-                    table: mano.table,
-                    lato: "ns",
-                    vulnerability: mano.vulnerability,
-                    // Lo stesso metro della sezione qui sotto: è una tabella
-                    // sola, e due riferimenti diversi renderebbero le stelle
-                    // incomparabili proprio dove servono per confrontare.
-                    riferimento: mano.condivisa
-                      ? riferimentoUnico(mano.condivisa).punteggio
-                      : mano.riferimento,
-                    metro: mano.condivisa
-                      ? riferimentoUnico(mano.condivisa).metro
-                      : mano.metro,
-                    giocato: giocato?.lato === "ns" ? giocato : null,
-                    // Il vostro contratto porta il voto in cima: vedi `stelleDelVoto`.
-                    stelleDelVoto: esito.stelle,
-                    // Il valore atteso entra in tabella solo quando è anche il
-                    // metro del riferimento: mostrarlo accanto a stelle
-                    // calcolate sul par confonderebbe due conti diversi.
-                    // Il valore atteso segue il metro della TABELLA, non quello
-                    // del voto: con il riferimento medio e i punteggi reali le
-                    // righe confrontavano due cose diverse (01/10/2026).
-                    ev:
-                      mano.condivisa && riferimentoUnico(mano.condivisa).metro === "atteso"
-                        ? (c) => evDelContratto(mano.condivisa!, c)
-                        : undefined,
+                    noi: {
+                      riferimento: mano.condivisa
+                        ? riferimentoUnico(mano.condivisa).punteggio
+                        : mano.riferimento,
+                      metro: mano.condivisa
+                        ? riferimentoUnico(mano.condivisa).metro
+                        : mano.metro,
+                      // Il valore atteso segue il metro della TABELLA, non
+                      // quello del voto: con il riferimento medio e i punteggi
+                      // reali le righe confrontavano due cose diverse
+                      // (01/10/2026).
+                      ev:
+                        mano.condivisa && riferimentoUnico(mano.condivisa).metro === "atteso"
+                          ? (c) => evDelContratto(mano.condivisa!, c)
+                          : undefined,
+                    },
+                    loro: {
+                      riferimento: mano.condivisa
+                        ? riferimentoUnico(mano.condivisa).punteggio
+                        : Math.max(mano.riferimento, -mano.riferimento),
+                      metro: mano.condivisa
+                        ? riferimentoUnico(mano.condivisa).metro
+                        : mano.metro,
+                      ev: mano.condivisa ? (c) => evDelContratto(mano.condivisa!, c) : undefined,
+                    },
                   })}
                 />
                 {mano.metro !== (mano.condivisa ? riferimentoUnico(mano.condivisa).metro : mano.metro) && giocato?.lato === "ns" && (

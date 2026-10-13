@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { valutaLicita } from "./stelle-licita";
+import { contestoDaEsito, valutaLicita } from "./stelle-licita";
 
 /**
  * Il voto della licita è la cosa che l'allievo guarda per prima: se è
@@ -181,5 +181,93 @@ describe("quando la fortuna contraddice il voto", () => {
   it("senza punteggio reale, o col par esatto, il commento non cambia", () => {
     expect(valutaLicita(-300, 660, "atteso").commento).not.toContain("Stavolta");
     expect(valutaLicita(-300, 660, "esatto", 2220).commento).not.toContain("Stavolta");
+  });
+});
+
+describe("il commento guarda di chi era la mano e com'è finita", () => {
+  /**
+   * Il caso del 13/10/2026: 4♠X caduto di tre (−500) contro il par di 3SA
+   * avversario (−400). Il commento sceglieva la frase sulla sola distanza, e
+   * cento punti diventavano «la manche si poteva cercare» — a una linea che
+   * non aveva nessuna manche.
+   */
+  const noiCaduti = { contesto: { gioca: "noi" as const, caduto: true } };
+  const noiFatto = { contesto: { gioca: "noi" as const, caduto: false } };
+  const loro = { contesto: { gioca: "loro" as const, caduto: false } };
+
+  it("la mano vostra e un parziale al posto della manche: la manche si poteva cercare", () => {
+    const v = valutaLicita(170, 420, "esatto", undefined, noiFatto);
+    expect(v.commento).toMatch(/manche si poteva cercare/);
+  });
+
+  it("la mano vostra e il contratto caduto: troppo in alto, non «cerca la manche»", () => {
+    const v = valutaLicita(-50, 140, "esatto", undefined, noiCaduti);
+    expect(v.commento).toMatch(/Il contratto è caduto/);
+    expect(v.commento).not.toMatch(/manche si poteva cercare/);
+  });
+
+  it("la mano loro e un sacrificio troppo caro", () => {
+    const v = valutaLicita(-500, -400, "esatto", -500, noiCaduti);
+    expect(v.stelle).toBe(2.5);
+    expect(v.commento).toMatch(/Sacrificio troppo caro/);
+    expect(v.commento).not.toMatch(/manche/);
+  });
+
+  it("la mano loro e un buon sacrificio", () => {
+    const v = valutaLicita(-300, -420, "esatto", -300, noiCaduti);
+    expect(v.stelle).toBe(3);
+    expect(v.commento).toMatch(/Buon sacrificio/);
+  });
+
+  it("la mano loro, e li avete lasciati al par", () => {
+    const v = valutaLicita(-400, -400, "esatto", undefined, loro);
+    expect(v.stelle).toBe(3);
+    expect(v.commento).toMatch(/La mano era loro/);
+  });
+
+  it("la mano loro, e hanno fatto più del par", () => {
+    const v = valutaLicita(-590, -420, "esatto", undefined, loro);
+    expect(v.stelle).toBeLessThan(3);
+    expect(v.commento).toMatch(/più del par/);
+    expect(v.commento).not.toMatch(/manche si poteva cercare/);
+  });
+
+  it("la mano vostra ma il contratto l'hanno giocato loro", () => {
+    const v = valutaLicita(-110, 420, "esatto", undefined, loro);
+    expect(v.commento).toMatch(/La mano era vostra/);
+  });
+
+  it("passo generale su una mano vostra", () => {
+    const v = valutaLicita(0, 420, "esatto", undefined, {
+      contesto: { gioca: "nessuno", caduto: false },
+    });
+    expect(v.commento).toMatch(/Passo generale/);
+  });
+
+  it("senza contesto, con la mano non vostra, non inventa una manche", () => {
+    const v = valutaLicita(-500, -400, "esatto");
+    expect(v.commento).not.toMatch(/manche/);
+    expect(v.commento).toContain("100 punti sotto il par");
+  });
+
+  it("il contesto cambia il commento, mai le stelle", () => {
+    for (const o of [undefined, noiCaduti, noiFatto, loro]) {
+      expect(valutaLicita(-500, -400, "esatto", undefined, o).stelle).toBe(2.5);
+    }
+  });
+
+  it("contestoDaEsito: chi gioca e se è caduto, dal punto di vista di chi riceve il voto", () => {
+    expect(contestoDaEsito(null)).toEqual({ gioca: "nessuno", caduto: false });
+    expect(contestoDaEsito({ lato: "ns", level: 4, prese: 7 })).toEqual({ gioca: "noi", caduto: true });
+    expect(contestoDaEsito({ lato: "ew", level: 3, prese: 9 })).toEqual({ gioca: "loro", caduto: false });
+    expect(contestoDaEsito({ lato: "ew", level: 3, prese: 9 }, "ew")).toEqual({ gioca: "noi", caduto: false });
+  });
+
+  it("passa dal traduttore, con i numeri nei segnaposti", () => {
+    const tr = (frase: string, valori?: Record<string, string | number>) =>
+      `[${frase}]${JSON.stringify(valori ?? {})}`;
+    const v = valutaLicita(-500, -400, "esatto", undefined, { ...noiCaduti, tr });
+    expect(v.commento).toMatch(/^\[Sacrificio troppo caro: \{punti\}/);
+    expect(v.commento).toContain('"punti":"-500"');
   });
 });

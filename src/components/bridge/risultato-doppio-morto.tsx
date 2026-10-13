@@ -57,7 +57,7 @@ export function RisultatoDoppioMorto({
 
   if (!dati) return <p className="text-sm text-muted-foreground">{t("Calcolo le prese…")}</p>;
 
-  const { esito: e, voto } = votoLicitaChiusa(bids, dealer, vulnerability, dati);
+  const { esito: e, voto } = votoLicitaChiusa(bids, dealer, vulnerability, dati, t);
   let riga: string;
   if (!e) {
     riga = t("Passo generale");

@@ -2,7 +2,7 @@ import type { Card, Position } from "@/lib/bridge-engine";
 import type { Vulnerability } from "@/lib/catalog";
 import type { DdsTable, ParResult } from "@/lib/dds-table";
 import { esitoAsta, type EsitoAsta } from "@/lib/licita-mano";
-import { valutaLicita, type EsitoLicita } from "@/lib/stelle-licita";
+import { contestoDaEsito, valutaLicita, type EsitoLicita, type Traduttore } from "@/lib/stelle-licita";
 
 /**
  * Il voto di una licita chiusa, dato tabella e par della smazzata.
@@ -21,9 +21,15 @@ export function votoLicitaChiusa(
   dealer: Position,
   vulnerability: Vulnerability,
   dati: { table: DdsTable; par: ParResult },
+  tr?: Traduttore,
 ): { esito: EsitoAsta | null; voto: EsitoLicita } {
   const esito = esitoAsta(bids, dealer, dati.table, vulnerability);
-  const voto = valutaLicita(esito ? esito.punteggio : 0, dati.par.score, "esatto");
+  // Il contesto serve al commento: chi ha giocato e se è caduto decidono se
+  // si parla di manche mancata, di sacrificio o di difesa.
+  const voto = valutaLicita(esito ? esito.punteggio : 0, dati.par.score, "esatto", undefined, {
+    contesto: contestoDaEsito(esito),
+    tr,
+  });
   return { esito, voto };
 }
 

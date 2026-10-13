@@ -48,10 +48,37 @@ const DENOMINAZIONI: { chiave: TableStrain; strain: Strain; etichetta: string }[
   { chiave: "club", strain: "club", etichetta: "♣" },
 ];
 
+/**
+ * Il valore atteso di un contratto, dal punto di vista di Nord-Sud.
+ *
+ * `doppio` arriva solo per il contratto davvero giocato: la media di un 4♠X
+ * è la media di un 4♠ CONTRATO, e chiederla liscia metteva sulla stessa riga
+ * «Qui −500» (contrato) e «In media −107» (liscio) — due basi diverse sotto
+ * le stesse stelle (13/10/2026).
+ */
+export type ValoreAtteso = (c: {
+  level: number;
+  strain: Strain;
+  declarer: Position;
+  doppio?: Doppio;
+}) => number | null;
+
+/** Il contratto davvero dichiarato, con il contro se c'è. */
+export interface ContrattoGiocato {
+  level: number;
+  strain: Strain;
+  declarer?: Position;
+  doppio?: Doppio;
+}
+
 export interface ContrattoValutato {
   /** Quanto rende in media, quando la mano porta le distribuzioni. */
   ev: number | null;
-  /** Come si scrive: "4♥", "3SA". */
+  /**
+   * Come si scrive: "4♥", "3SA" — e "4♠X" quando è il vostro contratto
+   * contrato. Il punteggio della riga è quello contrato, e un'etichetta senza
+   * la X farebbe leggere −500 accanto a un 4♠ che liscio ne vale −150.
+   */
   etichetta: string;
   level: number;
   strain: Strain;
@@ -87,7 +114,7 @@ export function contrattiDaRivedere(opzioni: {
    * sopra, che il contro lo conta (vedi `esitoAsta`). Due numeri diversi per la
    * stessa mano nella stessa schermata.
    */
-  giocato?: { level: number; strain: Strain; declarer?: Position; doppio?: Doppio } | null;
+  giocato?: ContrattoGiocato | null;
   /**
    * Il valore atteso di un contratto, quando la mano lo permette.
    *
@@ -97,7 +124,7 @@ export function contrattiDaRivedere(opzioni: {
    * Il punteggio reale resta in tabella, perché «in media rende 175, qui ha
    * fatto 420» è proprio la cosa da imparare.
    */
-  ev?: (c: { level: number; strain: Strain; declarer: Position }) => number | null;
+  ev?: ValoreAtteso;
   /**
    * Mostra una denominazione anche quando nessun contratto ci regge.
    *
@@ -155,7 +182,14 @@ export function contrattiDaRivedere(opzioni: {
      * scrivere accanto al vostro contratto un punteggio che non è il vostro —
      * diverso, per giunta, da quello del voto qui sopra.
      */
-    dichiaranteVero?: Position
+    dichiaranteVero?: Position,
+    /**
+     * Il contro da applicare anche se la riga non è la vostra: serve alla
+     * «gemella» (lo stesso contratto dall'altra parte del tavolo), che è lo
+     * stesso contratto della stessa asta — contro compreso — e va confrontata
+     * alla pari.
+     */
+    doppioForzato?: Doppio
   ): ContrattoValutato => {
     const declarer =
       dichiaranteVero ??
@@ -167,21 +201,26 @@ export function contrattiDaRivedere(opzioni: {
       giocato?.level === level &&
       giocato?.strain === strain &&
       (giocato.declarer === undefined || giocato.declarer === declarer);
+    // Gli altri contratti sono proposte: nessuno li ha contrati, e applicare
+    // il contro anche a loro sarebbe inventarsi un'asta.
+    const doppio: Doppio = doppioForzato ?? (tuo ? (giocato?.doppio ?? 1) : 1);
     const punteggio = scoreContract({
       level,
       strain,
       tricksMade: prese,
       vulnerable: inZona,
-      // Gli altri contratti sono proposte: nessuno li ha contrati, e
-      // applicare il contro anche a loro sarebbe inventarsi un'asta.
-      doppio: tuo ? (giocato?.doppio ?? 1) : 1,
+      doppio,
     }).score;
-    const etichetta = `${level}${DENOMINAZIONI.find((d) => d.strain === strain)!.etichetta}`;
+    const etichetta =
+      `${level}${DENOMINAZIONI.find((d) => d.strain === strain)!.etichetta}` +
+      (doppio === 4 ? "XX" : doppio === 2 ? "X" : "");
     // `ev` risponde sempre dal punto di vista di Nord-Sud, come il par; qui
     // dentro tutto è dal punto di vista di `lato`, punteggio compreso.
     // Mescolare i due segni farebbe apparire i contratti avversari come
     // disastri per chi li dichiara.
-    const grezzo = ev?.({ level, strain, declarer }) ?? null;
+    // Il contro passa anche alla media: «Qui» e «In media» devono essere due
+    // misure dello STESSO contratto, non uno contrato e l'altro liscio.
+    const grezzo = ev?.({ level, strain, declarer, doppio }) ?? null;
     const atteso = grezzo === null ? null : lato === "ns" ? grezzo : -grezzo;
     return {
       etichetta,
@@ -251,7 +290,7 @@ export function contrattiDaRivedere(opzioni: {
     const altro = posti.find((p) => p !== mia.declarer);
     const chiave = DENOMINAZIONI.find((d) => d.strain === mia.strain)?.chiave;
     if (altro && chiave && table.tricks[chiave][altro] !== mia.prese) {
-      const gemella = valuta(mia.level, mia.strain, chiave, altro);
+      const gemella = valuta(mia.level, mia.strain, chiave, altro, giocato?.doppio ?? 1);
       if (!righe.some((r) => r.etichetta === gemella.etichetta && r.declarer === altro)) {
         righe.push(gemella);
       }
@@ -259,6 +298,57 @@ export function contrattiDaRivedere(opzioni: {
   }
 
   return righe.sort((a, b) => b.punteggio - a.punteggio);
+}
+
+/**
+ * Le due tabelle di fine mano — la vostra linea e «cosa potevano fare loro» —
+ * calcolate in un posto solo.
+ *
+ * PERCHÉ UNA FUNZIONE E NON DUE CHIAMATE NELLE PAGINE. Le pagine chiamavano
+ * `contrattiDaRivedere` due volte a testa, con le opzioni scritte a mano, e il
+ * torneo passava `stelleDelVoto` alla tabella DEGLI AVVERSARI invece che alla
+ * vostra. Lì non trovava mai la riga «il vostro» — quel contratto è della
+ * vostra linea — e la vostra riga ricalcolava le stelle su un altro metro: due
+ * stelle e mezza in cima, una sulla riga di 4♠X (13/10/2026). Peggio, quando
+ * il contratto era degli avversari il voto finiva sulla LORO riga, che porta
+ * le loro stelle e non le vostre.
+ *
+ * Qui l'instradamento è uno solo: il voto va sulla riga vostra e solo lì. Chi
+ * riceve il voto siede in Nord-Sud, come in tutto il riepilogo (vedi
+ * `dalVostroLato`).
+ */
+export function tabelleFineMano(opzioni: {
+  table: DdsTable;
+  vulnerability: Vulnerability;
+  giocato: ContrattoGiocato | null;
+  /** Le stelle del voto in cima: le porta la riga del vostro contratto. */
+  stelleDelVoto: number;
+  /** Riferimento, metro e valore atteso per le righe della vostra linea. */
+  noi: { riferimento: number; metro: Metro; ev?: ValoreAtteso };
+  /** Lo stesso per le righe degli avversari. */
+  loro: { riferimento: number; metro: Metro; ev?: ValoreAtteso };
+}): { contratti: ContrattoValutato[]; avversari: ContrattoValutato[] } {
+  const { table, vulnerability, giocato } = opzioni;
+  return {
+    contratti: contrattiDaRivedere({
+      table,
+      lato: "ns",
+      vulnerability,
+      ...opzioni.noi,
+      giocato,
+      stelleDelVoto: opzioni.stelleDelVoto,
+    }),
+    // Le due migliori per loro: senza, non si capisce se la mano era vostra.
+    // Il voto qui NON entra: le stelle di questa sezione sono le loro.
+    avversari: contrattiDaRivedere({
+      table,
+      lato: "ew",
+      ancheSenzaContratto: true,
+      vulnerability,
+      ...opzioni.loro,
+      giocato,
+    }).slice(0, 2),
+  };
 }
 
 /**
