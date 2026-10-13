@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
 import type { Position } from "./bridge-engine";
 import type { DdsTable, TableStrain } from "./dds-table";
-import { contrattiDaRivedere, dalVostroLato } from "./riepilogo-mano";
+import { contrattiDaRivedere, dalVostroLato, tabelleFineMano, type ValoreAtteso } from "./riepilogo-mano";
+import { esitoAsta } from "./licita-mano";
+import { scoreContract } from "./scoring";
+import { contestoDaEsito, valutaLicita } from "./stelle-licita";
 
 /** Tabella comoda da scrivere: prese per denominazione, uguali per i due compagni. */
 function tabella(p: Partial<Record<TableStrain, number>>): DdsTable {
@@ -413,5 +416,130 @@ describe("la riga del vostro contratto porta il voto in cima", () => {
     // Le altre righe non cambiano.
     const altre = contrattiDaRivedere({ ...opzioni, stelleDelVoto: 3 }).filter((r) => !r.tuo);
     expect(altre.map((r) => r.stelle)).toEqual(contrattiDaRivedere(opzioni).filter((r) => !r.tuo).map((r) => r.stelle));
+  });
+});
+
+/**
+ * La mano del 13/10/2026, così com'era sullo schermo.
+ *
+ * Nessuno in zona, mazziere Nord, l'allievo è Sud.
+ *   N ♠J ♥Q8 ♦98765 ♣KJ863        E ♠754 ♥9762 ♦AK104 ♣A9
+ *   S ♠AQ109832 ♥543 ♦— ♣Q102     O ♠K6 ♥AKJ10 ♦QJ32 ♣754
+ * Asta: N passo, E 1♦, S 4♠, O contro, passo, passo, passo.
+ * 4♠X di Sud, sette prese: −500. Il par è 3SA di Est-Ovest, −400.
+ *
+ * La schermata diceva tre cose che non stavano insieme: due stelle e mezza in
+ * cima, una stella sulla riga «4♠ di Sud ← il vostro» (senza la X, con
+ * «Qui −500» contrato e «In media −107» liscio), e un commento che invitava a
+ * cercare una manche che Nord-Sud non aveva.
+ *
+ * LA TABELLA DOUBLE DUMMY È SCRITTA A MANO: `bridge-dds` su questa smazzata
+ * (Sud ha un vuoto) va in errore dentro il WebAssembly anche da
+ * `scripts/dds.mjs`. I numeri che contano vengono dalla schermata — 4♠ di Sud
+ * sette prese, 3SA di Est nove, 1♦ di Est nove (−110) — e gli altri sono
+ * coerenti con il par: con 9 prese a cuori Est-Ovest non hanno 4♥, quindi il
+ * loro meglio è 3SA.
+ */
+describe("la mano del 13/10/2026: 4♠X di Sud contro il par 3SA loro", () => {
+  const table: DdsTable = {
+    tricks: {
+      spade: { north: 7, east: 6, south: 7, west: 6 },
+      heart: { north: 4, east: 9, south: 4, west: 9 },
+      diamond: { north: 4, east: 9, south: 4, west: 9 },
+      club: { north: 6, east: 7, south: 6, west: 7 },
+      notrump: { north: 4, east: 9, south: 4, west: 9 },
+    },
+  };
+  const bids = ["P", "1♦", "4♠", "X", "P", "P", "P"];
+  const PAR = -400;
+
+  /**
+   * Un valore atteso finto ma onesto: il punteggio double dummy, contro
+   * compreso se arriva. Basta a vedere se il contro raggiunge la colonna «In
+   * media», che è il punto: in produzione la media del 4♠ era quella liscia.
+   */
+  const ev: ValoreAtteso = (c) => {
+    const chiave = c.strain === "nt" ? "notrump" : c.strain;
+    const ns = c.declarer === "north" || c.declarer === "south";
+    const s = scoreContract({
+      level: c.level,
+      strain: c.strain,
+      tricksMade: table.tricks[chiave][c.declarer],
+      vulnerable: false,
+      doppio: c.doppio ?? 1,
+    }).score;
+    return ns ? s : -s;
+  };
+
+  // Il voto, come lo calcola il torneo quando la mano è degli avversari:
+  // metro esatto, riferimento il par.
+  const e = esitoAsta(bids, "north", table, "none")!;
+  const voto = valutaLicita(e.punteggio, PAR, "esatto", e.punteggio, {
+    contesto: contestoDaEsito(e),
+  });
+  // La tabella, col metro unico: il meglio della smazzata è il loro 3SA.
+  const { contratti, avversari } = tabelleFineMano({
+    table,
+    vulnerability: "none",
+    giocato: { level: e.level, strain: e.strain, declarer: e.declarer, doppio: e.doppio },
+    stelleDelVoto: voto.stelle,
+    noi: { riferimento: 400, metro: "atteso", ev },
+    loro: { riferimento: 400, metro: "atteso", ev },
+  });
+  const vostra = contratti.find((r) => r.tuo)!;
+
+  it("l'asta dà 4♠X di Sud, sette prese, −500", () => {
+    expect(e.contratto).toBe("4♠X");
+    expect(e.declarer).toBe("south");
+    expect(e.prese).toBe(7);
+    expect(e.punteggio).toBe(-500);
+  });
+
+  it("il voto in cima e la riga del vostro contratto hanno le stesse stelle", () => {
+    expect(voto.stelle).toBe(2.5);
+    expect(vostra.stelle).toBe(voto.stelle);
+  });
+
+  it("la riga dice che il contratto era contrato, e lo conta nei due numeri", () => {
+    expect(vostra.etichetta).toBe("4♠X");
+    expect(vostra.punteggio).toBe(-500);
+    // La media è quella del contratto contrato, non del 4♠ liscio (−150).
+    expect(vostra.ev).toBe(-500);
+  });
+
+  it("il commento parla di sacrificio, non di una manche da cercare", () => {
+    expect(voto.commento).not.toMatch(/manche si poteva cercare/);
+    expect(voto.commento).not.toMatch(/manche/);
+    expect(voto.commento).toMatch(/Sacrificio troppo caro/);
+    expect(voto.commento).toContain("-500");
+    expect(voto.commento).toContain("-400");
+  });
+
+  it("il voto non finisce sulle righe degli avversari", () => {
+    // Il torneo passava le stelle del voto alla tabella LORO: qui non devono
+    // entrare, e la loro 3SA resta misurata sul loro metro.
+    expect(avversari.some((r) => r.tuo)).toBe(false);
+    expect(avversari[0].etichetta).toBe("3SA");
+    expect(avversari[0].stelle).toBe(3);
+  });
+});
+
+describe("tabelleFineMano: il voto va solo sulla riga vostra", () => {
+  it("quando il contratto è degli avversari, la loro riga tiene le loro stelle", () => {
+    const table = tabella({ spade: 5 });
+    for (const p of ["east", "west"] as Position[]) table.tricks.notrump[p] = 9;
+    const comune = { riferimento: 400, metro: "esatto" as const };
+    const giocato = { level: 3, strain: "nt" as const, declarer: "west" as Position, doppio: 1 as const };
+    const { contratti, avversari } = tabelleFineMano({
+      table,
+      vulnerability: "none",
+      giocato,
+      stelleDelVoto: 0.5,
+      noi: comune,
+      loro: comune,
+    });
+    expect(contratti.some((r) => r.tuo)).toBe(false);
+    const loro = avversari.find((r) => r.tuo)!;
+    expect(loro.stelle).toBe(3);
   });
 });

@@ -19,8 +19,8 @@ import { handHcp } from "@/lib/deal-generator";
 import type { DdsTable } from "@/lib/dds-table";
 import { benBid, riprovareServe, type MotivoBen } from "@/lib/ben-client";
 import { astaChiusa, esitoAsta, ordineDa } from "@/lib/licita-mano";
-import { contrattiDaRivedere } from "@/lib/riepilogo-mano";
-import { valutaLicita, type EsitoLicita } from "@/lib/stelle-licita";
+import { tabelleFineMano } from "@/lib/riepilogo-mano";
+import { contestoDaEsito, valutaLicita, type EsitoLicita } from "@/lib/stelle-licita";
 import type { Strain } from "@/lib/minibridge";
 import {
   classificaTorneo, contatoreCresce, evDelContratto, manoArchiviata,
@@ -168,8 +168,10 @@ export default function TorneoLicitaPage() {
     );
   };
 
-  const chiudi = async (m: ManoCondivisa, t: DdsTable, finali: string[]) => {
-    const e = esitoAsta(finali, m.dealer, t, m.vulnerability);
+  // Il secondo parametro si chiama `tav` e non `t`: `t` è il traduttore, e
+  // il commento del voto ora passa da lì.
+  const chiudi = async (m: ManoCondivisa, tav: DdsTable, finali: string[]) => {
+    const e = esitoAsta(finali, m.dealer, tav, m.vulnerability);
     const rif = riferimento(m, "ns");
     const perStelle =
       e && rif.metro === "atteso"
@@ -180,7 +182,12 @@ export default function TorneoLicitaPage() {
            e.punteggio)
         : (e?.punteggio ?? 0);
 
-    const voto = valutaLicita(perStelle, rif.punteggio, rif.metro, e?.punteggio);
+    // Il contesto dice al commento chi ha giocato e se è caduto: senza, un
+    // sacrificio troppo caro veniva spiegato come una manche mancata.
+    const voto = valutaLicita(perStelle, rif.punteggio, rif.metro, e?.punteggio, {
+      contesto: contestoDaEsito(e),
+      tr: t,
+    });
     setEsito(voto);
     setGiocato(e ? { level: e.level, strain: e.strain, declarer: e.declarer, doppio: e.doppio } : null);
 
@@ -520,36 +527,30 @@ export default function TorneoLicitaPage() {
               <RiepilogoMano
                 deal={mano.hands}
                 vulnerability={mano.vulnerability}
-                avversari={contrattiDaRivedere({
+                {...tabelleFineMano({
                   table: tabella,
-                  lato: "ew",
-                  ancheSenzaContratto: true,
                   vulnerability: mano.vulnerability,
+                  giocato,
+                  // Il vostro contratto porta il voto in cima: vedi
+                  // `tabelleFineMano`, che lo mette sulla riga giusta.
+                  stelleDelVoto: esito.stelle,
                   // Un metro solo per tutta la tabella: il miglior contratto
                   // della smazzata, chiunque lo dichiari. Vedi
                   // `riferimentoUnico` — sul meglio della loro linea il loro
                   // contratto migliore prendeva tre stelle anche cadendo.
-                  riferimento: riferimentoUnico(mano).punteggio,
-                  metro: riferimentoUnico(mano).metro,
-                  giocato,
-                  // Il vostro contratto porta il voto in cima: vedi `stelleDelVoto`.
-                  stelleDelVoto: esito.stelle,
-                  ev: (c) => evDelContratto(mano, c),
-                }).slice(0, 2)}
-                contratti={contrattiDaRivedere({
-                  table: tabella,
-                  lato: "ns",
-                  vulnerability: mano.vulnerability,
-                  // Lo stesso metro della sezione avversari: è una tabella
-                  // sola, e due riferimenti diversi renderebbero le stelle
-                  // incomparabili proprio dove servono per confrontare.
-                  riferimento: riferimentoUnico(mano).punteggio,
-                  metro: riferimentoUnico(mano).metro,
-                  giocato,
-                  ev:
-                    riferimentoUnico(mano).metro === "atteso"
-                      ? (c) => evDelContratto(mano, c)
-                      : undefined,
+                  noi: {
+                    riferimento: riferimentoUnico(mano).punteggio,
+                    metro: riferimentoUnico(mano).metro,
+                    ev:
+                      riferimentoUnico(mano).metro === "atteso"
+                        ? (c) => evDelContratto(mano, c)
+                        : undefined,
+                  },
+                  loro: {
+                    riferimento: riferimentoUnico(mano).punteggio,
+                    metro: riferimentoUnico(mano).metro,
+                    ev: (c) => evDelContratto(mano, c),
+                  },
                 })}
               />
                 {riferimento(mano, "ns").metro !== riferimentoUnico(mano).metro && giocato && (giocato.declarer === "north" || giocato.declarer === "south") && (
