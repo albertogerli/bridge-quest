@@ -89,6 +89,14 @@ export function RiepilogoMano({
   // generate prima delle distribuzioni hanno solo il punteggio reale, e una
   // colonna di trattini non spiega niente a nessuno.
   const mostraAtteso = contratti.some((c) => c.ev !== null);
+  // «4♠X di Sud» nella lingua di chi legge: in inglese SA diventa NT e il
+  // posto si traduce. L'etichetta arriva già composta dalla libreria, che
+  // non conosce la lingua.
+  const nomeContratto = (c: ContrattoValutato) =>
+    t("{contratto} di {posto}", {
+      contratto: c.etichetta.replace("SA", t("SA")),
+      posto: t(ETICHETTA[c.declarer]),
+    });
 
   return (
     <div className="mt-4 pt-4 border-t border-border">
@@ -97,7 +105,7 @@ export function RiepilogoMano({
           {t("Tutta la smazzata")}
         </p>
         {vulnerability && (
-          <p className="text-xs text-muted-foreground">{ZONA_ETICHETTA[vulnerability]}</p>
+          <p className="text-xs text-muted-foreground">{t(ZONA_ETICHETTA[vulnerability])}</p>
         )}
       </div>
 
@@ -108,7 +116,7 @@ export function RiepilogoMano({
         <div />
         <ManoPosto hand={deal.west} posto="west" />
         <div className="flex items-center justify-center text-xs text-muted-foreground">
-          N<br />O · E<br />S
+          {t("Nord")[0]}<br />{t("Ovest")[0]} · {t("Est")[0]}<br />{t("Sud")[0]}
         </div>
         <ManoPosto hand={deal.east} posto="east" />
         <div />
@@ -139,7 +147,7 @@ export function RiepilogoMano({
               <tr className="text-left text-muted-foreground">
                 <th className="font-normal py-1">{t("Contratto")}</th>
                 <th className="font-normal py-1 text-right">{t("Prese")}</th>
-                <th className="font-normal py-1 text-right">Qui</th>
+                <th className="font-normal py-1 text-right">{t("Qui")}</th>
                 {mostraAtteso && <th className="font-normal py-1 text-right">{t("In media")}</th>}
                 <th className="font-normal py-1 text-right">{t("Stelle")}</th>
               </tr>
@@ -151,8 +159,8 @@ export function RiepilogoMano({
                   className={`border-t border-border ${c.tuo ? "font-bold text-figb" : ""}`}
                 >
                   <td className="py-2">
-                    {c.etichetta} di {ETICHETTA[c.declarer]}
-                    {c.tuo && <span className="ml-1 font-normal">← il vostro</span>}
+                    {nomeContratto(c)}
+                    {c.tuo && <span className="ml-1 font-normal">{t("← il vostro")}</span>}
                   </td>
                   <td className="py-2 text-right tabular-nums">{c.prese}</td>
                   <td className="py-2 text-right font-mono tabular-nums">{c.punteggio}</td>
@@ -183,7 +191,7 @@ export function RiepilogoMano({
                       className="border-t border-border"
                     >
                       <td className="py-2">
-                        {c.etichetta} di {ETICHETTA[c.declarer]}
+                        {nomeContratto(c)}
                       </td>
                       <td className="py-2 text-right tabular-nums">{c.prese}</td>
                       {/* Col segno di chi legge: l'allievo siede in Nord-Sud e
@@ -211,33 +219,26 @@ export function RiepilogoMano({
       )}
       {contratti.some((c) => contratti.filter((x) => x.etichetta === c.etichetta).length > 1) && (
         <p className="text-xs text-muted-foreground mt-2">
-          {t("Lo stesso contratto compare due volte perché")} <strong>cambia chi
-          dichiara</strong>: l&apos;attacco arriva dalla sinistra del
-          dichiarante, e una carta in meno da girare può valere due prese.
+          {t("Lo stesso contratto compare due volte perché cambia chi dichiara: l'attacco arriva dalla sinistra del dichiarante, e una carta in meno da girare può valere due prese.")}
         </p>
       )}
 
       {avversari.length > 0 && (
         <p className="text-xs text-muted-foreground mt-2">
-          Nei contratti loro i punti sono scritti dal vostro lato — col meno
-          quando il contratto lo mantengono, col più quando cade. Le stelle
-          invece sono le <strong>loro</strong>, misurate sul loro contratto
-          migliore: servono a sapere se la mano era vostra, perché tenerli
-          fuori da una manche vale più di un vostro parziale in più.
+          {t("Nei contratti loro i punti sono scritti dal vostro lato — col meno quando il contratto lo mantengono, col più quando cade. Le stelle invece sono le loro, misurate sul loro contratto migliore: servono a sapere se la mano era vostra, perché tenerli fuori da una manche vale più di un vostro parziale in più.")}
         </p>
       )}
 
       <p className="text-xs text-muted-foreground mt-3">
-        <strong>Qui</strong> è quanto vale su questa smazzata, a carte scoperte.
+        <strong>{t("Qui")}</strong>{" "}
+        {t("è quanto vale su questa smazzata, a carte scoperte.")}{" "}
         {mostraAtteso ? (
           <>
-            {" "}
-            <strong>{t("In media")}</strong> è quanto rende rimescolando le carte
-            avversarie: è da lì che vengono le stelle, perché una buona
-            dichiarazione resta buona anche quando le carte stanno male.
+            <strong>{t("In media")}</strong>{" "}
+            {t("è quanto rende rimescolando le carte avversarie: è da lì che vengono le stelle, perché una buona dichiarazione resta buona anche quando le carte stanno male.")}
           </>
         ) : (
-          " Le stelle sono quelle che avreste preso arrivando lì."
+          t("Le stelle sono quelle che avreste preso arrivando lì.")
         )}
       </p>
     </div>
@@ -251,6 +252,7 @@ function ManoPosto({
   posto: Position;
   evidenzia?: boolean;
 }) {
+  const t = useT();
   return (
     <div
       className={`rounded-xl border p-2 ${
@@ -258,7 +260,7 @@ function ManoPosto({
       }`}
     >
       <p className="text-xs font-semibold mb-1 flex items-center justify-between gap-1">
-        <span>{ETICHETTA[posto]}</span>
+        <span>{t(ETICHETTA[posto])}</span>
         <span className="font-normal text-muted-foreground">{handHcp(hand)} PO</span>
       </p>
       {SUITS.map((s) => (

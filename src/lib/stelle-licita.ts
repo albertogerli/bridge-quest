@@ -261,10 +261,18 @@ export function valutaLicita(
         "{d} punti sotto il contratto migliore: è la distanza fra un parziale e la manche. Con queste carte la manche si poteva cercare.",
       );
     } else if (differenza < 600) {
-      commento = perMetro(
-        "{d} punti sotto il par: una manche intera. O non è stata dichiarata, o il contratto scelto non stava in piedi.",
-        "{d} punti sotto il contratto migliore: una manche intera. O non è stata dichiarata, o il contratto scelto non stava in piedi.",
-      );
+      // Con il contesto si sa che il contratto è stato mantenuto: «non stava
+      // in piedi» sarebbe falso, resta solo la manche non dichiarata. Senza
+      // contesto le due spiegazioni restano tutte e due possibili.
+      commento = contesto?.gioca === "noi"
+        ? perMetro(
+            "{d} punti sotto il par: una manche intera. Il contratto l'avete mantenuto, ma con queste carte c'era una manche da dichiarare.",
+            "{d} punti sotto il contratto migliore: una manche intera. Il contratto l'avete mantenuto, ma con queste carte c'era una manche da dichiarare.",
+          )
+        : perMetro(
+            "{d} punti sotto il par: una manche intera. O non è stata dichiarata, o il contratto scelto non stava in piedi.",
+            "{d} punti sotto il contratto migliore: una manche intera. O non è stata dichiarata, o il contratto scelto non stava in piedi.",
+          );
     } else {
       commento = perMetro(
         "{d} punti sotto il par: qui è andato perso uno slam, oppure il contratto è caduto pesante. Vale la pena rivedere la mano.",
