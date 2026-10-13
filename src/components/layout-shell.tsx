@@ -253,52 +253,45 @@ function LayoutShellInner({ children }: { children: React.ReactNode }) {
    * destra, poi il contenuto a tutta larghezza. Niente colonna sinistra né
    * destra. La barra in basso del telefono resta: è lì che si naviga dal
    * telefono, e toglierla non libererebbe spazio a nessuno.
+   *
+   * UNA CORNICE SOLA, NON DUE. La modalità si decide quando arrivano profilo e
+   * classi, cioè DOPO il primo disegno: con due `return` diversi il contenuto
+   * cambiava posto nell'albero e React lo smontava e rimontava — la pagina
+   * ripartiva da capo, i dati si richiedevano due volte, un clic a metà
+   * cadeva nel vuoto. Le verifiche notturne del 13/10/2026 l'hanno colto. Qui
+   * le colonne compaiono e spariscono, ma `main` resta sempre allo stesso posto.
    */
-  if (modalitaCorso) {
-    return (
-      <div className="flex min-h-svh flex-col bg-background safe-area-top" data-profile={profile}>
-        <IntestazioneCorso />
+  return (
+    <div className="flex min-h-svh flex-col bg-background safe-area-top" data-profile={profile}>
+      {modalitaCorso && <IntestazioneCorso />}
+      <div className="flex flex-1 min-w-0">
+        {/* Left nav - desktop only. Chi non ha né account né la prova avviata
+            non la vede: ogni voce lo porterebbe al login, e mostrare una fila
+            di porte chiuse è chiedere prima di aver dato. */}
+        {!modalitaCorso && (user || ospite) && <DesktopNav />}
+
+        {/* Center: main content */}
         <div className="flex-1 flex flex-col min-w-0">
           <SyncNotice />
+          {/* pb-28: il bottone "Gioca" e' alto 60px e sporge di 24 sopra la barra
+              (-mt-6), piu' la sua ombra. Con pb-20 copriva l'ultima riga di
+              contenuto su OGNI schermata — "4 CORSI" nella landing, il titolo
+              "Pratica" su Gioca, "Completa il mondo precedente" su Lezioni. */}
           <main id="main-content" className="flex-1 pb-28 lg:pb-6">
             {ritornoEContenuto}
           </main>
           <div className="hidden lg:block">
             <SiteFooter />
           </div>
-          <BottomNav />
+          {(user || ospite) && <BottomNav />}
         </div>
-        {sovrapposti}
-      </div>
-    );
-  }
 
-  return (
-    <div className="flex min-h-svh bg-background safe-area-top" data-profile={profile}>
-      {/* Left nav - desktop only. Chi non ha né account né la prova avviata
-          non la vede: ogni voce lo porterebbe al login, e mostrare una fila
-          di porte chiuse è chiedere prima di aver dato. */}
-      {(user || ospite) && <DesktopNav />}
-
-      {/* Center: main content */}
-      <div className="flex-1 flex flex-col min-w-0">
-        <SyncNotice />
-        {/* pb-28: il bottone "Gioca" e' alto 60px e sporge di 24 sopra la barra
-            (-mt-6), piu' la sua ombra. Con pb-20 copriva l'ultima riga di
-            contenuto su OGNI schermata — "4 CORSI" nella landing, il titolo
-            "Pratica" su Gioca, "Completa il mondo precedente" su Lezioni. */}
-        <main id="main-content" className="flex-1 pb-28 lg:pb-6">
-          {ritornoEContenuto}
-        </main>
-        <div className="hidden lg:block">
-          <SiteFooter />
-        </div>
-        {(user || ospite) && <BottomNav />}
-      </div>
-
-      {/* Right sidebar - desktop only */}
-      <div className="hidden lg:block px-6 pt-6">
-        <DesktopSidebar />
+        {/* Right sidebar - desktop only */}
+        {!modalitaCorso && (
+          <div className="hidden lg:block px-6 pt-6">
+            <DesktopSidebar />
+          </div>
+        )}
       </div>
 
       {sovrapposti}

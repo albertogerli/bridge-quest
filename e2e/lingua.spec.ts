@@ -18,11 +18,11 @@ test.describe("la lingua nell'indirizzo", () => {
     // Il titolo, non il marchio a schermo: «BridgeLab» in pagina è dentro il
     // logo, cioè un'immagine, e cercarlo come testo fa fallire una pagina sana.
     await expect(page).toHaveTitle(/BridgeLab/, { timeout: 45_000 });
-    // E la navigazione dell'applicazione, che dimostra che è arrivata la
-    // pagina vera e non un «non trovato» col titolo giusto. In inglese si
-    // chiama «Learn»: da quando la navigazione è tradotta, cercare «Impara»
-    // qui fallirebbe — ed è giusto così, il test ha colto il cambiamento.
-    await expect(page.getByRole("link", { name: "Path" }).first()).toBeVisible({
+    // E il titolone della landing, che dimostra che è arrivata la pagina vera
+    // e non un «non trovato» col titolo giusto. Non la navigazione: chi non è
+    // collegato non la vede più (vedi «La prima schermata dà» in CLAUDE.md),
+    // e questa prova la cercava ancora.
+    await expect(page.getByRole("heading", { name: /Learn bridge/ }).first()).toBeVisible({
       timeout: 45_000,
     });
   });
