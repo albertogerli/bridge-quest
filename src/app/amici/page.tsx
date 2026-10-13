@@ -127,9 +127,23 @@ export default function AmiciPage() {
     }
   };
 
+  // Un tocco solo per persona finché la richiesta è in volo, e «Richiesta
+  // inviata!» solo se è partita davvero.
+  const [inVolo, setInVolo] = useState<Set<string>>(new Set());
   const handleAddFriend = async (userId: string) => {
-    await addFriend(userId);
-    setSentRequests((prev) => new Set(prev).add(userId));
+    if (inVolo.has(userId)) return;
+    setInVolo((prev) => new Set(prev).add(userId));
+    try {
+      if (await addFriend(userId)) {
+        setSentRequests((prev) => new Set(prev).add(userId));
+      }
+    } finally {
+      setInVolo((prev) => {
+        const next = new Set(prev);
+        next.delete(userId);
+        return next;
+      });
+    }
   };
 
   // Auth loading
@@ -629,7 +643,8 @@ export default function AmiciPage() {
                       ) : (
                         <button
                           onClick={() => handleAddFriend(result.id)}
-                          className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-figb text-white text-xs font-semibold hover:bg-figb-dark transition-colors shrink-0"
+                          disabled={inVolo.has(result.id)}
+                          className="disabled:opacity-60 flex items-center gap-1.5 px-3 py-2 rounded-xl bg-figb text-white text-xs font-semibold hover:bg-figb-dark transition-colors shrink-0"
                         >
                           <UserPlus className="h-3.5 w-3.5" />
                           {t("Aggiungi")}
