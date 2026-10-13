@@ -2536,5 +2536,6 @@
   "Tavolo della classe": "Class table",
   "dichiara {chi}": "{chi} declares",
   "Non tocca a te: aggiorno il tavolo.": "It's not your turn: refreshing the table.",
-  "Devi rispondere al seme della presa: hai ancora carte di quel seme.": "You must follow suit: you still have cards in the suit led."
+  "Devi rispondere al seme della presa: hai ancora carte di quel seme.": "You must follow suit: you still have cards in the suit led.",
+  "mazziere": "dealer"
 }

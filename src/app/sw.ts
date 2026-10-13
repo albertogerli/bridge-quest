@@ -103,4 +103,25 @@ self.addEventListener("activate", (event) => {
   );
 });
 
+/**
+ * Il clic su una notifica: si torna alla finestra di BridgeLab già aperta, o se
+ * ne apre una. Stava in un secondo worker, `/sw-notifications.js`, che però
+ * registrato sullo stesso ambito sostituiva questo (vedi `use-notifications.ts`).
+ */
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  event.waitUntil(
+    (async () => {
+      const finestre = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
+      const aperta = finestre.find((c) => c.url.includes(self.registration.scope));
+      if (aperta) {
+        await aperta.focus();
+        return;
+      }
+      const dati = event.notification.data as { url?: string } | null;
+      await self.clients.openWindow(dati?.url || "/gioca/sfida");
+    })(),
+  );
+});
+
 serwist.addEventListeners();

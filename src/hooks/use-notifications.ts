@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useCallback, useRef } from "react";
 
 // Serve a `checkReminders`, che gira all'APERTURA della pagina: lì la soglia
 // ha senso. Non serviva al promemoria programmato, che infatti non c'è più.
@@ -42,43 +42,43 @@ function getLastActivity(): number {
   }
 }
 
-function registerNotificationSW() {
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("/sw-notifications.js").catch(() => {
-      // Silent fail - notifications still work without SW, just no click handling
-    });
-  }
-}
-
-function showNotification(title: string, body: string, icon?: string) {
+/**
+ * Il clic sulla notifica lo gestisce il service worker dell'app (`src/app/sw.ts`).
+ *
+ * PRIMA questo file registrava un SECONDO worker, `/sw-notifications.js`, sullo
+ * stesso ambito «/» del primo. Un ambito ha un worker solo: registrarne un altro
+ * lo SOSTITUISCE. Ogni visita alla home rimpiazzava il worker dell'app con
+ * quello delle notifiche, e il layout lo rimetteva alla pagina dopo — due
+ * installazioni a pagina, la cache offline persa a ogni giro, e nelle verifiche
+ * notturne del 13/10/2026 pagine che si ricaricavano da sole e navigazioni che
+ * non partivano.
+ *
+ * Ora si usa la registrazione che c'è già. Se non c'è (in sviluppo il worker è
+ * spento) si ripiega sulla notifica semplice, che funziona lo stesso.
+ */
+async function showNotification(title: string, body: string, icon?: string) {
   if (!isNotificationSupported()) return;
   if (Notification.permission !== "granted") return;
 
+  const opzioni = {
+    body,
+    icon: icon || "/icons/icon-192x192.png",
+    badge: "/icons/icon-192x192.png",
+    tag: "bridgelab-reminder",
+  } as NotificationOptions;
   try {
-    // Try using service worker registration for better PWA support
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.ready.then((registration) => {
-        registration.showNotification(title, {
-          body,
-          icon: icon || "/icons/icon-192x192.png",
-          badge: "/icons/icon-192x192.png",
-          tag: "bridgelab-reminder",
-        } as NotificationOptions);
-      }).catch(() => {
-        // Fallback to basic Notification API
-        new Notification(title, {
-          body,
-          icon: icon || "/icons/icon-192x192.png",
-          tag: "bridgelab-reminder",
-        });
-      });
-    } else {
-      new Notification(title, {
-        body,
-        icon: icon || "/icons/icon-192x192.png",
-        tag: "bridgelab-reminder",
-      });
+    const registrazione = "serviceWorker" in navigator
+      ? await navigator.serviceWorker.getRegistration()
+      : undefined;
+    if (registrazione) {
+      await registrazione.showNotification(title, opzioni);
+      return;
     }
+  } catch {
+    // Si ripiega sulla notifica semplice qui sotto.
+  }
+  try {
+    new Notification(title, opzioni);
   } catch {
     // Notification failed silently
   }
@@ -96,11 +96,6 @@ export function useNotifications() {
   });
   const reminderChecked = useRef(false);
 
-  // Register SW on mount
-  useEffect(() => {
-    if (supported) registerNotificationSW();
-  }, [supported]);
-
   // Request permission and enable notifications
   const requestPermission = useCallback(async (): Promise<boolean> => {
     if (!isNotificationSupported()) return false;
@@ -112,7 +107,6 @@ export function useNotifications() {
       if (result === "granted") {
         setEnabled(true);
         setStoredEnabled(true);
-        registerNotificationSW();
         return true;
       }
       return false;

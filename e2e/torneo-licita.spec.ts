@@ -39,8 +39,10 @@ test("il torneo parte anche quando non apri tu", async ({ page }) => {
   await login(page);
   await page.goto("/gioca/torneo-licita");
 
-  // La mano arriva: la riga «… · 11 PO Apre Nord» (prima finiva con «PO»).
-  await expect(page.getByText(/\d+ PO\b/).first()).toBeVisible({ timeout: 60_000 });
+  // La mano arriva: sotto i punti c'è «Apre Nord» (o chi è il mazziere).
+  // Prima si cercava una riga che finisse con «PO»: da quando sotto c'è chi
+  // apre, quel testo non finisce più così e la prova falliva a mano arrivata.
+  await expect(page.getByText(/^Apre (Nord|Est|Sud|Ovest)$/).first()).toBeVisible({ timeout: 60_000 });
 
   // E si può dichiarare: o è il tuo turno subito, o i robot parlano fino a te.
   await expect(page.getByRole("button", { name: "Dichiara 1♣" })).toBeEnabled({
