@@ -40,7 +40,7 @@ const VIETATI = [
   { nome: "altri filmati", regola: /[\w/-]+\.(?:mov|webm)(?![\w])/g },
   { nome: "audio", regola: /[\w/-]+\.(?:mp3|wav)(?![\w])/g },
   { nome: "infografiche delle lezioni", regola: /\/infografiche\/[\w.-]+/g },
-  { nome: "materiali per l'insegnante", regola: /\/materiali\/[\w./-]+/g },
+  { nome: "materiali per l'insegnante", regola: /\/materiali\/[\w/-]+\.pdf/g },
 ];
 
 /**
