@@ -74,10 +74,17 @@ export default function TrovaCompagnoPage() {
 
   const handleContact = useCallback(
     async (userId: string) => {
-      // Ottimistico: la richiesta di amicizia è idempotente lato database e un
-      // fallimento non lascia stato incoerente, solo un bottone da ripremere.
+      // Ottimistico: una richiesta già esistente conta come inviata
+      // (`addFriend` lo tratta come esito), e se l'invio fallisce davvero il
+      // bottone torna da ripremere.
       setContacted((prev) => new Set(prev).add(userId));
-      await addFriend(userId);
+      if (!(await addFriend(userId))) {
+        setContacted((prev) => {
+          const next = new Set(prev);
+          next.delete(userId);
+          return next;
+        });
+      }
     },
     [addFriend]
   );

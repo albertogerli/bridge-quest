@@ -331,9 +331,9 @@ export function useFriends({ live = true }: { live?: boolean } = {}) {
   );
 
   const addFriend = useCallback(
-    async (userId: string) => {
+    async (userId: string): Promise<boolean> => {
       const currentUserId = await getCurrentUserId();
-      if (!currentUserId) return;
+      if (!currentUserId) return false;
 
       try {
         const { data: inserted, error } = await supabase
@@ -346,9 +346,23 @@ export function useFriends({ live = true }: { live?: boolean } = {}) {
           .select("id")
           .single();
 
+        /**
+         * La richiesta c'è già: è un esito, non un errore.
+         *
+         * Succede con un doppio tocco su «Aggiungi» (il secondo insert arriva
+         * prima che l'elenco si aggiorni) e quando una richiesta precedente è
+         * stata rifiutata — la riga `declined` resta, il pulsante no, perché
+         * l'elenco legge solo le `pending`. In tutti e due i casi per chi
+         * chiede la richiesta risulta inviata, e non diciamo a nessuno di
+         * essere stato rifiutato. Sentry 635b2a0b, 13/10/2026.
+         */
+        if (error?.code === "23505") {
+          await fetchPending();
+          return true;
+        }
         if (error) {
           segnala("use-friends:add", error);
-          return;
+          return false;
         }
 
         // Avvisa il destinatario via email (fire-and-forget)
@@ -361,8 +375,10 @@ export function useFriends({ live = true }: { live?: boolean } = {}) {
         }
 
         await fetchPending();
+        return true;
       } catch (error) {
         segnala("use-friends:add", error);
+        return false;
       }
     },
     [supabase, getCurrentUserId, fetchPending]
