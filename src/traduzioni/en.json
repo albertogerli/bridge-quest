@@ -2565,5 +2565,19 @@
   "{d} punti sotto il par: qui è andato perso uno slam, oppure il contratto è caduto pesante. Vale la pena rivedere la mano.": "{d} points below par: a slam was missed here, or the contract went down heavily. The hand is worth reviewing.",
   "{d} punti sotto il contratto migliore: qui è andato perso uno slam, oppure il contratto è caduto pesante. Vale la pena rivedere la mano.": "{d} points below the best contract: a slam was missed here, or the contract went down heavily. The hand is worth reviewing.",
   "Stavolta ti è andata bene: {reale}. Ma le stelle giudicano la scelta, e in media questo contratto rende {media}, contro {rif} del contratto migliore. Con le carte messe diversamente sarebbe andata peggio.": "You got lucky this time: {reale}. But the stars judge the choice, and on average this contract scores {media}, against {rif} for the best contract. With the cards lying differently it would have gone worse.",
-  "Stavolta è andata male ({reale}), ma la scelta era buona: in media questo contratto rende {media}. Le stelle giudicano la scelta, non la sfortuna di questa smazzata.": "It went badly this time ({reale}), but the choice was good: on average this contract scores {media}. The stars judge the choice, not the bad luck on this deal."
+  "Stavolta è andata male ({reale}), ma la scelta era buona: in media questo contratto rende {media}. Le stelle giudicano la scelta, non la sfortuna di questa smazzata.": "It went badly this time ({reale}), but the choice was good: on average this contract scores {media}. The stars judge the choice, not the bad luck on this deal.",
+  "Le stelle sono quelle che avreste preso arrivando lì.": "The stars are the ones you would have earned by getting there.",
+  "Lo stesso contratto compare due volte perché cambia chi dichiara: l'attacco arriva dalla sinistra del dichiarante, e una carta in meno da girare può valere due prese.": "The same contract appears twice because the declarer changes: the opening lead comes from declarer's left, and one card fewer to turn over can be worth two tricks.",
+  "Nei contratti loro i punti sono scritti dal vostro lato — col meno quando il contratto lo mantengono, col più quando cade. Le stelle invece sono le loro, misurate sul loro contratto migliore: servono a sapere se la mano era vostra, perché tenerli fuori da una manche vale più di un vostro parziale in più.": "In their contracts the points are written from your side — minus when they make it, plus when it goes down. The stars, though, are theirs, measured against their best contract: they tell you whether the hand was yours, because keeping them out of a game is worth more than an extra partscore of your own.",
+  "Qui": "Here",
+  "{contratto} di {posto}": "{contratto} by {posto}",
+  "è quanto rende rimescolando le carte avversarie: è da lì che vengono le stelle, perché una buona dichiarazione resta buona anche quando le carte stanno male.": "is what it scores when the opponents' cards are reshuffled: that's where the stars come from, because a good bid stays good even when the cards lie badly.",
+  "è quanto vale su questa smazzata, a carte scoperte.": "is what it's worth on this deal, double dummy.",
+  "← il vostro": "← yours",
+  "Nessuno in zona": "None vulnerable",
+  "In zona Nord-Sud": "North-South vulnerable",
+  "In zona Est-Ovest": "East-West vulnerable",
+  "Tutti in zona": "Both vulnerable",
+  "{d} punti sotto il par: una manche intera. Il contratto l'avete mantenuto, ma con queste carte c'era una manche da dichiarare.": "{d} points below par: a whole game. You made your contract, but with these cards there was a game to bid.",
+  "{d} punti sotto il contratto migliore: una manche intera. Il contratto l'avete mantenuto, ma con queste carte c'era una manche da dichiarare.": "{d} points below the best contract: a whole game. You made your contract, but with these cards there was a game to bid."
 }

@@ -271,3 +271,18 @@ describe("il commento guarda di chi era la mano e com'è finita", () => {
     expect(v.commento).toContain('"punti":"-500"');
   });
 });
+
+describe("una manche intera sotto il par, con il contratto mantenuto", () => {
+  it("non dice che il contratto non stava in piedi", () => {
+    // 2♠ fatto (+110) dove c'era 4♠ (+420): la manche non è stata dichiarata,
+    // il contratto invece reggeva benissimo.
+    const contesto = contestoDaEsito({ lato: "ns", level: 2, prese: 9 });
+    const e = valutaLicita(110, 420, "esatto", undefined, { contesto });
+    expect(e.commento).toContain("c'era una manche da dichiarare");
+    expect(e.commento).not.toContain("non stava in piedi");
+  });
+
+  it("senza contesto lascia aperte le due spiegazioni", () => {
+    expect(valutaLicita(110, 420).commento).toContain("non stava in piedi");
+  });
+});
