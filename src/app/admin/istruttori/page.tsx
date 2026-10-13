@@ -18,6 +18,7 @@ import {
   type InstructorRequestStatus,
 } from "@/lib/instructors";
 import { useT } from "@/contexts/traduzioni-provider";
+import { reportError } from "@/lib/report-error";
 
 const FILTERS: { value: InstructorRequestStatus | "all"; label: string }[] = [
   { value: "pending", label: "In attesa" },
@@ -59,6 +60,15 @@ export default function AdminInstructorRequestsPage() {
     setActingId(id);
     try {
       await reviewInstructorRequest(id, approve, messages[id]);
+      // L'email a chi è stato approvato: se non parte, l'approvazione resta
+      // valida e la persona la scopre comunque riaprendo la pagina.
+      if (approve) {
+        void fetch("/api/instructor-request/approvata", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ requestId: id }),
+        }).catch((err) => reportError("admin:istruttori:email", err));
+      }
       setMessages((prev) => {
         const next = { ...prev };
         delete next[id];

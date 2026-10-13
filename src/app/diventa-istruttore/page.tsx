@@ -114,7 +114,7 @@ export default function DiventaIstruttorePage() {
                 <span className="text-4xl">⏳</span>
                 <p className="font-display text-lg font-semibold">{t("Richiesta in attesa di approvazione")}</p>
                 <p className="max-w-sm text-sm text-muted-foreground">
-                  {t("Abbiamo ricevuto la tua richiesta. Riceverai accesso al portale non appena verrà approvata.")}
+                  {t("Abbiamo ricevuto la tua richiesta. Quando verrà approvata ti arriva un'email e il portale si apre.")}
                 </p>
               </CardContent>
             </Card>

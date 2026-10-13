@@ -61,7 +61,7 @@ export function ModuloAdesione({ codice }: { codice: string }) {
       <div className="rounded-xl border border-border bg-card p-5 text-center">
         <p className="text-lg font-bold">{t("Ci vediamo lì.")}</p>
         <p className="mt-1 text-sm text-muted-foreground">
-          {t("Abbiamo avvisato chi organizza. Se qualcosa cambia ti contattano.")}
+          {t("Chi organizza trova il tuo nome nell'elenco delle adesioni. Se qualcosa cambia ti contattano.")}
         </p>
       </div>
     );
