@@ -106,7 +106,7 @@ export function Asta({
             >
               {ETICHETTA[p]}
               {p === dealer && (
-                <span className="block text-[12px] font-normal">dealer</span>
+                <span className="block text-[12px] font-normal">{t("mazziere")}</span>
               )}
             </div>
           ))}

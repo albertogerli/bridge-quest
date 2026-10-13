@@ -44,13 +44,17 @@ const projectRoot = path.dirname(fileURLToPath(import.meta.url));
  * pagina: 256 secondi misurati in produzione il 17/08/2026, contro 1,5 secondi
  * col worker disattivato.
  *
- * Le due cartelle sono escluse per nome, ma la protezione vera è il limite di
+ * Le cartelle di contenuto sono escluse per nome, ma la protezione vera è il limite di
  * peso: qualunque cosa venga aggiunta in `public/` domani, se supera il
  * megabyte non entra. Una lista di estensioni copre solo i formati a cui si è
  * pensato — e questo difetto è nato proprio così, da una regola che parlava di
  * video mentre il problema erano anche le immagini.
+ *
+ * E il limite da solo non basta: i PDF del gioco della carta (`materiali/`,
+ * ottobre 2026) pesano meno di un mega l'uno, e otto insieme facevano 4,4 MB
+ * su 6,7 di precache — per materiale che apre solo chi insegna.
  */
-const CARTELLE_DI_CONTENUTO = /^(?:videos|infografiche)\//;
+const CARTELLE_DI_CONTENUTO = /^(?:videos|infografiche|materiali)\//;
 /** Il worker stesso e i suoi satelliti: precaricarsi da soli non ha senso. */
 const NON_E_UN_ASSET = /^(?:sw\.js(?:\.map)?|swe-worker-[^/]*\.js)$/;
 /** Oltre questo, non è roba che serve prima che l'utente veda qualcosa. */
