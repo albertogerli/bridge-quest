@@ -52,8 +52,10 @@ export const FoglioLocandina = forwardRef<
           // eslint-disable-next-line @next/next/no-img-element -- come sopra
           <img src={logoAsd} alt="" style={{ height: 60, maxWidth: 200, objectFit: "contain" }} />
         )}
+        {/* Più basso della FIGB perché è largo e basso: a 40 px i due loghi
+            occupano più o meno la stessa superficie. A 28 px sembrava una nota a piè. */}
         {/* eslint-disable-next-line @next/next/no-img-element -- come sopra */}
-        <img src="/icons/logo-coni.png" alt="CONI" style={{ height: 28 }} />
+        <img src="/icons/logo-coni.png" alt="CONI" style={{ height: 40 }} />
       </div>
 
       {/*
