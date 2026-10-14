@@ -15,6 +15,7 @@ import {
 } from "@/lib/locandina";
 import { altezzaLogo, valutaLogo } from "@/lib/logo-asd";
 import { reportError } from "@/lib/report-error";
+import { useAsdClub } from "@/store/use-asd-store";
 import { useT } from "@/contexts/traduzioni-provider";
 
 /**
@@ -54,11 +55,16 @@ export default function LocandinaPage({ params }: { params: Promise<{ classId: s
         // Quello che l'ASD aveva già scritto torna com'era: ricompilare
         // quattordici locandine due volte era il lavoro da togliere.
         const salvata = d.classRoom.locandina as
-          | (Partial<TestiLocandina> & { facoltativi?: Facoltativi })
+          | (Partial<TestiLocandina> & { facoltativi?: Facoltativi; logoAsd?: unknown })
           | undefined;
         const predefiniti = testiPredefiniti(d.classRoom, profile?.display_name ?? "");
         setTesti((precedenti) => precedenti ?? { ...predefiniti, ...salvata });
         if (salvata?.facoltativi) setFacoltativi(salvata.facoltativi);
+        // Il logo torna con il resto: prima restava solo in memoria, e chi
+        // riapriva la pagina doveva ricaricarlo a ogni locandina.
+        if (typeof salvata?.logoAsd === "string" && salvata.logoAsd.startsWith("data:image/")) {
+          setLogoAsd(salvata.logoAsd);
+        }
       })
       .catch((err) => {
         reportError("locandina:classe", err);
@@ -66,6 +72,18 @@ export default function LocandinaPage({ params }: { params: Promise<{ classId: s
       });
     return () => { vivo = false; };
   }, [classId, profile?.display_name]);
+
+  /**
+   * L'associazione per nome, non per codice. La classe conosce solo il codice
+   * FIGB dell'ASD, e il modulo lo scriveva così: sulla locandina finiva una
+   * sigla che nessuno in bacheca riconosce. Si sostituisce solo finché il campo
+   * contiene ancora il codice — se l'insegnante l'ha riscritto, resta suo.
+   */
+  const club = useAsdClub(classe?.asd_code);
+  useEffect(() => {
+    if (!club?.name || !classe?.asd_code) return;
+    setTesti((p) => (p && p.associazione.trim() === classe.asd_code ? { ...p, associazione: club.name } : p));
+  }, [club?.name, classe?.asd_code]);
 
   // Il QR porta alla pagina dell'evento, non alla schermata di iscrizione:
   // vedi `indirizzoEvento`.
@@ -117,7 +135,8 @@ export default function LocandinaPage({ params }: { params: Promise<{ classId: s
       // sarebbe un passaggio in più da dimenticare, con la conseguenza che il
       // cartello in bacheca rimanda a una pagina vuota.
       await aggiornaImpostazioniClasse(classId, {
-        locandina: { ...testi, facoltativi },
+        // Il logo è già ridotto a 192 px di altezza: pesa poche decine di kB.
+        locandina: { ...testi, facoltativi, logoAsd: facoltativi.logoAsd ? logoAsd : null },
       });
       // Tre volte le misure CSS: 794×1123 punti sono un A4 a 96 dpi, e per tre
       // fanno i 300 dpi che una stampante si aspetta.
