@@ -22,6 +22,7 @@ import { reportError } from "@/lib/report-error";
 import { compitoAssegnatoWhatsApp, linkWhatsApp, materialiLezioneWhatsApp } from "@/lib/whatsapp";
 import { useT } from "@/contexts/traduzioni-provider";
 import { contrattoLeggibile } from "@/lib/contratto-leggibile";
+import { getYouTubeWatchUrl } from "@/components/maestro-video";
 
 /**
  * Le lezioni del corso, con lo stato per ciascuna e un pulsante per assegnarla.
@@ -362,6 +363,11 @@ export function AssegnaLezioni({ classId, onCambiato }: { classId: string; onCam
                                 classId,
                                 assignmentId: compito.assignment_id,
                                 corsoId: corso.id,
+                                // La videolezione registrata del canale, se la
+                                // lezione ce l'ha: il messaggio la prevedeva
+                                // ma nessuno gliela passava, e la riga
+                                // non usciva mai.
+                                linkVideo: getYouTubeWatchUrl(lezione.id),
                               }),
                             )}
                             target="_blank"
