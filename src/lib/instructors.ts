@@ -961,6 +961,14 @@ export async function submitInstructorRequest(input: {
 }
 
 /** The current user's own instructor request, if any. */
+/**
+ * Chi si è registrato scegliendo «Per insegnare». L'account nasce comunque
+ * allievo — il ruolo lo dà solo lo staff approvando la richiesta — e questo
+ * segno in `localStorage` serve a non mandarlo nell'avvio guidato per chi
+ * impara mentre la richiesta non è ancora partita (Trevissoi, 14/10/2026).
+ */
+export const CHIAVE_VUOLE_INSEGNARE = "bq_vuole_insegnare";
+
 export async function getMyInstructorRequest(): Promise<InstructorRequest | null> {
   const supabase = createClient();
   const {
