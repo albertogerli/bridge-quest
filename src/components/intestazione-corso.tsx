@@ -62,10 +62,17 @@ export function IntestazioneCorso() {
         </Link>
 
         <div className="ml-auto flex min-w-0 items-center gap-2">
+          {/* Il nome porta al profilo: è lì che lo si cerca per cambiare i dati
+              o eliminare l'account (Trevissoi, 14/10/2026: «in fondo alla
+              pagina non vedo nulla» — il profilo stava solo dietro il menu). */}
           {nome && (
-            <span className="hidden max-w-[16rem] truncate text-sm text-muted-foreground sm:inline" title={nome}>
+            <Link
+              href="/profilo"
+              title={nome}
+              className="hidden max-w-[16rem] truncate rounded-lg px-2 py-1 text-sm text-muted-foreground hover:bg-muted hover:text-foreground sm:inline"
+            >
               {nome}
-            </span>
+            </Link>
           )}
           {user && (
             <button
