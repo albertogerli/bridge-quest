@@ -9,9 +9,14 @@ vi.mock("@/lib/instructors", () => ({
   getMyEnrolledClasses: vi.fn(),
 }));
 
+const auth = vi.hoisted(() => ({ user: { id: "u1" } as { id: string } | null }));
+vi.mock("@/contexts/auth-provider", () => ({ useSharedAuth: () => ({ user: auth.user }) }));
+
 beforeEach(() => {
   vi.resetAllMocks();
+  auth.user = { id: "u1" };
   useClassesStore.setState({
+    utenteId: "u1",
     myClasses: [], myLoading: false, myLoaded: false, myError: null,
     enrolledClasses: [], enrolledLoading: false, enrolledLoaded: false, enrolledError: null,
   });
@@ -64,4 +69,48 @@ describe.each([
 it("non cerca le iscrizioni quando il caricamento è disabilitato", () => {
   renderHook(() => useEnrolledClasses(false));
   expect(getMyEnrolledClasses).not.toHaveBeenCalled();
+});
+
+describe("cambio di account senza ricaricare la pagina", () => {
+  it("dimentica le classi del precedente e rilegge quelle del nuovo", async () => {
+    // Trevissoi, 14/10/2026: uscito come insegnante e rientrato come allievo,
+    // la home restava quella di chi non ha classi.
+    const load = vi.mocked(getMyEnrolledClasses);
+    load.mockResolvedValueOnce([]);
+    const { result, rerender } = renderHook(() => useEnrolledClasses());
+    await waitFor(() => expect(result.current.isLoaded).toBe(true));
+    expect(result.current.classes).toEqual([]);
+
+    load.mockResolvedValueOnce([{ id: "c1" } as never]);
+    auth.user = { id: "u2" };
+    rerender();
+    await waitFor(() => expect(result.current.classes).toHaveLength(1));
+    expect(load).toHaveBeenCalledTimes(2);
+  });
+
+  it("non riprende un errore «Non autenticato» del caricamento precedente", async () => {
+    const load = vi.mocked(getMyEnrolledClasses);
+    auth.user = null;
+    useClassesStore.setState({ utenteId: null, enrolledError: "Non autenticato" });
+    const { result, rerender } = renderHook(() => useEnrolledClasses());
+    expect(load).not.toHaveBeenCalled();
+
+    load.mockResolvedValueOnce([{ id: "c1" } as never]);
+    auth.user = { id: "u1" };
+    rerender();
+    await waitFor(() => expect(result.current.classes).toHaveLength(1));
+  });
+
+  it("scarta la risposta arrivata per l'account di prima", async () => {
+    const load = vi.mocked(getMyEnrolledClasses);
+    let finisciVecchia!: (v: never[]) => void;
+    load.mockImplementationOnce(() => new Promise((ok) => { finisciVecchia = ok; }));
+    load.mockResolvedValueOnce([]);
+    const { result, rerender } = renderHook(() => useEnrolledClasses());
+    auth.user = { id: "u2" };
+    rerender();
+    await waitFor(() => expect(result.current.isLoaded).toBe(true));
+    await act(async () => { finisciVecchia([{ id: "vecchia" } as never]); });
+    expect(result.current.classes).toEqual([]);
+  });
 });
