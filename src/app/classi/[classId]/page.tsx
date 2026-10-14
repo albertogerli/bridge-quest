@@ -28,6 +28,10 @@ import { useT } from "@/contexts/traduzioni-provider";
 import { useAlRitorno } from "@/hooks/use-al-ritorno";
 import { statoClasseAllievo, type StatoClasseAllievo } from "@/lib/classe-allievo";
 import { segnalaSalvoRete } from "@/lib/report-error";
+import { materialiPubblicati } from "@/lib/materiali-lezione-db";
+import { raggruppaPerLezione, type MaterialeLezione, type TipoMateriale } from "@/lib/materiali-lezione";
+import { CollegamentoMateriale } from "@/components/collegamento-materiale";
+import { ClipboardList, FileText } from "lucide-react";
 
 export default function StudentClassPage({
   params,
@@ -73,6 +77,23 @@ export default function StudentClassPage({
   }, [leggiIscrizione]);
   useAlRitorno(leggiIscrizione, 30_000, iscrizione !== null && iscrizione.stato !== "active");
   const attivo = iscrizione?.stato === "active";
+
+  /**
+   * I materiali che l'insegnante ha già fatto uscire. Cosa è uscito lo decide
+   * il database: qui arrivano solo quelli pubblicati, e se la funzione non è
+   * ancora attiva arriva un elenco vuoto e la sezione non compare.
+   */
+  const [materiali, setMateriali] = useState<MaterialeLezione[]>([]);
+  useEffect(() => {
+    if (!attivo) return;
+    let vivo = true;
+    void materialiPubblicati(classId).then((m) => {
+      if (vivo) setMateriali(m);
+    });
+    return () => {
+      vivo = false;
+    };
+  }, [classId, attivo]);
 
   useEffect(() => {
     let vivo = true;
@@ -216,6 +237,9 @@ export default function StudentClassPage({
           <span className="ml-auto shrink-0 text-sm font-semibold text-primary">{t("Entra →")}</span>
         </Link>
       )}
+
+      {/* Prima dei compiti: dopo la lezione si guarda, si legge, e poi ci si esercita. */}
+      {attivo && materiali.length > 0 && <MaterialiDelleLezioni materiali={materiali} />}
 
       {error && <p className="mb-4 text-sm text-destructive">{error}</p>}
 
@@ -363,6 +387,63 @@ function AssignmentSection({
           })}
         </div>
       )}
+    </section>
+  );
+}
+
+const ICONE_MATERIALE: Record<TipoMateriale, typeof Video> = {
+  video: Video,
+  dispensa: FileText,
+  esercizio: ClipboardList,
+};
+
+/**
+ * Videolezione, dispensa ed esercizio di ogni lezione, come li ha fatti uscire
+ * l'insegnante. La lezione uscita per ultima sta in cima: è quella di ieri
+ * sera, e chi apre la classe il giorno dopo cerca quella.
+ */
+function MaterialiDelleLezioni({ materiali }: { materiali: MaterialeLezione[] }) {
+  const t = useT();
+  const gruppi = raggruppaPerLezione(materiali, "pubblicazione");
+  const nomeTipo: Record<TipoMateriale, string> = {
+    video: t("Videolezione"),
+    dispensa: t("Dispensa"),
+    esercizio: t("Esercizio"),
+  };
+  return (
+    <section className="mb-8">
+      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+        {t("Materiali delle lezioni")}
+      </h2>
+      <div className="space-y-4">
+        {gruppi.map((g) => (
+          <div key={g.lezione} className="rounded-xl border border-border bg-card p-4">
+            <h3 className="mb-3 font-display text-base font-semibold">{g.lezione}</h3>
+            <ul className="space-y-2">
+              {g.materiali.map((m) => {
+                const Icona = ICONE_MATERIALE[m.tipo];
+                return (
+                  <li key={m.id}>
+                    <CollegamentoMateriale
+                      url={m.url}
+                      className="flex min-h-12 items-center gap-3 rounded-lg border border-border px-3 py-2 transition-colors hover:bg-muted/50"
+                    >
+                      <Icona className="h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
+                      <span className="min-w-0">
+                        <span className="block text-sm font-semibold text-foreground">{m.titolo}</span>
+                        <span className="block text-xs text-muted-foreground">{nomeTipo[m.tipo]}</span>
+                      </span>
+                      <span className="ml-auto shrink-0 text-sm font-semibold text-primary" aria-hidden="true">
+                        →
+                      </span>
+                    </CollegamentoMateriale>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ))}
+      </div>
     </section>
   );
 }

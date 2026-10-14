@@ -509,6 +509,13 @@ export default function ClassDetailPage({
           <Button variant="outline" onClick={() => setScheda("lezioni")}>
             3 · {t("Smazzate della lezione, video e materiali")}
           </Button>
+          {/* Qui si decide che cosa vedono gli allievi e quando: videolezione,
+              dispensa ed esercizio, ciascuno con la sua ora di uscita
+              (Trevissoi, 14/10/2026). Le tre voci sopra preparano; questa
+              consegna. */}
+          <Link href={`/istruttori/${classId}/materiali`}>
+            <Button>{t("Materiali dopo la lezione")}</Button>
+          </Link>
         </div>
       </div>
       <div className="mb-6">
