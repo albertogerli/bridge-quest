@@ -37,7 +37,13 @@ import { useLocalStats } from "@/hooks/use-local-stats";
 import { useGameStore, useHasHydrated } from "@/store/use-game-store";
 import { GraduationCap, Zap } from "lucide-react";
 import { reportError, segnalaSalvoRete } from "@/lib/report-error";
-import { mieRichiesteInAttesa, type RichiestaInAttesa } from "@/lib/instructors";
+import {
+  CHIAVE_VUOLE_INSEGNARE,
+  getMyInstructorRequest,
+  mieRichiesteInAttesa,
+  type InstructorRequestStatus,
+  type RichiestaInAttesa,
+} from "@/lib/instructors";
 import { InstructorCard } from "@/components/home/instructor-card";
 import { useT } from "@/contexts/traduzioni-provider";
 import { AvvisoRichiesteAmicizia } from "@/components/avviso-richieste-amicizia";
@@ -86,6 +92,26 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
       });
     return () => { vivo = false; };
   }, [user]);
+  /**
+   * La richiesta per il Portale Insegnanti, se c'è: `undefined` finché non è
+   * arrivata. Chi ha chiesto di insegnare non è ancora insegnante — il ruolo
+   * arriva con l'approvazione — e senza questo finiva nell'avvio guidato per
+   * chi impara (Trevissoi, 14/10/2026).
+   */
+  const [statoRichiestaInsegnante, setStatoRichiestaInsegnante] =
+    useState<InstructorRequestStatus | null | undefined>(undefined);
+  useEffect(() => {
+    if (!user) return;
+    let vivo = true;
+    getMyInstructorRequest()
+      .then((r) => { if (vivo) setStatoRichiestaInsegnante(r?.status ?? null); })
+      .catch((err) => {
+        segnalaSalvoRete("home:richiesta-insegnante", err);
+        if (vivo) setStatoRichiestaInsegnante(null);
+      });
+    return () => { vivo = false; };
+  }, [user]);
+  const [vuoleInsegnare, setVuoleInsegnare] = useState(false);
   const { courses, isLoaded: catalogLoaded } = useCatalog();
   const stats = useLocalStats();
   const profile = useProfile();
@@ -127,6 +153,7 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
       setIsGuest(localStorage.getItem("bq_guest") === "1");
       setVuoleLaBacheca(preferisceLaBacheca());
+      setVuoleInsegnare(localStorage.getItem(CHIAVE_VUOLE_INSEGNARE) === "1");
       if (!localStorage.getItem("bq_onboarded")) {
         setShowOnboarding(true);
         setNotOnboarded(true);
@@ -291,9 +318,11 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
   try { codiceInSospeso = !!localStorage.getItem("bq_codice_classe"); } catch {}
   const arrivaDaUnaClasse =
     codiceInSospeso || classiIscritte.length > 0 || (richiesteInAttesa?.length ?? 0) > 0;
-  const classiNote = !user || ((classiCaricate || erroreClassi !== null) && richiesteInAttesa !== null);
-  if (showOnboarding && !insegnaGia && classiNote && !arrivaDaUnaClasse) {
-    return <PrimaManoOnboarding onDismiss={handleOnboardingComplete} />;
+  const classiNote = !user || ((classiCaricate || erroreClassi !== null) && richiesteInAttesa !== null && statoRichiestaInsegnante !== undefined);
+  // Né per chi ha chiesto di insegnare: va alla sua richiesta, non a «tra 5 minuti giocherai».
+  const vaVersoIlPortale = vuoleInsegnare || statoRichiestaInsegnante === "pending";
+  if (showOnboarding && !insegnaGia && classiNote && !arrivaDaUnaClasse && !vaVersoIlPortale) {
+    return <PrimaManoOnboarding onDismiss={handleOnboardingComplete} conAccount={!!user} />;
   }
 
   /**
@@ -462,6 +491,23 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
           registrato e senza ASD ne vedeva due in fila. */}
       {richiesta === "ospite" && <GuestLoginReminder />}
       {richiesta === "prima-mano" && <PrimaManoBanner />}
+
+      {/* Chi ha chiesto di insegnare e aspetta: la strada per il portale resta in vista. */}
+      {user && !insegna && vaVersoIlPortale && (
+        <Link
+          href="/diventa-istruttore"
+          className="block rounded-2xl border border-primary/20 bg-primary/5 px-4 py-3 text-sm transition-colors hover:bg-primary/10"
+        >
+          <span className="font-semibold text-foreground">
+            {statoRichiestaInsegnante === "pending"
+              ? t("La tua richiesta per il Portale Insegnanti è in attesa di approvazione.")
+              : t("Hai scelto di insegnare: manca solo la richiesta per il Portale Insegnanti.")}
+          </span>{" "}
+          <span className="text-primary">
+            {statoRichiestaInsegnante === "pending" ? t("Vedi la richiesta →") : t("Inviala ora →")}
+          </span>
+        </Link>
+      )}
 
       {/*
         L'INVITO A ENTRARE IN UNA CLASSE, per chi non ne ha nessuna.

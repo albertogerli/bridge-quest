@@ -50,9 +50,12 @@ function saveProgress(p: SavedProgress) {
 export function PrimaManoV2({
   onDismiss,
   returnHref,
+  conAccount = false,
 }: {
   onDismiss?: () => void;
   returnHref?: string;
+  /** Chi ha già un account può chiedere da qui il Portale Insegnanti. */
+  conAccount?: boolean;
 }) {
   const t = useT();
   const router = useRouter();
@@ -98,6 +101,12 @@ export function PrimaManoV2({
     onDismiss?.();
     if (returnHref) router.push(returnHref);
   }, [persistOnboarding, onDismiss, returnHref, router]);
+
+  const vaiAlPortaleInsegnanti = useCallback(() => {
+    persistOnboarding();
+    onDismiss?.();
+    router.push("/diventa-istruttore");
+  }, [persistOnboarding, onDismiss, router]);
 
   const handleStepComplete = useCallback(
     (xpEarned: number) => {
@@ -210,6 +219,31 @@ export function PrimaManoV2({
         })}
       </div>
 
+      {/*
+        L'USCITA STA IN ALTO E RESTA FERMA. Prima «Salta» era sotto il passo,
+        ma la colonna dei nove passi a sinistra allunga la griglia e lo
+        spingeva in fondo alla pagina: su un portatile non si vedeva senza
+        scorrere, e chi non scorre resta chiuso dentro (Trevissoi, 14/10/2026).
+      */}
+      {stepId !== "vittoria" && (
+        <div className="sticky top-0 z-10 flex items-center justify-end gap-2 px-4 pt-3 sm:px-6">
+          {conAccount && (
+            <button
+              onClick={vaiAlPortaleInsegnanti}
+              className="rounded-[22px] border border-gray-200 bg-white/90 px-4 py-2 text-sm font-semibold text-[#12305f] backdrop-blur-sm transition-colors hover:bg-white"
+            >
+              {t("Sono un insegnante")}
+            </button>
+          )}
+          <button
+            onClick={handleSkip}
+            className="rounded-[22px] border border-gray-200 bg-white/90 px-5 py-2 text-sm font-semibold text-[#5c677d] backdrop-blur-sm transition-colors hover:text-[#12305f]"
+          >
+            {t("Salta")}
+          </button>
+        </div>
+      )}
+
       <div className="relative mx-auto flex min-h-screen w-full max-w-6xl items-center px-4 py-8 sm:px-6 lg:px-8">
         <div className="w-full">
           {/* Mobile progress bar (visible < lg, when sidebar is hidden) */}
@@ -287,21 +321,11 @@ export function PrimaManoV2({
                 </motion.div>
               </AnimatePresence>
 
-              {/* Skip + FIGB footer — hidden on vittoria */}
+              {/* FIGB footer — hidden on vittoria; «Salta» sta in alto */}
               {stepId !== "vittoria" && (
-                <div className="mt-4 flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-xs text-[#6b7280]">
-                    <BookOpen className="h-4 w-4 text-[#8f6b16]" />
-                    <span className="hidden sm:inline">
-                      {t("Ispirato alla logica FIGB dell'ingresso morbido al tavolo.")}
-                    </span>
-                  </div>
-                  <button
-                    onClick={handleSkip}
-                    className="rounded-[22px] border border-gray-200 bg-white px-5 py-2 text-sm font-semibold text-[#5c677d] transition-colors hover:text-[#12305f]"
-                  >
-                    {t("Salta")}
-                  </button>
+                <div className="mt-4 hidden items-center gap-2 text-xs text-[#6b7280] sm:flex">
+                  <BookOpen className="h-4 w-4 text-[#8f6b16]" />
+                  <span>{t("Ispirato alla logica FIGB dell'ingresso morbido al tavolo.")}</span>
                 </div>
               )}
             </div>

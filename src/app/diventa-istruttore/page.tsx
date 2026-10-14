@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/card";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import {
+  CHIAVE_VUOLE_INSEGNARE,
   getMyInstructorRequest,
   submitInstructorRequest,
   type InstructorRequest,
@@ -56,6 +57,8 @@ export default function DiventaIstruttorePage() {
         asdCode: profile?.asd_code ?? null,
       });
       setSent(true);
+      // Da qui in avanti a tenerlo fuori dall'avvio guidato è la richiesta stessa.
+      try { localStorage.removeItem(CHIAVE_VUOLE_INSEGNARE); } catch {}
       setRequest((prev) =>
         prev
           ? { ...prev, status: "pending", message: message.trim() || null }

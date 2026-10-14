@@ -21,8 +21,9 @@ import { type ReactNode } from "react";
 import { useT } from "@/contexts/traduzioni-provider";
 import { homeDi, linguaDaPercorso, localizzaHref } from "@/lib/lingua";
 import { AvvisoPassword } from "@/components/avviso-password";
-import { CodiceClasseNonValido, joinClass } from "@/lib/instructors";
+import { CHIAVE_VUOLE_INSEGNARE, CodiceClasseNonValido, joinClass } from "@/lib/instructors";
 type Mode = "login" | "signup";
+type Ruolo = "allievo" | "insegnante";
 type ProfileType = "junior" | "giovane" | "adulto" | "senior";
 
 export default function LoginPage() {
@@ -67,6 +68,14 @@ function LoginContent() {
   // direttamente nella sua classe invece che nella home generale (Trevissoi,
   // ottobre 2026). Arriva già compilato da `?codice=` (QR della locandina).
   const [codiceClasse, setCodiceClasse] = useState(() => (searchParams.get("codice") ?? "").trim().toUpperCase().slice(0, 6));
+  /**
+   * Per cosa si registra. Prima non lo chiedeva nessuno: l'insegnante appena
+   * registrato finiva nell'avvio guidato per chi impara, con «Salta» in fondo
+   * alla pagina e la richiesta del portale da cercare nel menù (Trevissoi,
+   * 14/10/2026). Il ruolo lo dà comunque lo staff: qui si sceglie solo dove
+   * atterrare. `?ruolo=insegnante` lo preseleziona nei link mandati ai docenti.
+   */
+  const [ruolo, setRuolo] = useState<Ruolo>(() => (searchParams.get("ruolo") === "insegnante" ? "insegnante" : "allievo"));
   const [profileType, setProfileType] = useState<ProfileType>("adulto");
   const [asdSearch, setAsdSearch] = useState("");
   const [selectedAsdCode, setSelectedAsdCode] = useState<string>("");
@@ -187,6 +196,11 @@ function LoginContent() {
           }
           // Save profile type to localStorage too
           try { localStorage.setItem("bq_profile", profileType); } catch {}
+          if (ruolo === "insegnante") {
+            try { localStorage.setItem(CHIAVE_VUOLE_INSEGNARE, "1"); } catch {}
+            window.location.href = localizzaHref("/diventa-istruttore", linguaDaPercorso(window.location.pathname));
+            return;
+          }
           // Con il codice della classe si entra nella classe. Se la sessione non
           // c'è ancora (email da confermare) il codice resta in sospeso e lo
           // usa `IscrizioneInSospeso` al primo accesso.
@@ -268,6 +282,40 @@ function LoginContent() {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
+          {mode === "signup" && (
+            <div>
+              <label className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
+                {t("Ti registri per")}
+              </label>
+              <div className="grid grid-cols-2 gap-2">
+                {([
+                  { key: "allievo" as Ruolo, label: t("Imparare e giocare"), desc: t("Da solo o nel corso del tuo insegnante") },
+                  { key: "insegnante" as Ruolo, label: t("Insegnare"), desc: t("Classi, compiti e progressi degli allievi") },
+                ]).map(({ key, label, desc }) => (
+                  <button
+                    key={key}
+                    type="button"
+                    onClick={() => setRuolo(key)}
+                    aria-pressed={ruolo === key}
+                    className={`p-3 rounded-xl border-2 text-left transition-all ${
+                      ruolo === key
+                        ? "border-primary bg-primary/10"
+                        : "border-border/50 bg-card hover:border-border"
+                    }`}
+                  >
+                    <span className="text-sm font-semibold text-foreground block">{label}</span>
+                    <span className="text-[12px] text-muted-foreground block mt-0.5">{desc}</span>
+                  </button>
+                ))}
+              </div>
+              {ruolo === "insegnante" && (
+                <p className="mt-1.5 text-xs text-muted-foreground">
+                  {t("Dopo la registrazione invii la richiesta per il Portale Insegnanti. Lo staff FIGB la approva e ti arriva un'email.")}
+                </p>
+              )}
+            </div>
+          )}
+
           {/* Email */}
           <div>
             <label className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
@@ -422,7 +470,8 @@ function LoginContent() {
                   />
                 </div>
 
-                {/* Codice della classe */}
+                {/* Codice della classe: è dell'allievo, l'insegnante le classi le crea */}
+                {ruolo === "allievo" && (
                 <div>
                   <label className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
                     {t("Codice della tua classe")} <span className="text-muted-foreground/50 normal-case">({t("se te l'ha dato l'insegnante")})</span>
@@ -436,6 +485,7 @@ function LoginContent() {
                     placeholder="A7B9XZ"
                   />
                 </div>
+                )}
 
                 {/* BBO Username */}
                 <div>
@@ -650,6 +700,18 @@ function LoginContent() {
             )}
           </Button>
         </form>
+
+        {mode === "login" && (
+          <div className="mt-6 text-center">
+            <button
+              type="button"
+              onClick={() => { setMode("signup"); setRuolo("insegnante"); setError(""); setSuccess(""); }}
+              className="text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
+            >
+              {t("Sei un insegnante e non hai ancora un account? Registrati qui")}
+            </button>
+          </div>
+        )}
 
         {/* Continue without account */}
         <div className="mt-6 text-center">
