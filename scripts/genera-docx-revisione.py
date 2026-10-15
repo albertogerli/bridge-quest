@@ -208,8 +208,10 @@ def scrivi_blocco(doc, blocco, rif):
             if giusta:
                 run.font.color.rgb = VERDE
     elif tipo == "true-false":
-        # Senza opzioni esplicite, correctAnswer 1 = Vero, 0 = Falso.
-        risposta = "VERO" if corretta == 1 else "FALSO"
+        # Nel DB correctAnswer è l'indice in ["Vero", "Falso"]: 0 = Vero,
+        # 1 = Falso. La prima versione lo leggeva al contrario e il documento
+        # dell'11/08/2026 stampava rovesciate tutte le risposte Vero/Falso.
+        risposta = "VERO" if corretta == 0 else "FALSO"
         par(doc, f"✔ Risposta data per corretta: {risposta}", size=10,
             bold=True, color=VERDE, space_after=2)
 
