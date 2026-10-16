@@ -96,6 +96,18 @@ export function classifyPlayErrors(opts: ClassifyOptions): PlayError[] {
   const { tricks, originalHands, trumpSuit, playerPositions, declarer } = opts;
   const errors: PlayError[] = [];
 
+  // The result already says whether any card cost a trick. When the human side
+  // reached the double-dummy optimum, an unblock or a loser-on-loser that the
+  // rules below would flag was a textbook play, not a mistake.
+  const humanDeclares = playerPositions.includes(declarer);
+  if (
+    typeof opts.ddTricks === "number" &&
+    typeof opts.tricksMade === "number" &&
+    (humanDeclares ? opts.tricksMade >= opts.ddTricks : opts.tricksMade <= opts.ddTricks)
+  ) {
+    return errors;
+  }
+
   // Live copies of the hands, consumed as we replay the tricks
   const hands: Record<Position, Card[]> = {
     north: [...originalHands.north],
@@ -135,14 +147,18 @@ export function classifyPlayErrors(opts: ClassifyOptions): PlayError[] {
       const partnerWinning = winningBefore?.position === partner;
 
       if (isHuman(play.position) && i > 0) {
-        // ── Missed ruff: void in the lead suit, holds trumps, discards while
-        //    the opponents are winning the trick ──
+        // ── Missed ruff: void in the lead suit, holds a trump that would
+        //    have won the trick, discards while the opponents are winning ──
         if (
           trumpSuit &&
           !couldFollow &&
           play.card.suit !== trumpSuit &&
           !partnerWinning &&
-          hand.some((c) => c.suit === trumpSuit) &&
+          hand.some(
+            (c) =>
+              c.suit === trumpSuit &&
+              (winningBefore?.card.suit !== trumpSuit || rankValue(c.rank) > rankValue(winningBefore.card.rank)),
+          ) &&
           trick.winner &&
           !playerPositions.includes(trick.winner) &&
           trick.winner !== partner
@@ -202,7 +218,7 @@ export function classifyPlayErrors(opts: ClassifyOptions): PlayError[] {
   if (
     typeof opts.ddTricks === "number" &&
     typeof opts.tricksMade === "number" &&
-    playerPositions.includes(declarer) &&
+    humanDeclares &&
     opts.tricksMade < opts.ddTricks
   ) {
     const planModule = trumpSuit

@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import type { Suit } from "./bridge-engine";
 import {
+  aiSelectCard,
   createGame,
   determineTrickWinner,
   getValidCards,
@@ -202,5 +203,79 @@ describe("le posizioni parziali", () => {
     }
     expect(s.phase).toBe("finished");
     expect(s.tricks).toHaveLength(13);
+  });
+});
+
+describe("aiSelectCard: scelte del robot", () => {
+  const c = (suit: Suit, rank: Card["rank"]): Card => ({ suit, rank });
+  /** Uno stato a 4♥ di Sud con le mani date (non serve che siano complete). */
+  function stato(over: Partial<GameState>): GameState {
+    return {
+      hands: { north: [], east: [], south: [], west: [] },
+      tricks: [],
+      currentTrick: [],
+      currentPlayer: "west",
+      leader: "west",
+      trumpSuit: "heart",
+      declarer: "south",
+      dummy: "north",
+      contract: "4H",
+      trickCount: { ns: 0, ew: 0 },
+      phase: "playing",
+      openingLead: null,
+      ...over,
+    };
+  }
+
+  it("quarto di mano: non butta l'Asso sotto il taglio avversario", () => {
+    const s = stato({
+      hands: { north: [], east: [], south: [], west: [c("spade", "A"), c("spade", "4")] },
+      currentTrick: [play("north", "spade", "5"), play("east", "spade", "6"), play("south", "heart", "9")],
+      currentPlayer: "west",
+    });
+    expect(aiSelectCard(s, "west")).toEqual(c("spade", "4"));
+  });
+
+  it("terzo di mano: non butta l'Asso dopo il taglio del secondo", () => {
+    const s = stato({
+      hands: { north: [], east: [], south: [c("spade", "A"), c("spade", "4")], west: [] },
+      currentTrick: [play("north", "spade", "5"), play("east", "heart", "2")],
+      currentPlayer: "south",
+    });
+    expect(aiSelectCard(s, "south")).toEqual(c("spade", "4"));
+  });
+
+  it("senza taglio il quarto di mano vince ancora con la carta più bassa che basta", () => {
+    const s = stato({
+      hands: { north: [], east: [], south: [], west: [c("spade", "A"), c("spade", "K"), c("spade", "4")] },
+      currentTrick: [play("north", "spade", "5"), play("east", "spade", "6"), play("south", "spade", "Q")],
+      currentPlayer: "west",
+    });
+    expect(aiSelectCard(s, "west")).toEqual(c("spade", "K"));
+  });
+
+  it("in attacco un Re secondo non è un onore scoperto se l'Asso è già uscito", () => {
+    const giaGiocata = {
+      leader: "west" as Position,
+      winner: "north" as Position,
+      plays: [play("west", "diamond", "2"), play("north", "spade", "A"), play("east", "diamond", "3"), play("south", "diamond", "4")],
+    };
+    const s = stato({
+      hands: { north: [], east: [], south: [], west: [c("spade", "K"), c("spade", "2"), c("club", "7"), c("club", "4"), c("club", "3"), c("club", "2")] },
+      tricks: [giaGiocata],
+      currentPlayer: "west",
+    });
+    expect(aiSelectCard(s, "west")).toEqual(c("spade", "K"));
+  });
+
+  it("in difesa con quattro atout non attacca in atout", () => {
+    const s = stato({
+      hands: {
+        north: [], east: [], south: [],
+        west: [c("heart", "8"), c("heart", "7"), c("heart", "5"), c("heart", "4"), c("club", "Q"), c("club", "J"), c("club", "10"), c("diamond", "3"), c("diamond", "2")],
+      },
+      currentPlayer: "west",
+    });
+    expect(aiSelectCard(s, "west")).toEqual(c("club", "Q"));
   });
 });

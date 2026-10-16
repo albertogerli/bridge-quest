@@ -497,6 +497,12 @@ export function aiSelectCard(state: GameState, position: Position): Card {
     const lowest = sorted[sorted.length - 1];
     const highest = sorted[0];
 
+    // Someone has already ruffed: no card of the led suit can win this trick,
+    // and comparing ranks across suits would throw an Ace under a two of trumps.
+    if (trumpSuit && leadSuit !== trumpSuit && winning.card.suit === trumpSuit) {
+      return lowest;
+    }
+
     // FOURTH SEAT: Play just enough to win, or give up
     if (seat === 4) {
       if (partnerWinning) return lowest;
@@ -599,6 +605,13 @@ export function aiSelectCard(state: GameState, position: Position): Card {
   return smartDiscard(validCards, hand, trumpSuit);
 }
 
+/** True when every card above `card` in its suit is already played or in `hand`. */
+function isTopRemaining(card: Card, hand: Card[], playedCards: Set<string>): boolean {
+  return RANK_ORDER.slice(0, RANK_ORDER.indexOf(card.rank)).every(
+    (r) => playedCards.has(`${r}-${card.suit}`) || hand.some((c) => c.suit === card.suit && c.rank === r),
+  );
+}
+
 /** Advanced opening lead selection */
 function aiLead(
   hand: Card[],
@@ -610,8 +623,6 @@ function aiLead(
   defending: boolean,
 ): Card {
   const trumpSuit = state.trumpSuit;
-  const suitCounts: Record<Suit, number> = { spade: 0, heart: 0, diamond: 0, club: 0 };
-  for (const c of hand) suitCounts[c.suit]++;
 
   // Calculate suit strength (honors + length)
   const suitScores: { suit: Suit; score: number; count: number }[] = [];
@@ -627,8 +638,9 @@ function aiLead(
     // Sequence bonus: KQJ or QJ10 are great leads
     const seq = topOfSequence(hand, s);
     if (seq) score += 10;
-    // Penalize unsupported honors (leading from Kx is bad)
-    if (suitCards.length <= 2 && suitCards.some(c => hcp(c.rank) > 0 && c.rank !== "A")) {
+    // Penalize unsupported honors (leading from Kx is bad) — but a King whose
+    // Ace has already gone is a winner, not an unsupported honor.
+    if (suitCards.length <= 2 && suitCards.some(c => hcp(c.rank) > 0 && !isTopRemaining(c, hand, playedCards))) {
       score -= 8;
     }
     // Bonus for partner's known void (can give a ruff)
@@ -651,13 +663,8 @@ function aiLead(
     suitScores.sort((a, b) => b.score - a.score);
   }
 
-  // Consider leading trumps if defending a suit contract and we have 4+ trumps
-  if (defending && trumpSuit && suitCounts[trumpSuit] >= 4) {
-    const trumpCards = hand.filter(c => c.suit === trumpSuit)
-      .sort((a, b) => rankValue(a.rank) - rankValue(b.rank));
-    // Lead low trump to draw declarer's trumps
-    if (trumpCards.length > 0) return trumpCards[0];
-  }
+  // No trump lead with four or more trumps: that holding is the reason to
+  // force declarer to ruff (forcing defense), and drawing trumps is his job.
 
   // Pick the best suit to lead
   const bestSuit = suitScores.length > 0 ? suitScores[0].suit : hand[0].suit;
