@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { solveExact } from "./dds-exact";
-import { solveDDS } from "./dds-solver";
+import { preseDelDichiarante } from "./dds-table";
 import { generateDeals } from "./deal-generator";
 import type { Card, Position, Rank, Suit } from "./bridge-engine";
 
@@ -40,43 +40,30 @@ describe("solveExact — casi con risposta nota", () => {
   });
 });
 
-describe("solveExact — concorda con il solver esistente sui finali brevi", () => {
-  // Il vecchio solver è esatto fino a 6 carte per mano: è l'unico riscontro
-  // indipendente disponibile in casa. Se i due divergono, uno dei due sbaglia.
+describe("solveExact — concorda con la libreria bridge-dds sui finali brevi", () => {
+  // Due motori scritti in modo indipendente: se divergono, uno dei due
+  // sbaglia. Fino a ottobre 2026 il riscontro era il vecchio solver in
+  // TypeScript, rimosso quando tutto il prodotto è passato alla libreria.
   const { deals } = generateDeals({}, { count: 4, seed: 4242 });
 
-  it.each([3, 4, 5])("finale a %i carte, senza atout", (n) => {
+  it.each([3, 4, 5])("finale a %i carte, senza atout", async (n) => {
     for (const deal of deals) {
       const fin = ending(deal, n);
       const mio = solveExact(fin, null, "west", 15000);
-      const vecchio = solveDDS({
-        hands: fin,
-        contract: "3NT",
-        declarer: "south",
-        leader: "west",
-        timeout: 15000,
-      });
-      expect(mio.exact, "il nuovo solver deve concludere").toBe(true);
-      expect(vecchio.available, "il vecchio deve essere in modalità esatta").toBe(true);
-      // Il vecchio conta le prese del DICHIARANTE (Sud = N-S).
-      expect(mio.nsTricks).toBe(vecchio.tricks);
+      const libreria = await preseDelDichiarante(fin, null, "south", "west");
+      expect(mio.exact, "il solver in casa deve concludere").toBe(true);
+      // La libreria conta le prese del DICHIARANTE (Sud = N-S).
+      expect(mio.nsTricks).toBe(libreria);
     }
   });
 
-  it("concorda anche a colore", () => {
+  it("concorda anche a colore", async () => {
     for (const deal of deals) {
       const fin = ending(deal, 4);
       const mio = solveExact(fin, "spade", "west", 15000);
-      const vecchio = solveDDS({
-        hands: fin,
-        contract: "4♠",
-        declarer: "south",
-        leader: "west",
-        timeout: 15000,
-      });
+      const libreria = await preseDelDichiarante(fin, "spade", "south", "west");
       expect(mio.exact).toBe(true);
-      expect(vecchio.available).toBe(true);
-      expect(mio.nsTricks).toBe(vecchio.tricks);
+      expect(mio.nsTricks).toBe(libreria);
     }
   });
 });

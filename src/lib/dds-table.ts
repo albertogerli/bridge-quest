@@ -3,8 +3,8 @@
  * `dds-bridge/dds` compilata in WebAssembly (pacchetto `bridge-dds`).
  *
  * PERCHÉ UNA LIBRERIA ESTERNA
- * `dds-solver.ts` fa ricerca esatta solo fino a 6 carte per mano: su una
- * smazzata intera restituisce una stima euristica. Un motore esatto scritto in
+ * Il vecchio `dds-solver.ts` (rimosso a ottobre 2026) faceva ricerca esatta
+ * solo fino a 6 carte per mano: su una smazzata intera restituiva una stima. Un motore esatto scritto in
  * casa (`dds-exact.ts`) è corretto ma impiega 11-20 secondi per singolo atout,
  * e il par ne richiede dieci. Questa libreria calcola l'intera tabella in
  * 25-340 ms perché è il motore C++ di riferimento, con vent'anni di verifiche
@@ -269,4 +269,37 @@ export async function cardOptions(
     }
   }
   return out;
+}
+
+/**
+ * Le prese che il dichiarante fa ancora, col gioco perfetto di tutti, da una
+ * posizione a inizio presa con `leader` di mano.
+ *
+ * Con `attacco` si valuta QUELLA carta d'attacco invece della migliore per la
+ * difesa: è la domanda «dopo l'attacco che c'è stato, quante se ne fanno».
+ *
+ * Sostituisce il vecchio solver in TypeScript (`dds-solver.ts`, rimosso a
+ * ottobre 2026), che oltre le sei carte per mano non risolveva ma stimava
+ * dai punti: un reclamo legittimo a otto prese dalla fine poteva essere
+ * rifiutato, e a fine mano il confronto con l'ottimo era quasi sempre una
+ * stima che il classificatore degli errori scartava.
+ */
+export async function preseDelDichiarante(
+  hands: Record<Position, Card[]>,
+  trump: Suit | null,
+  declarer: Position,
+  leader: Position,
+  attacco?: Card
+): Promise<number> {
+  const carte = hands[leader].length;
+  if (carte === 0) return 0;
+  const opzioni = await cardOptions(hands, trump, leader);
+  if (opzioni.length === 0) throw new Error("Il solver non ha restituito carte");
+  const scelta = attacco
+    ? opzioni.find((o) => o.card.suit === attacco.suit && o.card.rank === attacco.rank)
+    : undefined;
+  if (attacco && !scelta) throw new Error("La carta d'attacco non è nella mano di chi attacca");
+  const diChiAttacca = scelta ? scelta.tricks : Math.max(...opzioni.map((o) => o.tricks));
+  const stessaLinea = DECLARER_ORDER.indexOf(leader) % 2 === DECLARER_ORDER.indexOf(declarer) % 2;
+  return stessaLinea ? diChiAttacca : carte - diChiAttacca;
 }

@@ -2291,7 +2291,7 @@
   "Reclamo accettato! Contratto fatto con {n} presa/e in più.": "Claim accepted! Contract made with {n} overtrick(s).",
   "Reclamo accettato. Prese: {made}/{needed}": "Claim accepted. Tricks: {made}/{needed}",
   "Reclamo rifiutato: gli avversari possono ancora fare una presa.": "Claim rejected: the opponents can still win a trick.",
-  "Posizione troppo complessa da verificare: continua a giocare.": "Position too complex to verify: keep playing.",
+  "Non è stato possibile verificare il reclamo: continua a giocare.": "The claim couldn't be checked: keep playing.",
   "Non è stato possibile ritirare la carta. La partita continua da qui.": "The card could not be taken back. The game continues from here.",
   "Carta ritirata. Scegli di nuovo.": "Card taken back. Choose again.",
   "Dich.": "Decl.",

@@ -1,8 +1,8 @@
 /**
  * Double dummy solver esatto per smazzate intere.
  *
- * PERCHÉ NON BASTA `dds-solver.ts`
- * Quello fa ricerca esatta solo fino a 6 carte per mano
+ * PERCHÉ NON BASTAVA `dds-solver.ts` (il vecchio solver, rimosso a ottobre 2026)
+ * Quello faceva ricerca esatta solo fino a 6 carte per mano
  * (`FULL_SEARCH_THRESHOLD = 6`); oltre restituisce una stima euristica con
  * `available: false`. Misurato il 12/08/2026 su smazzate intere: esaurisce i
  * 4 secondi di timeout e ritorna una stima. Va bene per suggerire una carta

@@ -40,8 +40,9 @@ Variabili d'ambiente richieste (`.env.local`, mai committato):
 ```
 src/app/          66 rotte App Router (gioca/, lezioni/, istruttori/, admin/, api/)
 src/components/   90 componenti (bridge/ = tavolo da gioco, ui/ = shadcn)
-src/lib/          logica di dominio pura: bridge-engine, dds-solver (double-dummy
-                  minimax in Web Worker), bridge-scoring (punteggi WBF/IMP),
+src/lib/          logica di dominio pura: bridge-engine, dds-table (double dummy
+                  esatto, bridge-dds in WebAssembly), robot-pimc (il robot che
+                  gioca con le carte che vede), bridge-scoring (punteggi WBF/IMP),
                   ai-difficulty, pbn, hand-encoder, catalog (contenuti da DB)
 src/hooks/        26 hook (use-bridge-game = orchestrazione partita)
 src/data/         seed iniziale dei contenuti — ATTENZIONE: i contenuti live sono

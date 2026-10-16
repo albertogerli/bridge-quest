@@ -3,23 +3,32 @@
 /**
  * FIGB Bridge LAB - useDDS Hook
  *
- * Manages the DDS Web Worker for background double-dummy analysis.
- * Features:
- * - Spawns a Web Worker to avoid blocking UI
- * - Caches results by hand hash
- * - Provides loading state
- * - Falls back to contract estimate if worker unavailable
+ * Quante prese fa il dichiarante col gioco perfetto, per il riepilogo di fine
+ * mano e per il quiz di pianificazione.
+ *
+ * PRIMA era un Web Worker con un solver in TypeScript (`dds-solver.ts`) che
+ * oltre le sei carte per mano non risolveva ma stimava dai punti: su una
+ * smazzata intera il risultato era quasi sempre una stima (`isExact: false`),
+ * e la pagina della smazzata, giustamente, non la passava al classificatore
+ * degli errori. Adesso risponde la libreria `bridge-dds` in WebAssembly
+ * (`preseDelDichiarante`), esatta su tredici carte in qualche decina di
+ * millisecondi: il calcolo è uno per mano, e il Worker non serve più.
+ *
+ * L'interfaccia è rimasta la stessa — `isExact` compreso — perché il caso
+ * «non è stato possibile calcolare» esiste ancora: se il WebAssembly non si
+ * carica si ripiega sulle prese richieste dal contratto, dichiarandolo.
  */
 
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useCallback } from "react";
 import type { Card, Position } from "@/lib/bridge-engine";
-import type { DDSResult } from "@/lib/dds-solver";
-import type { DDSWorkerResponse } from "@/lib/dds-worker";
+import { parseContract } from "@/lib/bridge-engine";
+import { preseDelDichiarante } from "@/lib/dds-table";
+import { reportError } from "@/lib/report-error";
 
 export interface DDSAnalysis {
   /** Optimal tricks for declarer (double dummy) */
   ddTricks: number;
-  /** Whether this is an exact result or estimate */
+  /** Whether this is an exact result or the contract's target as a fallback */
   isExact: boolean;
   /** Computation time in ms */
   timeMs: number;
@@ -29,173 +38,22 @@ export interface DDSAnalysis {
   error: string | null;
 }
 
-interface PendingRequest {
-  resolve: (result: DDSResult) => void;
-  reject: (error: Error) => void;
+/** Same deal, same lead, same answer: no need to solve twice in a session. */
+const cache = new Map<string, number>();
+
+function chiave(hands: Record<Position, Card[]>, contract: string, declarer: Position, openingLead?: Card): string {
+  const mani = (["north", "east", "south", "west"] as Position[]).map((p) =>
+    hands[p].map((c) => `${c.suit[0]}${c.rank}`).sort().join(","),
+  );
+  return [contract, declarer, ...mani, openingLead ? `${openingLead.suit[0]}${openingLead.rank}` : ""].join("|");
 }
 
-// ──────────────────────────────────────────────────────────────
-// Result cache (persists across hook instances in the same session)
-// ──────────────────────────────────────────────────────────────
-
-const resultCache = new Map<string, DDSResult>();
-
-function hashHands(
-  hands: Record<Position, Card[]>,
-  contract: string,
-  declarer: Position,
-  openingLead?: Card,
-): string {
-  const parts: string[] = [contract, declarer];
-
-  for (const pos of ["north", "east", "south", "west"] as Position[]) {
-    const hand = hands[pos]
-      .map(c => `${c.suit[0]}${c.rank}`)
-      .sort()
-      .join(",");
-    parts.push(hand);
-  }
-
-  if (openingLead) {
-    parts.push(`lead:${openingLead.suit[0]}${openingLead.rank}`);
-  }
-
-  return parts.join("|");
-}
-
-// ──────────────────────────────────────────────────────────────
-// Inline solver fallback (runs on main thread if Worker unavailable)
-// ──────────────────────────────────────────────────────────────
-
-async function solveInline(
-  hands: Record<Position, Card[]>,
-  contract: string,
-  declarer: Position,
-  openingLead?: Card,
-): Promise<DDSResult> {
-  // Dynamic import to keep initial bundle small
-  const { solveDDS } = await import("@/lib/dds-solver");
-  return solveDDS({
-    hands,
-    contract,
-    declarer,
-    openingLead,
-    timeout: 2000,
-  });
-}
-
-// ──────────────────────────────────────────────────────────────
-// Hook
-// ──────────────────────────────────────────────────────────────
+const SINISTRA: Record<Position, Position> = { north: "east", east: "south", south: "west", west: "north" };
 
 export function useDDS() {
-  const workerRef = useRef<Worker | null>(null);
-  const pendingRef = useRef<Map<string, PendingRequest>>(new Map());
-  const idCounterRef = useRef(0);
-  const [workerReady, setWorkerReady] = useState(false);
-
-  // Initialize worker
-  useEffect(() => {
-    try {
-      const worker = new Worker(
-        new URL("@/lib/dds-worker.ts", import.meta.url),
-        { type: "module" }
-      );
-
-      worker.onmessage = (event: MessageEvent<DDSWorkerResponse>) => {
-        if (event.data.type !== "result") return;
-        const { id, result } = event.data;
-        const pending = pendingRef.current.get(id);
-        if (pending) {
-          pending.resolve(result);
-          pendingRef.current.delete(id);
-        }
-      };
-
-      worker.onerror = (err) => {
-        console.warn("[DDS] Worker error:", err.message);
-        // Reject all pending requests
-        for (const [id, pending] of pendingRef.current) {
-          pending.reject(new Error("Worker error"));
-          pendingRef.current.delete(id);
-        }
-      };
-
-      workerRef.current = worker;
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- inizializzazione una-tantum del Web Worker al mount: client-only
-      setWorkerReady(true);
-    } catch (err) {
-      console.warn("[DDS] Worker not available, will use inline solver:", err);
-      setWorkerReady(false);
-    }
-
-    return () => {
-      workerRef.current?.terminate();
-      workerRef.current = null;
-    };
-  }, []);
-
   /**
-   * Analyze a hand position double-dummy.
-   * Returns a promise with the DDS result.
-   */
-  const analyze = useCallback(
-    async (
-      hands: Record<Position, Card[]>,
-      contract: string,
-      declarer: Position,
-      openingLead?: Card,
-    ): Promise<DDSResult> => {
-      // Check cache
-      const cacheKey = hashHands(hands, contract, declarer, openingLead);
-      const cached = resultCache.get(cacheKey);
-      if (cached) return cached;
-
-      let result: DDSResult;
-
-      if (workerRef.current) {
-        // Use Web Worker
-        const id = String(++idCounterRef.current);
-
-        result = await new Promise<DDSResult>((resolve, reject) => {
-          pendingRef.current.set(id, { resolve, reject });
-
-          workerRef.current!.postMessage({
-            type: "solve",
-            id,
-            request: {
-              hands,
-              contract,
-              declarer,
-              openingLead,
-              timeout: 2000,
-            },
-          });
-
-          // Safety timeout: if worker doesn't respond in 5s, reject
-          setTimeout(() => {
-            const pending = pendingRef.current.get(id);
-            if (pending) {
-              pending.reject(new Error("Worker timeout"));
-              pendingRef.current.delete(id);
-            }
-          }, 5000);
-        });
-      } else {
-        // Fallback: inline solver on main thread
-        result = await solveInline(hands, contract, declarer, openingLead);
-      }
-
-      // Cache the result
-      resultCache.set(cacheKey, result);
-      return result;
-    },
-    []
-  );
-
-  /**
-   * High-level analysis function that manages loading state.
-   * Returns an DDSAnalysis object.
+   * Prese del dichiarante dalla smazzata intera, con l'attacco dato se c'è
+   * (altrimenti con il miglior attacco per la difesa).
    */
   const analyzeHand = useCallback(
     async (
@@ -204,21 +62,21 @@ export function useDDS() {
       declarer: Position,
       openingLead?: Card,
     ): Promise<DDSAnalysis> => {
+      const avvio = performance.now();
       try {
-        const result = await analyze(hands, contract, declarer, openingLead);
-        return {
-          ddTricks: result.tricks,
-          isExact: result.available,
-          timeMs: result.timeMs,
-          loading: false,
-          error: null,
-        };
+        const k = chiave(hands, contract, declarer, openingLead);
+        let prese = cache.get(k);
+        if (prese === undefined) {
+          const { trumpSuit } = parseContract(contract);
+          prese = await preseDelDichiarante(hands, trumpSuit, declarer, SINISTRA[declarer], openingLead);
+          cache.set(k, prese);
+        }
+        return { ddTricks: prese, isExact: true, timeMs: performance.now() - avvio, loading: false, error: null };
       } catch (err) {
-        // Final fallback: use contract target
-        const level = parseInt(contract[0]);
-        const tricksNeeded = level + 6;
+        reportError("dds:analisi-mano", err);
+        // Ripiego dichiarato: le prese che il contratto richiede.
         return {
-          ddTricks: tricksNeeded,
+          ddTricks: parseInt(contract[0]) + 6,
           isExact: false,
           timeMs: 0,
           loading: false,
@@ -226,12 +84,8 @@ export function useDDS() {
         };
       }
     },
-    [analyze]
+    [],
   );
 
-  return {
-    analyze,
-    analyzeHand,
-    workerReady,
-  };
+  return { analyzeHand };
 }
