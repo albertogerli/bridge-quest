@@ -3,7 +3,8 @@ import { z } from "zod";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 import { benEndpoint, rateLimit } from "@/lib/ben-guard";
-import { biddingToCTX, handToPBN, positionToBEN } from "@/lib/ben-format";
+import { biddingToCTX, handToPBN, positionToBEN, vulToBEN } from "@/lib/ben-format";
+import type { Vulnerability } from "@/lib/catalog";
 import type { Card, Position } from "@/lib/bridge-engine";
 
 /**
@@ -66,7 +67,7 @@ export async function POST(req: NextRequest) {
   const admin = createAdminSupabaseClient();
   const { data: riga } = await admin
     .from("bidding_sessions")
-    .select("hands, bids, dealer, closed_at")
+    .select("hands, bids, dealer, vulnerability, closed_at")
     .eq("id", parsed.data.sessionId)
     .single();
   if (!riga) {
@@ -97,7 +98,11 @@ export async function POST(req: NextRequest) {
         hand: handToPBN(hands[chi]),
         seat: positionToBEN(chi),
         dealer: positionToBEN(dealer),
-        vul: "None",
+        // Oggi le licite a due nascono tutte senza zona (la colonna ha
+        // `default 'none'` e nessuno la scrive): si legge comunque quella
+        // della sessione, perché il giorno in cui la zona entrerà nel gioco
+        // BEN non continui a dichiarare come se non ci fosse.
+        vul: vulToBEN((riga.vulnerability as Vulnerability | null) ?? "none"),
         ctx: biddingToCTX({ dealer, bids }),
       });
       const controller = new AbortController();

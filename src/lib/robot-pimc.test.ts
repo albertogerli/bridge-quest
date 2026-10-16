@@ -100,6 +100,43 @@ describe("campionaMondo", () => {
   });
 });
 
+describe("campionaMondo: le proporzioni", () => {
+  it("con un seme mancante, ogni carta libera finisce in proporzione ai posti rimasti", () => {
+    // Sud gioca e vede Nord (morto). Ovest ha mostrato di non avere picche:
+    // tutte le picche coperte vanno a Est, le altre carte si dividono nei
+    // posti che restano. Una carta libera deve stare in Ovest con probabilità
+    // (posti di Ovest) / (posti liberi totali).
+    const s = partita();
+    const stato: GameState = {
+      ...s,
+      currentPlayer: "south",
+      tricks: [{
+        leader: "north",
+        winner: "north",
+        plays: [
+          { position: "north", card: { suit: "spade", rank: "A" } },
+          { position: "east", card: { suit: "spade", rank: "2" } },
+          { position: "south", card: { suit: "spade", rank: "3" } },
+          { position: "west", card: { suit: "heart", rank: "2" } },
+        ],
+      }],
+    };
+    const coperte = [...stato.hands.east, ...stato.hands.west];
+    const picche = coperte.filter((c) => c.suit === "spade").length;
+    const libere = coperte.filter((c) => c.suit !== "spade");
+    const atteso = stato.hands.west.length / (coperte.length - picche);
+    const bersaglio = libere[0];
+    let inOvest = 0;
+    const N = 3000;
+    const rng = rngFisso(42);
+    for (let i = 0; i < N; i++) {
+      const mondo = campionaMondo(stato, "south", rng)!;
+      if (mondo.west.some((c) => chiave(c) === chiave(bersaglio))) inOvest++;
+    }
+    expect(Math.abs(inOvest / N - atteso)).toBeLessThan(0.03);
+  });
+});
+
 describe("scegliCartaPimc", () => {
   it("con una sola carta valida la gioca senza chiedere al solver", async () => {
     const s = partita();

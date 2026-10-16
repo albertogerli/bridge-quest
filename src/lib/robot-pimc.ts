@@ -96,13 +96,30 @@ export function campionaMondo(
     const mondo: Record<Position, Card[]> = { north: [], east: [], south: [], west: [] };
     for (const p of visti) mondo[p] = [...state.hands[p]];
     let riuscito = true;
+    const spazio = (p: Position) => state.hands[p].length - mondo[p].length;
     for (const c of carte) {
-      const liberi = ammessi(c).filter((p) => mondo[p].length < state.hands[p].length);
+      const liberi = ammessi(c).filter((p) => spazio(p) > 0);
       if (liberi.length === 0) {
         riuscito = false;
         break;
       }
-      mondo[liberi[Math.floor(rng() * liberi.length)]].push(c);
+      // PESATO SUI POSTI LIBERI. Anche la moneta dava a ogni carta libera la
+      // probabilità giusta — le carte sono già mescolate, e la scelta del
+      // posto non guarda quale carta sia — ma riempiva presto il posto con
+      // meno spazio, e con tre posti coperti e più semi mancanti questo
+      // porta a vicoli ciechi (carte che non hanno più un posto ammesso).
+      // Il peso sullo spazio rimasto è la regola naturale e li rende rari.
+      // Il test «ogni carta libera finisce in proporzione ai posti» lo fissa.
+      let r = rng() * liberi.reduce((somma, p) => somma + spazio(p), 0);
+      let dove = liberi[liberi.length - 1];
+      for (const p of liberi) {
+        r -= spazio(p);
+        if (r < 0) {
+          dove = p;
+          break;
+        }
+      }
+      mondo[dove].push(c);
     }
     if (riuscito) return mondo;
   }
