@@ -51,7 +51,7 @@ Quasi tutte le pagine sono client component ("use client"); il server rendering 
 
 ### `src/hooks/` (~26)
 
-I principali: `use-bridge-game` (orchestrazione completa di una partita: licita, gioco, AI, punteggio), `use-auth` + `src/contexts/auth-provider.tsx` (sessione condivisa), `use-supabase-sync` (sync gamification, vedi sotto), `use-dds` (Web Worker DDS), `use-friends` / `use-challenges` / `use-pending-friend-requests` (sociale, con polling), `use-profile`, `use-game-results`, `use-spaced-review`, `use-weekly-objectives`, `use-notifications`, `use-sound(s)`.
+I principali: `use-bridge-game` (orchestrazione completa di una partita: licita, gioco, AI, punteggio), `use-auth` + `src/contexts/auth-provider.tsx` (sessione condivisa), `use-supabase-sync` (sync gamification, vedi sotto), `use-dds` (prese col gioco perfetto, per il riepilogo di fine mano), `use-friends` / `use-challenges` / `use-pending-friend-requests` (sociale, con polling), `use-profile`, `use-game-results`, `use-spaced-review`, `use-weekly-objectives`, `use-notifications`, `use-sound(s)`.
 
 ### `src/store/` — store Zustand
 
@@ -62,9 +62,9 @@ I principali: `use-bridge-game` (orchestrazione completa di una partita: licita,
 | Modulo | Ruolo |
 |---|---|
 | `bridge-engine.ts` | Regole del gioco (mani, prese, validità carte) + AI euristica (`aiSelectCard`) |
-| `dds-solver.ts` | Double-dummy solver minimax/alpha-beta in puro TS: ricerca esatta ≤ 6 carte per mano, stima euristica oltre, timeout 2s |
-| `dds-worker.ts` + `use-dds` | Esegue il solver in un Web Worker (fallback sul main thread se il Worker non è disponibile) |
-| `dds-select.ts` | Sceglie la carta DD-ottimale in una posizione di gioco |
+| `dds-table.ts` | Double dummy esatto con la libreria `bridge-dds` (WebAssembly): tabella, par, valore di ogni carta (`cardOptions`), prese del dichiarante (`preseDelDichiarante`, usata da reclamo e `use-dds`) |
+| `dds-exact.ts` | Solver esatto scritto in casa, tenuto come riscontro indipendente della libreria (`dds-exact.test.ts`) |
+| `robot-pimc.ts` | Il robot di gioco: campiona le carte che non vede e sceglie la carta migliore in media (livelli intermedio ed esperto senza BEN, suggerimenti) |
 | `bridge-scoring.ts` | Punteggi (contratto, WBF/IMP) |
 | `ai-difficulty.ts` | Tre livelli AI: `base` (~20% errori plausibili da principiante), `intermedio` (euristica), `esperto` con cascata **BEN → DDS (≤ 7 carte, timeout 1200 ms) → euristica** |
 | `ben-client.ts` / `ben-format.ts` / `ben-guard.ts` | Client verso le route `/api/ben/*`, che fanno da proxy al server BEN self-hosted (`BEN_API_URL`); ogni chiamata ha `fallback: true` in caso di errore/timeout |

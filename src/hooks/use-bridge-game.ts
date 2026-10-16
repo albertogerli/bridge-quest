@@ -14,7 +14,7 @@ import {
   partnerOf,
   partnershipOf,
 } from "@/lib/bridge-engine";
-import { ddsSolve } from "@/lib/dds-select";
+import { preseDelDichiarante } from "@/lib/dds-table";
 import { useSounds } from "@/hooks/use-sounds";
 import type { Vulnerability, BiddingData } from "@/lib/catalog";
 import { checkBenHealth, benPlay } from "@/lib/ben-client";
@@ -80,8 +80,12 @@ interface GameConfig {
   allowClaim?: boolean;
 }
 
-/** Max remaining tricks for showing the claim button (DDS must verify exactly) */
-const CLAIM_MAX_REMAINING = 8;
+/**
+ * Max remaining tricks for showing the claim button. The claim is verified
+ * exactly by the WebAssembly solver at any size; the old TypeScript solver
+ * only solved up to six cards a hand, hence the former limit of 8.
+ */
+const CLAIM_MAX_REMAINING = 13;
 
 const AI_DELAY = 600; // ms delay for AI plays (used when BEN not available)
 const BEN_DELAY = 100; // ms delay before BEN call (BEN adds its own latency)
@@ -461,15 +465,14 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
     setClaimStatus("checking");
     setMessage(tradFrase("Verifica del reclamo…"));
 
-    const dds = await ddsSolve({
-      hands: state.hands,
-      contract: state.contract,
-      declarer: state.declarer,
-      leader: state.currentPlayer,
-      timeout: 2000,
-    });
+    let fattibili: number | null = null;
+    try {
+      fattibili = await preseDelDichiarante(state.hands, state.trumpSuit, state.declarer, state.currentPlayer);
+    } catch (err) {
+      reportError("reclamo:dds", err);
+    }
 
-    if (dds.available && dds.tricks >= remaining) {
+    if (fattibili !== null && fattibili >= remaining) {
       // Claim accepted: all remaining tricks to declarer's side
       if (aiTimerRef.current) clearTimeout(aiTimerRef.current);
       if (trickTimerRef.current) clearTimeout(trickTimerRef.current);
@@ -498,9 +501,9 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
     // Claim rejected
     setClaimStatus("rejected");
     setMessage(
-      dds.available
+      fattibili !== null
         ? tradFrase("Reclamo rifiutato: gli avversari possono ancora fare una presa.")
-        : tradFrase("Posizione troppo complessa da verificare: continua a giocare.")
+        : tradFrase("Non è stato possibile verificare il reclamo: continua a giocare.")
     );
     if (claimTimerRef.current) clearTimeout(claimTimerRef.current);
     claimTimerRef.current = setTimeout(() => setClaimStatus(null), 3000);

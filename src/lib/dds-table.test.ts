@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { calcTableAndPar, cardOptions, fitFor, TABLE_STRAINS } from "./dds-table";
+import { calcDdsTable, calcTableAndPar, cardOptions, fitFor, preseDelDichiarante, TABLE_STRAINS } from "./dds-table";
 import type { Card, Position } from "./bridge-engine";
 import { generateDeals } from "./deal-generator";
 import { solveExact } from "./dds-exact";
@@ -126,4 +126,31 @@ describe("cardOptions", () => {
     const vuote = { north: [] as Card[], east: [], south: [], west: [] };
     await expect(cardOptions(vuote, "spade", "north")).resolves.toEqual([]);
   }, 60000);
+});
+
+describe("preseDelDichiarante", () => {
+  it("senza attacco imposto coincide con la tabella double dummy", async () => {
+    const { deals } = generateDeals({}, { count: 3, seed: 99 });
+    const sinistra = { north: "east", east: "south", south: "west", west: "north" } as const;
+    for (const deal of deals) {
+      const tabella = await calcDdsTable(deal);
+      for (const [strain, trump] of [["notrump", null], ["heart", "heart"]] as const) {
+        for (const dich of ["south", "west"] as const) {
+          expect(await preseDelDichiarante(deal, trump, dich, sinistra[dich])).toBe(tabella.tricks[strain][dich]);
+        }
+      }
+    }
+  });
+
+  it("con un attacco dato il dichiarante fa almeno quante prese fa contro il miglior attacco", async () => {
+    const { deals } = generateDeals({}, { count: 2, seed: 7 });
+    for (const deal of deals) {
+      const migliore = await preseDelDichiarante(deal, null, "south", "west");
+      for (const attacco of deal.west.slice(0, 4)) {
+        const conQuesto = await preseDelDichiarante(deal, null, "south", "west", attacco);
+        expect(conQuesto).toBeGreaterThanOrEqual(migliore);
+        expect(conQuesto).toBeLessThanOrEqual(13);
+      }
+    }
+  });
 });
