@@ -6,6 +6,7 @@ import { generateDeals } from "./deal-generator";
 import { calcTableAndPar } from "./dds-table";
 import { parAssignmentFromContracts } from "./par-contract";
 import { analyseReplay, type PlayedTrick } from "./dds-replay";
+import { scegliCartaPimc } from "./robot-pimc";
 
 const MANI = Number(process.env.MISURA_MANI ?? 30);
 
@@ -18,7 +19,18 @@ async function scegli(state: Parameters<typeof aiSelectWithDifficulty>[0], chi: 
   return aiSelectWithDifficulty(state, chi, level);
 }
 
-async function misura(level: AILevel) {
+/** Un generatore ripetibile, perché due misure sulle stesse mani siano confrontabili. */
+function rngFisso(seme: number): () => number {
+  let x = (seme * 2654435761) >>> 0 || 1;
+  return () => {
+    x ^= x << 13; x >>>= 0;
+    x ^= x >>> 17;
+    x ^= x << 5; x >>>= 0;
+    return x / 4294967296;
+  };
+}
+
+async function misura(level: AILevel | `pimc-${number}`) {
   const { deals } = generateDeals({}, { count: MANI, seed: 4242 });
   const seats: Position[] = ["north", "east", "south", "west"];
   let regalateDaDichiarante = 0;
@@ -39,7 +51,10 @@ async function misura(level: AILevel) {
 
     for (let n = 0; n < 52; n++) {
       const chi = state.currentPlayer;
-      const carta = await scegli(state, chi, level);
+      const carta = level.startsWith("pimc-")
+        ? (await scegliCartaPimc(state, chi, { mondi: Number(level.slice(5)), rng: rngFisso(n + i * 52) })) ??
+          aiSelectWithDifficulty(state, chi, "intermedio")
+        : await scegli(state, chi, level as AILevel);
       corrente.push({ player: chi, card: carta });
       const prima = state.tricks.length;
       state = playCard(state, chi, carta);
@@ -97,4 +112,7 @@ describe.skipIf(!process.env.MISURA_ROBOT)("quanto sbagliano i robot", () => {
   it("livello intermedio (quello predefinito)", async () => { await misura("intermedio"); }, 900000);
   it("livello base", async () => { await misura("base"); }, 900000);
   it("livello esperto (double dummy negli ultimi 7)", async () => { await misura("esperto"); }, 900000);
+  for (const mondi of (process.env.MISURA_MONDI ?? "4,20").split(",").map(Number)) {
+    it(`robot che vede il morto, ${mondi} mondi`, async () => { await misura(`pimc-${mondi}`); }, 3600000);
+  }
 });

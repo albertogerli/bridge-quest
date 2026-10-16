@@ -519,7 +519,7 @@ export default function ImpostazioniPage() {
                     </Badge>
                   )}
                 </div>
-                <p className="text-xs text-muted-foreground mt-1 ml-9">{AI_LEVEL_DESCRIPTIONS[level]}</p>
+                <p className="text-xs text-muted-foreground mt-1 ml-9">{t(AI_LEVEL_DESCRIPTIONS[level])}</p>
                 {aiLevel === level && (
                   <motion.div
                     layoutId="aiLevelIndicator"
