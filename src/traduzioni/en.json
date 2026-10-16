@@ -2633,5 +2633,9 @@
   "← Torna alla classe": "← Back to the class",
   "Avversari che commettono errori occasionali": "Opponents who make occasional mistakes",
   "Ragiona sulle carte che vede, ma valuta poche ipotesi": "Reasons from the cards it can see, but weighs only a few possibilities",
-  "Ragiona sulle carte che vede, come un giocatore vero: non guarda mai le tue": "Reasons from the cards it can see, like a real player: it never looks at yours"
+  "Ragiona sulle carte che vede, come un giocatore vero: non guarda mai le tue": "Reasons from the cards it can see, like a real player: it never looks at yours",
+  "Il server non ha risposto": "The server didn't respond",
+  "Il tuo accesso è scaduto": "Your session has expired",
+  "La mano non è persa: l'asta è salvata sul server e riprende da dove si è fermata.": "The board isn't lost: the auction is saved on the server and picks up where it stopped.",
+  "Rientra e riapri il torneo: l'asta riprende da dove si è fermata.": "Sign in again and reopen the tournament: the auction picks up where it stopped."
 }
