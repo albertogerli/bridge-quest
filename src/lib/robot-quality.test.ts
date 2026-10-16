@@ -7,7 +7,7 @@ import { calcTableAndPar } from "./dds-table";
 import { parAssignmentFromContracts } from "./par-contract";
 import { analyseReplay, type PlayedTrick } from "./dds-replay";
 
-const MANI = 30;
+const MANI = Number(process.env.MISURA_MANI ?? 30);
 
 /** Come sceglie il gioco vero: a «esperto» prova il double dummy nei finali. */
 async function scegli(state: Parameters<typeof aiSelectWithDifficulty>[0], chi: Position, level: AILevel) {
