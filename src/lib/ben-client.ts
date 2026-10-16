@@ -204,7 +204,7 @@ export function riassumiCorpo(grezzo: string): string {
   return pezzi.length ? `pagina HTML — ${pezzi.join(" · ")}` : `pagina HTML (${testo.length} caratteri)`;
 }
 
-function motivoDa(status: number, errore: unknown): MotivoBen {
+export function motivoDa(status: number, errore: unknown): MotivoBen {
   if (status === 401) return "sessione";
   if (status === 429) return "limite";
   if (status === 400) return "richiesta";

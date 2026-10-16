@@ -29,6 +29,8 @@ import {
   type ClassificaTorneo, type EsitoRegistrazione, type ManoCondivisa, type TorneoCorrente, riferimentoUnico } from "@/lib/mani-condivise";
 import { useT } from "@/contexts/traduzioni-provider";
 import { CondizioniAsta } from "@/components/bridge/condizioni-asta";
+import { chiamaTorneo, manoParziale, type RispostaTorneo } from "@/lib/torneo-licita-client";
+import { votoMano, type ManoTorneo } from "@/lib/torneo-licita-server";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
 const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -111,6 +113,14 @@ export default function TorneoLicitaPage() {
   const [motivoMuto, setMotivoMuto] = useState<MotivoBen | null>(null);
   /** Esito dell'ultima scrittura del risultato: governa se la mano è archiviata. */
   const [registrazione, setRegistrazione] = useState<EsitoRegistrazione | null>(null);
+  /**
+   * L'asta la tiene il server (`/api/licita/torneo`): il browser ha solo la
+   * mano di Sud. Falso finché `torneo-licita-server-1` non è eseguito, e
+   * allora vale il flusso di prima, con la mano intera nel browser.
+   */
+  const [suServer, setSuServer] = useState(false);
+  /** Il server non ha risposto: la mano non è persa, si può riprendere. */
+  const [erroreServer, setErroreServer] = useState(false);
 
   /**
    * Una dichiarazione dal motore.
@@ -168,6 +178,43 @@ export default function TorneoLicitaPage() {
     );
   };
 
+  /**
+   * Dopo la scrittura del risultato, da chiunque sia stata fatta (browser nel
+   * flusso di prima, server in quello nuovo): contatore e classifica.
+   */
+  const dopoRegistrazione = async (esito: EsitoRegistrazione) => {
+    setRegistrazione(esito);
+    if (!torneo) return;
+
+    // SI AVANZA SOLO SE IL DATABASE HA DAVVERO LA RIGA. Prima il contatore
+    // cresceva comunque: con la sessione scaduta o un errore di scrittura la
+    // mano risultava fatta a schermo e non esisteva da nessuna parte — il
+    // guasto peggiore, perché non si vede.
+    //
+    // `gia-presente` avanza ma NON incrementa: la riga c'è (l'ha scritta il
+    // primo tocco) e contarla due volte farebbe saltare una mano.
+    if (manoArchiviata(esito)) {
+      // IL CONTATORE LO DICE IL DATABASE. Incrementarlo qui sembrava
+      // equivalente e non lo è: se la scrittura riesce ma la risposta si
+      // perde per strada, al tentativo successivo torna `gia-presente` — la
+      // riga c'è, ma NOI non l'abbiamo mai contata, e la mano resterebbe
+      // scoperta per sempre.
+      //
+      // `torneoCorrente` calcola `fatte` contando le righe vere
+      // (`scripts/sql/tornei-licita-2026-08.sql`). Costa una richiesta in
+      // più a fine mano — una ogni paio di minuti — e in cambio il numero a
+      // schermo è quello che il torneo userà per la classifica.
+      const aggiornato = await torneoCorrente(tipo);
+      if (aggiornato) setTorneo(aggiornato);
+      else if (contatoreCresce(esito)) {
+        // Non è arrivata la rilettura: si ripiega sul conteggio locale, che
+        // è meglio di lasciare il numero fermo.
+        setTorneo({ ...torneo, fatte: torneo.fatte + 1 });
+      }
+      setClassifica(await classificaTorneo(torneo.id));
+    }
+  };
+
   // Il secondo parametro si chiama `tav` e non `t`: `t` è il traduttore, e
   // il commento del voto ora passa da lì.
   const chiudi = async (m: ManoCondivisa, tav: DdsTable, finali: string[]) => {
@@ -201,35 +248,7 @@ export default function TorneoLicitaPage() {
         punteggio: e?.punteggio ?? 0,
         stelle: voto.stelle,
       });
-      setRegistrazione(esitoScrittura);
-
-      // SI AVANZA SOLO SE IL DATABASE HA DAVVERO LA RIGA. Prima il contatore
-      // cresceva comunque: con la sessione scaduta o un errore di scrittura la
-      // mano risultava fatta a schermo e non esisteva da nessuna parte — il
-      // guasto peggiore, perché non si vede.
-      //
-      // `gia-presente` avanza ma NON incrementa: la riga c'è (l'ha scritta il
-      // primo tocco) e contarla due volte farebbe saltare una mano.
-      if (manoArchiviata(esitoScrittura)) {
-        // IL CONTATORE LO DICE IL DATABASE. Incrementarlo qui sembrava
-        // equivalente e non lo è: se la scrittura riesce ma la risposta si
-        // perde per strada, al tentativo successivo torna `gia-presente` — la
-        // riga c'è, ma NOI non l'abbiamo mai contata, e la mano resterebbe
-        // scoperta per sempre.
-        //
-        // `torneoCorrente` calcola `fatte` contando le righe vere
-        // (`scripts/sql/tornei-licita-2026-08.sql`). Costa una richiesta in
-        // più a fine mano — una ogni paio di minuti — e in cambio il numero a
-        // schermo è quello che il torneo userà per la classifica.
-        const aggiornato = await torneoCorrente(tipo);
-        if (aggiornato) setTorneo(aggiornato);
-        else if (contatoreCresce(esitoScrittura)) {
-          // Non è arrivata la rilettura: si ripiega sul conteggio locale, che
-          // è meglio di lasciare il numero fermo.
-          setTorneo({ ...torneo, fatte: torneo.fatte + 1 });
-        }
-        setClassifica(await classificaTorneo(torneo.id));
-      }
+      await dopoRegistrazione(esitoScrittura);
     }
   };
 
@@ -339,12 +358,91 @@ export default function TorneoLicitaPage() {
     }
   };
 
-  const prossima = async () => {
-    if (!torneo) return;
-    const m = await torneoMano(torneo.id);
-    const t = m?.dd_table ? ({ tricks: m.dd_table } as DdsTable) : null;
+  // ── Asta sul server (`/api/licita/torneo`) ─────────────────────────────
+
+  /** A asta chiusa il server manda la mano intera: il voto si mostra come prima. */
+  const mostraChiusa = async (m: ManoTorneo, finali: string[], esito: EsitoRegistrazione) => {
+    // Lo stesso calcolo che il server ha usato per le stelle registrate: qui
+    // serve per il commento, nella lingua di chi gioca.
+    const v = votoMano(m, finali, t);
     setMano(m);
-    setTabella(t);
+    setTabella(m.dd_table ? ({ tricks: m.dd_table } as DdsTable) : null);
+    setBids(finali);
+    if (v) {
+      setEsito(v.voto);
+      const e = v.esito;
+      setGiocato(e ? { level: e.level, strain: e.strain, declarer: e.declarer, doppio: e.doppio } : null);
+    }
+    await dopoRegistrazione(esito);
+  };
+
+  /**
+   * Applica una risposta del server e, finché non tocca a Sud, chiede la
+   * dichiarazione successiva: una per richiesta, perché la schermata possa
+   * dire chi sta pensando.
+   */
+  const avanzaServer = async (torneoId: string, primo: RispostaTorneo) => {
+    let r = primo;
+    setAttesa(true);
+    setCompagnoMuto(false);
+    setMotivoMuto(null);
+    setErroreServer(false);
+    try {
+      // Un tetto per sicurezza: un'asta ha al massimo qualche decina di giri.
+      for (let giro = 0; giro < 400; giro++) {
+        switch (r.tipo) {
+          case "nonPronto":
+            return;
+          case "finito":
+            setMano(null);
+            setTabella(null);
+            return;
+          case "errore":
+            if (r.registrazione === "sessione-scaduta") setRegistrazione("sessione-scaduta");
+            setErroreServer(true);
+            return;
+          case "chiusa":
+            if (r.avversarioMuto) setAvversarioMuto(true);
+            await mostraChiusa(r.mano, r.bids, r.registrazione);
+            return;
+          case "aperta":
+            setMano(manoParziale(r.vista));
+            setTabella(null);
+            setBids(r.vista.bids);
+            if (r.avversarioMuto) setAvversarioMuto(true);
+            if (r.compagnoMuto) {
+              segnalaRinuncia("north", { motivo: r.compagnoMuto });
+              setMotivoMuto(r.compagnoMuto);
+              setCompagnoMuto(true);
+              return;
+            }
+            if (r.vista.turno === "south") return;
+            setAttesaDi(r.vista.turno);
+            r = await chiamaTorneo(torneoId, "robot");
+        }
+      }
+    } finally {
+      setAttesa(false);
+      setAttesaDi(null);
+    }
+  };
+
+  const dichiaraServer = async (b: string) => {
+    if (!torneo) return;
+    setBids([...bids, b]);
+    setAttesa(true);
+    await avanzaServer(torneo.id, await chiamaTorneo(torneo.id, "dichiara", b));
+  };
+
+  /** Riprende da dove l'asta si è fermata: `stato` rifà anche la chiusura mancata. */
+  const riprendiServer = async (azione: "stato" | "robot") => {
+    if (!torneo) return;
+    setAttesa(true);
+    await avanzaServer(torneo.id, await chiamaTorneo(torneo.id, azione));
+  };
+
+  /** Azzera la schermata per una mano nuova. */
+  const azzera = () => {
     setBids([]);
     setEsito(null);
     setGiocato(null);
@@ -352,7 +450,39 @@ export default function TorneoLicitaPage() {
     setCompagnoMuto(false);
     setMotivoMuto(null);
     setRegistrazione(null);
-    if (m && t && m.dealer !== "south") void avanza(m, t, []);
+    setErroreServer(false);
+  };
+
+  /**
+   * La mano da dichiarare: dal server se l'asta la tiene lui, altrimenti come
+   * prima. Vale sia all'apertura sia per «Prossima mano».
+   */
+  const carica = async (t: TorneoCorrente, vivo: () => boolean = () => true) => {
+    azzera();
+    const r = await chiamaTorneo(t.id, "stato");
+    if (!vivo()) return;
+    if (r.tipo !== "nonPronto") {
+      setSuServer(true);
+      await avanzaServer(t.id, r);
+      return;
+    }
+    setSuServer(false);
+    const m = await torneoMano(t.id);
+    if (!vivo()) return;
+    const tav = m?.dd_table ? ({ tricks: m.dd_table } as DdsTable) : null;
+    setMano(m);
+    setTabella(tav);
+    // Se non apri tu, devono parlare gli altri: senza questa riga, con
+    // mazziere diverso da Sud — cioè tre mani su quattro — il cassetto
+    // delle dichiarazioni non compare (non è il tuo turno) e nessuno fa
+    // parlare i robot. Il torneo resta fermo alla prima mano, senza
+    // nemmeno un pulsante per uscirne.
+    if (m && tav && m.dealer !== "south") void avanza(m, tav, []);
+  };
+
+  const prossima = async () => {
+    if (!torneo) return;
+    await carica(torneo);
   };
 
   useEffect(() => {
@@ -363,22 +493,9 @@ export default function TorneoLicitaPage() {
         if (!vivo) return;
         setTorneo(t);
         if (!t) return;
-        const [m, cl] = await Promise.all([torneoMano(t.id), classificaTorneo(t.id)]);
+        const [, cl] = await Promise.all([carica(t, () => vivo), classificaTorneo(t.id)]);
         if (!vivo) return;
-        const tav = m?.dd_table ? ({ tricks: m.dd_table } as DdsTable) : null;
-        setMano(m);
-        setTabella(tav);
-        setBids([]);
-        setEsito(null);
-        setGiocato(null);
-        setAvversarioMuto(false);
         setClassifica(cl);
-        // Se non apri tu, devono parlare gli altri: senza questa riga, con
-        // mazziere diverso da Sud — cioè tre mani su quattro — il cassetto
-        // delle dichiarazioni non compare (non è il tuo turno) e nessuno fa
-        // parlare i robot. Il torneo resta fermo alla prima mano, senza
-        // nemmeno un pulsante per uscirne.
-        if (m && tav && m.dealer !== "south") void avanza(m, tav, []);
       })
       .catch((err) => reportError("torneo-licita:carica", err));
     return () => { vivo = false; };
@@ -452,7 +569,23 @@ export default function TorneoLicitaPage() {
         </div>
       )}
 
-      {mano && tabella && (
+      {erroreServer && (
+        <div className="rounded-2xl border border-amber-300 bg-amber-50 dark:bg-amber-950/30 p-4 mb-4">
+          <p className="text-sm font-semibold text-amber-900 dark:text-amber-200 mb-1">
+            {registrazione === "sessione-scaduta" ? t("Il tuo accesso è scaduto") : t("Il server non ha risposto")}
+          </p>
+          <p className="text-xs text-amber-900/80 dark:text-amber-200/80 mb-3">
+            {registrazione === "sessione-scaduta"
+              ? t("Rientra e riapri il torneo: l'asta riprende da dove si è fermata.")
+              : t("La mano non è persa: l'asta è salvata sul server e riprende da dove si è fermata.")}
+          </p>
+          <Button onClick={() => { void riprendiServer("stato"); }} disabled={attesa}>
+            {t("Riprova")}
+          </Button>
+        </div>
+      )}
+
+      {mano && (tabella || suServer) && (
         <>
           <div className="rounded-2xl border border-border bg-card p-5 mb-4">
             <div className="flex items-center justify-between mb-3">
@@ -481,7 +614,10 @@ export default function TorneoLicitaPage() {
               dealer={mano.dealer}
               bids={bids}
               ioSono="south"
-              onDichiara={(b) => { void avanza(mano, tabella, [...bids, b]); }}
+              onDichiara={(b) => {
+                if (suServer) void dichiaraServer(b);
+                else if (tabella) void avanza(mano, tabella, [...bids, b]);
+              }}
               disabilitato={attesa || !!esito}
             />
             <AttesaDichiarazione chi={attesaDi} />
@@ -502,7 +638,12 @@ export default function TorneoLicitaPage() {
                 {spiegazioneMuto(motivoMuto, t)}
               </p>
               {riprovareServe(motivoMuto ?? "attesa") ? (
-                <Button onClick={() => { void avanza(mano, tabella, bids); }}>
+                <Button
+                  onClick={() => {
+                    if (suServer) void riprendiServer("robot");
+                    else if (tabella) void avanza(mano, tabella, bids);
+                  }}
+                >
                   {t("Riprova")}
                 </Button>
               ) : (
@@ -513,7 +654,7 @@ export default function TorneoLicitaPage() {
             </div>
           )}
 
-          {esito && (
+          {esito && tabella && (
             <div className="rounded-2xl border border-border bg-card p-4 mb-6">
               <div className="flex justify-center mb-2">
                 <Stelle quante={esito.stelle} className="[&_svg]:w-8 [&_svg]:h-8" />
@@ -582,6 +723,10 @@ export default function TorneoLicitaPage() {
                   </p>
                   <Button
                     onClick={() => {
+                      if (suServer) {
+                        void riprendiServer("stato");
+                        return;
+                      }
                       if (!mano || !tabella) return;
                       // L'ATTESA VA ACCESA QUI. `disabled={attesa}` da solo non
                       // proteggeva niente: `chiudi` non la accende, quindi il
