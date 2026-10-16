@@ -17,15 +17,13 @@ import { reportError } from "@/lib/report-error";
 import type { Card, Position, Suit } from "@/lib/bridge-engine";
 import { handHcp } from "@/lib/deal-generator";
 import type { DdsTable } from "@/lib/dds-table";
-import { benBid, riprovareServe, type MotivoBen } from "@/lib/ben-client";
-import { astaChiusa, esitoAsta, ordineDa } from "@/lib/licita-mano";
+import { riprovareServe, type MotivoBen } from "@/lib/ben-client";
 import { tabelleFineMano } from "@/lib/riepilogo-mano";
-import { contestoDaEsito, valutaLicita, type EsitoLicita } from "@/lib/stelle-licita";
+import type { EsitoLicita } from "@/lib/stelle-licita";
 import type { Strain } from "@/lib/minibridge";
 import {
   classificaTorneo, contatoreCresce, evDelContratto, manoArchiviata,
-  registraRisultatoTorneo, riferimento,
-  torneoCorrente, torneoMano,
+  riferimento, torneoCorrente,
   type ClassificaTorneo, type EsitoRegistrazione, type ManoCondivisa, type TorneoCorrente, riferimentoUnico } from "@/lib/mani-condivise";
 import { useT } from "@/contexts/traduzioni-provider";
 import { CondizioniAsta } from "@/components/bridge/condizioni-asta";
@@ -78,9 +76,11 @@ function spiegazioneMuto(motivo: MotivoBen | null, t: (frase: string) => string)
  * modo, ma le stelle restano leggibili anche quando la classifica si guarda a
  * distanza di giorni.
  *
- * UNA MANO PER VOLTA, e arriva dal server. Consegnarle tutte insieme
- * vorrebbe dire mandare al browser le carte degli avversari di tutto il
- * torneo: chiunque guardi la risposta di rete vincerebbe.
+ * L'ASTA LA TIENE IL SERVER (`/api/licita/torneo`). Finché è aperta il
+ * browser ha solo la mano di Sud; le dichiarazioni dei robot e il voto li
+ * fa il server, che scrive anche il risultato. Prima le quattro mani, la
+ * tabella double dummy e le stelle passavano dal browser: chiunque guardasse
+ * la rete vedeva le carte degli avversari, o si scriveva tre stelle.
  *
  * SI PUÒ INTERROMPERE: le mani già dichiarate restano, e riaprendo la pagina
  * si riprende da dove si era. Otto mani sono un quarto d'ora, ventiquattro
@@ -113,55 +113,8 @@ export default function TorneoLicitaPage() {
   const [motivoMuto, setMotivoMuto] = useState<MotivoBen | null>(null);
   /** Esito dell'ultima scrittura del risultato: governa se la mano è archiviata. */
   const [registrazione, setRegistrazione] = useState<EsitoRegistrazione | null>(null);
-  /**
-   * L'asta la tiene il server (`/api/licita/torneo`): il browser ha solo la
-   * mano di Sud. Falso finché `torneo-licita-server-1` non è eseguito, e
-   * allora vale il flusso di prima, con la mano intera nel browser.
-   */
-  const [suServer, setSuServer] = useState(false);
   /** Il server non ha risposto: la mano non è persa, si può riprendere. */
   const [erroreServer, setErroreServer] = useState(false);
-
-  /**
-   * Una dichiarazione dal motore.
-   *
-   * `benBid` NON LANCIA MAI: cattura tutto e restituisce `fallback: true`.
-   * Qui c'era un `try/catch` con dentro l'unica segnalazione a Sentry di
-   * questa schermata, e quel ramo non è mai stato eseguito: quando l'esercizio
-   * si bloccava, in Sentry non arrivava niente e la causa restava invisibile.
-   * Adesso si segnala sul valore di ritorno, che è dove l'errore arriva
-   * davvero.
-   */
-  /**
-   * Una dichiarazione dal motore.
-   *
-   * NON SEGNALA NIENTE, ed è deliberato. Qui c'era un `reportError` su ogni
-   * fallimento, compreso quello che il ritentativo subito dopo rimediava: chi
-   * giocava non si accorgeva di nulla e a noi arrivava un avviso lo stesso.
-   * Un allarme deve voler dire «qualcuno è rimasto bloccato», altrimenti si
-   * impara a ignorarlo — ed è il modo in cui gli allarmi smettono di servire.
-   * La segnalazione si fa quando si rinuncia davvero, più sotto.
-   *
-   * I guasti veri di BEN li riferisce comunque il server (`api:ben-bid`), che
-   * li vede tutti, ritentati o no.
-   */
-  const chiediABen = async (m: ManoCondivisa, chi: Position, fatte: string[]) => {
-    // QUANTO CI HA MESSO fa parte della risposta. Sul ritentativo dei guasti
-    // `edge` avevo dato per scontato che arrivassero subito — plausibile, mai
-    // misurato. Se invece arrivassero dopo dieci secondi, ritentare due volte
-    // terrebbe fermo lo schermo mezzo minuto: la decisione va presa sul fatto,
-    // non sull'ipotesi. Il tempo finisce anche nella segnalazione, così la
-    // prossima volta non ci sarà da indovinare.
-    const avvio = Date.now();
-    const r = await benBid({
-      hand: m.hands[chi],
-      seat: chi,
-      dealer: m.dealer,
-      vulnerability: m.vulnerability,
-      bidding: { dealer: m.dealer, bids: fatte },
-    });
-    return { ...r, durata: Date.now() - avvio };
-  };
 
   /** Si è rinunciato: adesso sì che vale la pena dirlo. */
   const segnalaRinuncia = (
@@ -215,149 +168,6 @@ export default function TorneoLicitaPage() {
     }
   };
 
-  // Il secondo parametro si chiama `tav` e non `t`: `t` è il traduttore, e
-  // il commento del voto ora passa da lì.
-  const chiudi = async (m: ManoCondivisa, tav: DdsTable, finali: string[]) => {
-    const e = esitoAsta(finali, m.dealer, tav, m.vulnerability);
-    const rif = riferimento(m, "ns");
-    const perStelle =
-      e && rif.metro === "atteso"
-        ? // `doppio` come in «Licita e vediamo»: senza, un contratto contrato
-          // veniva valutato come se non lo fosse, e lo stesso 5♥X prendeva
-          // stelle diverse nelle due modalità (forum, 28/09/2026).
-          (evDelContratto(m, { level: e.level, strain: e.strain, declarer: e.declarer, doppio: e.doppio }) ??
-           e.punteggio)
-        : (e?.punteggio ?? 0);
-
-    // Il contesto dice al commento chi ha giocato e se è caduto: senza, un
-    // sacrificio troppo caro veniva spiegato come una manche mancata.
-    const voto = valutaLicita(perStelle, rif.punteggio, rif.metro, e?.punteggio, {
-      contesto: contestoDaEsito(e),
-      tr: t,
-    });
-    setEsito(voto);
-    setGiocato(e ? { level: e.level, strain: e.strain, declarer: e.declarer, doppio: e.doppio } : null);
-
-    if (torneo) {
-      const esitoScrittura = await registraRisultatoTorneo({
-        torneoId: torneo.id,
-        manoId: m.id,
-        asta: finali,
-        contratto: e?.contratto ?? null,
-        dichiarante: e?.declarer ?? null,
-        punteggio: e?.punteggio ?? 0,
-        stelle: voto.stelle,
-      });
-      await dopoRegistrazione(esitoScrittura);
-    }
-  };
-
-  /**
-   * Fa dichiarare gli altri finché non tocca di nuovo a te.
-   *
-   * Se a tacere è un avversario passa d'ufficio e la schermata lo dice; se
-   * tace il compagno non si può fare altro che fermarsi, perché l'esercizio è
-   * proprio intendersi con lui. In torneo però la mano NON si annulla: la
-   * classifica è la stessa per tutti e una mano saltata resterebbe un buco.
-   * Si dice cosa è successo e si lascia riprovare.
-   */
-  const avanza = async (m: ManoCondivisa, t: DdsTable, iniziali: string[]) => {
-    let correnti = iniziali;
-    setBids(correnti);
-    setCompagnoMuto(false);
-    setMotivoMuto(null);
-    if (astaChiusa(correnti)) {
-      // L'ATTESA SI ACCENDE ANCHE QUI. Quando è la dichiarazione dell'utente a
-      // chiudere l'asta si andava dritti a `chiudi` senza accenderla, e per
-      // tutto il tempo della scrittura i pulsanti restavano premibili: due
-      // tocchi rapidi su un telefono facevano registrare due volte la stessa
-      // mano. Il database lo rifiuta — è la sua chiave primaria — e l'utente
-      // vedeva un errore per aver premuto due volte.
-      setAttesa(true);
-      // `finally`: se `chiudi` sollevasse un'eccezione, senza questo la
-      // schermata resterebbe in attesa per sempre e l'unica via d'uscita
-      // sarebbe ricaricare la pagina.
-      try {
-        await chiudi(m, t, correnti);
-      } finally {
-        setAttesa(false);
-      }
-      return;
-    }
-
-    setAttesa(true);
-    const ordine = ordineDa(m.dealer);
-    while (!astaChiusa(correnti)) {
-      const chi = ordine[correnti.length % 4];
-      if (chi === "south") break;
-
-      setAttesaDi(chi);
-      // SI RITENTA SOLO SUI GUASTI ISTANTANEI, e fino a due volte.
-      //
-      // Il ritentativo automatico su tutto era stato tolto per un buon motivo:
-      // quando la rinuncia arriva dopo venti secondi di attesa, rifarla in
-      // silenzio porta l'utente a quaranta secondi di schermo fermo prima di
-      // sapere qualcosa.
-      //
-      // `edge` è l'eccezione, ed è diversa in natura. Lì a rispondere non è la
-      // nostra rotta ma qualcosa che le sta davanti, con una pagina d'errore
-      // invece del JSON: la richiesta non è mai arrivata al motore, e torna
-      // indietro SUBITO. Due tentativi in più costano meno di un secondo in
-      // tutto, e un intoppo di connessione raramente si ripete tre volte.
-      //
-      // Fino al 28/08/2026 davanti c'era anche Cloudflare, ed era lui a
-      // restituire quei «502 Bad gateway». Ora il proxy non c'è più: se questi
-      // eventi continuano, la causa è un'altra e va cercata altrove — non
-      // dare per scontato il colpevole di ieri.
-      //
-      // La pausa fra i tentativi non è cerimoniale: rifare la richiesta
-      // nell'identico istante rischia di ripassare per la stessa connessione
-      // guasta. Un attimo basta perché ne venga aperta un'altra.
-      let r = await chiediABen(m, chi, correnti);
-      for (const pausa of [300, 800]) {
-        if (!r.fallback || r.motivo !== "edge") break;
-        // Si ritenta solo se il guasto è arrivato SUBITO. Un `edge` lento
-        // sarebbe una cosa diversa — qualcosa che scade invece che rompersi —
-        // e insistere raddoppierebbe un'attesa già lunga.
-        if (r.durata > 3000) break;
-        await new Promise((ok) => setTimeout(ok, pausa));
-        r = await chiediABen(m, chi, correnti);
-      }
-      // La dichiarazione da mettere nell'asta: quella di BEN, oppure il passo
-      // d'ufficio dell'avversario che non ha risposto. Si tiene separata da `r`
-      // perché il suo `motivo` serve ancora dopo, per dire cosa è successo.
-      let dichiarazione = r.bid;
-      if (r.fallback) {
-        segnalaRinuncia(chi, r);
-        if (chi === "north") {
-          setMotivoMuto(r.motivo ?? null);
-          // Senza il compagno l'esercizio non esiste, e in torneo la mano non
-          // si può annullare: la classifica è la stessa per tutti e un buco
-          // resterebbe. Si dice cosa è successo e si lascia riprovare da dove
-          // l'asta si è fermata.
-          setCompagnoMuto(true);
-          setAttesa(false);
-          setAttesaDi(null);
-          return;
-        }
-        setAvversarioMuto(true);
-        dichiarazione = "P";
-      }
-      correnti = [...correnti, dichiarazione];
-      setBids(correnti);
-    }
-    setAttesa(false);
-    setAttesaDi(null);
-    if (astaChiusa(correnti)) {
-      setAttesa(true);
-      try {
-        await chiudi(m, t, correnti);
-      } finally {
-        setAttesa(false);
-      }
-    }
-  };
-
   // ── Asta sul server (`/api/licita/torneo`) ─────────────────────────────
 
   /** A asta chiusa il server manda la mano intera: il voto si mostra come prima. */
@@ -391,8 +201,6 @@ export default function TorneoLicitaPage() {
       // Un tetto per sicurezza: un'asta ha al massimo qualche decina di giri.
       for (let giro = 0; giro < 400; giro++) {
         switch (r.tipo) {
-          case "nonPronto":
-            return;
           case "finito":
             setMano(null);
             setTabella(null);
@@ -454,30 +262,15 @@ export default function TorneoLicitaPage() {
   };
 
   /**
-   * La mano da dichiarare: dal server se l'asta la tiene lui, altrimenti come
-   * prima. Vale sia all'apertura sia per «Prossima mano».
+   * La mano da dichiarare, all'apertura e per «Prossima mano». Se non apre
+   * Sud, `avanzaServer` fa parlare subito i robot: senza, tre mani su quattro
+   * resterebbero ferme senza nemmeno il cassetto delle dichiarazioni.
    */
   const carica = async (t: TorneoCorrente, vivo: () => boolean = () => true) => {
     azzera();
     const r = await chiamaTorneo(t.id, "stato");
     if (!vivo()) return;
-    if (r.tipo !== "nonPronto") {
-      setSuServer(true);
-      await avanzaServer(t.id, r);
-      return;
-    }
-    setSuServer(false);
-    const m = await torneoMano(t.id);
-    if (!vivo()) return;
-    const tav = m?.dd_table ? ({ tricks: m.dd_table } as DdsTable) : null;
-    setMano(m);
-    setTabella(tav);
-    // Se non apri tu, devono parlare gli altri: senza questa riga, con
-    // mazziere diverso da Sud — cioè tre mani su quattro — il cassetto
-    // delle dichiarazioni non compare (non è il tuo turno) e nessuno fa
-    // parlare i robot. Il torneo resta fermo alla prima mano, senza
-    // nemmeno un pulsante per uscirne.
-    if (m && tav && m.dealer !== "south") void avanza(m, tav, []);
+    await avanzaServer(t.id, r);
   };
 
   const prossima = async () => {
@@ -585,7 +378,7 @@ export default function TorneoLicitaPage() {
         </div>
       )}
 
-      {mano && (tabella || suServer) && (
+      {mano && (
         <>
           <div className="rounded-2xl border border-border bg-card p-5 mb-4">
             <div className="flex items-center justify-between mb-3">
@@ -614,10 +407,7 @@ export default function TorneoLicitaPage() {
               dealer={mano.dealer}
               bids={bids}
               ioSono="south"
-              onDichiara={(b) => {
-                if (suServer) void dichiaraServer(b);
-                else if (tabella) void avanza(mano, tabella, [...bids, b]);
-              }}
+              onDichiara={(b) => { void dichiaraServer(b); }}
               disabilitato={attesa || !!esito}
             />
             <AttesaDichiarazione chi={attesaDi} />
@@ -638,12 +428,7 @@ export default function TorneoLicitaPage() {
                 {spiegazioneMuto(motivoMuto, t)}
               </p>
               {riprovareServe(motivoMuto ?? "attesa") ? (
-                <Button
-                  onClick={() => {
-                    if (suServer) void riprendiServer("robot");
-                    else if (tabella) void avanza(mano, tabella, bids);
-                  }}
-                >
+                <Button onClick={() => { void riprendiServer("robot"); }}>
                   {t("Riprova")}
                 </Button>
               ) : (
@@ -722,20 +507,9 @@ export default function TorneoLicitaPage() {
                       : t("Non siamo riusciti a scrivere il risultato. Il voto è già calcolato: premi Salva per riprovare, la mano non va rigiocata.")}
                   </p>
                   <Button
-                    onClick={() => {
-                      if (suServer) {
-                        void riprendiServer("stato");
-                        return;
-                      }
-                      if (!mano || !tabella) return;
-                      // L'ATTESA VA ACCESA QUI. `disabled={attesa}` da solo non
-                      // proteggeva niente: `chiudi` non la accende, quindi il
-                      // pulsante restava premibile e due tocchi avviavano due
-                      // salvataggi in parallelo. L'idempotenza salva il
-                      // database, non l'interfaccia.
-                      setAttesa(true);
-                      void chiudi(mano, tabella, bids).finally(() => setAttesa(false));
-                    }}
+                    // `stato` su un'asta chiusa e non ancora registrata la
+                    // fa registrare dal server: il voto non si ricalcola.
+                    onClick={() => { void riprendiServer("stato"); }}
                     disabled={attesa}
                   >
                     {t("Salva il risultato")}

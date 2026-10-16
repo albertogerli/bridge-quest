@@ -16,7 +16,7 @@
 -- Rigenerare e committare dopo OGNI modifica allo schema, insieme allo script
 -- che l'ha causata.
 --
--- Estratto il: 2026-10-12
+-- Estratto il: 2026-10-16
 -- ============================================================================
 
 SET check_function_bodies = false;
@@ -89,6 +89,14 @@ CREATE TABLE IF NOT EXISTS public.assignments (
   minibridge boolean NOT NULL,
   esercizio_ids uuid[] NOT NULL,
   link_video text
+);
+
+CREATE TABLE IF NOT EXISTS public.aste_torneo_in_corso (
+  torneo_id uuid NOT NULL,
+  mano_id uuid NOT NULL,
+  user_id uuid NOT NULL,
+  asta text[] NOT NULL,
+  aggiornata_at timestamp with time zone NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.badges (
@@ -3541,27 +3549,27 @@ $function$
 CREATE OR REPLACE FUNCTION public.mano_da_fare(p_slug text DEFAULT NULL::text)
  RETURNS jsonb
  LANGUAGE sql
- STABLE
+ STABLE SECURITY DEFINER
  SET search_path TO 'public'
 AS $function$
-  SELECT to_jsonb(m) || jsonb_build_object(
-    'scenario', CASE WHEN s.id IS NULL THEN NULL ELSE to_jsonb(s) - 'vincoli' END)
-  FROM public.mani_generate m
-  LEFT JOIN public.scenari s ON s.id = m.scenario_id
-  WHERE (p_slug IS NULL OR s.slug = p_slug)
-    AND auth.uid() IS NOT NULL
-    AND NOT EXISTS (
-      SELECT 1 FROM public.risultati_mano r
-      WHERE r.mano_id = m.id AND r.user_id = auth.uid()
-    )
-    AND NOT EXISTS (
-      SELECT 1 FROM public.torneo_mani tm
-      JOIN public.tornei t ON t.id = tm.torneo_id
-      WHERE tm.mano_id = m.id AND now() < t.chiude_at
-    )
-  ORDER BY random()
-  LIMIT 1;
-$function$
+    SELECT to_jsonb(m) || jsonb_build_object(
+      'scenario', CASE WHEN s.id IS NULL THEN NULL ELSE to_jsonb(s) - 'vincoli' END)
+    FROM public.mani_generate m
+    LEFT JOIN public.scenari s ON s.id = m.scenario_id
+    WHERE (p_slug IS NULL OR s.slug = p_slug)
+      AND auth.uid() IS NOT NULL
+      AND NOT EXISTS (
+        SELECT 1 FROM public.risultati_mano r
+        WHERE r.mano_id = m.id AND r.user_id = auth.uid()
+      )
+      AND NOT EXISTS (
+        SELECT 1 FROM public.torneo_mani tm
+        JOIN public.tornei t ON t.id = tm.torneo_id
+        WHERE tm.mano_id = m.id AND now() < t.chiude_at
+      )
+    ORDER BY random()
+    LIMIT 1;
+  $function$
 ;
 
 CREATE OR REPLACE FUNCTION public.mie_richieste_in_attesa()
@@ -4515,6 +4523,27 @@ AS $function$
 $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.torneo_mano_per(p_torneo uuid, p_user uuid)
+ RETURNS jsonb
+ LANGUAGE sql
+ STABLE SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+    SELECT to_jsonb(m) || jsonb_build_object('numero', tm.numero)
+    FROM public.torneo_mani tm
+    JOIN public.mani_generate m ON m.id = tm.mano_id
+    WHERE tm.torneo_id = p_torneo
+      AND p_user IS NOT NULL
+      AND NOT EXISTS (
+        SELECT 1 FROM public.risultati_torneo r
+        WHERE r.torneo_id = p_torneo AND r.mano_id = tm.mano_id AND r.user_id = p_user
+      )
+      AND EXISTS (SELECT 1 FROM public.tornei t WHERE t.id = p_torneo AND now() < t.chiude_at)
+    ORDER BY tm.numero
+    LIMIT 1;
+  $function$
+;
+
 CREATE OR REPLACE FUNCTION public.touch_updated_at()
  RETURNS trigger
  LANGUAGE plpgsql
@@ -4606,6 +4635,8 @@ ALTER TABLE public.assignments ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.assignments ALTER COLUMN soluzioni SET DEFAULT 'dopo-il-gioco'::text;
 ALTER TABLE public.assignments ALTER COLUMN minibridge SET DEFAULT false;
 ALTER TABLE public.assignments ALTER COLUMN esercizio_ids SET DEFAULT '{}'::uuid[];
+ALTER TABLE public.aste_torneo_in_corso ALTER COLUMN asta SET DEFAULT '{}'::text[];
+ALTER TABLE public.aste_torneo_in_corso ALTER COLUMN aggiornata_at SET DEFAULT now();
 ALTER TABLE public.badges ALTER COLUMN id SET DEFAULT nextval('badges_id_seq'::regclass);
 ALTER TABLE public.badges ALTER COLUMN earned_at SET DEFAULT now();
 ALTER TABLE public.bbo_username_cleanup_2026_08 ALTER COLUMN cleared_at SET DEFAULT now();
@@ -4816,6 +4847,7 @@ ALTER TABLE public.adesioni ADD CONSTRAINT adesioni_pkey PRIMARY KEY (id);
 ALTER TABLE public.asd ADD CONSTRAINT asd_pkey PRIMARY KEY (id);
 ALTER TABLE public.asd_clubs ADD CONSTRAINT asd_clubs_pkey PRIMARY KEY (code);
 ALTER TABLE public.assignments ADD CONSTRAINT assignments_pkey PRIMARY KEY (id);
+ALTER TABLE public.aste_torneo_in_corso ADD CONSTRAINT aste_torneo_in_corso_pkey PRIMARY KEY (torneo_id, mano_id, user_id);
 ALTER TABLE public.badges ADD CONSTRAINT badges_pkey PRIMARY KEY (id);
 ALTER TABLE public.bbo_username_cleanup_2026_08 ADD CONSTRAINT bbo_username_cleanup_2026_08_pkey PRIMARY KEY (profile_id);
 ALTER TABLE public.bidding_sessions ADD CONSTRAINT bidding_sessions_pkey PRIMARY KEY (id);
@@ -4901,6 +4933,7 @@ ALTER TABLE public.adesioni ADD CONSTRAINT adesioni_nome_non_vuoto CHECK (((leng
 ALTER TABLE public.assignments ADD CONSTRAINT assignments_mode_check CHECK ((mode = ANY (ARRAY['homework'::text, 'live'::text])));
 ALTER TABLE public.assignments ADD CONSTRAINT assignments_soluzioni_check CHECK ((soluzioni = ANY (ARRAY['subito'::text, 'dopo-il-gioco'::text, 'dopo-la-scadenza'::text, 'quando-l-insegnante-decide'::text])));
 ALTER TABLE public.assignments ADD CONSTRAINT assignments_unlock_mode_check CHECK ((unlock_mode = ANY (ARRAY['free'::text, 'sequential'::text])));
+ALTER TABLE public.aste_torneo_in_corso ADD CONSTRAINT aste_torneo_in_corso_dimensione CHECK (((array_ndims(asta) IS NULL) OR ((array_ndims(asta) = 1) AND (cardinality(asta) <= 319))));
 ALTER TABLE public.bidding_sessions ADD CONSTRAINT bidding_sessions_check CHECK ((south_id <> north_id));
 ALTER TABLE public.bidding_sessions ADD CONSTRAINT bidding_sessions_dealer_check CHECK ((dealer = ANY (ARRAY['north'::text, 'east'::text, 'south'::text, 'west'::text])));
 ALTER TABLE public.challenges ADD CONSTRAINT challenges_board_count_check CHECK ((board_count = ANY (ARRAY[1, 4, 8])));
@@ -4974,6 +5007,9 @@ ALTER TABLE public.adesioni ADD CONSTRAINT adesioni_class_id_fkey FOREIGN KEY (c
 ALTER TABLE public.adesioni ADD CONSTRAINT adesioni_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE SET NULL;
 ALTER TABLE public.assignments ADD CONSTRAINT assignments_class_id_fkey FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE;
 ALTER TABLE public.assignments ADD CONSTRAINT assignments_lesson_id_fkey FOREIGN KEY (lesson_id) REFERENCES lessons(id) ON DELETE SET NULL;
+ALTER TABLE public.aste_torneo_in_corso ADD CONSTRAINT aste_torneo_in_corso_mano_id_fkey FOREIGN KEY (mano_id) REFERENCES mani_generate(id) ON DELETE CASCADE;
+ALTER TABLE public.aste_torneo_in_corso ADD CONSTRAINT aste_torneo_in_corso_torneo_id_fkey FOREIGN KEY (torneo_id) REFERENCES tornei(id) ON DELETE CASCADE;
+ALTER TABLE public.aste_torneo_in_corso ADD CONSTRAINT aste_torneo_in_corso_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.badges ADD CONSTRAINT badges_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.bbo_username_cleanup_2026_08 ADD CONSTRAINT bbo_username_cleanup_2026_08_profile_id_fkey FOREIGN KEY (profile_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.bidding_sessions ADD CONSTRAINT bidding_sessions_north_id_fkey FOREIGN KEY (north_id) REFERENCES profiles(id) ON DELETE CASCADE;
@@ -5184,6 +5220,7 @@ ALTER TABLE public.adesioni ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.asd ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.asd_clubs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.assignments ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.aste_torneo_in_corso ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.badges ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.bbo_username_cleanup_2026_08 ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.bidding_sessions ENABLE ROW LEVEL SECURITY;
@@ -5339,7 +5376,6 @@ CREATE POLICY "Users can read own login history" ON public.login_history AS PERM
 CREATE POLICY "Istruttori generano mani" ON public.mani_generate AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK ((EXISTS ( SELECT 1
    FROM profiles p
   WHERE ((p.id = auth.uid()) AND (p.role = ANY (ARRAY['instructor'::text, 'admin'::text]))))));
-CREATE POLICY "Mani leggibili" ON public.mani_generate AS PERMISSIVE FOR SELECT TO authenticated USING (true);
 CREATE POLICY "Chi insegna crea i propri modelli" ON public.modelli_mani AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK (((autore_id = auth.uid()) AND (NOT ufficiale) AND (EXISTS ( SELECT 1
    FROM profiles p
   WHERE ((p.id = auth.uid()) AND (p.role = ANY (ARRAY['instructor'::text, 'admin'::text])))))));
@@ -5368,7 +5404,6 @@ CREATE POLICY "Si vede la propria risposta, e l'insegnante tutte" ON public.risp
 CREATE POLICY "Ognuno scrive il proprio risultato" ON public.risultati_mano AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK ((user_id = auth.uid()));
 CREATE POLICY "Risultati leggibili" ON public.risultati_mano AS PERMISSIVE FOR SELECT TO authenticated USING (true);
 CREATE POLICY "Ognuno legge il proprio risultato di torneo" ON public.risultati_torneo AS PERMISSIVE FOR SELECT TO authenticated USING ((( SELECT auth.uid() AS uid) = user_id));
-CREATE POLICY "Ognuno scrive il proprio risultato di torneo" ON public.risultati_torneo AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK ((user_id = auth.uid()));
 CREATE POLICY "Own saved hands" ON public.saved_hands AS PERMISSIVE FOR ALL TO authenticated USING ((owner_id = auth.uid())) WITH CHECK ((owner_id = auth.uid()));
 CREATE POLICY "Autore cancella i propri scenari" ON public.scenari AS PERMISSIVE FOR DELETE TO authenticated USING (((autore_id = auth.uid()) OR is_admin()));
 CREATE POLICY "Autore modifica i propri scenari" ON public.scenari AS PERMISSIVE FOR UPDATE TO authenticated USING ((autore_id = auth.uid())) WITH CHECK ((autore_id = auth.uid()));
@@ -5405,6 +5440,7 @@ REVOKE ALL ON TABLE public.asd FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.asd_clubs FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON SEQUENCE public.asd_id_seq FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.assignments FROM PUBLIC, anon, authenticated, service_role;
+REVOKE ALL ON TABLE public.aste_torneo_in_corso FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.badges FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON SEQUENCE public.badges_id_seq FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.bbo_username_cleanup_2026_08 FROM PUBLIC, anon, authenticated, service_role;
@@ -5579,6 +5615,14 @@ GRANT SELECT ON TABLE public.assignments TO service_role;
 GRANT TRIGGER ON TABLE public.assignments TO service_role;
 GRANT TRUNCATE ON TABLE public.assignments TO service_role;
 GRANT UPDATE ON TABLE public.assignments TO service_role;
+GRANT DELETE ON TABLE public.aste_torneo_in_corso TO service_role;
+GRANT INSERT ON TABLE public.aste_torneo_in_corso TO service_role;
+GRANT MAINTAIN ON TABLE public.aste_torneo_in_corso TO service_role;
+GRANT REFERENCES ON TABLE public.aste_torneo_in_corso TO service_role;
+GRANT SELECT ON TABLE public.aste_torneo_in_corso TO service_role;
+GRANT TRIGGER ON TABLE public.aste_torneo_in_corso TO service_role;
+GRANT TRUNCATE ON TABLE public.aste_torneo_in_corso TO service_role;
+GRANT UPDATE ON TABLE public.aste_torneo_in_corso TO service_role;
 GRANT DELETE ON TABLE public.badges TO anon;
 GRANT INSERT ON TABLE public.badges TO anon;
 GRANT MAINTAIN ON TABLE public.badges TO anon;
@@ -6698,7 +6742,6 @@ GRANT SELECT ON TABLE public.risultati_mano TO service_role;
 GRANT TRIGGER ON TABLE public.risultati_mano TO service_role;
 GRANT TRUNCATE ON TABLE public.risultati_mano TO service_role;
 GRANT UPDATE ON TABLE public.risultati_mano TO service_role;
-GRANT INSERT ON TABLE public.risultati_torneo TO authenticated;
 GRANT SELECT ON TABLE public.risultati_torneo TO authenticated;
 GRANT DELETE ON TABLE public.risultati_torneo TO service_role;
 GRANT INSERT ON TABLE public.risultati_torneo TO service_role;
@@ -7452,8 +7495,9 @@ REVOKE ALL ON FUNCTION public.torneo_corrente(p_tipo text) FROM PUBLIC, anon, au
 GRANT EXECUTE ON FUNCTION public.torneo_corrente(p_tipo text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.torneo_corrente(p_tipo text) TO service_role;
 REVOKE ALL ON FUNCTION public.torneo_mano(p_torneo uuid) FROM PUBLIC, anon, authenticated, service_role;
-GRANT EXECUTE ON FUNCTION public.torneo_mano(p_torneo uuid) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.torneo_mano(p_torneo uuid) TO service_role;
+REVOKE ALL ON FUNCTION public.torneo_mano_per(p_torneo uuid, p_user uuid) FROM PUBLIC, anon, authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.torneo_mano_per(p_torneo uuid, p_user uuid) TO service_role;
 REVOKE ALL ON FUNCTION public.touch_updated_at() FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.touch_updated_at() TO PUBLIC;
 GRANT EXECUTE ON FUNCTION public.touch_updated_at() TO anon;

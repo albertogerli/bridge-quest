@@ -43,9 +43,6 @@ const bodySchema = z.object({
  * passano dalla chiave di servizio (`torneo_mano_per`, `aste_torneo_in_corso`,
  * `risultati_torneo`), che il browser non può più usare direttamente
  * (`scripts/sql/torneo-licita-server-2-2026-10.sql`).
- *
- * `{ nonPronto: true }` vuol dire che `torneo-licita-server-1` non è ancora
- * stato eseguito: la pagina torna al flusso di prima.
  */
 export async function POST(req: NextRequest) {
   const supabase = await createServerSupabaseClient();
@@ -65,7 +62,6 @@ export async function POST(req: NextRequest) {
     p_user: user.id,
   });
   if (erroreMano) {
-    if (erroreMano.code === "PGRST202") return NextResponse.json({ nonPronto: true });
     reportError("api:torneo-licita", erroreMano);
     return NextResponse.json({ error: "Mano non disponibile" }, { status: 500 });
   }
