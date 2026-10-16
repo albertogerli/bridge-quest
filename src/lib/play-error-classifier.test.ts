@@ -1,12 +1,16 @@
 import { describe, it, expect } from "vitest";
 import type { Card, Position, Trick } from "./bridge-engine";
-import { classifyPlayErrors } from "./play-error-classifier";
+import { classifyPlayErrors, presePerse } from "./play-error-classifier";
 
 const c = (suit: Card["suit"], rank: Card["rank"]): Card => ({ suit, rank });
 const p = (position: Position, card: Card) => ({ position, card });
 
 /** 4♥ di Sud; l'allievo gioca Nord-Sud. Le mani contengono solo le carte che servono. */
-function classifica(trick: Trick, hands: Record<Position, Card[]>, extra: { ddTricks?: number; tricksMade?: number } = {}) {
+function classifica(
+  trick: Trick,
+  hands: Record<Position, Card[]>,
+  extra: { ddTricks?: number; tricksMade?: number; presePerse?: ReadonlySet<number> } = {},
+) {
   return classifyPlayErrors({
     tricks: [trick],
     originalHands: hands,
@@ -58,5 +62,27 @@ describe("classifyPlayErrors", () => {
   it("sotto l'ottimo restano sia gli errori per presa sia il piano di gioco", () => {
     const errori = classifica(tagliMancato, maniTaglio, { ddTricks: 10, tricksMade: 9 });
     expect(errori.map((e) => e.category)).toEqual(["missed-ruff", "below-optimal"]);
+  });
+
+  it("sotto l'ottimo, un errore per presa resta solo se in quella presa si è perso davvero", () => {
+    // La presa persa è stata la 2: quella della regola (la 1) non costava niente.
+    const errori = classifica(tagliMancato, maniTaglio, { ddTricks: 10, tricksMade: 9, presePerse: new Set([2]) });
+    expect(errori.map((e) => e.category)).toEqual(["below-optimal"]);
+    const conLaPresa = classifica(tagliMancato, maniTaglio, { ddTricks: 10, tricksMade: 9, presePerse: new Set([1]) });
+    expect(conLaPresa.map((e) => e.category)).toEqual(["missed-ruff", "below-optimal"]);
+  });
+});
+
+describe("presePerse", () => {
+  const punti = [
+    { trick: 1, delta: 0 },
+    { trick: 2, delta: -1 },
+    { trick: 5, delta: 1 },
+  ];
+  it("per il dichiarante sono le prese in cui il totale ottenibile scende", () => {
+    expect([...presePerse(punti, true)]).toEqual([2]);
+  });
+  it("per la difesa sono quelle in cui il totale del dichiarante sale", () => {
+    expect([...presePerse(punti, false)]).toEqual([5]);
   });
 });

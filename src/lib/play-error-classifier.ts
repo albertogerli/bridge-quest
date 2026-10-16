@@ -90,6 +90,25 @@ export interface ClassifyOptions {
   ddTricks?: number | null;
   /** Actual tricks made by declarer's side */
   tricksMade?: number;
+  /**
+   * Tricks (numbered from 1) in which the human side's double-dummy total
+   * dropped, from `presePerse(analyseReplay(...))`. When given, the per-trick
+   * rules only report errors in those tricks: an unblock at trick 7 is not a
+   * mistake just because a trick was thrown away at trick 2.
+   */
+  presePerse?: ReadonlySet<number>;
+}
+
+/**
+ * The tricks where the human side lost something, read from the replay
+ * analysis: the declarer's potential going down if the human declares, up
+ * if the human defends.
+ */
+export function presePerse(
+  points: readonly { trick: number; delta: number }[],
+  umanoDichiara: boolean,
+): Set<number> {
+  return new Set(points.filter((p) => (umanoDichiara ? p.delta < 0 : p.delta > 0)).map((p) => p.trick));
 }
 
 export function classifyPlayErrors(opts: ClassifyOptions): PlayError[] {
@@ -211,6 +230,15 @@ export function classifyPlayErrors(opts: ClassifyOptions): PlayError[] {
       const idx = hand.findIndex((c) => isSameCard(c, play.card));
       if (idx >= 0) hand.splice(idx, 1);
       played.add(cardKey(play.card));
+    }
+  }
+
+  // Only the tricks where a trick was really lost, when we know which they are.
+  if (opts.presePerse) {
+    const perse = opts.presePerse;
+    for (let i = errors.length - 1; i >= 0; i--) {
+      const n = errors[i].trickNumber;
+      if (n !== undefined && !perse.has(n)) errors.splice(i, 1);
     }
   }
 

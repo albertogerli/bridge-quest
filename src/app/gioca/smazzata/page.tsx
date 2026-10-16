@@ -48,7 +48,9 @@ import { useMobile } from "@/hooks/use-mobile";
 import { useProfile } from "@/hooks/use-profile";
 import { useDDS, type DDSAnalysis } from "@/hooks/use-dds";
 import { addGameRecordDirect } from "@/hooks/use-game-history";
-import { classifyPlayErrors, type PlayError } from "@/lib/play-error-classifier";
+import { classifyPlayErrors, presePerse, type PlayError } from "@/lib/play-error-classifier";
+import { analyseReplay } from "@/lib/dds-replay";
+import { reportError } from "@/lib/report-error";
 import { useSpacedReview } from "@/hooks/use-spaced-review";
 import Link from "@/components/link";
 import { useT } from "@/contexts/traduzioni-provider";
@@ -570,25 +572,48 @@ function PlayingView({
     )
       return;
     errorsLoggedRef.current = true;
-    try {
-      const { trumpSuit } = parseContract(smazzata.contract);
-      const errors = classifyPlayErrors({
-        tricks: game.gameState.tricks,
-        originalHands: smazzata.hands,
-        trumpSuit,
-        playerPositions,
-        declarer,
-        // Only grade against the DD optimum when the solver result is exact
-        ddTricks: ddsResult.isExact ? ddsResult.ddTricks : null,
-        tricksMade: game.result.tricksMade,
-      }).slice(0, 2); // at most 2 review items per hand
-      setPlayErrors(errors);
-      for (const err of errors) {
-        addReviewItem(err.lessonId, err.moduleId, err.description);
+    const tricks = game.gameState.tricks;
+    const tricksMade = game.result.tricksMade;
+    void (async () => {
+      try {
+        const { trumpSuit } = parseContract(smazzata.contract);
+        // Which tricks really cost something, double dummy: the per-trick
+        // rules then speak only about those. If the replay can't be solved
+        // the rules run unfiltered, as before.
+        let perse: Set<number> | undefined;
+        try {
+          const analisi = await analyseReplay(
+            smazzata.hands,
+            tricks.map((t) => ({
+              cards: t.plays.map((p) => ({ player: p.position, card: p.card })),
+              winner: t.winner ?? t.plays[0].position,
+            })),
+            trumpSuit,
+            declarer,
+          );
+          perse = presePerse(analisi.points, playerPositions.includes(declarer));
+        } catch (err) {
+          reportError("smazzata:analisi-prese", err);
+        }
+        const errors = classifyPlayErrors({
+          tricks,
+          originalHands: smazzata.hands,
+          trumpSuit,
+          playerPositions,
+          declarer,
+          // Only grade against the DD optimum when the solver result is exact
+          ddTricks: ddsResult.isExact ? ddsResult.ddTricks : null,
+          tricksMade,
+          presePerse: perse,
+        }).slice(0, 2); // at most 2 review items per hand
+        setPlayErrors(errors);
+        for (const err of errors) {
+          addReviewItem(err.lessonId, err.moduleId, err.description);
+        }
+      } catch {
+        // Classification is best-effort: never block the end-of-hand flow
       }
-    } catch {
-      // Classification is best-effort: never block the end-of-hand flow
-    }
+    })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [game.phase, game.result, game.gameState, ddsResult]);
 
