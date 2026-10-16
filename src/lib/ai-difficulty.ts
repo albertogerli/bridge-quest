@@ -1,19 +1,26 @@
 /**
  * Livelli dell'avversario artificiale.
  * - Base: euristica più un errore da principiante nel 20% delle scelte
- * - Intermedio: sola euristica
- * - Esperto: BEN quando c'è, altrimenti gioco perfetto nei finali (nelle
- *   posizioni grandi ricade sull'euristica)
+ * - Intermedio: il robot che vede il morto (`robot-pimc.ts`) su poche
+ *   distribuzioni delle carte coperte
+ * - Esperto: BEN quando c'è, altrimenti lo stesso robot su venti
+ *   distribuzioni. Nessun livello guarda le carte coperte dell'allievo.
  *
  * PERCHÉ IL PREDEFINITO È «ESPERTO»
  * Un utente ha scritto che i robot «commettono errori banali e sconcertanti,
  * così si vince anche sbagliando e non ce se ne rende conto: diseducativo».
- * Misurato su 30 mani (`robot-quality.test.ts`), prese buttate per mano
+ * Misurato su 150 mani (`robot-quality.test.ts`), prese buttate per mano
  * rispetto al gioco perfetto a carte scoperte:
  *
- *   intermedio   3,13 dal dichiarante + 2,17 dalla difesa
- *   base         3,33 + 2,10   — indistinguibile da intermedio
- *   esperto      1,60 + 1,40   — circa la metà
+ *   euristica (vecchio intermedio)        3,22 dal dichiarante + 1,91 dalla difesa
+ *   vecchio esperto (DD negli ultimi 7)   1,71 + 1,21 — e guardava le carte coperte
+ *   robot che vede il morto, 20 mondi     0,53 + 0,47
+ *   robot che vede il morto, 10 mondi     0,65 + 0,51
+ *   robot che vede il morto, 4 mondi      0,85 + 0,75
+ *
+ * Misure senza tetto di tempo. Nel gioco vero le prime prese, dove una
+ * risoluzione costa fino a ~200 ms, si fermano a `BUDGET_MS` e provano meno
+ * mondi: la forza lì sta fra le righe qui sopra.
  *
  * Il predefinito era quindi fra i peggiori disponibili. Chi ha già scelto un
  * livello se lo tiene: qui cambia solo cosa trova chi non ha mai scelto.
@@ -22,6 +29,8 @@
 import type { Card, Position, Rank, Suit, GameState, TrickPlay } from "./bridge-engine";
 import { aiSelectCard, getValidCards, partnerOf, rankValue } from "./bridge-engine";
 import { ddsSelectCard } from "./dds-select";
+import { scegliCartaPimc } from "./robot-pimc";
+import { reportError } from "./report-error";
 
 export type AILevel = "base" | "intermedio" | "esperto";
 
@@ -33,9 +42,12 @@ export const AI_LEVEL_LABELS: Record<AILevel, string> = {
 
 export const AI_LEVEL_DESCRIPTIONS: Record<AILevel, string> = {
   base: "Avversari che commettono errori occasionali",
-  intermedio: "Avversari con buona strategia di gioco",
-  esperto: "Gioco perfetto nei finali: sbaglia circa la metà degli altri livelli",
+  intermedio: "Ragiona sulle carte che vede, ma valuta poche ipotesi",
+  esperto: "Ragiona sulle carte che vede, come un giocatore vero: non guarda mai le tue",
 };
+
+const MONDI_INTERMEDIO = 4;
+const MONDI_ESPERTO = 20;
 
 /** Livello di chi non ha mai scelto. */
 export const AI_LEVEL_PREDEFINITO: AILevel = "esperto";
@@ -237,4 +249,45 @@ export function aiSelectWithDifficulty(
 
   // For "intermedio" and "esperto" (when BEN/DDS unavailable): use existing heuristic
   return aiSelectCard(gameState, position);
+}
+
+// ──────────────────────────────────────────────────────────────
+// Il robot che vede il morto (robot-pimc.ts)
+// ──────────────────────────────────────────────────────────────
+
+/**
+ * Quante distribuzioni delle carte coperte prova il robot, per livello.
+ * Zero vuol dire l'euristica di sempre.
+ */
+export const MONDI_PER_LIVELLO: Record<AILevel, number> = { base: 0, intermedio: MONDI_INTERMEDIO, esperto: MONDI_ESPERTO };
+
+/**
+ * Tetto di tempo per una carta. Il gioco ha un controllo che, dopo cinque
+ * secondi senza giocata, fa giocare la prima carta valida: il robot deve
+ * stare largamente sotto, anche su un telefono lento.
+ */
+const BUDGET_MS = 900;
+
+let solverSegnalato = false;
+
+/**
+ * La carta del robot per il livello scelto: le distribuzioni possibili
+ * quando il livello le prevede, l'euristica se il solver non è disponibile.
+ */
+export async function aiSelectRobotCard(state: GameState, position: Position, level: AILevel): Promise<Card> {
+  const mondi = MONDI_PER_LIVELLO[level];
+  if (mondi > 0) {
+    try {
+      const carta = await scegliCartaPimc(state, position, { mondi, budgetMs: BUDGET_MS });
+      if (carta) return carta;
+    } catch (err) {
+      // Il solver è WebAssembly scaricato a parte: se non si carica il robot
+      // gioca lo stesso, con l'euristica. Una segnalazione per sessione basta.
+      if (!solverSegnalato) {
+        solverSegnalato = true;
+        reportError("robot:pimc", err);
+      }
+    }
+  }
+  return aiSelectWithDifficulty(state, position, level);
 }

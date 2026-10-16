@@ -22,25 +22,20 @@ import { reportError } from "@/lib/report-error";
 import { useT } from "@/contexts/traduzioni-provider";
 import {
   getAILevel,
-  aiSelectWithDifficulty,
-  aiSelectExpertCard,
+  aiSelectRobotCard,
   type AILevel,
 } from "@/lib/ai-difficulty";
 
 /**
- * Heuristic/DDS selection used when BEN is not available (or failed).
- * At "esperto" level, tries DD-perfect endgame play first.
+ * Selection used when BEN is not available (or failed): the robot that
+ * samples the hidden cards (robot-pimc.ts), heuristic as last resort.
  */
 async function selectAiCard(
   state: GameState,
   position: Position,
   level: AILevel
 ): Promise<Card> {
-  if (level === "esperto") {
-    const ddsCard = await aiSelectExpertCard(state, position);
-    if (ddsCard) return ddsCard;
-  }
-  return aiSelectWithDifficulty(state, position, level);
+  return aiSelectRobotCard(state, position, level);
 }
 
 export type GamePhase = "ready" | "playing" | "trick-complete" | "finished";
