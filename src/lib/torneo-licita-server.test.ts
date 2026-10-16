@@ -82,8 +82,7 @@ describe("votoMano", () => {
 });
 
 describe("leggiRisposta", () => {
-  it("riconosce il server non ancora pronto, il torneo finito e la sessione scaduta", () => {
-    expect(leggiRisposta(200, { nonPronto: true })).toEqual({ tipo: "nonPronto" });
+  it("riconosce il torneo finito e la sessione scaduta", () => {
     expect(leggiRisposta(200, { finito: true })).toEqual({ tipo: "finito" });
     expect(leggiRisposta(401, { error: "Non autenticato" })).toEqual({ tipo: "errore", registrazione: "sessione-scaduta" });
     expect(leggiRisposta(500, { error: "x" })).toEqual({ tipo: "errore", registrazione: "errore" });

@@ -13,8 +13,6 @@ import type { ManoTorneo, VistaAperta } from "./torneo-licita-server";
 export type AzioneTorneo = "stato" | "dichiara" | "robot";
 
 export type RispostaTorneo =
-  /** `torneo-licita-server-1` non è ancora eseguito: si usa il flusso di prima. */
-  | { tipo: "nonPronto" }
   /** Nessuna mano da dichiarare: torneo finito o chiuso. */
   | { tipo: "finito" }
   | {
@@ -52,7 +50,6 @@ export async function chiamaTorneo(torneoId: string, azione: AzioneTorneo, bid?:
 export function leggiRisposta(status: number, dati: unknown): RispostaTorneo {
   const d = (dati ?? {}) as Record<string, unknown>;
   if (status === 401) return { tipo: "errore", registrazione: "sessione-scaduta" };
-  if (d.nonPronto === true) return { tipo: "nonPronto" };
   if (d.finito === true) return { tipo: "finito" };
   if (d.chiusa === true && d.mano) {
     return {

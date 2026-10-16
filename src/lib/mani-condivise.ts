@@ -563,31 +563,9 @@ export async function torneoCorrente(
 }
 
 /**
- * La prossima mano del torneo. `null` quando sono finite o il torneo è chiuso.
- *
- * Una per volta: consegnarle tutte insieme vorrebbe dire mandare al browser le
- * carte degli avversari di tutto il torneo.
- */
-export async function torneoMano(
-  torneoId: string
-): Promise<(ManoCondivisa & { numero: number }) | null> {
-  try {
-    const supabase = createClient();
-    const { data, error } = await supabase.rpc("torneo_mano", { p_torneo: torneoId });
-    if (error) {
-      await segnalaSeNonEScaduta(supabase, "tornei:mano", error);
-      return null;
-    }
-    return (data as (ManoCondivisa & { numero: number }) | null) ?? null;
-  } catch (err) {
-    segnalaSalvoRete("tornei:mano", err);
-    return null;
-  }
-}
-
-/**
- * Come è andata la registrazione. NON è un dettaglio diagnostico: da questo
- * dipende se la schermata può considerare la mano archiviata.
+ * Come è andata la registrazione del risultato (la fa il server,
+ * `/api/licita/torneo`). NON è un dettaglio diagnostico: da questo dipende se
+ * la schermata può considerare la mano archiviata.
  *
  *   `salvato`         la riga è stata scritta adesso.
  *   `gia-presente`    c'era già (doppio tocco): il risultato È nel database,
@@ -619,81 +597,6 @@ export function manoArchiviata(esito: EsitoRegistrazione): boolean {
  */
 export function contatoreCresce(esito: EsitoRegistrazione): boolean {
   return esito === "salvato";
-}
-
-export async function registraRisultatoTorneo(r: {
-  torneoId: string;
-  manoId: string;
-  /** Asta completa, nell'ordine delle chiamate. Viene salvata col risultato. */
-  asta: string[];
-  contratto: string | null;
-  dichiarante: string | null;
-  punteggio: number;
-  stelle: number;
-}): Promise<EsitoRegistrazione> {
-  try {
-    const supabase = createClient();
-    // `getUser()` e non `getSession()`: qui si sta per SCRIVERE, e la domanda
-    // non è «ho un token sul disco» ma «quel token vale ancora». Sono due cose
-    // diverse per la finestra in cui il token è scaduto ma non ancora scartato.
-    const { data: sessione, error: erroreSessione } = await supabase.auth.getUser();
-    const uid = sessione.user?.id;
-    if (erroreSessione || !uid) return "sessione-scaduta";
-    // SCRIVERE DUE VOLTE LA STESSA MANO NON È UN ERRORE, è un doppio tocco.
-    //
-    // La chiave primaria è (torneo_id, mano_id, user_id), e con una `insert`
-    // il secondo tentativo faceva fallire tutto con «duplicate key value
-    // violates unique constraint» — visto in produzione il 28/08/2026 da un
-    // telefono. Non serviva un caso strano: quando la dichiarazione dell'utente
-    // chiude l'asta, la registrazione parte subito e per il tempo della
-    // scrittura i pulsanti restano premibili.
-    //
-    // `ignoreDuplicates` fa sì che il secondo arrivo non scriva niente, e non è
-    // solo comodo: nel torneo VALE IL PRIMO RISULTATO. Sovrascriverlo darebbe a
-    // chi tocca due volte un secondo tentativo che gli altri non hanno.
-    // Il `.select()` serve a SAPERE se la riga è stata scritta adesso: con
-    // `ON CONFLICT DO NOTHING` un conflitto non è un errore, e senza rileggere
-    // non si distingue «salvato» da «c'era già». La differenza conta, perché
-    // il contatore delle mani fatte non deve crescere due volte per un doppio
-    // tocco.
-    const { data: scritte, error } = await supabase
-      .from("risultati_torneo")
-      .upsert(
-        {
-          torneo_id: r.torneoId,
-          mano_id: r.manoId,
-          user_id: uid,
-          asta: r.asta,
-          contratto: r.contratto,
-          dichiarante: r.dichiarante,
-          punteggio: r.punteggio,
-          stelle: r.stelle,
-        },
-        { onConflict: "torneo_id,mano_id,user_id", ignoreDuplicates: true },
-      )
-      .select("mano_id");
-    if (error) {
-      await segnalaSeNonEScaduta(supabase, "tornei:registra", error);
-      // «permission denied» NON basta a dire «sessione scaduta». L'identità era
-      // stata appena verificata con `getUser()`: se il rifiuto arriva subito
-      // dopo, la spiegazione più probabile è un privilegio configurato male —
-      // e mostrare «rientra» manderebbe l'utente a rifare l'accesso per un
-      // problema nostro, che il nuovo accesso non risolve.
-      //
-      // Si richiede l'identità UNA VOLTA, solo su questo ramo: se adesso non
-      // c'è più, la sessione è davvero caduta nel frattempo (finestra stretta
-      // ma reale); se c'è ancora, è un errore e va detto come tale.
-      if (/permission denied/i.test(error.message ?? "")) {
-        const { data: ancora, error: erroreAncora } = await supabase.auth.getUser();
-        return erroreAncora || !ancora.user ? "sessione-scaduta" : "errore";
-      }
-      return "errore";
-    }
-    return (scritte?.length ?? 0) > 0 ? "salvato" : "gia-presente";
-  } catch (err) {
-    segnalaSalvoRete("tornei:registra", err);
-    return "errore";
-  }
 }
 
 export async function classificaTorneo(torneoId: string): Promise<ClassificaTorneo | null> {
