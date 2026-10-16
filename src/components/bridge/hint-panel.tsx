@@ -4,7 +4,13 @@
  * Progressive hints — three escalating levels per turn:
  *   1. a thinking prompt (free)
  *   2. the right suit to play
- *   3. the exact card (DD-verified in endgames, expert heuristic otherwise)
+ *   3. the card itself
+ *
+ * The card comes from the same robot the expert opponents use when BEN is off
+ * (`robot-pimc.ts`): it reasons only from what the student can see — own
+ * hand, dummy, cards played. It used to come from a double-dummy solve in the
+ * endgame, which looked at the hidden hands: the hint "played for the drop"
+ * because it knew where the Queen was, and taught the wrong lesson.
  *
  * Each level beyond the first costs XP at the end of the hand: the parent
  * page tracks usage via onHintUsed and reduces the reward accordingly.
@@ -16,7 +22,13 @@ import { Button } from "@/components/ui/button";
 import { Lightbulb, Loader2 } from "lucide-react";
 import type { Card, GameState, Suit } from "@/lib/bridge-engine";
 import { aiSelectCard, cardToString } from "@/lib/bridge-engine";
-import { aiSelectExpertCard } from "@/lib/ai-difficulty";
+import { scegliCartaPimc } from "@/lib/robot-pimc";
+import { reportError } from "@/lib/report-error";
+import { useT } from "@/contexts/traduzioni-provider";
+
+/** As the expert robot: twenty samples, but the student is waiting, so a cap. */
+const MONDI = 20;
+const BUDGET_MS = 1500;
 
 const SUIT_NAMES: Record<Suit, string> = {
   spade: "picche",
@@ -34,10 +46,12 @@ export interface HintPanelProps {
 
 interface HintData {
   card: Card;
-  exact: boolean;
+  /** False when the solver couldn't load and the plain heuristic answered. */
+  ragionata: boolean;
 }
 
 export function HintPanel({ gameState, isPlayerTurn, onHintUsed }: HintPanelProps) {
+  const t = useT();
   const [level, setLevel] = useState(0);
   const [hint, setHint] = useState<HintData | null>(null);
   const [loading, setLoading] = useState(false);
@@ -62,9 +76,13 @@ export function HintPanel({ gameState, isPlayerTurn, onHintUsed }: HintPanelProp
     if (newLevel >= 2 && !hint) {
       setLoading(true);
       try {
-        const expert = await aiSelectExpertCard(gameState, gameState.currentPlayer);
-        const card = expert ?? aiSelectCard(gameState, gameState.currentPlayer);
-        setHint({ card, exact: expert !== null });
+        let card: Card | null = null;
+        try {
+          card = await scegliCartaPimc(gameState, gameState.currentPlayer, { mondi: MONDI, budgetMs: BUDGET_MS });
+        } catch (err) {
+          reportError("hint:pimc", err);
+        }
+        setHint(card ? { card, ragionata: true } : { card: aiSelectCard(gameState, gameState.currentPlayer), ragionata: false });
       } finally {
         setLoading(false);
       }
@@ -78,12 +96,14 @@ export function HintPanel({ gameState, isPlayerTurn, onHintUsed }: HintPanelProp
     if (level === 0) return null;
     if (level === 1) {
       return gameState.currentTrick.length === 0
-        ? "Prima di giocare: conta le prese sicure e chiediti dove puoi svilupparne altre."
-        : "Osserva la presa: chi sta vincendo? Vale la pena impegnare una carta alta?";
+        ? t("Prima di giocare: conta le prese sicure e chiediti dove puoi svilupparne altre.")
+        : t("Osserva la presa: chi sta vincendo? Vale la pena impegnare una carta alta?");
     }
     if (!hint) return null;
-    if (level === 2) return `Il colore giusto è ${SUIT_NAMES[hint.card.suit]}.`;
-    return `Gioca ${cardToString(hint.card)}${hint.exact ? " — è la carta migliore (verificato double-dummy)." : " — è il consiglio dell'esperto."}`;
+    if (level === 2) return t("Il colore giusto è {colore}.", { colore: t(SUIT_NAMES[hint.card.suit]) });
+    return hint.ragionata
+      ? t("Gioca {carta}: è quella che rende di più su tutte le distribuzioni possibili delle carte che non vedi.", { carta: cardToString(hint.card) })
+      : t("Gioca {carta}: è il consiglio dell'esperto.", { carta: cardToString(hint.card) });
   };
 
   const text = hintText();
@@ -103,7 +123,7 @@ export function HintPanel({ gameState, isPlayerTurn, onHintUsed }: HintPanelProp
           ) : (
             <Lightbulb className="h-3.5 w-3.5" />
           )}
-          {level === 0 ? "Suggerimento" : "Dimmi di più"}
+          {level === 0 ? t("Suggerimento") : t("Dimmi di più")}
         </Button>
       )}
       <AnimatePresence mode="wait">

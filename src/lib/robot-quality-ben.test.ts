@@ -1,7 +1,8 @@
 import { describe, it } from "vitest";
 import type { Card, Position } from "./bridge-engine";
 import { getValidCards, type GameState } from "./bridge-engine";
-import { aiSelectExpertCard, aiSelectWithDifficulty } from "./ai-difficulty";
+import { aiSelectWithDifficulty } from "./ai-difficulty";
+import { scegliCartaPimc } from "./robot-pimc";
 import {
   benSeatParams,
   biddingToCTX,
@@ -101,10 +102,8 @@ async function chiediABen(state: GameState, chi: Position): Promise<Card | null>
 
 const conBen: Scelta = (state, chi) => chiediABen(state, chi);
 
-const conDoubleDummy: Scelta = async (state, chi) => {
-  const dd = await aiSelectExpertCard(state, chi);
-  return dd ?? aiSelectWithDifficulty(state, chi, "esperto");
-};
+/** L'esperto quando BEN non c'è: venti distribuzioni delle carte non viste. */
+const conRobot: Scelta = (state, chi) => scegliCartaPimc(state, chi, { mondi: 20 });
 
 const conEuristica: Scelta = async (state, chi) =>
   aiSelectWithDifficulty(state, chi, "intermedio");
@@ -128,7 +127,7 @@ describe.skipIf(!attivo)("BEN è più bravo o solo più lento?", () => {
       // Le carte obbligate non si chiedono a BEN: sarebbero mezzo secondo di
       // rete per una decisione che non esiste.
       console.log(formatta("euristica", await misura(conEuristica, ripiego, opz)));
-      console.log(formatta("double dummy", await misura(soloSeCScelta(conDoubleDummy), ripiego, opz)));
+      console.log(formatta("robot che vede il morto", await misura(soloSeCScelta(conRobot), ripiego, opz)));
       console.log(formatta("BEN", await misura(soloSeCScelta(conBen), ripiego, opz)));
     },
     3_600_000

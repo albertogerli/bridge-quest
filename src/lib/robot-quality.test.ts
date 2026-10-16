@@ -1,7 +1,7 @@
 import { describe, it } from "vitest";
 import type { Card, Position, Suit } from "./bridge-engine";
 import { createGame, parseContract, playCard } from "./bridge-engine";
-import { aiSelectExpertCard, aiSelectWithDifficulty, type AILevel } from "./ai-difficulty";
+import { aiSelectRobotCard, aiSelectWithDifficulty, type AILevel } from "./ai-difficulty";
 import { generateDeals } from "./deal-generator";
 import { calcTableAndPar } from "./dds-table";
 import { parAssignmentFromContracts } from "./par-contract";
@@ -10,13 +10,9 @@ import { scegliCartaPimc } from "./robot-pimc";
 
 const MANI = Number(process.env.MISURA_MANI ?? 30);
 
-/** Come sceglie il gioco vero: a «esperto» prova il double dummy nei finali. */
+/** Come sceglie il gioco vero quando BEN non c'è (in locale non c'è mai). */
 async function scegli(state: Parameters<typeof aiSelectWithDifficulty>[0], chi: Position, level: AILevel) {
-  if (level === "esperto") {
-    const dd = await aiSelectExpertCard(state, chi);
-    if (dd) return dd;
-  }
-  return aiSelectWithDifficulty(state, chi, level);
+  return aiSelectRobotCard(state, chi, level);
 }
 
 /** Un generatore ripetibile, perché due misure sulle stesse mani siano confrontabili. */
@@ -111,7 +107,7 @@ async function misura(level: AILevel | `pimc-${number}`) {
 describe.skipIf(!process.env.MISURA_ROBOT)("quanto sbagliano i robot", () => {
   it("livello intermedio (quello predefinito)", async () => { await misura("intermedio"); }, 900000);
   it("livello base", async () => { await misura("base"); }, 900000);
-  it("livello esperto (double dummy negli ultimi 7)", async () => { await misura("esperto"); }, 900000);
+  it("livello esperto (senza BEN: 20 mondi con il tetto di tempo)", async () => { await misura("esperto"); }, 3600000);
   for (const mondi of (process.env.MISURA_MONDI ?? "4,20").split(",").map(Number)) {
     it(`robot che vede il morto, ${mondi} mondi`, async () => { await misura(`pimc-${mondi}`); }, 3600000);
   }
