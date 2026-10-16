@@ -28,7 +28,6 @@
 
 import type { Card, Position, Rank, Suit, GameState, TrickPlay } from "./bridge-engine";
 import { aiSelectCard, getValidCards, partnerOf, rankValue } from "./bridge-engine";
-import { ddsSelectCard } from "./dds-select";
 import { scegliCartaPimc } from "./robot-pimc";
 import { reportError } from "./report-error";
 
@@ -180,54 +179,15 @@ function plausibleMistake(
 }
 
 // ──────────────────────────────────────────────────────────────
-// Expert play: DDS-perfect endgames (BEN fallback)
-// ──────────────────────────────────────────────────────────────
-
-/** Max cards per hand for attempting an exact DDS search during play */
-const EXPERT_DDS_THRESHOLD = 7;
-
-/**
- * DD-optimal card for the expert AI when BEN is unavailable.
- * Returns null when the position is too large or the search times out —
- * callers should fall back to aiSelectWithDifficulty.
- */
-export async function aiSelectExpertCard(
-  state: GameState,
-  position: Position
-): Promise<Card | null> {
-  const maxCards = Math.max(
-    state.hands.north.length,
-    state.hands.south.length,
-    state.hands.east.length,
-    state.hands.west.length
-  );
-  if (maxCards > EXPERT_DDS_THRESHOLD) return null;
-
-  try {
-    const result = await ddsSelectCard({
-      hands: state.hands,
-      contract: state.contract,
-      position,
-      currentTrick: state.currentTrick.map(tp => ({ position: tp.position, card: tp.card })),
-      timeout: 1200,
-      maxCardsForSearch: EXPERT_DDS_THRESHOLD,
-    });
-    return result.available ? result.card : null;
-  } catch {
-    return null;
-  }
-}
-
-// ──────────────────────────────────────────────────────────────
 // Main entry point (synchronous heuristic selection)
 // ──────────────────────────────────────────────────────────────
 
 /**
  * Select a card for the AI to play, taking difficulty into account.
  * - "base": ~20% chance of a plausible beginner mistake
- * - "intermedio": standard aiSelectCard heuristic
- * - "esperto": same heuristic (BEN and DDS endgame play are handled
- *   asynchronously in use-bridge-game via aiSelectExpertCard)
+ * Synchronous heuristic, the last resort of every level: in play the levels
+ * go through `aiSelectRobotCard` (sampled double dummy, `robot-pimc.ts`).
+ * - "base": ~20% chance of a plausible beginner mistake
  */
 export function aiSelectWithDifficulty(
   gameState: GameState,

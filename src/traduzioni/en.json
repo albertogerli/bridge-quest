@@ -2637,5 +2637,11 @@
   "Il server non ha risposto": "The server didn't respond",
   "Il tuo accesso è scaduto": "Your session has expired",
   "La mano non è persa: l'asta è salvata sul server e riprende da dove si è fermata.": "The board isn't lost: the auction is saved on the server and picks up where it stopped.",
-  "Rientra e riapri il torneo: l'asta riprende da dove si è fermata.": "Sign in again and reopen the tournament: the auction picks up where it stopped."
+  "Rientra e riapri il torneo: l'asta riprende da dove si è fermata.": "Sign in again and reopen the tournament: the auction picks up where it stopped.",
+  "Dimmi di più": "Tell me more",
+  "Gioca {carta}: è il consiglio dell'esperto.": "Play {carta}: that's the expert's advice.",
+  "Gioca {carta}: è quella che rende di più su tutte le distribuzioni possibili delle carte che non vedi.": "Play {carta}: it takes the most tricks across all the possible layouts of the cards you can't see.",
+  "Il colore giusto è {colore}.": "The right suit is {colore}.",
+  "Osserva la presa: chi sta vincendo? Vale la pena impegnare una carta alta?": "Look at the trick: who's winning it? Is it worth playing a high card?",
+  "Prima di giocare: conta le prese sicure e chiediti dove puoi svilupparne altre.": "Before you play: count your sure tricks and ask where you can develop more."
 }
