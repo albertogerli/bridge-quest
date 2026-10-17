@@ -38,6 +38,7 @@ export function PlayingCard({
   size = "md",
   noHover = false,
   cardWidth,
+  angolo = false,
 }: {
   card: CardData;
   faceDown?: boolean;
@@ -49,6 +50,12 @@ export function PlayingCard({
   noHover?: boolean;
   /** When set, overrides size prop with exact pixel width (height auto-calculated) */
   cardWidth?: number;
+  /**
+   * Valore e seme nell'angolo in alto a sinistra invece che al centro: per le
+   * mani a ventaglio, dove ogni carta è coperta dalla successiva e del centro
+   * resta visibile solo metà (il «10» diventava «1(»).
+   */
+  angolo?: boolean;
 }) {
   const t = useT();
   const dimensions = {
@@ -134,7 +141,10 @@ export function PlayingCard({
       whileTap={disabled ? {} : { scale: 0.97 }}
     >
       {/* Simple clean layout: rank + suit, centered */}
-      <div className={`flex h-full flex-col items-center justify-center ${suitColors[card.suit]}`} aria-hidden="true">
+      <div
+        className={`flex h-full flex-col ${angolo ? "items-start justify-start px-1 pt-1" : "items-center justify-center"} ${suitColors[card.suit]}`}
+        aria-hidden="true"
+      >
         <span className={`${rankSizes[effectiveSize]} font-black leading-none`}>{card.rank}</span>
         <span className={`${suitSizes[effectiveSize]} leading-none`}>{suitSymbols[card.suit]}</span>
       </div>
