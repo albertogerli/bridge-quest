@@ -30,18 +30,29 @@ test("un torneo senza mani non viene dichiarato completato", async ({ page }) =>
  * browser: un `page.route` su `/api/ben/bid` non intercetta più niente, e la
  * prova si è fermata alla prima notte — il compagno non rispondeva e la
  * pagina, giustamente, si metteva ad aspettare. Il finto BEN sta quindi dove
- * il server lo cerca quando `BEN_API_URL` non c'è: `localhost:8085`. Se la
+ * il server lo cerca: la porta di `BEN_API_URL` quando punta a questa
+ * macchina (le notturne la impostano a `127.0.0.1:55999`, apposta su un
+ * indirizzo morto), altrimenti `localhost:8085`, il default del server. Se la
  * porta è già occupata, in locale è il BEN vero, e va bene lo stesso.
  */
+function portaDiBen(): number | null {
+  const dato = process.env.BEN_API_URL;
+  if (!dato) return 8085;
+  const url = new URL(dato);
+  if (!["localhost", "127.0.0.1", "[::1]"].includes(url.hostname)) return null;
+  return Number(url.port || 80);
+}
 let benFinto: Server | null = null;
 test.beforeAll(async () => {
+  const porta = portaDiBen();
+  if (porta === null) return;
   const server = createServer((_req, res) => {
     res.writeHead(200, { "content-type": "application/json" });
     res.end(JSON.stringify({ bid: "PASS" }));
   });
   benFinto = await new Promise<Server | null>((ok) => {
     server.once("error", () => ok(null));
-    server.listen(8085, () => ok(server));
+    server.listen(porta, () => ok(server));
   });
 });
 test.afterAll(async () => {
