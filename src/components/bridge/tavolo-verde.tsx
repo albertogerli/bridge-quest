@@ -171,12 +171,12 @@ export function TavoloVerde({
       // mano mezza trasparente sul panno non si legge dall'ultima fila.
       return (
         <div key={chiave(c)} className="pointer-events-none">
-          <PlayingCard card={c} size={dimensione} noHover />
+          <PlayingCard card={c} size={dimensione} noHover angolo />
         </div>
       );
     }
     return (
-      <PlayingCard key={chiave(c)} card={c} size={dimensione} highlighted onClick={() => onGioca(p, c)} />
+      <PlayingCard key={chiave(c)} card={c} size={dimensione} highlighted angolo onClick={() => onGioca(p, c)} />
     );
   };
 
@@ -223,15 +223,19 @@ export function TavoloVerde({
     </div>
   );
 
-  /** Ovest ed Est: un seme per riga. */
+  /**
+   * Ovest ed Est: un seme per riga. Le righe si sovrappongono quanto basta a
+   * lasciare scoperto l'angolo con valore e seme: con il valore al centro la
+   * riga sotto copriva il seme (ottobre 2026, «si vedono male»).
+   */
   const perSeme = (p: Position) => piccolo ? compatta(p) : (
     <div className="flex flex-col items-center">
       {targhetta(p)}
-      <div className={piccolo ? "space-y-1" : "-space-y-12"}>
+      <div className="-space-y-11">
         {SEMI.map((s) => {
           const delSeme = ordina((mani[p] ?? []).filter((c) => c.suit === s));
           return (
-            <div key={s} className={`flex min-h-6 ${piccolo ? "[&>*:not(:first-child)]:-ml-5" : "[&>*:not(:first-child)]:-ml-8"}`}>
+            <div key={s} className="flex min-h-14 items-start [&>*:not(:first-child)]:-ml-9">
               {delSeme.length ? delSeme.map((c) => carta(p, c, piccolo ? "xs" : "md")) : <span className="text-white/50">—</span>}
             </div>
           );
@@ -303,10 +307,11 @@ export function TavoloVerde({
             )}
           </div>
         )}
+        {/* Nord e Sud occupano tutta la riga: se stessero nella colonna di
+            mezzo la allargherebbero alla loro misura, e a Ovest ed Est
+            resterebbe troppo poco posto — le carte uscivano dal panno. */}
         <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-1 sm:gap-4">
-          <div />
-          {inRiga("north")}
-          <div />
+          <div className="col-span-3 justify-self-center">{inRiga("north")}</div>
 
           {perSeme("west")}
           {/* La bussola, con la presa in corso attorno. */}
@@ -340,9 +345,7 @@ export function TavoloVerde({
           </div>
           {perSeme("east")}
 
-          <div />
-          {inRiga("south")}
-          <div />
+          <div className="col-span-3 justify-self-center">{inRiga("south")}</div>
         </div>
       </div>
     </div>
