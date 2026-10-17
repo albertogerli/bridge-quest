@@ -1,3 +1,4 @@
+import { createServer, type Server } from "node:http";
 import { expect, test } from "./test";
 import { login } from "./helpers";
 
@@ -23,18 +24,32 @@ test("un torneo senza mani non viene dichiarato completato", async ({ page }) =>
  * via d'uscita: il torneo muore alla prima mano, cioè quasi subito.
  *
  * La rete neurale viene sostituita con un passo: è l'unica parte che non ci
- * appartiene, e in sviluppo non è accesa.
+ * appartiene, e in CI non è accesa.
+ *
+ * DAL 16/10/2026 A CHIEDERE A BEN È IL SERVER (`/api/licita/torneo`), non il
+ * browser: un `page.route` su `/api/ben/bid` non intercetta più niente, e la
+ * prova si è fermata alla prima notte — il compagno non rispondeva e la
+ * pagina, giustamente, si metteva ad aspettare. Il finto BEN sta quindi dove
+ * il server lo cerca quando `BEN_API_URL` non c'è: `localhost:8085`. Se la
+ * porta è già occupata, in locale è il BEN vero, e va bene lo stesso.
  */
+let benFinto: Server | null = null;
+test.beforeAll(async () => {
+  const server = createServer((_req, res) => {
+    res.writeHead(200, { "content-type": "application/json" });
+    res.end(JSON.stringify({ bid: "PASS" }));
+  });
+  benFinto = await new Promise<Server | null>((ok) => {
+    server.once("error", () => ok(null));
+    server.listen(8085, () => ok(server));
+  });
+});
+test.afterAll(async () => {
+  await new Promise((ok) => (benFinto ? benFinto.close(ok) : ok(null)));
+});
+
 test("il torneo parte anche quando non apri tu", async ({ page }) => {
   test.setTimeout(180_000);
-
-  await page.route("**/api/ben/bid", (route) =>
-    route.fulfill({
-      status: 200,
-      contentType: "application/json",
-      body: JSON.stringify({ bid: "PASS" }),
-    })
-  );
 
   await login(page);
   await page.goto("/gioca/torneo-licita");
