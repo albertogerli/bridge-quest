@@ -128,7 +128,10 @@ export const FoglioLocandina = forwardRef<
           <div style={{ fontSize: 19, color: "#3b4453", lineHeight: 1.4 }}>
             {t("Organizza")}
             <b style={{ display: "block", fontSize: 26, color: "#0f1219" }}>{testi.associazione}</b>
-            {!conQr && testi.contatti && <span style={{ fontSize: 18 }}>{testi.contatti}</span>}
+            {/* Anche CON il QR: chi non sa inquadrarlo deve avere un'altra
+                strada, ed è come fanno le locandine delle ASD — QR e numero
+                WhatsApp insieme (format di Trevissoi, ottobre 2026). */}
+            {testi.contatti && <span style={{ display: "block", fontSize: 18, marginTop: 4 }}>{testi.contatti}</span>}
           </div>
           {conQr && (
             <div style={{
