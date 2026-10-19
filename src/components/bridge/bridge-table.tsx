@@ -51,6 +51,14 @@ export interface BridgeTableProps {
   activePosition?: string;
   disabled?: boolean;
   compact?: boolean;
+  /**
+   * Tavolo orizzontale (4:3) invece che quadrato, per le pagine dove sopra e
+   * sotto c'è poco. Il quadrato è limitato dall'ALTEZZA dello schermo: su un
+   * portatile scendeva sotto i 500 px, passava al formato compatto e le carte
+   * diventavano minuscole con metà della larghezza vuota ai lati (Trevissoi,
+   * feedback 5, pagina dell'esercizio).
+   */
+  largo?: boolean;
   trumpSuit?: string | null;
 }
 
@@ -163,6 +171,7 @@ export function BridgeTable({
   activePosition,
   disabled = false,
   compact = false,
+  largo = false,
   trumpSuit,
   ancora,
 }: BridgeTableProps) {
@@ -242,7 +251,7 @@ export function BridgeTable({
       ref={tableRef}
       role="group"
       aria-label={`${t("Tavolo da bridge")}${trumpSuit ? `, ${t("atout")} ${suitAriaLabel(trumpSuit)}` : `, ${t("senza atout")}`}${activePosition ? `, ${t("di turno")} ${posLabel(activePosition, "")}` : ""}`}
-      className={`relative w-full max-w-3xl mx-auto no-select ${isCompact ? "min-h-[340px]" : ""}`}
+      className={`relative w-full ${largo && !isCompact ? "max-w-5xl" : "max-w-3xl"} mx-auto no-select ${isCompact ? "min-h-[340px]" : ""}`}
       // IL TAVOLO STA NELLO SCHERMO. Quadrato e largo fino a 48rem, su un
       // portatile con la finestra non a tutta altezza superava lo schermo e
       // bisognava scorrere fra il morto e la propria mano (controllo esterno,
@@ -250,7 +259,7 @@ export function BridgeTable({
       // sopra il tavolo, e non scende sotto i 22rem, dove le carte non si
       // leggerebbero più.
       style={{
-        aspectRatio: isCompact ? "4 / 5" : "1 / 1",
+        aspectRatio: isCompact ? "4 / 5" : largo ? "4 / 3" : "1 / 1",
         touchAction: "manipulation",
         // Il limite vale in ENTRAMBI i formati, con la proporzione di ciascuno:
         // il tavolo decide da sé se essere compatto guardando la propria
@@ -258,7 +267,9 @@ export function BridgeTable({
         // oscillare fra i due (stretto → compatto → senza limite → largo…).
         maxWidth: isCompact
           ? "max(18rem, min(48rem, calc((100svh - 14rem) * 0.8)))"
-          : "max(22rem, min(48rem, calc(100svh - 14rem)))",
+          : largo
+            ? "max(22rem, min(64rem, calc((100svh - 12rem) * 4 / 3)))"
+            : "max(22rem, min(48rem, calc(100svh - 14rem)))",
       }}
     >
       {/* Felt background — uses shop cosmetic if purchased */}
@@ -416,7 +427,7 @@ export function BridgeTable({
         <div className="flex items-center gap-1">
           {isDummy("east") && !eastFaceDown ? (
             <SideDummy cards={east} trumpSuit={trumpSuit} />
-          ) : isCompact && eastFaceDown ? (
+          ) : (isCompact || largo) && eastFaceDown ? (
             <CompactFaceDown count={east.length} gradient={cosmetics.cardBackGradient} />
           ) : (
             <Hand
@@ -441,7 +452,7 @@ export function BridgeTable({
           </span>
           {isDummy("west") && !westFaceDown ? (
             <SideDummy cards={west} trumpSuit={trumpSuit} />
-          ) : isCompact && westFaceDown ? (
+          ) : (isCompact || largo) && westFaceDown ? (
             <CompactFaceDown count={west.length} gradient={cosmetics.cardBackGradient} />
           ) : (
             <Hand

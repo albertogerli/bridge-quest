@@ -32,6 +32,7 @@ import {
   type TempiMano,
 } from "@/lib/tempi";
 import { NotaSmazzata } from "@/components/istruttori/nota-smazzata";
+import { senzaLicita } from "@/lib/gioco-della-carta";
 import { useT } from "@/contexts/traduzioni-provider";
 import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 import { useAlRitorno } from "@/hooks/use-al-ritorno";
@@ -165,11 +166,21 @@ export default function AssignmentResultsPage({
   }
 
   const smazzataIds = assignment.smazzata_ids;
+  /**
+   * Nelle lezioni del gioco della carta (Fiori 1–6) il contratto non è ancora
+   * stato spiegato: la colonna dice l'obiettivo in prese, e i risultati sono
+   * «esito positivo / negativo» invece di «mantenuto / caduto» — anche qui,
+   * perché l'insegnante questa schermata la condivide con gli allievi
+   * (Trevissoi, feedback 5).
+   */
+  const soloGioco = senzaLicita(assignment.lesson_id);
   const colLabel = (id: string) => {
     const s =
       validated.find((sm) => sm.id === id) ??
       assignment.custom_hands?.find((sm) => sm.id === id);
-    return s ? s.contract : id;
+    if (!s) return id;
+    const livello = parseInt(s.contract, 10);
+    return soloGioco && !Number.isNaN(livello) ? t("{n} prese", { n: livello + 6 }) : s.contract;
   };
 
   /**
@@ -284,15 +295,15 @@ export default function AssignmentResultsPage({
       {/* Legend */}
       <div className="mb-4 flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
         <span className="flex items-center gap-1.5">
-          <span className="h-3 w-3 rounded bg-emerald-500" /> {t("Contratto mantenuto")}
+          <span className="h-3 w-3 rounded bg-emerald-500" /> {t("Esito positivo")}
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="h-3 w-3 rounded bg-red-500" /> {t("Caduto")}
+          <span className="h-3 w-3 rounded bg-red-500" /> {t("Esito negativo")}
         </span>
         <span className="flex items-center gap-1.5">
           <span className="h-3 w-3 rounded border border-border bg-muted" /> {t("Non giocata")}
         </span>
-        <span className="text-muted-foreground">▶ Clicca una cella giocata per rivedere la mano</span>
+        <span className="text-muted-foreground">▶ {t("Clicca una cella giocata per rivedere la mano carta per carta")}</span>
       </div>
 
       {members.length === 0 ? (
@@ -343,7 +354,7 @@ export default function AssignmentResultsPage({
               {/* Footer: down count per hand (class difficulty signal) */}
               <tr className="bg-muted/30 text-xs text-muted-foreground">
                 <td className="sticky left-0 z-10 bg-muted/30 px-3 py-2 font-semibold">
-                  {t("Cadute / classe")}
+                  {t("Esiti negativi / classe")}
                 </td>
                 {downPerHand.map((n, i) => (
                   <td key={i} className="px-2 py-2 text-center font-semibold">

@@ -40,7 +40,7 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
             href="/login?mode=signup"
             className="rounded-xl bg-figb px-3.5 py-2 text-sm font-bold text-white shadow-sm transition-colors hover:bg-figb-light"
           >
-            {t("Inizia gratis")}
+            {t("Registrati gratis")}
           </a>
         </div>
       </header>
@@ -104,7 +104,7 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
               href="/login?mode=signup"
               className="flex items-center justify-center w-full h-14 rounded-2xl bg-white text-figb font-semibold text-base hover:bg-white/90 shadow-xl shadow-black/15 active:scale-[0.98] transition-all"
             >
-              {t("Inizia gratis")}
+              {t("Registrati gratis")}
             </a>
             <p className="text-center text-xs text-white/60 -mt-1">{t("Nessuna carta di credito richiesta")}</p>
             <a
@@ -226,7 +226,7 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
               href="/login?mode=signup"
               className="flex items-center justify-center w-full h-12 rounded-2xl bg-gradient-to-r from-figb to-figb-light text-white font-semibold text-sm shadow-lg shadow-figb/20 hover:opacity-90 transition-opacity"
             >
-              {t("Inizia gratis")}
+              {t("Registrati gratis")}
             </a>
             <p className="text-center text-[12px] text-muted-foreground -mt-1">{t("Nessuna carta di credito richiesta")}</p>
             <a

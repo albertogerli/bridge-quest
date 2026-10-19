@@ -322,6 +322,25 @@ export default function AllieviPage({
         )}
       </div>
 
+      {/*
+        GLI ISCRITTI, PER NOME, IN CIMA. La pagina mostrava solo l'elenco per i
+        tavoli (quello del file Excel) e degli iscritti al portale diceva
+        soltanto quanti mancavano: l'insegnante cercava i suoi allievi e non li
+        trovava (Trevissoi, feedback 5).
+      */}
+      {iscritti.length > 0 && (
+        <section className="mb-4 rounded-xl border border-border bg-card p-3" aria-labelledby="iscritti-classe">
+          <h2 id="iscritti-classe" className="mb-2 text-sm font-semibold">
+            {t("Iscritti alla classe ({n})", { n: iscritti.length })}
+          </h2>
+          <ul className="flex flex-wrap gap-1.5">
+            {iscritti.map((nome) => (
+              <li key={nome} className="rounded-full bg-muted px-2.5 py-1 text-sm">{nome}</li>
+            ))}
+          </ul>
+        </section>
+      )}
+
       {(() => {
         const giaDentro = new Set(righe.map((r) => r.nome.trim().toLowerCase()));
         const mancanti = iscritti.filter((n) => !giaDentro.has(n.trim().toLowerCase()));

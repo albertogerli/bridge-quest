@@ -76,6 +76,21 @@ hanno una causa trovata, non supposta. Taglia: **S** = meno di mezza giornata,
 
 ---
 
+## Stato al 19/10/2026
+
+- **Fatti e pubblicati**: D1–D7, U1–U11, F3.
+  - U1: «Registrati gratis» (scelta di Alberto).
+  - U11 senza campi nuovi: luogo e insegnante dalla locandina, periodo dalla
+    classe, giorno e ora nella descrizione della classe.
+  - F3 c'era già (cursore «Quanto del portale è aperto» nelle impostazioni
+    della classe): il pulsante «vai al resto del portale» ora lo rispetta.
+  - D7: il modello ufficiale della lezione 1 è aggiornato anche nel database
+    (`maxOnori: 3`, solo quella riga).
+- **Da eseguire a mano**: `scripts/sql/tavolo-dove-sei-seduto-2026-10.sql` (D2,
+  più tavoli aperti), poi `node scripts/dump-schema.mjs`.
+- **Restano**: F1 (codice numerico per l'aula), F2 (email ai compiti), F4
+  (esercizi con domande).
+
 ## Ordine proposto
 
 1. **Ondata 1** (D1–D7) in un giro solo: sono i difetti che si vedono in aula.

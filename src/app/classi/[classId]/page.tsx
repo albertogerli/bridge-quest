@@ -24,6 +24,7 @@ import { Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCatalog } from "@/store/use-catalog-store";
 import { SondaggioAllievo } from "@/components/sondaggio-allievo";
+import { BenvenutoCorso } from "@/components/classi/benvenuto-corso";
 import { useT } from "@/contexts/traduzioni-provider";
 import { useAlRitorno } from "@/hooks/use-al-ritorno";
 import { statoClasseAllievo, type StatoClasseAllievo } from "@/lib/classe-allievo";
@@ -196,6 +197,8 @@ export default function StudentClassPage({
       <h1 className="mb-6 font-display text-3xl font-bold text-foreground sm:text-4xl">
         {nomeClasse}
       </h1>
+
+      {classRoom && <BenvenutoCorso classe={classRoom} />}
 
       <SondaggioAllievo classId={classId} />
 

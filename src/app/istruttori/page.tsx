@@ -3,14 +3,13 @@
 import { useEffect, useState } from "react";
 import Link from "@/components/link";
 import { motion } from "motion/react";
+import { Check, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardHeader,
   CardTitle,
   CardDescription,
   CardContent,
-  CardFooter,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -29,6 +28,7 @@ import { useSharedAuth } from "@/contexts/auth-provider";
 import { StrumentiLezione } from "@/components/istruttori/strumenti-lezione";
 import { ElencoAllieviTutte } from "@/components/istruttori/elenco-allievi-tutte";
 import { useT } from "@/contexts/traduzioni-provider";
+import { Briciole } from "@/components/briciole";
 import { createClient } from "@/lib/supabase/client";
 import { segnalaSalvoRete } from "@/lib/report-error";
 
@@ -81,6 +81,8 @@ export default function IstruttoriPage() {
   }, [idArchiviate]);
 
   const [dialogOpen, setDialogOpen] = useState(false);
+  /** La classe di cui si è appena copiato il codice: il segno dura due secondi. */
+  const [copiato, setCopiato] = useState<string | null>(null);
   // Dalla home dell'insegnante, «+ Nuova classe» arriva qui con `?nuova=1`.
   useEffect(() => {
     if (new URLSearchParams(window.location.search).get("nuova") === "1") {
@@ -116,6 +118,9 @@ export default function IstruttoriPage() {
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6">
       {/* Header */}
+      {/* Il percorso anche qui, al primo livello: ogni altra pagina del
+          portale lo ha, e qui mancava (Trevissoi, feedback 5). */}
+      <Briciole percorso={[{ etichetta: t("Home"), href: "/" }, { etichetta: t("Le tue classi") }]} />
       <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <div className="flex items-center gap-2">
@@ -159,12 +164,12 @@ export default function IstruttoriPage() {
           <CardContent className="flex flex-col items-center gap-3 py-12 text-center">
             <span className="text-4xl">🎓</span>
             <p className="font-display text-lg font-semibold">{t("Nessuna classe ancora")}</p>
+            {/* Un pulsante solo, quello in alto: due pulsanti diversi per la
+                stessa cosa facevano chiedere quale fosse quello giusto
+                (Trevissoi, feedback 5). */}
             <p className="max-w-sm text-sm text-muted-foreground">
-              {t("Crea la tua prima classe: otterrai un codice invito da condividere con gli allievi.")}
+              {t("Premi «+ Nuova classe» qui sopra: otterrai un codice invito da condividere con gli allievi.")}
             </p>
-            <Button onClick={() => setDialogOpen(true)} className="mt-2">
-              + Crea la prima classe
-            </Button>
           </CardContent>
         </Card>
       )}
@@ -175,7 +180,10 @@ export default function IstruttoriPage() {
           {t("Classi attive")} ({attive.length})
         </h2>
       )}
-      <div className="grid gap-4 sm:grid-cols-2">
+      {/* Schede più basse e tre per riga su schermo largo: con più corsi aperti
+          le classi devono stare in una videata (Trevissoi, feedback 5). Il
+          codice si copia dalla scheda, senza entrare nella classe. */}
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {attive.map((c, i) => (
           <motion.div
             key={c.id}
@@ -183,44 +191,64 @@ export default function IstruttoriPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.04 }}
           >
-            <Link href={`/istruttori/${c.id}`} className="block h-full">
-              <Card className="h-full transition-shadow hover:shadow-lg">
-                <CardHeader>
-                  <div className="flex items-start justify-between gap-2">
-                    <CardTitle className="font-display text-xl">{c.name}</CardTitle>
-                    {c.stato !== "aperta" ? (
-                      <Badge variant="secondary" className="shrink-0">
-                        {ETICHETTE_STATO[c.stato]}
+            <Card className="h-full gap-0 py-0 transition-shadow hover:shadow-lg">
+              <Link href={`/istruttori/${c.id}`} className="block flex-1 px-4 pb-2 pt-3">
+                <div className="flex items-start justify-between gap-2">
+                  <CardTitle className="font-display text-lg">{c.name}</CardTitle>
+                  {c.stato !== "aperta" ? (
+                    <Badge variant="secondary" className="shrink-0">
+                      {ETICHETTE_STATO[c.stato]}
+                    </Badge>
+                  ) : (
+                    !c.invite_active && (
+                      <Badge variant="outline" className="shrink-0">
+                        {t("Iscrizioni chiuse")}
                       </Badge>
-                    ) : (
-                      !c.invite_active && (
-                        <Badge variant="outline" className="shrink-0">
-                          {t("Iscrizioni chiuse")}
-                        </Badge>
-                      )
-                    )}
-                  </div>
-                  {/* Come si riconosce questa classe fra le altre: ASD,
-                      livello, periodo. Con quattordici corsi aperti insieme il
-                      solo nome non basta — due «Corso Fiori» sono la stessa
-                      riga scritta due volte. */}
-                  {dettagliClasse(c, { mostraAsd }).length > 0 && (
-                    <p className="text-sm text-muted-foreground">
-                      {dettagliClasse(c, { mostraAsd }).join(" · ")}
-                    </p>
+                    )
                   )}
-                  {c.description && (
-                    <CardDescription className="line-clamp-2">{c.description}</CardDescription>
-                  )}
-                </CardHeader>
-                <CardFooter className="flex items-center justify-between">
-                  <span className="text-xs text-muted-foreground">{t("Codice invito")}</span>
+                </div>
+                {/* Come si riconosce questa classe fra le altre: ASD,
+                    livello, periodo. Con quattordici corsi aperti insieme il
+                    solo nome non basta — due «Corso Fiori» sono la stessa
+                    riga scritta due volte. */}
+                {dettagliClasse(c, { mostraAsd }).length > 0 && (
+                  <p className="text-sm text-muted-foreground">
+                    {dettagliClasse(c, { mostraAsd }).join(" · ")}
+                  </p>
+                )}
+                {c.description && (
+                  <CardDescription className="line-clamp-1">{c.description}</CardDescription>
+                )}
+              </Link>
+              <div className="flex items-center justify-between gap-2 border-t border-border px-4 py-2">
+                <span className="text-xs text-muted-foreground">{t("Codice invito")}</span>
+                <span className="flex items-center gap-1.5">
                   <span className="rounded-md bg-muted px-2 py-1 font-mono text-sm font-semibold tracking-widest">
                     {c.invite_code}
                   </span>
-                </CardFooter>
-              </Card>
-            </Link>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 px-2"
+                    aria-label={t("Copia il codice di {classe}", { classe: c.name })}
+                    onClick={() => {
+                      void navigator.clipboard?.writeText(c.invite_code).then(() => {
+                        setCopiato(c.id);
+                        setTimeout(() => setCopiato((x) => (x === c.id ? null : x)), 2000);
+                      });
+                    }}
+                  >
+                    {copiato === c.id ? (
+                      <Check className="h-4 w-4 text-emerald-600" aria-hidden="true" />
+                    ) : (
+                      <Copy className="h-4 w-4" aria-hidden="true" />
+                    )}
+                    <span className="text-xs">{copiato === c.id ? t("Copiato") : t("Copia")}</span>
+                  </Button>
+                </span>
+              </div>
+            </Card>
           </motion.div>
         ))}
       </div>

@@ -11,6 +11,7 @@ import {
 } from "@/lib/instructors";
 import { corsiAttivi, daFareAdesso, percorsoDelCorso } from "@/lib/percorso-allievo";
 import { reportError } from "@/lib/report-error";
+import { BenvenutoCorso } from "@/components/classi/benvenuto-corso";
 import { useT } from "@/contexts/traduzioni-provider";
 
 /**
@@ -97,7 +98,12 @@ export function HomeAllievo({ onVaiAllaBacheca }: { onVaiAllaBacheca: () => void
     // quale corso sia, e mostrare tutti i corsi sarebbe rumore.
     const corso = courses.find((c) => c.lessons.some((l) => assegnate.has(l.id)));
     if (!corso) return [];
+    // Solo le lezioni già aperte dall'insegnante. L'elenco intero, con «la
+    // aprirà il tuo insegnante» su tutte le successive, faceva vedere
+    // all'allievo quanto mancava invece di quello che ha fatto — e il
+    // percorso lo decide l'insegnante, può cambiare (Trevissoi, feedback 5).
     return percorsoDelCorso(corso.lessons.map((l) => l.id), assegnate, completate)
+      .filter((r) => r.stato !== "in-attesa")
       .map((r) => ({ ...r, titolo: corso.lessons.find((l) => l.id === r.lessonId)?.title ?? "" }));
   }
 
@@ -108,6 +114,11 @@ export function HomeAllievo({ onVaiAllaBacheca }: { onVaiAllaBacheca: () => void
       </h1>
       {!piuCorsi && attivi[0]?.asd_code && (
         <p className="mt-1 text-sm text-muted-foreground">{attivi[0].asd_code}</p>
+      )}
+      {!piuCorsi && attivi[0] && (
+        <div className="mt-4">
+          <BenvenutoCorso classe={attivi[0]} />
+        </div>
       )}
 
       {/* ── Da fare adesso ───────────────────────────────────────────────── */}
@@ -130,9 +141,20 @@ export function HomeAllievo({ onVaiAllaBacheca }: { onVaiAllaBacheca: () => void
             <p className="mt-0.5 text-sm text-muted-foreground">
               {assignment.smazzata_ids.length} {t("mani")}
             </p>
-            <Link href={`/classi/${classe.id}/compito/${assignment.id}`}>
-              <Button size="sm" className="mt-3">{t("Riprendi")}</Button>
-            </Link>
+            {/* «Riprendi» solo a chi ha cominciato: era scritto anche su un
+                compito mai aperto (Trevissoi, feedback 5). */}
+            {(() => {
+              const giocate = assignment.smazzata_ids.filter((id) => fatti.get(assignment.id)?.has(id)).length;
+              return (
+                <Link href={`/classi/${classe.id}/compito/${assignment.id}`}>
+                  <Button size="sm" className="mt-3">
+                    {giocate === 0
+                      ? t("Inizia")
+                      : t("Riprendi · {n} di {m}", { n: giocate, m: assignment.smazzata_ids.length })}
+                  </Button>
+                </Link>
+              );
+            })()}
           </div>
         ))
       )}
@@ -144,7 +166,7 @@ export function HomeAllievo({ onVaiAllaBacheca }: { onVaiAllaBacheca: () => void
         return (
           <section key={classe.id}>
             <h2 className="mt-7 mb-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
-              {piuCorsi ? classe.name : t("Il tuo percorso")}
+              {piuCorsi ? classe.name : t("Le tue lezioni")}
             </h2>
             <div className="divide-y divide-border rounded-xl bg-card px-4 shadow-sm">
               {righe.map((r) => (
@@ -212,14 +234,21 @@ export function HomeAllievo({ onVaiAllaBacheca }: { onVaiAllaBacheca: () => void
         </p>
       )}
 
-      {/* Il portale resta raggiungibile: le funzioni non proposte non sono
-          vietate, e chi le cerca deve poterle trovare. */}
-      <button
-        onClick={onVaiAllaBacheca}
-        className="mt-8 min-h-11 text-sm text-muted-foreground underline underline-offset-4"
-      >
-        {t("Vai al resto del portale")}
-      </button>
+      {/*
+        IL RESTO DEL PORTALE LO APRE L'INSEGNANTE. Il cursore «Quanto del
+        portale è aperto» c'era già nelle impostazioni della classe, ma questo
+        pulsante lo ignorava: compariva dal primo giorno, e l'allievo usciva
+        dal percorso del corso prima del tempo (Trevissoi, feedback 5: «deve
+        essere attivabile dall'insegnante, verso il termine del corso»).
+      */}
+      {attivi.some((c) => c.accesso_libero !== "solo-il-corso") && (
+        <button
+          onClick={onVaiAllaBacheca}
+          className="mt-8 min-h-11 text-sm text-muted-foreground underline underline-offset-4"
+        >
+          {t("Vai al resto del portale")}
+        </button>
+      )}
     </div>
   );
 }
