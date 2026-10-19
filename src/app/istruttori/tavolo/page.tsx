@@ -51,6 +51,7 @@ import { PulsanteSegnalazione } from "@/components/pulsante-segnalazione";
 import { SondaggioAula } from "@/components/istruttori/sondaggio-aula";
 import { useT } from "@/contexts/traduzioni-provider";
 import { Briciole } from "@/components/briciole";
+import { TavoliAula } from "@/components/istruttori/tavoli-aula";
 
 const SEATS: { key: Position; label: string }[] = [
   { key: "north", label: "Nord" },
@@ -499,6 +500,17 @@ function Tavolo() {
           { etichetta: "Tavolo condiviso" },
         ]}
       />
+      {daAula && classId && (
+        <TavoliAula
+          classId={classId}
+          attuale={tableId}
+          onScegli={(id) => {
+            setTableId(id);
+            // L'indirizzo segue il tavolo: ricaricando si resta su questo.
+            window.history.replaceState(null, "", `?classe=${classId}&tavolo=${id}&da=aula`);
+          }}
+        />
+      )}
       <header className="mb-5">
         <h1 className="text-2xl font-bold font-display flex items-center gap-2">
           <Users className="w-6 h-6 text-figb" aria-hidden="true" />
@@ -755,6 +767,11 @@ function Tavolo() {
 
       {divisioniVisibili && stato && (
         <div className="mx-auto mt-4 max-w-2xl">
+          {/* Cosa mostra, detto in una riga: il pannello senza spiegazione
+              non si capiva (Trevissoi, feedback 5). */}
+          <p className="mb-2 text-sm text-muted-foreground">
+            {t("Come possono essere divise fra i due avversari le carte di ogni seme che non si vedono, con la probabilità di ciascuna divisione.")}
+          </p>
           <PannelloDivisioni
             noti={stato.hands}
             giocate={stato.played}
@@ -774,6 +791,9 @@ function Tavolo() {
       */}
       {tableId && stato && (
         <div className="mt-4 flex flex-wrap items-center justify-center gap-2 rounded-xl border border-border bg-card p-3">
+          <p className="w-full text-center text-xs text-muted-foreground">
+            {t("Per rigiocare la stessa mano con un altro contratto o un altro dichiarante: «riproviamola a 4 cuori».")}
+          </p>
           <span className="text-sm font-medium text-muted-foreground">{t("Si gioca")}</span>
           <select
             aria-label={t("Contratto")}

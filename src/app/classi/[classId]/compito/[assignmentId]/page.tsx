@@ -281,14 +281,18 @@ export default function CompitoPage({
                     Mano {i + 1}: {hand.title}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    Contratto {contrattoLeggibile(hand.contract)} ·{" "}
+                    {senzaLicita(hand.lesson)
+                      ? t("Obiettivo {n} prese", { n: parseContract(hand.contract).tricksNeeded })
+                      : t("Contratto {c}", { c: contrattoLeggibile(hand.contract) })} ·{" "}
                     {hand.lesson > 0
                       ? `Lezione ${getLessonDisplayNumber(hand.lesson)}`
                       : "Mano dell'insegnante"}
                   </p>
                   {isDown && (
                     <p className="mt-0.5 text-xs font-bold text-red-600">
-                      Caduto{r ? ` di ${Math.abs(r.result)}` : ""} — rigioca questa mano
+                      {senzaLicita(hand.lesson)
+                        ? t("Obiettivo mancato — rigioca questa mano")
+                        : <>Caduto{r ? ` di ${Math.abs(r.result)}` : ""} — rigioca questa mano</>}
                     </p>
                   )}
                   {isMade && (
@@ -431,6 +435,12 @@ interface CompitoHandGameProps {
 function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, minibridge }: CompitoHandGameProps) {
   const t = useT();
   const { tricksNeeded } = parseContract(smazzata.contract);
+  /**
+   * Lezioni del gioco della carta (Fiori 1–6): il contratto non è ancora stato
+   * spiegato. Si dice solo l'obiettivo in prese, e l'esito è «obiettivo
+   * raggiunto / mancato» (Trevissoi, feedback 5).
+   */
+  const soloGioco = senzaLicita(smazzata.lesson);
   const declarer = smazzata.declarer;
   const dummyGamePos = toGamePosition("north", declarer);
   const saved = useRef(false);
@@ -591,18 +601,22 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
         {/* Contract bar */}
         <div className="mb-4 flex items-center justify-center">
           <div className="flex items-center gap-5 rounded-xl border border-border bg-card px-4 py-2 text-sm">
-            <div className="text-center">
-              <p className="text-[12px] font-bold uppercase tracking-wider text-muted-foreground">{t("Contratto")}</p>
-              <p className="text-lg font-bold text-primary">{contrattoLeggibile(smazzata.contract)}</p>
-            </div>
-            <div className="h-8 w-px bg-border" />
+            {!soloGioco && (
+              <>
+                <div className="text-center">
+                  <p className="text-[12px] font-bold uppercase tracking-wider text-muted-foreground">{t("Contratto")}</p>
+                  <p className="text-lg font-bold text-primary">{contrattoLeggibile(smazzata.contract)}</p>
+                </div>
+                <div className="h-8 w-px bg-border" />
+              </>
+            )}
             <div className="text-center">
               <p className="text-[12px] font-bold uppercase tracking-wider text-muted-foreground">{t("Obiettivo")}</p>
               <p className="text-lg font-bold">{tricksNeeded} prese</p>
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[12px] font-bold uppercase tracking-wider text-muted-foreground">{t("Dich. / Dif.")}</p>
+              <p className="text-[12px] font-bold uppercase tracking-wider text-muted-foreground">{soloGioco ? t("Prese: tue / avversari") : t("Dich. / Dif.")}</p>
               <p className="text-lg font-bold">
                 {partnershipOf(declarer) === "ew"
                   ? `${game.gameState?.trickCount.ew ?? 0} / ${game.gameState?.trickCount.ns ?? 0}`
@@ -614,7 +628,7 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
 
         {/* Bridge table + bidding */}
         <div className="flex flex-col items-start justify-center gap-4 lg:flex-row">
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.15 }} className="relative w-full max-w-3xl flex-1 lg:w-auto">
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.15 }} className="relative w-full max-w-5xl flex-1 lg:w-auto">
             {hands ? (
               <BridgeTable ancora={declarer}
                 north={hands.north}
@@ -635,6 +649,7 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
                 activePosition={activeDisplayPos}
                 disabled={!game.isPlayerTurn}
                 compact={isMobile}
+                largo
                 trumpSuit={game.gameState?.trumpSuit}
               />
             ) : (
@@ -653,6 +668,7 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
                 trickCount={{ ns: 0, ew: 0 }}
                 disabled={true}
                 compact={isMobile}
+                largo
                 trumpSuit={parseContract(smazzata.contract).trumpSuit}
               />
             )}
@@ -696,7 +712,11 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
                     : "text-muted-foreground"
               }`}
             >
-              {game.message}
+              {soloGioco && game.phase === "finished" && game.result
+                ? game.result.result >= 0
+                  ? t("Obiettivo raggiunto! {n} prese.", { n: game.result.tricksMade })
+                  : t("Obiettivo mancato: {n} prese su {m}.", { n: game.result.tricksMade, m: game.result.tricksNeeded })
+                : game.message}
             </motion.p>
           </AnimatePresence>
         </div>
@@ -746,11 +766,15 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
               >
                 <div className="mb-3 text-4xl">{game.result.result >= 0 ? "🎉" : "😔"}</div>
                 <h3 className={`text-xl font-bold ${game.result.result >= 0 ? "text-emerald-700 dark:text-emerald-400" : "text-red-600 dark:text-red-400"}`}>
-                  {game.result.result >= 0
-                    ? game.result.result === 0
-                      ? "Contratto mantenuto!"
-                      : `Contratto +${game.result.result}!`
-                    : `Caduto di ${Math.abs(game.result.result)}`}
+                  {soloGioco
+                    ? game.result.result >= 0
+                      ? t("Obiettivo raggiunto!")
+                      : t("Obiettivo mancato")
+                    : game.result.result >= 0
+                      ? game.result.result === 0
+                        ? "Contratto mantenuto!"
+                        : `Contratto +${game.result.result}!`
+                      : `Caduto di ${Math.abs(game.result.result)}`}
                 </h3>
                 <p className="mt-2 text-sm text-muted-foreground">
                   Prese: {game.result.tricksMade} / {game.result.tricksNeeded}
