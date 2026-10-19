@@ -88,6 +88,19 @@ export function useAuth() {
         // Sentry racconterebbe la qualità delle reti degli allievi invece
         // dei difetti del sito. Il profilo torna `null`, che è già il caso
         // previsto — si ricarica al giro dopo.
+        //
+        // «Permission denied» (42501) vuol dire che la chiamata è partita come
+        // ANONIMO: la funzione è concessa solo ad `authenticated`. Succede se
+        // la sessione si chiude — logout, scadenza per inattività, rinnovo
+        // fallito — mentre la richiesta è in volo (Sentry, 19/10/2026). Senza
+        // sessione non è un difetto; con la sessione ancora lì sì, e si segnala.
+        if (error.code === "42501") {
+          const { data: sessione } = await supabase.auth.getSession();
+          if (!sessione.session) {
+            console.warn("[use-auth:get_own_profile] sessione chiusa durante la richiesta del profilo");
+            return null;
+          }
+        }
         segnalaSalvoRete("use-auth:get_own_profile", error);
         return null;
       }
