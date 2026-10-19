@@ -2685,5 +2685,15 @@
   "Tavoli dell'aula": "Classroom tables",
   "Tavolo {n}": "Table {n}",
   "Ti diamo il benvenuto: {corso}": "Welcome to {corso}",
-  "{s}/4 seduti · {c} carte": "{s}/4 seated · {c} cards"
+  "{s}/4 seduti · {c} carte": "{s}/4 seated · {c} cards",
+  "Gli allievi ricevono un'email con il compito entro la sera, e un promemoria due giorni prima della scadenza.": "Students get an email with the assignment by the evening, and a reminder two days before it's due.",
+  "Senza QR: su {sito} si scrive il codice": "No QR? Go to {sito} and type the code",
+  "Codice dell'aula {codice}": "Classroom code {codice}",
+  "Codice dell'aula": "Classroom code",
+  "Entra in aula": "Join the classroom",
+  "Scrivi il codice di sei cifre che ti ha dato l'insegnante.": "Type the six-digit code your teacher gave you.",
+  "Il codice ha sei cifre.": "The code has six digits.",
+  "Troppi tentativi: aspetta un minuto.": "Too many attempts: wait a minute.",
+  "Nessuna aula aperta con questo codice. Controlla le cifre, o chiedi all'insegnante.": "No open classroom with this code. Check the digits, or ask your teacher.",
+  "Non riesco a controllare il codice adesso.": "I can't check the code right now."
 }

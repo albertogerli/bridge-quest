@@ -186,9 +186,12 @@ export default function NuovoCompitoPage({
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-8 pb-44 sm:px-6 lg:pb-28">
       <BricioleClasse classId={classId} pagina={"Compito su misura"} />
-      <h1 className="mb-6 font-display text-3xl font-bold text-foreground sm:text-4xl">
+      <h1 className="mb-2 font-display text-3xl font-bold text-foreground sm:text-4xl">
         {t("Compito su misura")}
       </h1>
+      <p className="mb-6 text-sm text-muted-foreground">
+        {t("Gli allievi ricevono un'email con il compito entro la sera, e un promemoria due giorni prima della scadenza.")}
+      </p>
 
       {/* Assignment meta */}
       <div className="mb-6 grid gap-4 sm:grid-cols-2">
