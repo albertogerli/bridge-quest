@@ -126,6 +126,12 @@ export default function ProiezionePage() {
         <h1 className="mb-6 text-center text-3xl font-bold tracking-tight">{stato.titolo}</h1>
       )}
 
+      {presenti.length === 0 && (
+        <p className="mt-24 text-center text-2xl text-white/60" role="status">
+          {t("Il tavolo non ha ancora carte: l'insegnante sta preparando la mano.")}
+        </p>
+      )}
+
       <div className={`mx-auto grid grid-cols-3 ${condivisa ? "max-w-5xl gap-10" : "max-w-6xl gap-6"}`}>
         <div />
         <ManoProiettata posizione="north" carte={stato.mani.north} presente={presenti.includes("north")} condivisa={condivisa} />

@@ -133,15 +133,18 @@ export function materialiLezioneWhatsApp(opzioni: {
   assignmentId?: string | null;
   /** Per aprire le dispense sul corso giusto. */
   corsoId?: string | null;
+  /** La lezione: con la classe, la dispensa si apre già rilasciata. */
+  lessonId?: number | string | null;
   linkVideo?: string | null;
 }): string {
-  const { titoloLezione, classId, assignmentId, corsoId, linkVideo } = opzioni;
+  const { titoloLezione, classId, assignmentId, corsoId, lessonId, linkVideo } = opzioni;
   const righe = [`${titoloLezione}`, ``];
 
   if (linkVideo) righe.push(`La videolezione: ${linkVideo}`);
 
   const corso = corsoId ? `&corso=${corsoId}` : "";
-  righe.push(`La dispensa: ${SITO}/dispense?classe=${classId}${corso}`);
+  const lezione = lessonId != null ? `&lezione=${lessonId}` : "";
+  righe.push(`La dispensa: ${SITO}/dispense?classe=${classId}${corso}${lezione}`);
 
   if (assignmentId) {
     righe.push(`Gli esercizi: ${SITO}/classi/${classId}/compito/${assignmentId}`);

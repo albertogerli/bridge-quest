@@ -9,6 +9,7 @@ import { useSharedAuth } from "@/contexts/auth-provider";
 import { reportError } from "@/lib/report-error";
 import type { Card, Position, Suit } from "@/lib/bridge-engine";
 import { DEAL_TEMPLATES, generateDeals, handHcp } from "@/lib/deal-generator";
+import { elencaModelli, type ModelloMani } from "@/lib/modelli-mani";
 import { getAssignment } from "@/lib/instructors";
 import type { Smazzata } from "@/lib/catalog";
 import { getAllSmazzate } from "@/lib/catalog";
@@ -99,7 +100,22 @@ function Dispensa() {
 
   const [daCompito, setDaCompito] = useState<Foglio[] | null>(null);
   const [titoloCompito, setTitoloCompito] = useState<string>("");
-  const [modelloId, setModelloId] = useState(DEAL_TEMPLATES[0].id);
+  /**
+   * L'argomento scelto: `null` finché l'insegnante non ne tocca uno, e allora
+   * vale il primo modello ufficiale del Corso Fiori.
+   *
+   * Prima c'erano solo i sette temi di LICITA, con «Apertura di 1NT» come
+   * partenza: un insegnante del modulo sul gioco della carta stampava mani di
+   * apertura e le trovava «fuori tema» (Trevissoi, feedback 5). Le lezioni
+   * del Corso Fiori ora vengono prima; i temi di licita restano in fondo.
+   */
+  const [sceltaArgomento, setSceltaArgomento] = useState<string | null>(null);
+  const [modelli, setModelli] = useState<ModelloMani[]>([]);
+  useEffect(() => {
+    void elencaModelli().then(setModelli);
+  }, []);
+  const ufficiali = modelli.filter((m) => m.ufficiale);
+  const modelloId = sceltaArgomento ?? (ufficiali[0] ? ufficiali[0].id : `fisso:${DEAL_TEMPLATES[0].id}`);
   const [seed, setSeed] = useState(2026);
   const [quante, setQuante] = useState(8);
   const [note, setNote] = useState<Map<string, string>>(new Map());
@@ -160,12 +176,20 @@ function Dispensa() {
     };
   }, [compitoId]);
 
-  const modello = DEAL_TEMPLATES.find((t) => t.id === modelloId) ?? DEAL_TEMPLATES[0];
+  const salvato = modelli.find((m) => m.id === modelloId);
+  const fisso = DEAL_TEMPLATES.find((d) => `fisso:${d.id}` === modelloId) ?? DEAL_TEMPLATES[0];
+  const modello = salvato
+    ? { label: salvato.nome, description: salvato.descrizione ?? "", constraints: salvato.vincoli }
+    : { label: fisso.label, description: fisso.description, constraints: fisso.constraints };
 
+  // I vincoli sono l'oggetto del modello (stabile fra un render e l'altro):
+  // dipendere da `modello`, che si ricrea a ogni render, rigenererebbe le mani
+  // a ogni tasto premuto.
+  const vincoli = modello.constraints;
   const generate = useMemo<Foglio[]>(() => {
-    const { deals } = generateDeals(modello.constraints, { count: quante, seed });
+    const { deals } = generateDeals(vincoli, { count: quante, seed });
     return deals.map((d, i) => ({ hands: d, titolo: `Mano ${i + 1}` }));
-  }, [modello, seed, quante]);
+  }, [vincoli, seed, quante]);
 
   const fogli = daCompito && daCompito.length > 0 ? daCompito : generate;
   const titolo = titoloCompito || modello.label;
@@ -207,12 +231,30 @@ function Dispensa() {
                 <select
                   id="argomento"
                   value={modelloId}
-                  onChange={(e) => setModelloId(e.target.value)}
+                  onChange={(e) => setSceltaArgomento(e.target.value)}
                   className="h-11 px-3 rounded-xl border border-border bg-card text-sm"
                 >
-                  {DEAL_TEMPLATES.map((t) => (
-                    <option key={t.id} value={t.id}>{t.label}</option>
-                  ))}
+                  {ufficiali.length > 0 && (
+                    <optgroup label={t("Corso Fiori — le lezioni")}>
+                      {ufficiali.map((m) => (
+                        <option key={m.id} value={m.id}>
+                          {m.lesson_id !== null ? t("Lezione {n} — {nome}", { n: m.lesson_id, nome: m.nome }) : m.nome}
+                        </option>
+                      ))}
+                    </optgroup>
+                  )}
+                  {modelli.some((m) => !m.ufficiale) && (
+                    <optgroup label={t("I tuoi modelli e quelli condivisi")}>
+                      {modelli.filter((m) => !m.ufficiale).map((m) => (
+                        <option key={m.id} value={m.id}>{m.nome}</option>
+                      ))}
+                    </optgroup>
+                  )}
+                  <optgroup label={t("Licita")}>
+                    {DEAL_TEMPLATES.map((d) => (
+                      <option key={d.id} value={`fisso:${d.id}`}>{d.label}</option>
+                    ))}
+                  </optgroup>
                 </select>
               </div>
               <div>

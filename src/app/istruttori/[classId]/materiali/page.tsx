@@ -448,7 +448,7 @@ function ModuloMateriale({
       return video ? { titolo: t("La videolezione"), url: video } : { titolo: "", url: "" };
     }
     if (tp === "dispensa") {
-      return { titolo: t("La dispensa"), url: `/dispense?classe=${classId}&corso=${l.corsoId}` };
+      return { titolo: t("La dispensa"), url: `/dispense?classe=${classId}&corso=${l.corsoId}&lezione=${l.lessonId}` };
     }
     return { titolo: t("L'esercizio"), url: `/classi/${classId}/compito/${l.assignmentId}` };
   }

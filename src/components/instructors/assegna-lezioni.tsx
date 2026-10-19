@@ -363,6 +363,7 @@ export function AssegnaLezioni({ classId, onCambiato }: { classId: string; onCam
                                 classId,
                                 assignmentId: compito.assignment_id,
                                 corsoId: corso.id,
+                                lessonId: lezione.id,
                                 // La videolezione registrata del canale, se la
                                 // lezione ce l'ha: il messaggio la prevedeva
                                 // ma nessuno gliela passava, e la riga

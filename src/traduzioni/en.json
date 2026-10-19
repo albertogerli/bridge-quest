@@ -2643,5 +2643,19 @@
   "Gioca {carta}: è quella che rende di più su tutte le distribuzioni possibili delle carte che non vedi.": "Play {carta}: it takes the most tricks across all the possible layouts of the cards you can't see.",
   "Il colore giusto è {colore}.": "The right suit is {colore}.",
   "Osserva la presa: chi sta vincendo? Vale la pena impegnare una carta alta?": "Look at the trick: who's winning it? Is it worth playing a high card?",
-  "Prima di giocare: conta le prese sicure e chiediti dove puoi svilupparne altre.": "Before you play: count your sure tricks and ask where you can develop more."
+  "Prima di giocare: conta le prese sicure e chiediti dove puoi svilupparne altre.": "Before you play: count your sure tricks and ask where you can develop more.",
+  "Attacco: {posto}": "Opening lead: {posto}",
+  "Col gioco migliore {contratto} fa {n} prese": "With best play, {contratto} makes {n} tricks",
+  "Corso Fiori — le lezioni": "Clubs Course — the lessons",
+  "I tuoi modelli e quelli condivisi": "Your templates and shared ones",
+  "Il contratto lo dirà l'insegnante.": "Your teacher will announce the contract.",
+  "Il tavolo non ha ancora carte: l'insegnante sta preparando la mano.": "The table has no cards yet: the teacher is preparing the deal.",
+  "Il tuo insegnante non ha ancora rilasciato dispense di questo corso.": "Your teacher hasn't released any handouts for this course yet.",
+  "Lezione {n} — {nome}": "Lesson {n} — {nome}",
+  "Torna al tuo corso": "Back to your course",
+  "{n} dispense disponibili": "{n} handouts available",
+  "{n} dispense rilasciate dal tuo insegnante": "{n} handouts released by your teacher",
+  "{posto} vince con {carta}": "{posto} wins with {carta}",
+  "{posto} vince la presa": "{posto} wins the trick",
+  "O": "W"
 }

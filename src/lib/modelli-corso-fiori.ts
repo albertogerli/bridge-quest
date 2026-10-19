@@ -55,7 +55,9 @@ export const MODELLI_CORSO_FIORI: ModelloLezione[] = [
     // che va costruita: serve un colore di cinque carte con dentro degli onori
     // ma non tutti, o non ci sarebbe niente da affrancare.
     vincoli: {
-      south: { hcp: { min: 12, max: 17 }, spade: { min: 5 }, qualita: [{ suit: "spade", minOnori: 2 }] },
+      // Al massimo tre onori su cinque (A K Q J 10): con quattro il colore è
+      // quasi tutto vincente e non resta niente da affrancare.
+      south: { hcp: { min: 12, max: 17 }, spade: { min: 5 }, qualita: [{ suit: "spade", minOnori: 2, maxOnori: 3 }] },
       north: { spade: { min: 2, max: 3 } },
       nsHcp: { min: 22, max: 27 },
     },

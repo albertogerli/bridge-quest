@@ -117,7 +117,9 @@ export function costruisciStato(params: {
   return {
     titolo: params.titolo ?? null,
     mani,
-    posizioni: Object.keys(params.mani) as Position[],
+    // Solo i posti che hanno carte: un tavolo vuoto non deve disegnare
+    // quattro riquadri «coperta» che sembrano mani nascoste.
+    posizioni: (Object.keys(params.mani) as Position[]).filter((p) => (params.mani[p]?.length ?? 0) > 0),
     dichiarazione: imp.mostraDichiarazione ? (params.dichiarazione ?? null) : null,
     giocate: imp.mostraGiocate ? (params.giocate ?? []) : [],
     // Il contratto segue la dichiarazione: mostrarlo mentre la si nasconde

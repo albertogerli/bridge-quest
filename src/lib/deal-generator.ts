@@ -87,8 +87,13 @@ export interface SeatConstraint {
    * Qualità del colore: quanti onori (A K Q J 10) deve contenere.
    * Un colore lungo e scarno non si dichiara come uno lungo e solido, e un
    * esercizio che non distingue insegna a dichiarare male.
+   *
+   * `maxOnori` serve al gioco della carta: un colore con TUTTI gli onori non
+   * ha niente da affrancare, e in una lezione su vincenti e affrancabili è
+   * una mano che non insegna niente (Trevissoi, feedback 5: «le mani non
+   * appartengono al tema»).
    */
-  qualita?: { suit: Suit; minOnori: number }[];
+  qualita?: { suit: Suit; minOnori: number; maxOnori?: number }[];
 
   /**
    * Carte obbligate, es. l'asso di picche in mano a Sud. Servono agli esempi
@@ -232,6 +237,7 @@ export function satisfiesSeat(hand: readonly Card[], constraint: SeatConstraint 
       (c) => c.suit === q.suit && ["A", "K", "Q", "J", "10"].includes(c.rank)
     ).length;
     if (onori < q.minOnori) return false;
+    if (q.maxOnori !== undefined && onori > q.maxOnori) return false;
   }
 
   for (const c of constraint.carteObbligate ?? []) {

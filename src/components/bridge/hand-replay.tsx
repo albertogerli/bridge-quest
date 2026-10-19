@@ -12,7 +12,7 @@ import type {
   Card,
 } from "@/lib/bridge-engine";
 import {
-  cardToString, partnershipOf, suitSymbol, sortHand, toDisplayPosition,
+  cardToString, partnershipOf, suitSymbol, sortHand, toDisplayPosition, toGamePosition,
 } from "@/lib/bridge-engine";
 import { cardAriaLabel, handAriaLabel, suitAriaLabel } from "@/lib/card-labels";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
@@ -41,6 +41,8 @@ const POSITION_LABELS: Record<Position, string> = {
  * replay nella stessa pagina non può chiamare «Sud» quello che il tavolo
  * chiama «Est» — né far leggere un commento del maestro sulla mano sbagliata.
  */
+const INIZIALI: Record<Position, string> = { north: "N", south: "S", east: "E", west: "O" };
+
 function nomeVero(pos: Position): string {
   return POSITION_LABELS[pos];
 }
@@ -137,27 +139,33 @@ function MiniHand({
   playedCard?: Card;
   dimmed?: boolean;
 }) {
+  // Una riga per seme, come in ogni diagramma: prima le carte andavano a capo
+  // dove finiva lo spazio, e ♥ e ♦ si mescolavano sulla stessa riga.
+  const semi: Suit[] = ["spade", "heart", "diamond", "club"];
   return (
     <div
-      className={`flex flex-wrap gap-0.5 ${dimmed ? "opacity-40" : ""}`}
+      className={`space-y-0.5 ${dimmed ? "opacity-40" : ""}`}
       role="img"
       aria-label={handAriaLabel(cards)}
     >
-      {cards.map((c, i) => {
-        const isPlayed =
-          playedCard &&
-          c.rank === playedCard.rank &&
-          c.suit === playedCard.suit;
+      {semi.map((seme) => {
+        const delSeme = cards.filter((c) => c.suit === seme);
         return (
-          <span
-            key={`${c.rank}-${c.suit}-${i}`}
-            aria-hidden="true"
-            className={`text-xs font-bold leading-none
-              ${isPlayed ? "underline decoration-2 decoration-amber-400" : ""}
-              ${SUIT_COLORS[c.suit]}`}
-          >
-            {suitSymbol(c.suit)}{c.rank}
-          </span>
+          <div key={seme} aria-hidden="true" className={`flex gap-1 text-xs font-bold leading-tight ${SUIT_COLORS[seme]}`}>
+            <span className="w-3 shrink-0">{suitSymbol(seme)}</span>
+            {delSeme.length === 0 ? (
+              <span className="text-muted-foreground">—</span>
+            ) : (
+              delSeme.map((c) => {
+                const isPlayed = playedCard && c.rank === playedCard.rank && c.suit === playedCard.suit;
+                return (
+                  <span key={c.rank} className={isPlayed ? "underline decoration-2 decoration-amber-400" : ""}>
+                    {c.rank}
+                  </span>
+                );
+              })
+            )}
+          </div>
         );
       })}
     </div>
@@ -200,51 +208,53 @@ function TrickTable({
     );
   }
 
+  /**
+   * La lettera accanto a ogni casella è quella del posto VERO che ci siede.
+   * Il tavolo può essere ruotato (chi gioca in basso), e fino al 19/10/2026 le
+   * lettere erano fisse: col dichiarante a Nord l'Asso di Nord compariva
+   * accanto alla «S» — segnalato da un insegnante, che leggeva la presa al
+   * contrario rispetto alle mani elencate sotto.
+   */
+  function etichetta(slot: Position) {
+    const vero = toGamePosition(slot, declarer);
+    return (
+      <span className="text-[12px] font-bold text-muted-foreground uppercase">
+        <span aria-hidden="true">{t(INIZIALI[vero])}</span>
+        <span className="sr-only">{t(POSITION_LABELS[vero])}</span>
+      </span>
+    );
+  }
+
   return (
     <div className="grid grid-cols-3 grid-rows-3 gap-1 w-48 mx-auto">
-      {/* Row 1: North */}
       <div />
       <div className="flex flex-col items-center gap-0.5">
-        <span className="text-[12px] font-bold text-muted-foreground uppercase">
-          <span aria-hidden="true">N</span>
-          <span className="sr-only">{t("Nord")}</span>
-        </span>
+        {etichetta("north")}
         {renderCell("north")}
       </div>
       <div />
 
-      {/* Row 2: West - center - East */}
       <div className="flex flex-col items-center gap-0.5 justify-center">
-        <span className="text-[12px] font-bold text-muted-foreground uppercase">
-          <span aria-hidden="true">O</span>
-          <span className="sr-only">{t("Ovest")}</span>
-        </span>
+        {etichetta("west")}
         {renderCell("west")}
       </div>
       <div className="flex items-center justify-center">
         <span
           className="text-[12px] font-bold text-muted-foreground"
           role="img"
-          aria-label={trumpSuit ? `Atout: ${suitAriaLabel(trumpSuit)}` : "Senza atout"}
+          aria-label={trumpSuit ? `${t("Atout")}: ${suitAriaLabel(trumpSuit)}` : t("Senza atout")}
         >
-          <span aria-hidden="true">{trumpSuit ? suitSymbol(trumpSuit) : "SA"}</span>
+          <span aria-hidden="true">{trumpSuit ? suitSymbol(trumpSuit) : t("SA")}</span>
         </span>
       </div>
       <div className="flex flex-col items-center gap-0.5 justify-center">
-        <span className="text-[12px] font-bold text-muted-foreground uppercase">
-          <span aria-hidden="true">E</span>
-          <span className="sr-only">Est</span>
-        </span>
+        {etichetta("east")}
         {renderCell("east")}
       </div>
 
-      {/* Row 3: South */}
       <div />
       <div className="flex flex-col items-center gap-0.5">
-        <span className="text-[12px] font-bold text-muted-foreground uppercase">
-          <span aria-hidden="true">S</span>
-          <span className="sr-only">Sud</span>
-        </span>
+        {etichetta("south")}
         {renderCell("south")}
       </div>
       <div />
@@ -254,12 +264,12 @@ function TrickTable({
 
 // ── commentary generator ────────────────────────────────────────
 
-function trickCommentary(trick: Trick): string {
+function trickCommentary(trick: Trick, t: ReturnType<typeof useT>): string {
   if (!trick.winner) return "";
-  const winnerLabel = nomeVero(trick.winner);
+  const winnerLabel = t(nomeVero(trick.winner));
   const winnerPlay = trick.plays.find((p) => p.position === trick.winner);
-  if (!winnerPlay) return `${winnerLabel} vince la presa`;
-  return `${winnerLabel} vince con ${cardToString(winnerPlay.card)}`;
+  if (!winnerPlay) return t("{posto} vince la presa", { posto: winnerLabel });
+  return t("{posto} vince con {carta}", { posto: winnerLabel, carta: cardToString(winnerPlay.card) });
 }
 
 // ── main component ──────────────────────────────────────────────
@@ -379,8 +389,8 @@ export function HandReplay({
               {t("Rivedi la mano")}
             </h3>
             <p className="text-xs text-muted-foreground">
-              {contrattoLeggibile(gameState.contract)} &middot; Dich.{" "}
-              {nomeVero(gameState.declarer)}
+              {contrattoLeggibile(gameState.contract)} &middot; {t("Dich.")}{" "}
+              {t(nomeVero(gameState.declarer))}
             </p>
           </div>
           <button
@@ -449,10 +459,10 @@ export function HandReplay({
               className="rounded-xl bg-muted px-4 py-2.5 text-center"
             >
               <p className="text-sm font-semibold text-foreground/80">
-                {trickCommentary(trick)}
+                {trickCommentary(trick, t)}
               </p>
               <p className="text-[12px] text-muted-foreground mt-0.5">
-                Attacco: {nomeVero(trick.leader)}
+                {t("Attacco: {posto}", { posto: t(nomeVero(trick.leader)) })}
               </p>
             </motion.div>
           </AnimatePresence>
@@ -481,7 +491,7 @@ export function HandReplay({
               return (
                 <div key={slot} className={`rounded-lg bg-muted px-2.5 py-1.5 ${cellClass}`}>
                   <span className="text-[12px] font-bold text-muted-foreground uppercase">
-                    {POSITION_LABELS[pos]}
+                    {t(POSITION_LABELS[pos])}
                   </span>
                   <MiniHand cards={hand} playedCard={playedInTrick[pos]} />
                 </div>
