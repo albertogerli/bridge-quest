@@ -41,6 +41,11 @@ describe("lo stato spedito alla finestra proiettata", () => {
     expect(s.posizioni.sort()).toEqual(["east", "north", "south", "west"]);
   });
 
+  it("un posto senza carte non è un posto da disegnare", () => {
+    const s = costruisciStato({ mani: { ...MANI, east: [], west: [] }, impostazioni: IMPOSTAZIONI_INIZIALI });
+    expect(s.posizioni.sort()).toEqual(["north", "south"]);
+  });
+
   it("scoprire tutte le manda tutte", () => {
     const s = costruisciStato({
       mani: MANI,

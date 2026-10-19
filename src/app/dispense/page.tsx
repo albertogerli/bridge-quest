@@ -13,6 +13,7 @@ import Link from "@/components/link";
 import { useGameStore } from "@/store/use-game-store";
 import { useT } from "@/contexts/traduzioni-provider";
 import { useLingua } from "@/hooks/use-lingua";
+import { materialiPubblicati } from "@/lib/materiali-lezione-db";
 
 const courseColors: Record<CourseId, { active: string; inactive: string; border: string }> = {
   fiori: { active: "bg-emerald-500 text-white", inactive: "text-emerald-700 dark:text-emerald-300", border: "border-emerald-200 dark:border-emerald-900" },
@@ -60,7 +61,36 @@ function Dispense() {
    * contesto ce l'ha già (`/classi/<classe>/compito/<compito>`); questo no.
    */
   const classeDiProvenienza = parametri.get("classe");
+  const lezioneRichiesta = parametri.get("lezione");
   const [selectedCourse, setSelectedCourse] = useState<CourseId>(corsoRichiesto ?? "fiori");
+  /**
+   * LE DISPENSE CHE L'INSEGNANTE HA RILASCIATO alla classe, o `null` finché
+   * non si sa (o fuori da una classe).
+   *
+   * Prima la pagina ignorava la classe: bloccava ogni lezione finché l'allievo
+   * non ne aveva completato un modulo nel percorso personale, e un allievo di
+   * corso — che il percorso personale non lo fa — trovava col lucchetto anche
+   * la dispensa appena rilasciata, insieme alle schede di Quadri e Cuori
+   * (Trevissoi, feedback 5). Con la classe valgono solo i rilasci: si vede
+   * quello che è uscito, aperto, e nient'altro.
+   */
+  const [rilasciate, setRilasciate] = useState<Set<string> | null>(null);
+  useEffect(() => {
+    if (!classeDiProvenienza) return;
+    let vivo = true;
+    void materialiPubblicati(classeDiProvenienza).then((materiali) => {
+      if (!vivo) return;
+      const ids = new Set(
+        materiali.filter((m) => m.tipo === "dispensa" && m.lesson_id).map((m) => String(m.lesson_id)),
+      );
+      // Il link del messaggio WhatsApp porta la lezione: è un rilascio anche
+      // quello, fatto dall'insegnante mandandolo alla classe.
+      if (lezioneRichiesta) ids.add(lezioneRichiesta);
+      setRilasciate(ids);
+    });
+    return () => { vivo = false; };
+  }, [classeDiProvenienza, lezioneRichiesta]);
+  const diClasse = !!classeDiProvenienza;
   const completedMap = useGameStore((s) => s.completedModules);
   const { courses, isLoaded: catalogLoaded, isLoading, error, retry } = useCatalog();
   const currentCourse = courses.find((c) => c.id === selectedCourse) ?? courses[0];
@@ -91,11 +121,13 @@ function Dispense() {
     );
   };
 
-  const infographics = currentCourse.lessons.map((lesson) => ({
-    lesson,
-    info: getInfographicForLesson(lesson.id, profile, lingua),
-    locked: !isLessonStarted(lesson.id),
-  }));
+  const infographics = currentCourse.lessons
+    .filter((lesson) => !diClasse || (rilasciate?.has(String(lesson.id)) ?? false))
+    .map((lesson) => ({
+      lesson,
+      info: getInfographicForLesson(lesson.id, profile, lingua),
+      locked: diClasse ? false : !isLessonStarted(lesson.id),
+    }));
 
   const coursePdf = infographics[0]?.info?.coursePdf;
 
@@ -143,7 +175,7 @@ function Dispense() {
           transition={{ delay: 0.05 }}
           className="mb-4 mt-4 flex gap-2 overflow-x-auto pb-1 scrollbar-hide"
         >
-          {courses.map((course) => {
+          {courses.filter((course) => !diClasse || course.id === selectedCourse).map((course) => {
             const isActive = course.id === selectedCourse;
             const colors = courseColors[course.id];
             return (
@@ -190,10 +222,12 @@ function Dispense() {
                     {currentCourse.name}
                   </h2>
                   <p className="text-sm text-white/70 mt-0.5">
-                    {currentCourse.lessonCount} dispense disponibili
+                    {diClasse
+                      ? t("{n} dispense rilasciate dal tuo insegnante", { n: infographics.length })
+                      : t("{n} dispense disponibili", { n: currentCourse.lessonCount })}
                   </p>
                 </div>
-                {coursePdf && isCourseCompleted ? (
+                {diClasse ? null : coursePdf && isCourseCompleted ? (
                   <button
                     onClick={() => downloadPdf(coursePdf)}
                     className="flex items-center gap-2 rounded-xl bg-white/20 backdrop-blur-sm px-4 py-2.5 text-sm font-bold text-white hover:bg-white/30 transition-colors active:scale-95"
@@ -224,6 +258,12 @@ function Dispense() {
                 ) : null}
               </div>
             </div>
+
+            {diClasse && rilasciate !== null && infographics.length === 0 && (
+              <p className="rounded-2xl border border-border bg-card p-6 text-center text-sm text-muted-foreground">
+                {t("Il tuo insegnante non ha ancora rilasciato dispense di questo corso.")}
+              </p>
+            )}
 
             {/* Infographic grid */}
             <div className="grid grid-cols-2 gap-3">

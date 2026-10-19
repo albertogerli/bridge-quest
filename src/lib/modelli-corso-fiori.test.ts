@@ -38,4 +38,21 @@ describe("i modelli del Corso Fiori", () => {
     expect(modelloDellaLezione(8)?.nome).toBe("L'apertura e la risposta");
     expect(modelloDellaLezione(99)).toBeUndefined();
   });
+
+  /**
+   * La lezione 1 è sulla differenza fra prese che ci sono e prese da
+   * costruire: il colore lungo di Sud deve avere onori, ma non tutti — o non
+   * ci sarebbe niente da affrancare (Trevissoi, feedback 5).
+   */
+  it("lezione 1: il colore lungo di Sud ha qualcosa da affrancare", () => {
+    const { deals } = generateDeals(modelloDellaLezione(1)!.vincoli, { count: 20, seed: 11 });
+    expect(deals).toHaveLength(20);
+    for (const d of deals) {
+      const picche = d.south.filter((c) => c.suit === "spade");
+      const onori = picche.filter((c) => ["A", "K", "Q", "J", "10"].includes(c.rank)).length;
+      expect(picche.length).toBeGreaterThanOrEqual(5);
+      expect(onori).toBeGreaterThanOrEqual(2);
+      expect(onori).toBeLessThanOrEqual(3);
+    }
+  });
 });

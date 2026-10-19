@@ -270,7 +270,7 @@ export default function TavoloAllievoPage({
         <h1 className="text-xl font-bold font-display">{stato?.titolo ?? t("Tavolo della classe")}</h1>
         {stato?.seat ? (
           <p className="text-sm text-muted-foreground mt-1">
-            {t("Sei")}<strong>{ETICHETTA[stato.seat]}</strong>
+            {t("Sei")} <strong>{t(ETICHETTA[stato.seat])}</strong>
           </p>
         ) : (
           <p className="text-sm text-muted-foreground mt-1">
@@ -327,9 +327,17 @@ export default function TavoloAllievoPage({
         erano quattro riquadri impilati, e su uno schermo da PC la mano finiva
         sotto la piega (Trevissoi, feedback 4, punto 3.2).
       */}
-      {stato?.contract && (
+      {/*
+        Il blocco c'è anche SENZA contratto: la propria mano l'allievo la vede
+        appena seduto. Prima stava tutto dentro la condizione sul contratto, e
+        il contratto all'allievo arriva solo dopo «Mostra il contratto» — che
+        si azzera a ogni mano nuova: chi si sedeva vedeva il tavolo e nessuna
+        carta (Trevissoi, feedback 5).
+      */}
+      {(stato?.contract || miaVisibile) && (
         <section className="mb-4 rounded-2xl border-2 border-figb/30 bg-card p-3 sm:p-4">
           <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+            {stato?.contract ? (
             <p className="text-2xl font-bold text-figb font-display">
               {contrattoLeggibile(stato.contract)}
               {stato.declarer && (
@@ -338,6 +346,9 @@ export default function TavoloAllievoPage({
                 </span>
               )}
             </p>
+            ) : (
+              <p className="text-sm text-muted-foreground">{t("Il contratto lo dirà l'insegnante.")}</p>
+            )}
             {gioco && (
               <p className="text-sm tabular-nums text-muted-foreground">
                 {t("Presa {n}", { n: Math.min(gioco.prese.length + 1, 13) })} · {t("Nord-Sud")} <strong className="text-foreground">{gioco.preseNs}</strong> · {t("Est-Ovest")} <strong className="text-foreground">{gioco.preseEw}</strong>
@@ -389,7 +400,7 @@ export default function TavoloAllievoPage({
 
           {errore && <p className="mb-2 text-center text-sm font-medium text-destructive" role="alert">{errore}</p>}
 
-          {miaVisibile && stato.seat && (
+          {miaVisibile && stato?.seat && (
             <div>
               <p className="mb-1 flex items-baseline justify-between text-sm">
                 <span className="font-semibold text-figb">

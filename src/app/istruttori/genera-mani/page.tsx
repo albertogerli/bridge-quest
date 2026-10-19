@@ -139,7 +139,14 @@ export default function GeneraManiPage() {
   }, []);
 
   useEffect(() => {
-    void elencaModelli().then(setModelli);
+    void elencaModelli().then((lista) => {
+      setModelli(lista);
+      // Si parte da una lezione del Corso Fiori, non da «Apertura di 1NT»: chi
+      // insegna il gioco della carta trovava mani di licita «fuori tema»
+      // (Trevissoi, feedback 5). Solo se l'insegnante non ha già scelto.
+      const primo = lista.find((m) => m.ufficiale);
+      if (primo) setModelloId((attuale) => attuale || primo.id);
+    });
   }, []);
 
   const modelloScelto = modelli.find((m) => m.id === modelloId) ?? null;
@@ -428,7 +435,7 @@ export default function GeneraManiPage() {
                 ))}
             </optgroup>
           )}
-          <optgroup label="Modelli di base">
+          <optgroup label="Licita">
             {DEAL_TEMPLATES.map((t) => (
               <option key={t.id} value={`fisso:${t.id}`}>
                 {t.label}

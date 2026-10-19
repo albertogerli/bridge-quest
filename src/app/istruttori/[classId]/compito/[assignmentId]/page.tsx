@@ -521,8 +521,10 @@ export default function AssignmentResultsPage({
       )}
 
       <AnimatePresence>
+        {/* Nord in alto, come nei diagrammi delle dispense: l'insegnante guarda
+            la mano dall'esterno, non dal posto di chi l'ha giocata. */}
         {replay && (
-          <HandReplay gameState={replay.gameState} onClose={() => setReplay(null)} />
+          <HandReplay gameState={replay.gameState} inBasso="south" onClose={() => setReplay(null)} />
         )}
       </AnimatePresence>
     </div>

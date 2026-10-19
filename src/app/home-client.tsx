@@ -70,7 +70,7 @@ const WeeklyRecapModal = dynamic(
 
 export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
   const t = useT();
-  const { user, profile: authProfile, loading: authLoading } = useSharedAuth();
+  const { user, profile: authProfile, loading: authLoading, profiloLetto } = useSharedAuth();
   // Solo per chi ha fatto l'accesso: vedi `useEnrolledClasses`.
   const { classes: classiIscritte, isLoaded: classiCaricate, error: erroreClassi } = useEnrolledClasses(!!user);
   /**
@@ -298,13 +298,29 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
     }} />;
   }
 
+  /*
+   * IL RUOLO PRIMA DELLA HOME. Senza profilo non si sa se è un insegnante, e
+   * mostrare intanto la home generale vuol dire che l'insegnante appena
+   * entrato vede la bacheca dell'allievo — ed è quello che ha visto Trevissoi
+   * al primo accesso (feedback 5). L'attesa finisce sempre: `profiloLetto`
+   * diventa vero anche se la lettura fallisce, e allora si va avanti con
+   * quello che si sa.
+   */
+  if (user && !authProfile && !profiloLetto) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center" role="status" aria-label={t("Caricamento in corso")}>
+        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" aria-hidden="true" />
+        <span className="sr-only">{t("Caricamento...")}</span>
+      </div>
+    );
+  }
+
   /**
    * L'AVVIO GUIDATO È PER CHI IMPARA. «Il tuo primo torneo — tra 5 minuti
    * giocherai la tua prima mano» accoglieva anche l'insegnante appena
    * abilitato, prima della sua home con le classi (visto nel controllo del
-   * 28/09/2026). Finché il profilo non è arrivato il ruolo non si sa, e si
-   * mostra l'avvio come prima: un istante, invece di un'attesa che resterebbe
-   * infinita se il profilo non arrivasse.
+   * 28/09/2026). Il ruolo qui è già noto: il blocco qui sopra aspetta il
+   * profilo (che si considera letto anche quando la lettura fallisce).
    */
   const insegnaGia = authProfile?.role === "instructor" || authProfile?.role === "admin";
   /**
@@ -342,6 +358,7 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
    */
   const insegna = authProfile?.role === "instructor" || authProfile?.role === "admin";
   const corsiIscritti = corsiAttivi(classiIscritte);
+
 
   /*
    * IL SECONDO RAMO: chi segue un corso.
@@ -437,6 +454,25 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
           >
             <GraduationCap className="h-4 w-4 shrink-0" aria-hidden="true" />
             {t("Torna all'area insegnanti")}
+          </button>
+        </div>
+      )}
+      {/*
+        Anche chi segue un corso deve poter tornare. Il pulsante c'era solo per
+        gli insegnanti: l'allievo che sceglieva «il resto del portale» restava
+        sulla bacheca generale fino alla chiusura del browser (feedback 5).
+      */}
+      {!insegna && corsiIscritti.length > 0 && (
+        <div className="mx-auto max-w-5xl px-4 pt-4 sm:px-6">
+          <button
+            onClick={() => {
+              ricordaPreferenzaBacheca(false);
+              setVuoleLaBacheca(false);
+            }}
+            className="flex w-full items-center gap-2 rounded-xl border border-border bg-muted/40 px-4 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-muted"
+          >
+            <GraduationCap className="h-4 w-4 shrink-0" aria-hidden="true" />
+            {t("Torna al tuo corso")}
           </button>
         </div>
       )}

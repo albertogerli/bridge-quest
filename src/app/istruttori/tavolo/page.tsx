@@ -12,7 +12,7 @@ import { reportError } from "@/lib/report-error";
 import type { Card, Position } from "@/lib/bridge-engine";
 import { getValidCards, parseContract } from "@/lib/bridge-engine";
 import { DEAL_TEMPLATES, generateDeals, satisfiesDeal } from "@/lib/deal-generator";
-import { calcTableAndPar } from "@/lib/dds-table";
+import { calcTableAndPar, preseDelDichiarante } from "@/lib/dds-table";
 import { parAssignmentFromContracts } from "@/lib/par-contract";
 import {
   ClasseNonTrovata,
@@ -312,6 +312,42 @@ function Tavolo() {
     // eslint-disable-next-line react-hooks/exhaustive-deps -- si muove a ogni carta giocata, non a ogni render
   }, [firmaPosizione]);
 
+  /**
+   * UN TAVOLO SENZA CARTE NON È UNA MANO. I tavoli dell'aula nascono vuoti e
+   * ricevono le carte con «Manda a tutti i tavoli»: prima si mostrava quel
+   * vuoto (trattini e zero punti) finché non si cambiava mano, e sembrava un
+   * guasto (controllo esterno, 28/09/2026). Finché è vuoto si vede la mano
+   * proposta.
+   */
+  const tavoloConCarte = !!stato && Object.values(stato.hands ?? {}).some((h) => (h?.length ?? 0) > 0);
+  const manoCorrente = tavoloConCarte ? stato!.hands : mani[indice];
+
+  /**
+   * «Analisi doppio morto» sulla proiezione: le prese del dichiarante col
+   * gioco migliore, calcolate a mano intera (prima di giocare la prima carta).
+   * Fino al 19/10/2026 il tavolo condiviso non la passava, e la casella nel
+   * pannello della proiezione non faceva niente.
+   */
+  const [analisiDd, setAnalisiDd] = useState<{ chiave: string; testo: string } | null>(null);
+  const chiaveDd = manoCorrente && stato?.contract && stato.declarer && (stato.played?.length ?? 0) === 0
+    ? `${stato.contract}|${stato.declarer}|${(["north", "east", "south", "west"] as Position[]).map((p) => (manoCorrente[p] ?? []).map((c) => c.suit[0] + c.rank).join("")).join("|")}`
+    : null;
+  useEffect(() => {
+    if (!chiaveDd || !manoCorrente || !stato?.contract || !stato.declarer) return;
+    const completa = (["north", "east", "south", "west"] as Position[]).every((p) => (manoCorrente[p]?.length ?? 0) === 13);
+    if (!completa) return;
+    let vivo = true;
+    const dichiarante = stato.declarer;
+    const contratto = stato.contract;
+    const sinistra: Record<Position, Position> = { north: "east", east: "south", south: "west", west: "north" };
+    preseDelDichiarante(manoCorrente as Record<Position, Card[]>, parseContract(contratto).trumpSuit, dichiarante, sinistra[dichiarante])
+      .then((n) => {
+        if (vivo) setAnalisiDd({ chiave: chiaveDd, testo: t("Col gioco migliore {contratto} fa {n} prese", { contratto: contrattoLeggibile(contratto), n }) });
+      })
+      .catch((err) => reportError("tavolo:analisi-dd", err));
+    return () => { vivo = false; };
+  }, [chiaveDd]); // eslint-disable-line react-hooks/exhaustive-deps -- la chiave riassume mani, contratto e dichiarante: ricalcolare solo quando cambia
+
   if (loading) return null;
   if (!user) {
     return (
@@ -324,15 +360,6 @@ function Tavolo() {
     );
   }
 
-  /**
-   * UN TAVOLO SENZA CARTE NON È UNA MANO. I tavoli dell'aula nascono vuoti e
-   * ricevono le carte con «Manda a tutti i tavoli»: prima si mostrava quel
-   * vuoto (trattini e zero punti) finché non si cambiava mano, e sembrava un
-   * guasto (controllo esterno, 28/09/2026). Finché è vuoto si vede la mano
-   * proposta.
-   */
-  const tavoloConCarte = !!stato && Object.values(stato.hands ?? {}).some((h) => (h?.length ?? 0) > 0);
-  const manoCorrente = tavoloConCarte ? stato!.hands : mani[indice];
 
   /**
    * LA MANO AL TAVOLO È DAVVERO DI QUESTO ARGOMENTO?
@@ -692,8 +719,15 @@ function Tavolo() {
             vede lo decide questo pannello e non `revealed`, che riguarda gli
             allievi collegati con il telefono.
           */}
+          {/*
+            Alla proiezione le STESSE mani che vede l'insegnante: il tavolo
+            d'aula appena aperto è vuoto nel database, e mandarle quelle
+            mostrava alla classe una finestra nera con il solo titolo
+            (Trevissoi, feedback 5).
+          */}
           <ComandoProiezione
-            mani={stato.hands}
+            mani={manoCorrente ?? {}}
+            doppioMorto={analisiDd && analisiDd.chiave === chiaveDd ? analisiDd.testo : null}
             titolo={stato.titolo}
             giocate={stato.played}
             contratto={stato.contract}

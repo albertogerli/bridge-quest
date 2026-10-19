@@ -42,6 +42,13 @@ interface AuthState {
   profile: Profile | null;
   session: Session | null;
   loading: boolean;
+  /**
+   * Il profilo è stato chiesto almeno una volta per questo utente (riuscito o
+   * no). Serve a chi decide in base al ruolo: finché è falso, «profile null»
+   * vuol dire «non ancora arrivato», non «utente senza ruolo» — e la home
+   * dell'insegnante non deve diventare quella dell'allievo nell'attesa.
+   */
+  profiloLetto: boolean;
 }
 
 export function useAuth() {
@@ -50,6 +57,7 @@ export function useAuth() {
     profile: null,
     session: null,
     loading: true,
+    profiloLetto: false,
   });
 
   const supabase = createClient();
@@ -111,16 +119,35 @@ export function useAuth() {
       authResolved = true;
 
       if (session?.user) {
-        // Set user IMMEDIATELY (don't wait for profile fetch)
-        setState({ user: session.user, profile: null, session, loading: false });
+        // Set user IMMEDIATELY (don't wait for profile fetch).
+        //
+        // LO STESSO UTENTE TIENE IL SUO PROFILO. Questa funzione gira anche a
+        // ogni rinnovo del token (ogni dieci minuti): prima azzerava il
+        // profilo e lo richiedeva, e per quell'intervallo l'insegnante non
+        // aveva più un ruolo — la home tornava quella dell'allievo, e ci
+        // restava se la richiesta falliva (Trevissoi, feedback 5).
+        const utente = session.user;
+        setState((prev) => {
+          const stesso = prev.user?.id === utente.id;
+          return {
+            user: utente,
+            profile: stesso ? prev.profile : null,
+            session,
+            loading: false,
+            profiloLetto: stesso ? prev.profiloLetto : false,
+          };
+        });
         // Fetch profile in background (non-blocking)
         fetchProfileInBackground().then((profile) => {
-          if (mounted && profile) {
-            setState((prev) => ({ ...prev, profile }));
-          }
+          if (!mounted) return;
+          setState((prev) => (prev.user?.id !== utente.id ? prev : {
+            ...prev,
+            profile: profile ?? prev.profile,
+            profiloLetto: true,
+          }));
         });
       } else {
-        setState({ user: null, profile: null, session: null, loading: false });
+        setState({ user: null, profile: null, session: null, loading: false, profiloLetto: false });
       }
     };
 
@@ -209,7 +236,7 @@ export function useAuth() {
         console.log("Session timeout: auto-logout due to inactivity");
         try { localStorage.removeItem("bq_guest"); } catch {}
         await supabase.auth.signOut();
-        setState({ user: null, profile: null, session: null, loading: false });
+        setState({ user: null, profile: null, session: null, loading: false, profiloLetto: false });
          
         window.location.href = homeDi(window.location.pathname);
       }, INACTIVITY_TIMEOUT);
@@ -232,7 +259,7 @@ export function useAuth() {
       const { data } = await supabase.auth.refreshSession();
       if (!data.session) {
         // Session expired server-side
-        setState({ user: null, profile: null, session: null, loading: false });
+        setState({ user: null, profile: null, session: null, loading: false, profiloLetto: false });
       }
     }, 10 * 60 * 1000); // every 10 minutes
     return () => clearInterval(interval);
@@ -331,7 +358,7 @@ export function useAuth() {
   // Sign out
   const signOut = async () => {
     await supabase.auth.signOut();
-    setState({ user: null, profile: null, session: null, loading: false });
+    setState({ user: null, profile: null, session: null, loading: false, profiloLetto: false });
   };
 
   // Update profile
@@ -393,6 +420,7 @@ export function useAuth() {
     profile: state.profile,
     session: state.session,
     loading: state.loading,
+    profiloLetto: state.profiloLetto,
     signUp,
     signIn,
     signOut,

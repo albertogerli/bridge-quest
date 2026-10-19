@@ -326,6 +326,8 @@ describe("vincoli avanzati: quello che serve per gli scenari veri", () => {
     const scarno = mano("98765.A32.K43.A32");
     expect(satisfiesSeat(solido, { qualita: [{ suit: "spade", minOnori: 4 }] })).toBe(true);
     expect(satisfiesSeat(scarno, { qualita: [{ suit: "spade", minOnori: 4 }] })).toBe(false);
+    // Il tetto: il colore solido non passa se se ne chiedono al massimo tre.
+    expect(satisfiesSeat(solido, { qualita: [{ suit: "spade", minOnori: 1, maxOnori: 3 }] })).toBe(false);
   });
 
   it("carte obbligate: l'esempio dell'insegnante deve mostrare quella carta", () => {
