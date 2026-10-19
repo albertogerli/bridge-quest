@@ -86,10 +86,16 @@ hanno una causa trovata, non supposta. Taglia: **S** = meno di mezza giornata,
     della classe): il pulsante «vai al resto del portale» ora lo rispetta.
   - D7: il modello ufficiale della lezione 1 è aggiornato anche nel database
     (`maxOnori: 3`, solo quella riga).
-- **Da eseguire a mano**: `scripts/sql/tavolo-dove-sei-seduto-2026-10.sql` (D2,
-  più tavoli aperti), poi `node scripts/dump-schema.mjs`.
-- **Restano**: F1 (codice numerico per l'aula), F2 (email ai compiti), F4
-  (esercizi con domande).
+- **F1 fatto**: codice di sei cifre accanto al QR, pagina `bridgelab.it/aula`
+  per scriverlo, rotta `/api/aula/codice` con limite di tentativi. Il codice
+  compare dopo lo script SQL e su inviti nuovi («Nuovo link»).
+- **F2 c'era già**: il cron serale (`/api/cron/engagement`) manda «compito
+  assegnato» (15 email partite finora) e il promemoria a due giorni dalla
+  scadenza. Ora l'insegnante lo legge quando assegna.
+- **Da eseguire a mano**, poi `node scripts/dump-schema.mjs`:
+  `scripts/sql/tavolo-dove-sei-seduto-2026-10.sql` (D2, più tavoli aperti) e
+  `scripts/sql/codice-aula-2026-10.sql` (F1).
+- **Resta**: F4 (esercizi con domande), dopo aver fissato il formato.
 
 ## Ordine proposto
 

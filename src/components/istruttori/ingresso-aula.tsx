@@ -115,11 +115,28 @@ export function IngressoAula({ classId }: { classId: string }) {
               <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 {t("Da proiettare o da mostrare")}
               </p>
+              {/*
+                IL CODICE, GRANDE. Per chi non sa inquadrare il QR: si legge
+                dalla lavagna e si scrive su bridgelab.it/aula (Trevissoi,
+                feedback 5). Gli inviti creati prima dello script SQL non ce
+                l'hanno: «Nuovo link» ne crea uno che ce l'ha.
+              */}
+              {invito.codice && (
+                <div className="mb-3">
+                  <p className="text-sm text-muted-foreground">
+                    {t("Senza QR: su {sito} si scrive il codice", { sito: indirizzoAula("").replace(/^https?:\/\//, "").replace(/\/$/, "") })}
+                  </p>
+                  <p className="font-mono text-4xl font-bold tracking-[0.3em] text-foreground" aria-label={t("Codice dell'aula {codice}", { codice: invito.codice.split("").join(" ") })}>
+                    {invito.codice}
+                  </p>
+                </div>
+              )}
               <p className="mb-3 break-all font-mono text-xs text-muted-foreground">{indirizzo}</p>
               <div className="flex flex-wrap gap-2">
                 <a
                   href={linkWhatsApp(
-                    `Ci vediamo in aula su BridgeLab. Apri questo link e scrivi il tuo nome:\n\n${indirizzo}`,
+                    `Ci vediamo in aula su BridgeLab. Apri questo link e scrivi il tuo nome:\n\n${indirizzo}` +
+                      (invito.codice ? `\n\nOppure vai su ${indirizzoAula("").replace(/\/$/, "")} e scrivi il codice ${invito.codice}` : ""),
                   )}
                   target="_blank"
                   rel="noopener noreferrer"

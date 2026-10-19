@@ -181,6 +181,11 @@ export function AssegnaLezioni({ classId, onCambiato }: { classId: string; onCam
           <p className="mt-1 text-sm text-muted-foreground">
             {t("Le mani già assegnate sono spuntate. Togliere la spunta non le leva dal compito: si possono solo aggiungere.")}
           </p>
+          {/* L'avviso parte già da solo (cron serale, `bersagli_email_compiti`):
+              va detto, o l'insegnante lo manda una seconda volta a mano. */}
+          <p className="mt-1 text-sm text-muted-foreground">
+            {t("Gli allievi ricevono un'email con il compito entro la sera, e un promemoria due giorni prima della scadenza.")}
+          </p>
 
           <div className="mt-3 divide-y divide-border">
             {maniDella(scelta.lessonId).map((sm) => {

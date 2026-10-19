@@ -23,6 +23,12 @@ export interface InvitoAula {
   scade_il: string;
   revocato: boolean;
   max_ospiti: number;
+  /**
+   * Sei cifre da dettare in aula, per chi non sa inquadrare il QR. Assente
+   * finché non è eseguito `scripts/sql/codice-aula-2026-10.sql`, e sugli inviti
+   * creati prima.
+   */
+  codice?: string | null;
   /** Chi l'ha creato. La tabella ce l'ha e le letture `select("*")` lo portano. */
   creato_da: string | null;
   created_at: string;
@@ -76,22 +82,63 @@ export async function creaInvito(
   } = await supabase.auth.getUser();
   if (!user) return null;
 
-  const { data, error } = await supabase
+  const riga: Record<string, unknown> = {
+    class_id: classId,
+    token: nuovoToken(),
+    creato_da: user.id,
+    scade_il: opzioni?.scadeIl ?? fineGiornata(),
+    max_ospiti: opzioni?.maxOspiti ?? 40,
+  };
+  const codice = await codiceLibero();
+  let { data, error } = await supabase
     .from("inviti_aula")
-    .insert({
-      class_id: classId,
-      token: nuovoToken(),
-      creato_da: user.id,
-      scade_il: opzioni?.scadeIl ?? fineGiornata(),
-      max_ospiti: opzioni?.maxOspiti ?? 40,
-    })
+    .insert(codice ? { ...riga, codice } : riga)
     .select()
     .single();
+  // Colonna non ancora creata (script da eseguire a mano): l'invito nasce
+  // senza codice, come prima, invece di non nascere affatto.
+  if (error && codice && colonnaMancante(error)) {
+    ({ data, error } = await supabase.from("inviti_aula").insert(riga).select().single());
+  }
   if (error) {
     segnalaSalvoRete("inviti:crea", error);
     return null;
   }
   return data as InvitoAula;
+}
+
+/** Sei cifre a caso. Lo zero iniziale è ammesso: è testo, non un numero. */
+export function nuovoCodice(): string {
+  const b = new Uint32Array(1);
+  crypto.getRandomValues(b);
+  return String(b[0] % 1_000_000).padStart(6, "0");
+}
+
+/**
+ * Un codice che nessun invito ancora valido sta usando. Si controlla fra quelli
+ * visibili all'insegnante: due insegnanti diversi con lo stesso codice nello
+ * stesso giorno sono un caso su centinaia di migliaia, e la rotta che risolve
+ * il codice prende comunque il più recente.
+ */
+async function codiceLibero(): Promise<string | null> {
+  const supabase = createClient();
+  for (let tentativo = 0; tentativo < 5; tentativo++) {
+    const codice = nuovoCodice();
+    const { data, error } = await supabase
+      .from("inviti_aula")
+      .select("id")
+      .eq("codice", codice)
+      .eq("revocato", false)
+      .gt("scade_il", new Date().toISOString())
+      .limit(1);
+    if (error) return colonnaMancante(error) ? null : codice;
+    if (!data || data.length === 0) return codice;
+  }
+  return null;
+}
+
+function colonnaMancante(error: { code?: string; message?: string }): boolean {
+  return error.code === "42703" || error.code === "PGRST204" || /codice/.test(error.message ?? "");
 }
 
 export async function revocaInvito(id: string): Promise<boolean> {
