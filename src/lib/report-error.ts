@@ -35,6 +35,40 @@ export function reportError(scope: string, error: unknown): void {
     console.warn(`[${scope}] rete o sessione, non segnalato:`, error);
     return;
   }
+  // «Permission denied» (42501) su una funzione concessa solo ad
+  // `authenticated` vuol dire che la chiamata è partita da ANONIMO: la sessione
+  // si è chiusa — logout, inattività, rinnovo fallito — mentre la richiesta era
+  // in volo. Successo con `get_own_profile` il 19/10/2026 e con
+  // `mie_richieste_in_attesa` il 20/10: ogni funzione riservata ha la stessa
+  // finestra, quindi si decide qui e non chiamata per chiamata. Senza sessione
+  // non è un difetto; con la sessione ancora aperta è un permesso sbagliato
+  // davvero, e arriva a Sentry come prima.
+  if (typeof window !== "undefined" && ePermessoNegato(error)) {
+    void sessioneAperta().then((aperta) => {
+      if (aperta) invia(scope, error);
+      else console.warn(`[${scope}] permesso negato a sessione chiusa, non segnalato:`, error);
+    });
+    return;
+  }
+  invia(scope, error);
+}
+
+function ePermessoNegato(error: unknown): boolean {
+  return !!error && typeof error === "object" && (error as { code?: unknown }).code === "42501";
+}
+
+/** C'è ancora una sessione? Nel dubbio sì: meglio un evento in più che uno perso. */
+async function sessioneAperta(): Promise<boolean> {
+  try {
+    const { createClient } = await import("@/lib/supabase/client");
+    const { data } = await createClient().auth.getSession();
+    return !!data.session;
+  } catch {
+    return true;
+  }
+}
+
+function invia(scope: string, error: unknown): void {
   console.error(`[${scope}]`, error);
 
   if (!SENTRY_ENABLED) return;

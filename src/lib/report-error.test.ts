@@ -4,6 +4,12 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const catturate = vi.hoisted(() => [] as unknown[]);
 vi.mock("@sentry/nextjs", () => ({ captureException: (e: unknown) => catturate.push(e) }));
 vi.mock("@/lib/sentry-shared", () => ({ SENTRY_ENABLED: true }));
+const sessione = vi.hoisted(() => ({ aperta: false }));
+vi.mock("@/lib/supabase/client", () => ({
+  createClient: () => ({
+    auth: { getSession: async () => ({ data: { session: sessione.aperta ? {} : null } }) },
+  }),
+}));
 
 import { reportError } from "./report-error";
 
@@ -41,5 +47,18 @@ describe("reportError nel browser", () => {
     });
     reportError("pwa:register", e);
     expect(catturate).toHaveLength(1);
+  });
+
+  it("permesso negato a sessione chiusa: la chiamata è partita da anonimo, non arriva", async () => {
+    sessione.aperta = false;
+    reportError("home:richieste-in-attesa", { code: "42501", message: "permission denied for function mie_richieste_in_attesa" });
+    await vi.waitFor(() => expect(console.warn).toHaveBeenCalled());
+    expect(catturate).toHaveLength(0);
+  });
+
+  it("permesso negato con la sessione aperta: è un difetto, arriva", async () => {
+    sessione.aperta = true;
+    reportError("home:richieste-in-attesa", { code: "42501", message: "permission denied for function mie_richieste_in_attesa" });
+    await vi.waitFor(() => expect(catturate).toHaveLength(1));
   });
 });
