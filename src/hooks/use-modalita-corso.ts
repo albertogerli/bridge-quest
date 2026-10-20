@@ -4,6 +4,7 @@ import { useSyncExternalStore } from "react";
 import { usePercorso } from "@/hooks/use-lingua";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { useEnrolledClasses } from "@/store/use-classes-store";
+import { corsiAttivi } from "@/lib/percorso-allievo";
 
 /**
  * La «modalità corso» della cornice: niente colonne laterali.
@@ -16,7 +17,7 @@ import { useEnrolledClasses } from "@/store/use-classes-store";
  * generale resta raggiungibile, dietro un solo tasto.
  *
  * DOVE: sotto `/istruttori` e `/classi`, sempre; su `/dispense?classe=…`; sulla home solo per chi
- * insegna o è iscritto ad almeno una classe attiva — per tutti gli altri la
+ * insegna o è iscritto ad almeno una classe non archiviata — per tutti gli altri la
  * home resta quella di sempre.
  */
 export function useModalitaCorso(): boolean {
@@ -33,7 +34,8 @@ export function useModalitaCorso(): boolean {
   if (percorso.startsWith("/dispense") && dallaClasse) return true;
   if (!sullaHome) return false;
   const insegna = profile?.role === "instructor" || profile?.role === "admin";
-  return insegna || classes.length > 0;
+  // Un corso archiviato è finito: chi segue solo quello torna alla home di sempre.
+  return insegna || corsiAttivi(classes).length > 0;
 }
 
 /**

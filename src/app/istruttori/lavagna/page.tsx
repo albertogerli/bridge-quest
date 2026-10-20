@@ -2,6 +2,7 @@
 
 import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import Link from "@/components/link";
+import { Briciole } from "@/components/briciole";
 import { useSearchParams } from "next/navigation";
 import { Eye, EyeOff, ChevronLeft, ChevronRight, Presentation } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -160,6 +161,7 @@ function Lavagna() {
 
   return (
     <div className="min-h-screen bg-background px-4 py-4">
+      <Briciole percorso={[{ etichetta: t("Le tue classi"), href: "/istruttori" }, { etichetta: t("Lavagna") }]} />
       <header className="flex flex-wrap items-center gap-2 mb-4">
         <h1 className="text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2 mr-auto">
           <Presentation className="w-4 h-4" aria-hidden="true" />

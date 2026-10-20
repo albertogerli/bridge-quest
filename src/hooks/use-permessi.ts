@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { useEnrolledClasses } from "@/store/use-classes-store";
 import { permessiAllievo } from "@/lib/permessi-allievo";
 import { useSharedAuth } from "@/contexts/auth-provider";
+import { corsiAttivi } from "@/lib/percorso-allievo";
 
 /**
  * Le rotte che la navigazione non deve proporre.
@@ -30,8 +31,11 @@ export function useNascosti(): { nascosti: Set<string>; pronto: boolean } {
 
   return useMemo(() => {
     if (!isLoaded) return { nascosti: new Set<string>(), pronto: false };
+    // Un corso archiviato è finito: il suo cursore non limita più niente. È il
+    // «termine ufficiale» dopo cui il portale si apre da solo (Trevissoi,
+    // feedback 6), e lo decide l'insegnante archiviando la classe.
     const { nascosti } = permessiAllievo(
-      classes.map((c) => ({
+      corsiAttivi(classes).map((c) => ({
         accessoLibero: c.accesso_libero,
         permessi: c.permessi,
       })),

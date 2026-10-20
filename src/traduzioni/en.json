@@ -2695,5 +2695,15 @@
   "Il codice ha sei cifre.": "The code has six digits.",
   "Troppi tentativi: aspetta un minuto.": "Too many attempts: wait a minute.",
   "Nessuna aula aperta con questo codice. Controlla le cifre, o chiedi all'insegnante.": "No open classroom with this code. Check the digits, or ask your teacher.",
-  "Non riesco a controllare il codice adesso.": "I can't check the code right now."
+  "Non riesco a controllare il codice adesso.": "I can't check the code right now.",
+  "A fine corso, archiviando la classe, agli allievi si apre tutto il portale.": "When the course ends, archiving the class opens the whole site to your students.",
+  "Archiviata — corso finito, agli allievi si apre tutto il portale": "Archived — course over, students get the whole site",
+  "Manda l'invito": "Send the invite",
+  "Il corso «{nome}» su BridgeLab": "The «{nome}» course on BridgeLab",
+  "Entra in aula su BridgeLab": "Join the classroom on BridgeLab",
+  "Manda il link": "Send the link",
+  "Nuovo compito: {titolo}": "New assignment: {titolo}",
+  "I materiali della lezione: {titolo}": "Lesson materials: {titolo}",
+  "Copia il messaggio": "Copy the message",
+  "Copiato: incollalo dove vuoi": "Copied: paste it anywhere"
 }

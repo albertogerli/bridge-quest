@@ -121,6 +121,11 @@ export function Rubinetto({
       <p className="text-xs text-muted-foreground">
         {t("Chiudere non interrompe chi sta giocando in questo momento: il cambiamento si vede dalla volta dopo.")}
       </p>
+      {/* Il termine ufficiale del corso, e non la data scritta all'inizio
+          (Trevissoi, feedback 6): si decide qui accanto, archiviando. */}
+      <p className="text-xs text-muted-foreground">
+        {t("A fine corso, archiviando la classe, agli allievi si apre tutto il portale.")}
+      </p>
 
       <button
         onClick={() => setAvanzateAperte((v) => !v)}

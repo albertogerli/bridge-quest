@@ -12,7 +12,7 @@ import {
   type InvitoAula,
 } from "@/lib/inviti-aula";
 import { qrSvg } from "@/lib/qr";
-import { linkWhatsApp } from "@/lib/whatsapp";
+import { MandaMessaggio } from "@/components/istruttori/manda-messaggio";
 import { ClasseNonTrovata, getClassDetail, type ClassMember } from "@/lib/instructors";
 import { reportError } from "@/lib/report-error";
 import { useT } from "@/contexts/traduzioni-provider";
@@ -133,18 +133,14 @@ export function IngressoAula({ classId }: { classId: string }) {
               )}
               <p className="mb-3 break-all font-mono text-xs text-muted-foreground">{indirizzo}</p>
               <div className="flex flex-wrap gap-2">
-                <a
-                  href={linkWhatsApp(
+                <MandaMessaggio
+                  testo={
                     `Ci vediamo in aula su BridgeLab. Apri questo link e scrivi il tuo nome:\n\n${indirizzo}` +
-                      (invito.codice ? `\n\nOppure vai su ${indirizzoAula("").replace(/\/$/, "")} e scrivi il codice ${invito.codice}` : ""),
-                  )}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Button size="sm" variant="outline">
-                    {t("Manda su WhatsApp")}
-                  </Button>
-                </a>
+                      (invito.codice ? `\n\nOppure vai su ${indirizzoAula("").replace(/\/$/, "")} e scrivi il codice ${invito.codice}` : "")
+                  }
+                  oggetto={t("Entra in aula su BridgeLab")}
+                  etichetta={t("Manda il link")}
+                />
                 <Button
                   size="sm"
                   variant="outline"

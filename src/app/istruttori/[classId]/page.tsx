@@ -22,7 +22,8 @@ import { Rubinetto } from "@/components/istruttori/rubinetto";
 import { RevisioniDaAprire } from "@/components/istruttori/revisioni-da-aprire";
 import { ElencoAdesioni } from "@/components/istruttori/elenco-adesioni";
 import { IngressoAula } from "@/components/istruttori/ingresso-aula";
-import { invitoClasse, linkWhatsApp } from "@/lib/whatsapp";
+import { invitoClasse } from "@/lib/whatsapp";
+import { MandaMessaggio } from "@/components/istruttori/manda-messaggio";
 import {
   compitiSvoltiPerAllievo,
   getClassDetail,
@@ -712,15 +713,11 @@ export default function ClassDetailPage({
             leggono: un indirizzo `wa.me` con il testo pronto è tutto quello
             che serve per usarlo, senza servizi esterni né permessi.
           */}
-          <a
-            href={linkWhatsApp(invitoClasse(classRoom.name, classRoom.invite_code))}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Button size="sm" variant="outline">
-              {t("Invita su WhatsApp")}
-            </Button>
-          </a>
+          <MandaMessaggio
+            testo={invitoClasse(classRoom.name, classRoom.invite_code)}
+            oggetto={t("Il corso «{nome}» su BridgeLab", { nome: classRoom.name })}
+            etichetta={t("Manda l'invito")}
+          />
           <Button variant="outline" size="sm" onClick={handleRegenerate} disabled={busy}>
             {t("Rigenera codice")}
           </Button>
@@ -962,7 +959,7 @@ export default function ClassDetailPage({
               <option value="bozza">{t("Bozza — la sto preparando, non si entra")}</option>
               <option value="aperta">{t("Aperta — si entra e si lavora")}</option>
               <option value="chiusa">{t("Chiusa — niente nuovi iscritti, chi c’è continua")}</option>
-              <option value="archiviata">{t("Archiviata — corso finito")}</option>
+              <option value="archiviata">{t("Archiviata — corso finito, agli allievi si apre tutto il portale")}</option>
             </select>
             <p className="text-xs text-muted-foreground">
               {t("Chiudere e archiviare non cancella niente: allievi, compiti e risultati restano tutti.")}
