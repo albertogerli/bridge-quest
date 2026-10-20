@@ -21,9 +21,19 @@ import type { Assignment, ClassRoom } from "@/lib/instructors";
  *    il nome resta lì per sempre a fare rumore.
  */
 
-/** Una classe conta come corso in corso finché non è chiusa o archiviata. */
-export function corsiAttivi(classi: readonly ClassRoom[]): ClassRoom[] {
-  return classi.filter((c) => c.stato !== "chiusa" && c.stato !== "archiviata");
+/**
+ * Una classe conta come corso in corso finché l'insegnante non la archivia.
+ *
+ * «CHIUSA» NON VUOL DIRE FINITA. Nelle impostazioni della classe è «niente
+ * nuovi iscritti, chi c'è continua»: è lo stato di un corso partito, che non
+ * accetta più ingressi. Contarla come finita faceva perdere all'allievo la home
+ * del corso nel momento in cui l'insegnante chiudeva le iscrizioni dopo la
+ * prima lezione. Il termine ufficiale del corso è l'archiviazione («corso
+ * finito»), e lo decide l'insegnante, non la data scritta all'inizio
+ * (Trevissoi, feedback 6).
+ */
+export function corsiAttivi<C extends Pick<ClassRoom, "stato">>(classi: readonly C[]): C[] {
+  return classi.filter((c) => c.stato !== "archiviata");
 }
 
 /**

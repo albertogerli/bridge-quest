@@ -76,8 +76,8 @@ describe("il nome del corso solo se i corsi attivi sono più d'uno", () => {
     expect(etichettaLezione(2, "Approfondimento", attivi.length)).toBe("lezione 2");
   });
 
-  it("anche una classe chiusa smette di contare", () => {
-    expect(corsiAttivi([classe({ stato: "chiusa" }), classe({ stato: "aperta" })])).toHaveLength(1);
+  it("una classe chiusa alle iscrizioni è ancora un corso in corso", () => {
+    expect(corsiAttivi([classe({ stato: "chiusa" }), classe({ stato: "aperta" })])).toHaveLength(2);
   });
 });
 

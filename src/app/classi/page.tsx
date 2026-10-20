@@ -3,6 +3,7 @@
 import { Suspense, useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "@/components/link";
+import { Briciole } from "@/components/briciole";
 import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import {
@@ -135,6 +136,7 @@ function ClassiContent() {
 
   return (
     <div className="mx-auto w-full max-w-3xl px-4 py-8 sm:px-6">
+      <Briciole percorso={[{ etichetta: t("Home"), href: "/" }, { etichetta: t("Le mie classi") }]} />
       <div className="mb-6">
         <div className="flex items-center gap-2">
           <p className="text-xs font-semibold uppercase tracking-wide text-[#7a5a0f] dark:text-[#c8a44e]">

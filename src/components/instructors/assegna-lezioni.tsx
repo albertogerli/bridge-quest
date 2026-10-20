@@ -19,7 +19,8 @@ import {
 } from "@/lib/instructors";
 import { aspettaLInsegnante } from "@/lib/revisioni";
 import { reportError } from "@/lib/report-error";
-import { compitoAssegnatoWhatsApp, linkWhatsApp, materialiLezioneWhatsApp } from "@/lib/whatsapp";
+import { compitoAssegnatoWhatsApp, materialiLezioneWhatsApp } from "@/lib/whatsapp";
+import { MandaMessaggio } from "@/components/istruttori/manda-messaggio";
 import { useT } from "@/contexts/traduzioni-provider";
 import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 import { getYouTubeWatchUrl } from "@/components/maestro-video";
@@ -331,8 +332,8 @@ export function AssegnaLezioni({ classId, onCambiato }: { classId: string; onCam
                               {t("Aggiungi mani")}
                             </Button>
                           )}
-                          <a
-                            href={linkWhatsApp(
+                          <MandaMessaggio
+                            testo={
                               compitoAssegnatoWhatsApp(
                                 compito.title,
                                 classId,
@@ -340,15 +341,12 @@ export function AssegnaLezioni({ classId, onCambiato }: { classId: string; onCam
                                 compito.n_mani,
                                 null,
                                 compiti.find((a) => a.id === compito.assignment_id)?.soluzioni,
-                              ),
-                            )}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <Button size="sm" variant="ghost">
-                              {t("Avvisa")}
-                            </Button>
-                          </a>
+                              )
+                            }
+                            oggetto={t("Nuovo compito: {titolo}", { titolo: compito.title })}
+                            etichetta={t("Avvisa")}
+                            variante="ghost"
+                          />
                           {daAprire && (
                             <Button
                               size="sm"
@@ -361,8 +359,8 @@ export function AssegnaLezioni({ classId, onCambiato }: { classId: string; onCam
                           )}
                           {/* I tre link della settimana, già scritti: è il
                               gesto che l'insegnante fa a mano ogni lezione. */}
-                          <a
-                            href={linkWhatsApp(
+                          <MandaMessaggio
+                            testo={
                               materialiLezioneWhatsApp({
                                 titoloLezione: `${corso.name} — ${lezione.title}`,
                                 classId,
@@ -374,15 +372,12 @@ export function AssegnaLezioni({ classId, onCambiato }: { classId: string; onCam
                                 // ma nessuno gliela passava, e la riga
                                 // non usciva mai.
                                 linkVideo: getYouTubeWatchUrl(lezione.id),
-                              }),
-                            )}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <Button size="sm" variant="ghost">
-                              {t("Materiali")}
-                            </Button>
-                          </a>
+                              })
+                            }
+                            oggetto={t("I materiali della lezione: {titolo}", { titolo: lezione.title })}
+                            etichetta={t("Materiali")}
+                            variante="ghost"
+                          />
                           <Link href={`/istruttori/dispensa?compito=${compito.assignment_id}`}>
                             <Button size="sm" variant="ghost">
                               {t("Dispensa")}
