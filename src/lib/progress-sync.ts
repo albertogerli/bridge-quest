@@ -70,7 +70,12 @@ export class SyncAuthError extends Error {
 
 function assertAuthResult(error: AuthError | null) {
   if (!error) return;
-  if (isAuthSessionMissingError(error) || error.code === "session_not_found") throw new SyncSessionChangedError();
+  // `refresh_token_not_found`: la sessione è stata revocata (uscita da un
+  // altro dispositivo) e il client la chiude da solo. È una sessione finita,
+  // non un guasto (Sentry BRIDGELAB-1Z).
+  if (isAuthSessionMissingError(error) || error.code === "session_not_found" || error.code === "refresh_token_not_found") {
+    throw new SyncSessionChangedError();
+  }
   throw new SyncAuthError(error);
 }
 
