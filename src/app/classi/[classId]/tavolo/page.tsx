@@ -24,6 +24,7 @@ import { nomiDellaClasse } from "@/lib/aula";
 import { useT } from "@/contexts/traduzioni-provider";
 import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 import { statoMiaIscrizione } from "@/lib/instructors";
+import { segnalaSalvoRete } from "@/lib/report-error";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
 const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -109,9 +110,14 @@ export default function TavoloAllievoPage({
     if (!user) return;
     let vivo = true;
     const controlla = () => {
-      void statoMiaIscrizione(classId).then((st) => {
-        if (vivo) setInAttesa(st === "pending");
-      });
+      // Senza `catch` un errore del database diventava una promessa respinta
+      // non gestita, ogni cinque secondi (Sentry BRIDGELAB-2A). Lo stato resta
+      // quello di prima e il giro dopo riprova.
+      statoMiaIscrizione(classId)
+        .then((st) => {
+          if (vivo) setInAttesa(st === "pending");
+        })
+        .catch((err: unknown) => segnalaSalvoRete("tavolo:stato-iscrizione", err));
     };
     controlla();
     const timer = setInterval(controlla, 5000);

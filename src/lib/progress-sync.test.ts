@@ -310,7 +310,11 @@ describe("session interruption versus real authentication errors", () => {
     await expect(writeProgress(f.db, "synthetic-a", snapshot, "previous")).rejects.toBeInstanceOf(SyncAuthError);
     expect(f.request).not.toHaveBeenCalled();
   });
-  it.each([new AuthSessionMissingError(), new AuthApiError("signed out", 403, "session_not_found")])(
+  it.each([
+    new AuthSessionMissingError(),
+    new AuthApiError("signed out", 403, "session_not_found"),
+    new AuthApiError("revoked", 400, "refresh_token_not_found"),
+  ])(
     "classifies a confirmed missing session as cancellation, without writing", async (error) => {
       const f = authFixture();
       f.getUser.mockResolvedValueOnce({ data: { user: null }, error });
