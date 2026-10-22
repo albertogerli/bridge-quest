@@ -38,7 +38,10 @@ import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 import { useAlRitorno } from "@/hooks/use-al-ritorno";
 import { segnalaSalvoRete } from "@/lib/report-error";
 import { classificaCompito } from "@/lib/riepiloghi-classe";
-import { stelleScritte } from "@/lib/compito-licita";
+import { mazziereDellaMano, mazziereRegistrato, stelleScritte } from "@/lib/compito-licita";
+import { Asta } from "@/components/bridge/asta";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import type { Position } from "@/lib/bridge-engine";
 
 /** Cell state for the heatmap. */
 type Cell =
@@ -48,9 +51,17 @@ type Cell =
 /** Compito di licita: la cella dice il contratto raggiunto, non le prese. */
 interface CellaLicita {
   contratto: string | null;
+  dichiarante: Position | null;
   stelle: number;
   par: number | null;
+  bids: string[];
+  mazziere: Position;
 }
+
+const NOME_POSTO: Record<Position, string> = { north: "Nord", east: "Est", south: "Sud", west: "Ovest" };
+
+/** L'iniziale del dichiarante accanto al contratto: «4♠ N». */
+const INIZIALE: Record<Position, string> = { north: "N", east: "E", south: "S", west: "O" };
 
 export default function AssignmentResultsPage({
   params,
@@ -134,13 +145,21 @@ export default function AssignmentResultsPage({
     const tricksMade = typeof d.tricksMade === "number" ? d.tricksMade : undefined;
     const tricksNeeded = typeof d.tricksNeeded === "number" ? d.tricksNeeded : undefined;
     if (d.licita === true) {
+      const sm =
+        validated.find((s) => s.id === smazzataId) ??
+        assignment?.custom_hands?.find((s) => s.id === smazzataId);
+      const dichiarante =
+        typeof d.dichiarante === "string" && d.dichiarante in INIZIALE ? (d.dichiarante as Position) : null;
       return {
         state: d.made === true ? "made" : "down",
         result: r.score,
         licita: {
           contratto: typeof d.contratto === "string" ? d.contratto : null,
+          dichiarante,
           stelle: typeof d.stelle === "number" ? d.stelle : 0,
           par: typeof d.par === "number" ? d.par : null,
+          bids: Array.isArray(d.bids) ? (d.bids as string[]) : [],
+          mazziere: mazziereRegistrato(d, sm ? mazziereDellaMano(sm) : "south"),
         },
       };
     }
@@ -154,6 +173,8 @@ export default function AssignmentResultsPage({
 
   // ── Card-by-card replay of a student's hand ──────────────────────────────
   const [replay, setReplay] = useState<{ title: string; gameState: GameState } | null>(null);
+  /** Compito di licita: l'asta di un allievo su una mano, aperta dalla sua casella. */
+  const [astaAperta, setAstaAperta] = useState<{ titolo: string; cella: CellaLicita } | null>(null);
 
   function playOf(studentId: string, smazzataId: string) {
     const r = resultMap.get(`${studentId}|${smazzataId}`);
@@ -373,15 +394,22 @@ export default function AssignmentResultsPage({
                   {smazzataIds.map((id) => {
                     const cell = cellFor(m.student_id, id);
                     const playable = !!playOf(m.student_id, id);
+                    const licita = cell.state !== "empty" ? cell.licita : undefined;
                     return (
                       <td key={id} className="px-2 py-2 text-center">
                         <HeatCell
                           cell={cell}
-                          playable={playable}
+                          playable={playable || !!licita}
                           onClick={
-                            playable
-                              ? () => openReplay(m.student_id, id, m.display_name ?? "Allievo")
-                              : undefined
+                            licita
+                              ? () =>
+                                  setAstaAperta({
+                                    titolo: `${m.display_name ?? t("Allievo")} · ${colLabel(id)}`,
+                                    cella: licita,
+                                  })
+                              : playable
+                                ? () => openReplay(m.student_id, id, m.display_name ?? "Allievo")
+                                : undefined
                           }
                         />
                       </td>
@@ -578,6 +606,30 @@ export default function AssignmentResultsPage({
       <AnimatePresence>
         {/* Nord in alto, come nei diagrammi delle dispense: l'insegnante guarda
             la mano dall'esterno, non dal posto di chi l'ha giocata. */}
+        <Dialog open={!!astaAperta} onOpenChange={(aperta) => !aperta && setAstaAperta(null)}>
+          {astaAperta && (
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>{astaAperta.titolo}</DialogTitle>
+              </DialogHeader>
+              <p className="text-sm">
+                {astaAperta.cella.contratto
+                  ? t("{contratto} di {chi}", {
+                      contratto: astaAperta.cella.contratto,
+                      chi: astaAperta.cella.dichiarante ? t(NOME_POSTO[astaAperta.cella.dichiarante]) : "—",
+                    })
+                  : t("Passo generale")}
+                {" · "}
+                {t("{stelle} stelle su 3", { stelle: stelleScritte(astaAperta.cella.stelle) })}
+                {astaAperta.cella.par !== null && ` · ${t("par {par}", { par: astaAperta.cella.par })}`}
+              </p>
+              {astaAperta.cella.bids.length > 0 && (
+                <Asta dealer={astaAperta.cella.mazziere} bids={astaAperta.cella.bids} ioSono="south" />
+              )}
+            </DialogContent>
+          )}
+        </Dialog>
+
         {replay && (
           <HandReplay gameState={replay.gameState} inBasso="south" onClose={() => setReplay(null)} />
         )}
@@ -601,20 +653,24 @@ function HeatCell({
   }
   const made = cell.state === "made";
   if (cell.licita) {
-    const { contratto, stelle, par } = cell.licita;
+    const { contratto, dichiarante, stelle, par } = cell.licita;
     const titolo =
       t("{stelle} stelle su 3", { stelle: stelleScritte(stelle) }) +
-      (par !== null ? ` · ${t("par {par}", { par })}` : "");
+      (par !== null ? ` · ${t("par {par}", { par })}` : "") +
+      ` · ${t("tocca per la licita")}`;
     return (
-      <span
-        className={`inline-flex h-7 min-w-12 items-center justify-center rounded px-1 text-xs font-bold text-white ${
+      <button
+        type="button"
+        onClick={onClick}
+        className={`inline-flex h-7 min-w-12 cursor-pointer items-center justify-center gap-0.5 whitespace-nowrap rounded px-1 text-xs font-bold text-white ring-offset-1 transition hover:ring-2 hover:ring-primary/60 ${
           made ? "bg-emerald-500" : "bg-red-500"
         }`}
         title={titolo}
         aria-label={`${contratto ?? t("Passo generale")}, ${titolo}`}
       >
         {contratto ?? t("Passo")}
-      </span>
+        {contratto && dichiarante && <span className="font-normal opacity-80">{t(INIZIALE[dichiarante])}</span>}
+      </button>
     );
   }
   const label =

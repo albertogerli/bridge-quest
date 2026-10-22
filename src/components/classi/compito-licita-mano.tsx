@@ -144,6 +144,7 @@ export function CompitoLicitaMano({
         punteggio: e?.punteggio ?? 0,
         par: calcolo.par,
         bids,
+        mazziere: dealer,
       }),
     );
   };

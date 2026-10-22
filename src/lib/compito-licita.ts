@@ -18,6 +18,7 @@
 
 import type { Position } from "./bridge-engine";
 import type { Smazzata } from "./catalog";
+import { dichiarante as dichiaranteDellAsta } from "./asta";
 
 /**
  * Da quante stelle in su la mano è riuscita.
@@ -58,6 +59,8 @@ export interface EsitoCompitoLicita {
   /** Il par della smazzata, visto da Nord-Sud. */
   par: number;
   bids: string[];
+  /** Chi ha dato le carte: senza, le dichiarazioni non si rimettono al loro posto. */
+  mazziere: Position;
 }
 
 /**
@@ -84,8 +87,35 @@ export function rigaCompitoLicita(esito: EsitoCompitoLicita): {
       punteggio: esito.punteggio,
       par: esito.par,
       bids: esito.bids,
+      mazziere: esito.mazziere,
     },
   };
+}
+
+const POSTI: Position[] = ["north", "east", "south", "west"];
+
+/**
+ * Chi aveva dato le carte in una mano già registrata.
+ *
+ * Le righe scritte prima del 22/10/2026 pomeriggio non hanno `mazziere`, e il
+ * mazziere di oggi (`mazziereDellaMano`) non è quello con cui furono giocate:
+ * allora le carte giravano sul board. Lo si ricava dall'asta stessa — è il
+ * solo mazziere per cui il dichiarante registrato è quello dell'asta. Con il
+ * passo generale, o se l'asta non decide, resta `riserva`.
+ */
+export function mazziereRegistrato(
+  details: { mazziere?: unknown; bids?: unknown; dichiarante?: unknown },
+  riserva: Position,
+): Position {
+  if (typeof details.mazziere === "string" && POSTI.includes(details.mazziere as Position)) {
+    return details.mazziere as Position;
+  }
+  const bids = Array.isArray(details.bids) ? (details.bids as string[]) : [];
+  const chi = details.dichiarante;
+  if (typeof chi !== "string") return riserva;
+  const compatibili = POSTI.filter((d) => dichiaranteDellAsta(d, bids) === chi);
+  if (compatibili.length === 1) return compatibili[0];
+  return compatibili.includes(riserva) ? riserva : (compatibili[0] ?? riserva);
 }
 
 /** Le stelle come si scrivono: «2½», «3», «½». */
