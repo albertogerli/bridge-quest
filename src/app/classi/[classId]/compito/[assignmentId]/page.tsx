@@ -52,6 +52,8 @@ import {
 import { ArrowLeft, Play, CheckCircle2, XCircle, Lightbulb, RotateCcw } from "lucide-react";
 import { useT } from "@/contexts/traduzioni-provider";
 import { contrattoLeggibile } from "@/lib/contratto-leggibile";
+import { CompitoLicitaMano } from "@/components/classi/compito-licita-mano";
+import { stelleScritte } from "@/lib/compito-licita";
 
 export default function CompitoPage({
   params,
@@ -122,6 +124,32 @@ export default function CompitoPage({
       <div className="mx-auto max-w-6xl px-4 py-10">
         <p className="text-sm text-destructive">{error ?? "Compito non trovato"}</p>
       </div>
+    );
+  }
+
+  // Compito di licita: la mano si dichiara invece di giocarsi.
+  if (assignment.licita && currentIndex !== null && currentIndex < hands.length) {
+    const smazzata = hands[currentIndex];
+    return (
+      <CompitoLicitaMano
+        key={smazzata.id}
+        smazzata={smazzata}
+        handNumber={currentIndex + 1}
+        totalHands={hands.length}
+        onRegistra={async (score, details) => {
+          await recordAssignmentResult({ assignmentId, smazzataId: smazzata.id, score, details });
+          setDoneIds((prev) => new Set(prev).add(smazzata.id));
+          setResults((prev) =>
+            new Map(prev).set(smazzata.id, {
+              made: details.made === true,
+              result: score,
+              stelle: typeof details.stelle === "number" ? details.stelle : undefined,
+              contratto: typeof details.contratto === "string" ? details.contratto : null,
+            }),
+          );
+        }}
+        onEsci={() => setCurrentIndex(null)}
+      />
     );
   }
 
@@ -201,8 +229,16 @@ export default function CompitoPage({
         </div>
         <p className="mt-2 text-sm text-muted-foreground">
           {completedCount}/{hands.length} mani completate
-          {downCount > 0 && (
+          {downCount > 0 && !assignment.licita && (
             <span className="font-bold text-red-600"> · {downCount} {downCount === 1 ? "caduta" : "cadute"} da rigiocare</span>
+          )}
+          {downCount > 0 && assignment.licita && (
+            <span className="font-bold text-red-600">
+              {" · "}
+              {downCount === 1
+                ? t("1 da ridichiarare")
+                : t("{n} da ridichiarare", { n: downCount })}
+            </span>
           )}
           {allDone && downCount === 0 && " — Compito completato! 🎉"}
         </p>
@@ -281,21 +317,31 @@ export default function CompitoPage({
                     Mano {i + 1}: {hand.title}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    {senzaLicita(hand.lesson)
+                    {assignment.licita
+                      ? t("Da dichiarare: sei Sud")
+                      : senzaLicita(hand.lesson)
                       ? t("Obiettivo {n} prese", { n: parseContract(hand.contract).tricksNeeded })
                       : t("Contratto {c}", { c: contrattoLeggibile(hand.contract) })} ·{" "}
                     {hand.lesson > 0
                       ? `Lezione ${getLessonDisplayNumber(hand.lesson)}`
                       : "Mano dell'insegnante"}
                   </p>
-                  {isDown && (
+                  {assignment.licita && r && (
+                    <p className={`mt-0.5 text-xs font-semibold ${isDown ? "text-red-600" : "text-emerald-600"}`}>
+                      {r.contratto
+                        ? t("{contratto} — {stelle} stelle su 3", { contratto: r.contratto, stelle: stelleScritte(r.stelle ?? 0) })
+                        : t("Passo generale — {stelle} stelle su 3", { stelle: stelleScritte(r.stelle ?? 0) })}
+                      {isDown && ` · ${t("ridichiarala")}`}
+                    </p>
+                  )}
+                  {!assignment.licita && isDown && (
                     <p className="mt-0.5 text-xs font-bold text-red-600">
                       {senzaLicita(hand.lesson)
                         ? t("Obiettivo mancato — rigioca questa mano")
                         : <>Caduto{r ? ` di ${Math.abs(r.result)}` : ""} — rigioca questa mano</>}
                     </p>
                   )}
-                  {isMade && (
+                  {!assignment.licita && isMade && (
                     <p className="mt-0.5 text-xs font-semibold text-emerald-600">{t("Mantenuto ✓")}</p>
                   )}
                 </div>
@@ -307,12 +353,14 @@ export default function CompitoPage({
                     className={`shrink-0 ${isDown ? "bg-red-600 text-white hover:bg-red-700" : ""}`}
                   >
                     <Play className="mr-1 h-3.5 w-3.5" />
-                    {isPlayed ? "Rigioca" : "Gioca"}
+                    {assignment.licita
+                      ? isPlayed ? t("Ridichiara") : t("Dichiara")
+                      : isPlayed ? "Rigioca" : "Gioca"}
                   </Button>
                 )}
               </div>
               {isPlayed && (
-                <SoluzioneMano smazzata={hand} ricarica={doneIds.size} assignmentId={assignmentId} />
+                <SoluzioneMano smazzata={hand} ricarica={doneIds.size} assignmentId={assignmentId} licita={assignment.licita} />
               )}
             </motion.div>
           );
@@ -340,10 +388,17 @@ function SoluzioneMano({
   smazzata,
   ricarica,
   assignmentId,
+  licita = false,
 }: {
   smazzata: Smazzata;
   ricarica: unknown;
   assignmentId?: string;
+  /**
+   * Compito di licita: il confronto («l'hanno mantenuto») e la prova col
+   * contratto di riserva parlano del gioco della carta, che qui non c'è.
+   * Resta la spiegazione dell'insegnante.
+   */
+  licita?: boolean;
 }) {
   const t = useT();
   const [aperta, setAperta] = useState(false);
@@ -357,11 +412,11 @@ function SoluzioneMano({
         schermata di fine mano: lì si torna all'elenco dopo due secondi, e una
         cosa che si vuole guardare con calma va messa dove si può tornare.
       */}
-      {assignmentId && (
+      {assignmentId && !licita && (
         <ConfrontoClasse assignmentId={assignmentId} smazzataId={smazzata.id} />
       )}
 
-      {smazzata.contract && (
+      {smazzata.contract && !licita && (
         prova ? (
           <ProvaDaQui
             hands={smazzata.hands}

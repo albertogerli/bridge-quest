@@ -26,6 +26,12 @@ describe("dealsToSmazzate", () => {
     }
   });
 
+  it("porta il mazziere scelto per i compiti di licita, e solo se scelto", () => {
+    expect(smazzate.every((s) => s.mazziere === undefined)).toBe(true);
+    const conMazziere = dealsToSmazzate(deals, { ...base, mazziere: "north" });
+    expect(conMazziere.every((s) => s.mazziere === "north")).toBe(true);
+  });
+
   it("ruota la vulnerabilità invece di lasciarla sempre uguale", () => {
     expect(smazzate.map((s) => s.vulnerability)).toEqual(["none", "ns", "ew", "both"]);
   });
