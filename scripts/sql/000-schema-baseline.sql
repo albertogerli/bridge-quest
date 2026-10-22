@@ -16,7 +16,7 @@
 -- Rigenerare e committare dopo OGNI modifica allo schema, insieme allo script
 -- che l'ha causata.
 --
--- Estratto il: 2026-10-16
+-- Estratto il: 2026-10-22
 -- ============================================================================
 
 SET check_function_bodies = false;
@@ -88,7 +88,8 @@ CREATE TABLE IF NOT EXISTS public.assignments (
   lesson_id integer,
   minibridge boolean NOT NULL,
   esercizio_ids uuid[] NOT NULL,
-  link_video text
+  link_video text,
+  licita boolean NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.aste_torneo_in_corso (
@@ -513,6 +514,19 @@ CREATE TABLE IF NOT EXISTS public.mani_generate (
   valore_atteso jsonb,
   distribuzioni jsonb,
   ns_hcp smallint
+);
+
+CREATE TABLE IF NOT EXISTS public.materiali_lezione (
+  id uuid NOT NULL,
+  class_id uuid NOT NULL,
+  lesson_id text,
+  lezione text NOT NULL,
+  tipo text NOT NULL,
+  titolo text NOT NULL,
+  url text NOT NULL,
+  ordine integer NOT NULL,
+  pubblica_dal timestamp with time zone,
+  created_at timestamp with time zone NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.modelli_mani (
@@ -4635,6 +4649,7 @@ ALTER TABLE public.assignments ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.assignments ALTER COLUMN soluzioni SET DEFAULT 'dopo-il-gioco'::text;
 ALTER TABLE public.assignments ALTER COLUMN minibridge SET DEFAULT false;
 ALTER TABLE public.assignments ALTER COLUMN esercizio_ids SET DEFAULT '{}'::uuid[];
+ALTER TABLE public.assignments ALTER COLUMN licita SET DEFAULT false;
 ALTER TABLE public.aste_torneo_in_corso ALTER COLUMN asta SET DEFAULT '{}'::text[];
 ALTER TABLE public.aste_torneo_in_corso ALTER COLUMN aggiornata_at SET DEFAULT now();
 ALTER TABLE public.badges ALTER COLUMN id SET DEFAULT nextval('badges_id_seq'::regclass);
@@ -4755,6 +4770,9 @@ ALTER TABLE public.mani_generate ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.mani_generate ALTER COLUMN dealer SET DEFAULT 'south'::text;
 ALTER TABLE public.mani_generate ALTER COLUMN vulnerability SET DEFAULT 'none'::text;
 ALTER TABLE public.mani_generate ALTER COLUMN created_at SET DEFAULT now();
+ALTER TABLE public.materiali_lezione ALTER COLUMN id SET DEFAULT gen_random_uuid();
+ALTER TABLE public.materiali_lezione ALTER COLUMN ordine SET DEFAULT 0;
+ALTER TABLE public.materiali_lezione ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.modelli_mani ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.modelli_mani ALTER COLUMN ufficiale SET DEFAULT false;
 ALTER TABLE public.modelli_mani ALTER COLUMN condiviso SET DEFAULT false;
@@ -4881,6 +4899,7 @@ ALTER TABLE public.libreria ADD CONSTRAINT libreria_pkey PRIMARY KEY (id);
 ALTER TABLE public.live_tables ADD CONSTRAINT live_tables_pkey PRIMARY KEY (id);
 ALTER TABLE public.login_history ADD CONSTRAINT login_history_pkey PRIMARY KEY (id);
 ALTER TABLE public.mani_generate ADD CONSTRAINT mani_generate_pkey PRIMARY KEY (id);
+ALTER TABLE public.materiali_lezione ADD CONSTRAINT materiali_lezione_pkey PRIMARY KEY (id);
 ALTER TABLE public.modelli_mani ADD CONSTRAINT modelli_mani_pkey PRIMARY KEY (id);
 ALTER TABLE public.note_smazzate ADD CONSTRAINT note_smazzate_pkey PRIMARY KEY (autore_id, smazzata_id);
 ALTER TABLE public.partner_profiles ADD CONSTRAINT partner_profiles_pkey PRIMARY KEY (user_id);
@@ -4973,6 +4992,9 @@ ALTER TABLE public.lesson_modules ADD CONSTRAINT lesson_modules_xp_reward_check 
 ALTER TABLE public.libreria ADD CONSTRAINT libreria_stato_check CHECK ((stato = ANY (ARRAY['in-attesa'::text, 'approvato'::text, 'rifiutato'::text])));
 ALTER TABLE public.libreria ADD CONSTRAINT libreria_tipo_check CHECK ((tipo = ANY (ARRAY['modello'::text, 'smazzate'::text, 'esercizi'::text])));
 ALTER TABLE public.mani_generate ADD CONSTRAINT mani_generate_dealer_check CHECK ((dealer = ANY (ARRAY['north'::text, 'east'::text, 'south'::text, 'west'::text])));
+ALTER TABLE public.materiali_lezione ADD CONSTRAINT materiali_lezione_testi CHECK ((((char_length(btrim(lezione)) >= 1) AND (char_length(btrim(lezione)) <= 200)) AND ((char_length(btrim(titolo)) >= 1) AND (char_length(btrim(titolo)) <= 200))));
+ALTER TABLE public.materiali_lezione ADD CONSTRAINT materiali_lezione_tipo CHECK ((tipo = ANY (ARRAY['video'::text, 'dispensa'::text, 'esercizio'::text])));
+ALTER TABLE public.materiali_lezione ADD CONSTRAINT materiali_lezione_url CHECK (((char_length(url) <= 2000) AND ((url ~* '^https?://[^[:space:]]+$'::text) OR (url ~ '^/([^/[:space:]][^[:space:]]*)?$'::text))));
 ALTER TABLE public.partner_profiles ADD CONSTRAINT partner_profiles_availability_check CHECK ((availability <@ ARRAY['mattina'::text, 'pomeriggio'::text, 'sera'::text, 'weekend'::text]));
 ALTER TABLE public.partner_profiles ADD CONSTRAINT partner_profiles_level_check CHECK ((level = ANY (ARRAY['principiante'::text, 'intermedio'::text, 'avanzato'::text])));
 ALTER TABLE public.partner_profiles ADD CONSTRAINT partner_profiles_province_check CHECK (((province IS NULL) OR (province ~ '^[A-Z]{2}$'::text)));
@@ -5057,6 +5079,7 @@ ALTER TABLE public.live_tables ADD CONSTRAINT live_tables_instructor_id_fkey FOR
 ALTER TABLE public.live_tables ADD CONSTRAINT live_tables_sessione_id_fkey FOREIGN KEY (sessione_id) REFERENCES sessioni_aula(id) ON DELETE SET NULL;
 ALTER TABLE public.login_history ADD CONSTRAINT login_history_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.mani_generate ADD CONSTRAINT mani_generate_scenario_id_fkey FOREIGN KEY (scenario_id) REFERENCES scenari(id) ON DELETE CASCADE;
+ALTER TABLE public.materiali_lezione ADD CONSTRAINT materiali_lezione_class_id_fkey FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE;
 ALTER TABLE public.modelli_mani ADD CONSTRAINT modelli_mani_autore_id_fkey FOREIGN KEY (autore_id) REFERENCES auth.users(id) ON DELETE SET NULL;
 ALTER TABLE public.modelli_mani ADD CONSTRAINT modelli_mani_lesson_id_fkey FOREIGN KEY (lesson_id) REFERENCES lessons(id) ON DELETE SET NULL;
 ALTER TABLE public.note_smazzate ADD CONSTRAINT note_smazzate_autore_id_fkey FOREIGN KEY (autore_id) REFERENCES auth.users(id) ON DELETE CASCADE;
@@ -5164,6 +5187,7 @@ CREATE INDEX lessons_world_id_idx ON public.lessons USING btree (world_id);
 CREATE INDEX live_tables_class_idx ON public.live_tables USING btree (class_id, created_at DESC);
 CREATE INDEX mani_generate_ns_hcp_idx ON public.mani_generate USING btree (ns_hcp);
 CREATE INDEX mani_generate_scenario_idx ON public.mani_generate USING btree (scenario_id, created_at DESC);
+CREATE INDEX materiali_lezione_per_classe ON public.materiali_lezione USING btree (class_id, lezione);
 CREATE INDEX partner_profiles_looking_idx ON public.partner_profiles USING btree (looking, province) WHERE looking;
 CREATE INDEX presenze_per_classe_e_data ON public.presenze USING btree (class_id, data DESC);
 CREATE UNIQUE INDEX presenze_una_per_elenco_e_giorno ON public.presenze USING btree (class_id, elenco_id, data) WHERE (elenco_id IS NOT NULL);
@@ -5254,6 +5278,7 @@ ALTER TABLE public.libreria ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.live_tables ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.login_history ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.mani_generate ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.materiali_lezione ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.modelli_mani ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.note_smazzate ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.partner_profiles ENABLE ROW LEVEL SECURITY;
@@ -5376,6 +5401,8 @@ CREATE POLICY "Users can read own login history" ON public.login_history AS PERM
 CREATE POLICY "Istruttori generano mani" ON public.mani_generate AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK ((EXISTS ( SELECT 1
    FROM profiles p
   WHERE ((p.id = auth.uid()) AND (p.role = ANY (ARRAY['instructor'::text, 'admin'::text]))))));
+CREATE POLICY "L'allievo vede i materiali già pubblicati" ON public.materiali_lezione AS PERMISSIVE FOR SELECT TO authenticated USING ((is_member_of_class(class_id) AND (pubblica_dal IS NOT NULL) AND (pubblica_dal <= now())));
+CREATE POLICY "L'insegnante gestisce i materiali della sua classe" ON public.materiali_lezione AS PERMISSIVE FOR ALL TO authenticated USING ((is_instructor_of_class(class_id) OR is_admin())) WITH CHECK ((is_instructor_of_class(class_id) OR is_admin()));
 CREATE POLICY "Chi insegna crea i propri modelli" ON public.modelli_mani AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK (((autore_id = auth.uid()) AND (NOT ufficiale) AND (EXISTS ( SELECT 1
    FROM profiles p
   WHERE ((p.id = auth.uid()) AND (p.role = ANY (ARRAY['instructor'::text, 'admin'::text])))))));
@@ -5482,6 +5509,7 @@ REVOKE ALL ON TABLE public.libreria FROM PUBLIC, anon, authenticated, service_ro
 REVOKE ALL ON TABLE public.live_tables FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.login_history FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.mani_generate FROM PUBLIC, anon, authenticated, service_role;
+REVOKE ALL ON TABLE public.materiali_lezione FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.modelli_mani FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.note_smazzate FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.partner_profiles FROM PUBLIC, anon, authenticated, service_role;
@@ -6485,6 +6513,18 @@ GRANT SELECT ON TABLE public.mani_generate TO service_role;
 GRANT TRIGGER ON TABLE public.mani_generate TO service_role;
 GRANT TRUNCATE ON TABLE public.mani_generate TO service_role;
 GRANT UPDATE ON TABLE public.mani_generate TO service_role;
+GRANT DELETE ON TABLE public.materiali_lezione TO authenticated;
+GRANT INSERT ON TABLE public.materiali_lezione TO authenticated;
+GRANT SELECT ON TABLE public.materiali_lezione TO authenticated;
+GRANT UPDATE ON TABLE public.materiali_lezione TO authenticated;
+GRANT DELETE ON TABLE public.materiali_lezione TO service_role;
+GRANT INSERT ON TABLE public.materiali_lezione TO service_role;
+GRANT MAINTAIN ON TABLE public.materiali_lezione TO service_role;
+GRANT REFERENCES ON TABLE public.materiali_lezione TO service_role;
+GRANT SELECT ON TABLE public.materiali_lezione TO service_role;
+GRANT TRIGGER ON TABLE public.materiali_lezione TO service_role;
+GRANT TRUNCATE ON TABLE public.materiali_lezione TO service_role;
+GRANT UPDATE ON TABLE public.materiali_lezione TO service_role;
 GRANT DELETE ON TABLE public.modelli_mani TO anon;
 GRANT INSERT ON TABLE public.modelli_mani TO anon;
 GRANT MAINTAIN ON TABLE public.modelli_mani TO anon;
