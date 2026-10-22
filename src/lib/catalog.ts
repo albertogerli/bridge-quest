@@ -44,6 +44,11 @@ export interface ContentBlock {
   numericMax?: number;
   correctOrder?: number[];
   explanation?: string;
+  /**
+   * La domanda si regge solo dentro la lezione, sulla mano dell'esempio che la
+   * precede: il Quiz lampo, che pesca le domande da sole, la salta.
+   */
+  soloLezione?: boolean;
 }
 
 export interface LessonModule {

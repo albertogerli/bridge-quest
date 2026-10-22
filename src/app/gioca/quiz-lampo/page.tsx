@@ -92,6 +92,7 @@ function blockToQuestion(
   block: ContentBlock,
   courseName: string
 ): QuizQuestion | null {
+  if (block.soloLezione) return null;
   switch (block.type) {
     case "quiz": {
       if (!block.options || block.correctAnswer === undefined) return null;
