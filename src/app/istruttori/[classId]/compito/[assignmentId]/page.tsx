@@ -38,12 +38,19 @@ import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 import { useAlRitorno } from "@/hooks/use-al-ritorno";
 import { segnalaSalvoRete } from "@/lib/report-error";
 import { classificaCompito } from "@/lib/riepiloghi-classe";
+import { stelleScritte } from "@/lib/compito-licita";
 
 /** Cell state for the heatmap. */
 type Cell =
-  | { state: "made"; result: number; tricksMade?: number; tricksNeeded?: number }
-  | { state: "down"; result: number; tricksMade?: number; tricksNeeded?: number }
+  | { state: "made" | "down"; result: number; tricksMade?: number; tricksNeeded?: number; licita?: CellaLicita }
   | { state: "empty" };
+
+/** Compito di licita: la cella dice il contratto raggiunto, non le prese. */
+interface CellaLicita {
+  contratto: string | null;
+  stelle: number;
+  par: number | null;
+}
 
 export default function AssignmentResultsPage({
   params,
@@ -110,12 +117,33 @@ export default function AssignmentResultsPage({
     return m;
   }, [results]);
 
+  /** Compito di licita: le stelle di un allievo, sommate sulle mani dichiarate. */
+  function stelleTotali(studentId: string): number {
+    let somma = 0;
+    for (const id of assignment?.smazzata_ids ?? []) {
+      const stelle = resultMap.get(`${studentId}|${id}`)?.details?.stelle;
+      if (typeof stelle === "number") somma += stelle;
+    }
+    return somma;
+  }
+
   function cellFor(studentId: string, smazzataId: string): Cell {
     const r = resultMap.get(`${studentId}|${smazzataId}`);
     if (!r) return { state: "empty" };
     const d = r.details ?? {};
     const tricksMade = typeof d.tricksMade === "number" ? d.tricksMade : undefined;
     const tricksNeeded = typeof d.tricksNeeded === "number" ? d.tricksNeeded : undefined;
+    if (d.licita === true) {
+      return {
+        state: d.made === true ? "made" : "down",
+        result: r.score,
+        licita: {
+          contratto: typeof d.contratto === "string" ? d.contratto : null,
+          stelle: typeof d.stelle === "number" ? d.stelle : 0,
+          par: typeof d.par === "number" ? d.par : null,
+        },
+      };
+    }
     return {
       state: r.score >= 0 ? "made" : "down",
       result: r.score,
@@ -303,7 +331,13 @@ export default function AssignmentResultsPage({
         <span className="flex items-center gap-1.5">
           <span className="h-3 w-3 rounded border border-border bg-muted" /> {t("Non giocata")}
         </span>
-        <span className="text-muted-foreground">▶ {t("Clicca una cella giocata per rivedere la mano carta per carta")}</span>
+        {assignment.licita ? (
+          <span className="text-muted-foreground">
+            {t("Compito di licita: ogni cella è il contratto raggiunto. Verde da 2 stelle in su; passa sopra per le stelle e il par.")}
+          </span>
+        ) : (
+          <span className="text-muted-foreground">▶ {t("Clicca una cella giocata per rivedere la mano carta per carta")}</span>
+        )}
       </div>
 
       {members.length === 0 ? (
@@ -374,7 +408,9 @@ export default function AssignmentResultsPage({
             {t("Classifica di questo compito")}
           </h2>
           <p className="mb-3 text-sm text-muted-foreground">
-            {t("La vedi solo tu: prima i contratti mantenuti, poi le mani giocate, poi le prese in più o in meno. Si aggiorna da sola mentre la classe gioca.")}
+            {assignment.licita
+              ? t("La vedi solo tu: prima le mani riuscite, poi quelle dichiarate. Si aggiorna da sola mentre la classe dichiara.")
+              : t("La vedi solo tu: prima i contratti mantenuti, poi le mani giocate, poi le prese in più o in meno. Si aggiorna da sola mentre la classe gioca.")}
           </p>
           <ol className="divide-y divide-border rounded-lg border border-border">
             {classifica.map((r, i) => (
@@ -386,10 +422,14 @@ export default function AssignmentResultsPage({
                 ) : (
                   <>
                     <span className="tabular-nums">
-                      {t("{m} mantenuti su {g}", { m: r.mantenute, g: r.giocate })}
+                      {assignment.licita
+                        ? t("{m} riuscite su {g}", { m: r.mantenute, g: r.giocate })
+                        : t("{m} mantenuti su {g}", { m: r.mantenute, g: r.giocate })}
                     </span>
                     <span className="w-16 text-right tabular-nums text-muted-foreground">
-                      {r.saldo > 0 ? `+${r.saldo}` : r.saldo === 0 ? "=" : r.saldo}
+                      {assignment.licita
+                        ? `${stelleScritte(stelleTotali(r.studentId))} ★`
+                        : r.saldo > 0 ? `+${r.saldo}` : r.saldo === 0 ? "=" : r.saldo}
                     </span>
                   </>
                 )}
@@ -556,6 +596,23 @@ function HeatCell({
     return <span className="inline-block h-7 w-12 rounded border border-border bg-muted" aria-label={t("Non giocata")} />;
   }
   const made = cell.state === "made";
+  if (cell.licita) {
+    const { contratto, stelle, par } = cell.licita;
+    const titolo =
+      t("{stelle} stelle su 3", { stelle: stelleScritte(stelle) }) +
+      (par !== null ? ` · ${t("par {par}", { par })}` : "");
+    return (
+      <span
+        className={`inline-flex h-7 min-w-12 items-center justify-center rounded px-1 text-xs font-bold text-white ${
+          made ? "bg-emerald-500" : "bg-red-500"
+        }`}
+        title={titolo}
+        aria-label={`${contratto ?? t("Passo generale")}, ${titolo}`}
+      >
+        {contratto ?? t("Passo")}
+      </span>
+    );
+  }
   const label =
     cell.result === 0 ? "=" : cell.result > 0 ? `+${cell.result}` : `${cell.result}`;
   const title =

@@ -98,6 +98,10 @@ export default function GeneraManiPage() {
   const [assigning, setAssigning] = useState(false);
   // Compito di solo gioco della carta: la dichiarazione è già fatta.
   const [conLicita, setConLicita] = useState(false);
+  /** Compito di licita: gli allievi dichiarano invece di giocare. */
+  const [perLicita, setPerLicita] = useState(false);
+  /** Compito di licita: chi dà le carte, o il giro dei board. */
+  const [mazziere, setMazziere] = useState<Position | "giro">("giro");
   const [assigned, setAssigned] = useState("");
   // Pubblicazione nella scorta condivisa
   const [nomeScenario, setNomeScenario] = useState("");
@@ -284,7 +288,8 @@ export default function GeneraManiPage() {
         // l'insegnante ha scelto al posto del par. Un contratto unico per
         // tutte è impossibile su alcune mani e troppo timido su altre.
         perHand: analisi?.map((a) => a.scelta) ?? undefined,
-        conLicita,
+        conLicita: conLicita && !perLicita,
+        ...(perLicita && mazziere !== "giro" ? { mazziere } : {}),
         // Il seme entra nell'id: due compiti generati con semi diversi non si
         // sovrappongono, e lo stesso seme resta riconoscibile.
         idPrefix: `gen-${template.id}-${seed}`,
@@ -295,15 +300,29 @@ export default function GeneraManiPage() {
       });
       await createAssignment({
         classId,
-        title: `${template.label} (${smazzate.length} mani)`,
+        title: perLicita
+          ? `Licita — ${template.label} (${smazzate.length} mani)`
+          : `${template.label} (${smazzate.length} mani)`,
         smazzataIds: smazzate.map((s) => s.id),
         customHands: smazzate,
         instructorNote: template.description,
+        licita: perLicita,
       });
-      setAssigned(`Compito creato con ${smazzate.length} mani.`);
+      setAssigned(
+        perLicita
+          ? t("Compito di licita creato con {n} mani.", { n: smazzate.length })
+          : `Compito creato con ${smazzate.length} mani.`,
+      );
     } catch (err) {
       reportError("genera-mani:assegna", err);
-      setAssigned("Non è stato possibile creare il compito. Riprova.");
+      // Senza `compito-licita-2026-10.sql` la colonna non c'è e PostgREST
+      // risponde PGRST204: va detto, non confuso con un guasto passeggero.
+      const colonnaMancante = (err as { code?: unknown } | null)?.code === "PGRST204";
+      setAssigned(
+        perLicita && colonnaMancante
+          ? t("I compiti di licita non sono ancora attivi su questo sito. Puoi assegnare le stesse mani da giocare.")
+          : "Non è stato possibile creare il compito. Riprova.",
+      );
     } finally {
       setAssigning(false);
     }
@@ -631,18 +650,52 @@ export default function GeneraManiPage() {
           <p className="text-sm text-muted-foreground mb-4">
             {t("Le mani diventano un compito che gli allievi trovano nella loro classe.")}
           </p>
-          {analisi?.length === result.deals.length ? (
-            <p className="text-sm text-figb font-medium mb-4">
-              {t("Ogni mano porta il proprio contratto: lo trovi sotto le carte, qui sotto, e puoi cambiarlo mano per mano. Contratto e dichiarante di riserva servono solo alle mani il cui par non è interpretabile.")}
-            </p>
-          ) : (
-            <p className="text-sm text-muted-foreground mb-4">
-              Senza il par, tutte le mani prenderebbero lo stesso contratto — un
-              contratto unico è impossibile su alcune e troppo timido su altre.
-              Premi <strong>{t("Calcola par")}</strong> e ognuna riceverà il suo,
-              modificabile.
-            </p>
-          )}
+          {/*
+            Che cosa fanno gli allievi con le mani. Prima c'era solo il gioco,
+            e la casella «Solo gioco della carta» faceva credere che senza
+            l'allievo avrebbe dichiarato: un'insegnante (22/10/2026) ha
+            assegnato otto mani per esercitare i transfer, e gli allievi le
+            hanno solo giocate.
+          */}
+          <fieldset className="mb-4">
+            <legend className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
+              {t("Che cosa fanno gli allievi")}
+            </legend>
+            <div className="grid gap-2 sm:grid-cols-2">
+              <label className={`flex cursor-pointer items-start gap-2 rounded-xl border p-3 ${!perLicita ? "border-figb bg-card" : "border-border"}`}>
+                <input type="radio" name="cosa-fanno" checked={!perLicita} onChange={() => setPerLicita(false)} className="mt-1" />
+                <span className="text-sm">
+                  <strong>{t("Giocano la carta")}</strong>
+                  <span className="block text-xs text-muted-foreground">
+                    {t("Ogni mano arriva con il contratto già deciso, e l'allievo la gioca.")}
+                  </span>
+                </span>
+              </label>
+              <label className={`flex cursor-pointer items-start gap-2 rounded-xl border p-3 ${perLicita ? "border-figb bg-card" : "border-border"}`}>
+                <input type="radio" name="cosa-fanno" checked={perLicita} onChange={() => setPerLicita(true)} className="mt-1" />
+                <span className="text-sm">
+                  <strong>{t("Dichiarano")}</strong>
+                  <span className="block text-xs text-muted-foreground">
+                    {t("L'allievo è Sud e dichiara la mano; BEN dichiara per il compagno e per gli avversari. Il voto è il contratto raggiunto rispetto al par.")}
+                  </span>
+                </span>
+              </label>
+            </div>
+          </fieldset>
+
+          {!perLicita &&
+            (analisi?.length === result.deals.length ? (
+              <p className="text-sm text-figb font-medium mb-4">
+                {t("Ogni mano porta il proprio contratto: lo trovi sotto le carte, qui sotto, e puoi cambiarlo mano per mano. Contratto e dichiarante di riserva servono solo alle mani il cui par non è interpretabile.")}
+              </p>
+            ) : (
+              <p className="text-sm text-muted-foreground mb-4">
+                Senza il par, tutte le mani prenderebbero lo stesso contratto — un
+                contratto unico è impossibile su alcune e troppo timido su altre.
+                Premi <strong>{t("Calcola par")}</strong> e ognuna riceverà il suo,
+                modificabile.
+              </p>
+            ))}
 
           <div className="flex flex-wrap gap-3 mb-4">
             <div>
@@ -661,52 +714,79 @@ export default function GeneraManiPage() {
                 ))}
               </select>
             </div>
-            <div>
-              <label htmlFor="contratto" className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
-                {t("Contratto di riserva")}
-              </label>
-              <select
-                id="contratto"
-                value={contract}
-                onChange={(e) => setContract(e.target.value)}
-                className="h-12 px-4 rounded-xl border border-border bg-card text-sm"
-              >
-                {CONTRATTI.map((c) => (
-                  <option key={c} value={c}>{c}</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label htmlFor="dichiarante" className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
-                {t("Dichiarante di riserva")}
-              </label>
-              <select
-                id="dichiarante"
-                value={declarer}
-                onChange={(e) => setDeclarer(e.target.value as typeof declarer)}
-                className="h-12 px-4 rounded-xl border border-border bg-card text-sm"
-              >
-                {SEATS.map((s) => (
-                  <option key={s.key} value={s.key}>{s.label}</option>
-                ))}
-              </select>
-            </div>
+            {perLicita ? (
+              <div>
+                <label htmlFor="mazziere" className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
+                  {t("Chi dà le carte")}
+                </label>
+                <select
+                  id="mazziere"
+                  value={mazziere}
+                  onChange={(e) => setMazziere(e.target.value as typeof mazziere)}
+                  className="h-12 px-4 rounded-xl border border-border bg-card text-sm"
+                >
+                  <option value="giro">{t("A turno, come nei board")}</option>
+                  {SEATS.map((s) => (
+                    <option key={s.key} value={s.key}>{s.label}</option>
+                  ))}
+                </select>
+              </div>
+            ) : (
+              <>
+                <div>
+                  <label htmlFor="contratto" className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
+                    {t("Contratto di riserva")}
+                  </label>
+                  <select
+                    id="contratto"
+                    value={contract}
+                    onChange={(e) => setContract(e.target.value)}
+                    className="h-12 px-4 rounded-xl border border-border bg-card text-sm"
+                  >
+                    {CONTRATTI.map((c) => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label htmlFor="dichiarante" className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
+                    {t("Dichiarante di riserva")}
+                  </label>
+                  <select
+                    id="dichiarante"
+                    value={declarer}
+                    onChange={(e) => setDeclarer(e.target.value as typeof declarer)}
+                    className="h-12 px-4 rounded-xl border border-border bg-card text-sm"
+                  >
+                    {SEATS.map((s) => (
+                      <option key={s.key} value={s.key}>{s.label}</option>
+                    ))}
+                  </select>
+                </div>
+              </>
+            )}
           </div>
 
-          <label className="flex items-start gap-2 mb-4 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={conLicita}
-              onChange={(e) => setConLicita(e.target.checked)}
-              className="mt-1"
-            />
-            <span className="text-sm">
-              <strong>{t("Solo gioco della carta")}</strong>
-              <span className="block text-xs text-muted-foreground">
-                {t("Ogni mano arriva con la dichiarazione già fatta: l'allievo si concentra sul gioco. Senza, vedrebbe un contratto piovuto dal nulla senza sapere cosa la sua linea ha promesso.")}
+          {perLicita ? (
+            <p className="text-xs text-muted-foreground mb-4">
+              {t("Chi dà le carte decide chi parla per primo. Se il modello mette l'apertura in un posto preciso — per esempio 1SA di Nord per esercitare le risposte — scegli quel posto.")}
+            </p>
+          ) : (
+            <label className="flex items-start gap-2 mb-4 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={conLicita}
+                onChange={(e) => setConLicita(e.target.checked)}
+                className="mt-1"
+              />
+              <span className="text-sm">
+                <strong>{t("Mostra la licita che porta al contratto")}</strong>
+                <span className="block text-xs text-muted-foreground">
+                  {t("L'allievo vede l'asta già fatta e sa che cosa ha promesso la sua linea. Senza, vede solo il contratto. In tutti e due i casi gioca e basta: per farlo dichiarare scegli «Dichiarano» qui sopra.")}
+                </span>
               </span>
-            </span>
-          </label>
+            </label>
+          )}
 
           <Button disabled={assigning || !classId} onClick={assign}>
             {assigning ? "Creo il compito…" : `Assegna ${result.deals.length} mani`}

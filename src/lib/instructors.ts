@@ -163,6 +163,13 @@ export interface Assignment {
    * mettere davanti all'allievo una cassetta che non gli è stata spiegata.
    */
   minibridge: boolean;
+  /**
+   * Le mani si DICHIARANO invece di giocarsi: l'allievo è Sud, BEN dichiara
+   * per gli altri tre, il voto è il contratto raggiunto rispetto al par.
+   * Facoltativo finché `compito-licita-2026-10.sql` non è eseguito: senza la
+   * colonna non arriva, e il compito resta di gioco.
+   */
+  licita?: boolean;
   /** Esercizi di posizione assegnati insieme alle smazzate. */
   esercizio_ids: string[];
   /**
@@ -671,6 +678,8 @@ export async function createAssignment(input: {
   unlockMode?: UnlockMode;
   soluzioni?: VisibilitaSoluzioni;
   minibridge?: boolean;
+  /** Compito di licita: vedi `Assignment.licita`. */
+  licita?: boolean;
   esercizioIds?: string[];
   /** Hands imported from PBN; their ids must also appear in smazzataIds */
   customHands?: Smazzata[] | null;
@@ -691,6 +700,9 @@ export async function createAssignment(input: {
     minibridge: input.minibridge ?? false,
     esercizio_ids: input.esercizioIds ?? [],
   };
+  // Solo quando serve, come `custom_hands`: senza lo script la colonna non
+  // esiste, e mandarla sempre romperebbe anche i compiti di gioco.
+  if (input.licita) row.licita = true;
   // Only send the column when used, so DBs without pbn_import.sql keep working
   if (input.customHands && input.customHands.length > 0) {
     row.custom_hands = input.customHands;
@@ -774,6 +786,9 @@ export async function getMyAssignmentProgress(
 export interface HandResult {
   made: boolean;
   result: number;
+  /** Compito di licita: le stelle del voto (anche mezze) e il contratto raggiunto. */
+  stelle?: number;
+  contratto?: string | null;
 }
 
 export interface LeaderboardRow {
@@ -830,7 +845,9 @@ export async function getMyAssignmentResults(
     if (!aId || !sId) continue;
     const made = details && typeof details.made === "boolean" ? details.made : score >= 0;
     if (!out.has(aId)) out.set(aId, new Map());
-    out.get(aId)!.set(sId, { made, result: score });
+    const stelle = details && typeof details.stelle === "number" ? details.stelle : undefined;
+    const contratto = details && typeof details.contratto === "string" ? details.contratto : null;
+    out.get(aId)!.set(sId, { made, result: score, ...(stelle !== undefined ? { stelle, contratto } : {}) });
   }
   return out;
 }

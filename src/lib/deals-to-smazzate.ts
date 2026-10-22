@@ -71,6 +71,12 @@ export interface ToSmazzateOptions {
    * promesso.
    */
   conLicita?: boolean;
+  /**
+   * Chi dà le carte su tutte le mani, nei compiti di licita. Assente = il giro
+   * del torneo sul numero del board (`mazziereDellaMano`), lo stesso con cui
+   * qui si assegna la zona.
+   */
+  mazziere?: Position;
 }
 
 /**
@@ -108,6 +114,7 @@ export function dealsToSmazzate(
       ...(options.conLicita
         ? { bidding: licitaVersoIlContratto(hands, contract, declarer) }
         : {}),
+      ...(options.mazziere ? { mazziere: options.mazziere } : {}),
       commentary: options.commentary ?? "",
     };
   });

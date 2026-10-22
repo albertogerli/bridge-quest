@@ -118,6 +118,11 @@ export interface Smazzata {
   /** The recorded auction is withheld until reconciled with the official source. */
   biddingUnderReview?: boolean;
   /**
+   * Chi dà le carte, nei compiti di licita (`Assignment.licita`). Le mani di
+   * gioco non ne hanno bisogno: il mazziere sta già in `bidding`, quando c'è.
+   */
+  mazziere?: Position;
+  /**
    * Il commento didattico — presente SOLO sulle mani che se lo portano dietro:
    * quelle importate da PBN o generate dall'insegnante, che stanno dentro il
    * compito e non nel catalogo.
