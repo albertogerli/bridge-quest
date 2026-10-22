@@ -109,19 +109,8 @@ export function RiepilogoMano({
         )}
       </div>
 
-      {/* Le quattro mani, a forma di tavolo. */}
-      <div className="grid grid-cols-3 gap-2 mb-5">
-        <div />
-        <ManoPosto hand={deal.north} posto="north" />
-        <div />
-        <ManoPosto hand={deal.west} posto="west" />
-        <div className="flex items-center justify-center text-xs text-muted-foreground">
-          {t("Nord")[0]}<br />{t("Ovest")[0]} · {t("Est")[0]}<br />{t("Sud")[0]}
-        </div>
-        <ManoPosto hand={deal.east} posto="east" />
-        <div />
-        <ManoPosto hand={deal.south} posto="south" evidenzia />
-        <div />
+      <div className="mb-5">
+        <QuattroMani deal={deal} />
       </div>
 
       <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
@@ -241,6 +230,30 @@ export function RiepilogoMano({
           t("Le stelle sono quelle che avreste preso arrivando lì.")
         )}
       </p>
+    </div>
+  );
+}
+
+/**
+ * Le quattro mani a forma di tavolo, Sud evidenziato: il posto dell'allievo.
+ * Esportato per la pagina dei risultati, dove l'insegnante corregge la licita
+ * di un allievo guardando le carte.
+ */
+export function QuattroMani({ deal }: { deal: Record<Position, readonly Card[]> }) {
+  const t = useT();
+  return (
+    <div className="grid grid-cols-3 gap-2">
+      <div />
+      <ManoPosto hand={deal.north} posto="north" />
+      <div />
+      <ManoPosto hand={deal.west} posto="west" />
+      <div className="flex items-center justify-center text-xs text-muted-foreground">
+        {t("Nord")[0]}<br />{t("Ovest")[0]} · {t("Est")[0]}<br />{t("Sud")[0]}
+      </div>
+      <ManoPosto hand={deal.east} posto="east" />
+      <div />
+      <ManoPosto hand={deal.south} posto="south" evidenzia />
+      <div />
     </div>
   );
 }
