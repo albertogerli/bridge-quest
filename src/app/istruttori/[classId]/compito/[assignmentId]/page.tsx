@@ -40,8 +40,9 @@ import { segnalaSalvoRete } from "@/lib/report-error";
 import { classificaCompito } from "@/lib/riepiloghi-classe";
 import { mazziereDellaMano, mazziereRegistrato, stelleScritte } from "@/lib/compito-licita";
 import { Asta } from "@/components/bridge/asta";
+import { QuattroMani } from "@/components/bridge/riepilogo-mano";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import type { Position } from "@/lib/bridge-engine";
+import type { Card, Position } from "@/lib/bridge-engine";
 
 /** Cell state for the heatmap. */
 type Cell =
@@ -174,7 +175,19 @@ export default function AssignmentResultsPage({
   // ── Card-by-card replay of a student's hand ──────────────────────────────
   const [replay, setReplay] = useState<{ title: string; gameState: GameState } | null>(null);
   /** Compito di licita: l'asta di un allievo su una mano, aperta dalla sua casella. */
-  const [astaAperta, setAstaAperta] = useState<{ titolo: string; cella: CellaLicita } | null>(null);
+  const [astaAperta, setAstaAperta] = useState<{
+    titolo: string;
+    cella: CellaLicita;
+    /** Le carte della mano: la licita si corregge guardandole. */
+    mani: Record<Position, Card[]> | null;
+  } | null>(null);
+
+  function maniDi(smazzataId: string): Record<Position, Card[]> | null {
+    const sm =
+      validated.find((s) => s.id === smazzataId) ??
+      assignment?.custom_hands?.find((s) => s.id === smazzataId);
+    return sm?.hands ?? null;
+  }
 
   function playOf(studentId: string, smazzataId: string) {
     const r = resultMap.get(`${studentId}|${smazzataId}`);
@@ -406,6 +419,7 @@ export default function AssignmentResultsPage({
                                   setAstaAperta({
                                     titolo: `${m.display_name ?? t("Allievo")} · ${colLabel(id)}`,
                                     cella: licita,
+                                    mani: maniDi(id),
                                   })
                               : playable
                                 ? () => openReplay(m.student_id, id, m.display_name ?? "Allievo")
@@ -486,12 +500,25 @@ export default function AssignmentResultsPage({
             {t("Restano attaccate alla mano, non al compito: le ritrovi l’anno prossimo su un’altra classe, e finiscono nella dispensa da stampare.")}
           </p>
           <div className="divide-y divide-border rounded-lg border border-border">
-            {smazzataIds.map((id) => (
+            {smazzataIds.map((id) => {
+              const mani = assignment.licita ? maniDi(id) : null;
+              return (
               <div key={id} className="px-4 py-3">
                 <p className="mb-1 font-mono text-xs text-muted-foreground">{colLabel(id)}</p>
+                {/* Nel compito di licita la casella non porta il contratto: le
+                    carte restano raggiungibili da qui, una mano alla volta. */}
+                {mani && (
+                  <details className="mb-2">
+                    <summary className="cursor-pointer text-sm text-primary">{t("Vedi le carte")}</summary>
+                    <div className="mt-2 max-w-md">
+                      <QuattroMani deal={mani} />
+                    </div>
+                  </details>
+                )}
                 <NotaSmazzata smazzataId={id} />
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}
@@ -608,7 +635,7 @@ export default function AssignmentResultsPage({
             la mano dall'esterno, non dal posto di chi l'ha giocata. */}
         <Dialog open={!!astaAperta} onOpenChange={(aperta) => !aperta && setAstaAperta(null)}>
           {astaAperta && (
-            <DialogContent>
+            <DialogContent className="max-h-[90dvh] overflow-y-auto p-4 sm:p-6">
               <DialogHeader>
                 <DialogTitle>{astaAperta.titolo}</DialogTitle>
               </DialogHeader>
@@ -626,6 +653,7 @@ export default function AssignmentResultsPage({
               {astaAperta.cella.bids.length > 0 && (
                 <Asta dealer={astaAperta.cella.mazziere} bids={astaAperta.cella.bids} ioSono="south" />
               )}
+              {astaAperta.mani && <QuattroMani deal={astaAperta.mani} />}
             </DialogContent>
           )}
         </Dialog>
