@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { mazziereDellaMano, rigaCompitoLicita, stelleScritte } from "./compito-licita";
+import { mazziereDellaMano, mazziereRegistrato, rigaCompitoLicita, stelleScritte } from "./compito-licita";
 
 describe("mazziereDellaMano", () => {
   it("prende quello scelto dall'insegnante", () => {
@@ -15,7 +15,7 @@ describe("mazziereDellaMano", () => {
 });
 
 describe("rigaCompitoLicita", () => {
-  const base = { contratto: "3SA", dichiarante: "north" as const, punteggio: 400, par: 420, bids: ["1NT", "P", "3NT", "P", "P", "P"] };
+  const base = { contratto: "3SA", dichiarante: "north" as const, punteggio: 400, par: 420, bids: ["1SA", "P", "3SA", "P", "P", "P"], mazziere: "north" as const };
 
   it("da due stelle in su la mano è riuscita: score non negativo, per la classifica", () => {
     const r = rigaCompitoLicita({ ...base, stelle: 2.5 });
@@ -36,5 +36,20 @@ describe("rigaCompitoLicita", () => {
 describe("stelleScritte", () => {
   it("scrive le mezze stelle con ½", () => {
     expect([0, 0.5, 1, 2.5, 3].map(stelleScritte)).toEqual(["0", "½", "1", "2½", "3"]);
+  });
+});
+
+describe("mazziereRegistrato", () => {
+  it("prende quello scritto nella riga", () => {
+    expect(mazziereRegistrato({ mazziere: "west", bids: ["1SA", "P", "P", "P"], dichiarante: "south" }, "south")).toBe("west");
+  });
+  it("altrimenti lo ricava dall'asta: le righe giocate col mazziere a giro", () => {
+    // Mano 1 del 22/10: dava Nord, Est ha aperto 2♥, Nord ha giocato 4♠.
+    expect(mazziereRegistrato({ bids: ["P", "2♥", "X", "3♥", "4♠", "P", "P", "P"], dichiarante: "north" }, "south")).toBe("north");
+    // Mano 2: dava Est, 1♣ e 1SA di Sud.
+    expect(mazziereRegistrato({ bids: ["1♣", "1SA", "P", "P", "P"], dichiarante: "south" }, "south")).toBe("east");
+  });
+  it("col passo generale resta la riserva", () => {
+    expect(mazziereRegistrato({ bids: ["P", "P", "P", "P"], dichiarante: null }, "south")).toBe("south");
   });
 });
