@@ -26,6 +26,9 @@ import type { BiddingData, Smazzata, Vulnerability } from "./catalog";
 import { defaultOpeningLead } from "./pbn";
 
 /** Rotazione standard della vulnerabilità sui board di torneo. */
+/** Il mazziere del board n è GIRO[(n - 1) % 4]: il board 1 lo dà Nord. */
+const GIRO: Position[] = ["north", "east", "south", "west"];
+
 const VULNERABILITY_CYCLE: Vulnerability[] = [
   "none", "ns", "ew", "both",
   "ns", "ew", "both", "none",
@@ -72,11 +75,11 @@ export interface ToSmazzateOptions {
    */
   conLicita?: boolean;
   /**
-   * Chi dà le carte su tutte le mani, nei compiti di licita. Assente = il giro
-   * del torneo sul numero del board (`mazziereDellaMano`), lo stesso con cui
-   * qui si assegna la zona.
+   * Chi dà le carte, nei compiti di licita: una posizione per tutte le mani,
+   * oppure `"giro"` per il giro del torneo sul numero del board. Assente = il
+   * dichiarante di ogni mano (`mazziereDellaMano`).
    */
-  mazziere?: Position;
+  mazziere?: Position | "giro";
 }
 
 /**
@@ -114,7 +117,9 @@ export function dealsToSmazzate(
       ...(options.conLicita
         ? { bidding: licitaVersoIlContratto(hands, contract, declarer) }
         : {}),
-      ...(options.mazziere ? { mazziere: options.mazziere } : {}),
+      ...(options.mazziere
+        ? { mazziere: options.mazziere === "giro" ? GIRO[index % GIRO.length] : options.mazziere }
+        : {}),
       commentary: options.commentary ?? "",
     };
   });

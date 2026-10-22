@@ -3,15 +3,14 @@ import { mazziereDellaMano, rigaCompitoLicita, stelleScritte } from "./compito-l
 
 describe("mazziereDellaMano", () => {
   it("prende quello scelto dall'insegnante", () => {
-    expect(mazziereDellaMano({ mazziere: "west", board: 1, bidding: { dealer: "north", bids: [] } })).toBe("west");
+    expect(mazziereDellaMano({ mazziere: "west", declarer: "south", bidding: { dealer: "north", bids: [] } })).toBe("west");
   });
   it("altrimenti quello della licita registrata", () => {
-    expect(mazziereDellaMano({ board: 1, bidding: { dealer: "east", bids: [] } })).toBe("east");
+    expect(mazziereDellaMano({ declarer: "south", bidding: { dealer: "east", bids: [] } })).toBe("east");
   });
-  it("altrimenti il giro del torneo sul board", () => {
-    expect([1, 2, 3, 4, 5].map((board) => mazziereDellaMano({ board }))).toEqual([
-      "north", "east", "south", "west", "north",
-    ]);
+  it("altrimenti il dichiarante, per cui la mano è stata generata", () => {
+    expect(mazziereDellaMano({ declarer: "south" })).toBe("south");
+    expect(mazziereDellaMano({ declarer: "north" })).toBe("north");
   });
 });
 

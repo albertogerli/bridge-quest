@@ -203,6 +203,10 @@ export default function AssignmentResultsPage({
    */
   const soloGioco = senzaLicita(assignment.lesson_id);
   const colLabel = (id: string) => {
+    // Nel compito di licita il contratto è quello che gli allievi devono
+    // trovare: scriverlo in testa alla colonna lo dava per già deciso, e
+    // questa schermata l'insegnante la mostra alla classe.
+    if (assignment.licita) return t("Mano {n}", { n: smazzataIds.indexOf(id) + 1 });
     const s =
       validated.find((sm) => sm.id === id) ??
       assignment.custom_hands?.find((sm) => sm.id === id);
@@ -354,7 +358,7 @@ export default function AssignmentResultsPage({
                 </th>
                 {smazzataIds.map((id, i) => (
                   <th key={id} className="px-2 py-2 text-center font-semibold">
-                    <div className="font-mono text-xs">{colLabel(id)}</div>
+                    {!assignment.licita && <div className="font-mono text-xs">{colLabel(id)}</div>}
                     <div className="text-[12px] font-normal text-muted-foreground">M{i + 1}</div>
                   </th>
                 ))}

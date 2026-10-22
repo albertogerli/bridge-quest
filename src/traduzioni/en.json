@@ -2742,5 +2742,6 @@
   "{n} da ridichiarare": "{n} to bid again",
   "{stelle} stelle su 3": "{stelle} stars out of 3",
   "Siamo in zona": "We're vulnerable",
-  "Loro in zona": "They're vulnerable"
+  "Loro in zona": "They're vulnerable",
+  "Chi deve dichiarare il contratto": "The player meant to declare the contract"
 }
