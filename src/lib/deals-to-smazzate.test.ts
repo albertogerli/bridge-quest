@@ -30,6 +30,8 @@ describe("dealsToSmazzate", () => {
     expect(smazzate.every((s) => s.mazziere === undefined)).toBe(true);
     const conMazziere = dealsToSmazzate(deals, { ...base, mazziere: "north" });
     expect(conMazziere.every((s) => s.mazziere === "north")).toBe(true);
+    const aGiro = dealsToSmazzate(deals, { ...base, mazziere: "giro" });
+    expect(aGiro.map((s) => s.mazziere)).toEqual(["north", "east", "south", "west"]);
   });
 
   it("ruota la vulnerabilità invece di lasciarla sempre uguale", () => {

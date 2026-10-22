@@ -100,8 +100,8 @@ export default function GeneraManiPage() {
   const [conLicita, setConLicita] = useState(false);
   /** Compito di licita: gli allievi dichiarano invece di giocare. */
   const [perLicita, setPerLicita] = useState(false);
-  /** Compito di licita: chi dà le carte, o il giro dei board. */
-  const [mazziere, setMazziere] = useState<Position | "giro">("giro");
+  /** Compito di licita: chi dà le carte. Di base il dichiarante della mano, per cui il modello è pensato. */
+  const [mazziere, setMazziere] = useState<Position | "giro" | "dichiarante">("dichiarante");
   const [assigned, setAssigned] = useState("");
   // Pubblicazione nella scorta condivisa
   const [nomeScenario, setNomeScenario] = useState("");
@@ -289,7 +289,7 @@ export default function GeneraManiPage() {
         // tutte è impossibile su alcune mani e troppo timido su altre.
         perHand: analisi?.map((a) => a.scelta) ?? undefined,
         conLicita: conLicita && !perLicita,
-        ...(perLicita && mazziere !== "giro" ? { mazziere } : {}),
+        ...(perLicita && mazziere !== "dichiarante" ? { mazziere } : {}),
         // Il seme entra nell'id: due compiti generati con semi diversi non si
         // sovrappongono, e lo stesso seme resta riconoscibile.
         idPrefix: `gen-${template.id}-${seed}`,
@@ -725,6 +725,7 @@ export default function GeneraManiPage() {
                   onChange={(e) => setMazziere(e.target.value as typeof mazziere)}
                   className="h-12 px-4 rounded-xl border border-border bg-card text-sm"
                 >
+                  <option value="dichiarante">{t("Chi deve dichiarare il contratto")}</option>
                   <option value="giro">{t("A turno, come nei board")}</option>
                   {SEATS.map((s) => (
                     <option key={s.key} value={s.key}>{s.label}</option>

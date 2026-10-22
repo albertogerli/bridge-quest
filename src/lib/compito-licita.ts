@@ -29,19 +29,23 @@ import type { Smazzata } from "./catalog";
  */
 export const STELLE_PER_RIUSCITA = 2;
 
-const GIRO: Position[] = ["north", "east", "south", "west"];
-
 /**
  * Chi dà le carte.
  *
  * Prima quello scelto dall'insegnante; poi quello di un'eventuale licita
- * registrata; altrimenti il giro del torneo sul numero del board, che è anche
- * quello con cui il generatore assegna la zona.
+ * registrata; altrimenti il dichiarante della mano.
+ *
+ * PERCHÉ IL DICHIARANTE E NON IL GIRO DEL BOARD. Le mani del generatore sono
+ * costruite per una mano precisa — «Apertura di 1SA» dà 15-17 bilanciati a
+ * Sud — e la prima versione faceva dare le carte a turno: sulla mano 1 dava
+ * Nord, Est apriva 2♥ prima di Sud, e l'allievo l'1SA da allenare non lo
+ * dichiarava mai (Allievi Mondello, 22/10/2026). Il dichiarante del par è la
+ * mano per cui la smazzata è stata pensata.
  */
-export function mazziereDellaMano(s: Pick<Smazzata, "mazziere" | "bidding" | "board">): Position {
+export function mazziereDellaMano(s: Pick<Smazzata, "mazziere" | "bidding" | "declarer">): Position {
   if (s.mazziere) return s.mazziere;
   if (s.bidding?.dealer) return s.bidding.dealer;
-  return GIRO[(((s.board - 1) % 4) + 4) % 4];
+  return s.declarer;
 }
 
 export interface EsitoCompitoLicita {
