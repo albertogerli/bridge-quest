@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, use } from "react";
+import { useEffect, useMemo, useRef, useState, use } from "react";
 import { Briciole } from "@/components/briciole";
 import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "motion/react";
@@ -20,6 +20,7 @@ import {
   toDisplayPosition,
   toGamePosition,
   partnershipOf,
+  partnerOf,
 } from "@/lib/bridge-engine";
 import type { CardData } from "@/components/bridge/playing-card";
 import { classifyPlayErrors } from "@/lib/play-error-classifier";
@@ -157,6 +158,7 @@ export default function CompitoPage({
               tricksMade: gioco.tricksMade,
               tricksNeeded: gioco.tricksNeeded,
               result: gioco.result,
+              difesa: gioco.difesa === true,
               durationMs: gioco.durationMs,
               tempi: gioco.tempi,
             },
@@ -554,6 +556,11 @@ interface CompitoHandGameProps {
    * Compito di licita: si gioca il contratto che l'allievo ha appena
    * dichiarato, non quello scritto sulla mano. L'attacco lo sceglie il
    * motore — quello registrato era pensato per un altro contratto.
+   *
+   * Se il contratto è di Est-Ovest l'allievo lo CONTROGIOCA da Sud: il
+   * compagno a Nord è il motore e resta coperto, il morto si scopre dopo
+   * l'attacco (Allievi Mondello, 23/10/2026: «la giocano gli avversari e non
+   * mi fa controgiocare»).
    */
   dopoLicita?: { contract: string; declarer: Position; bidding: BiddingData };
 }
@@ -570,7 +577,15 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
    */
   const soloGioco = !dopoLicita && senzaLicita(smazzata.lesson);
   const declarer = dopoLicita?.declarer ?? smazzata.declarer;
+  const difesa = !!dopoLicita && partnershipOf(declarer) === "ew";
+  /**
+   * Il posto che si mette in basso. Da dichiarante il tavolo ruota sul
+   * dichiarante; in difesa non ruota: l'allievo è Sud, come nell'asta.
+   */
+  const vista: Position = difesa ? "south" : declarer;
   const dummyGamePos = toGamePosition("north", declarer);
+  const giocatori = useMemo<Position[]>(() => (difesa ? ["south"] : [declarer, dummyGamePos]), [difesa, declarer, dummyGamePos]);
+  const mortoReale = partnerOf(declarer);
   const saved = useRef(false);
   // eslint-disable-next-line react-hooks/purity -- timestamp di inizio catturato una sola volta (init del ref) per il tiebreak di velocità
   const startRef = useRef<number>(Date.now()); // for the speed tiebreak in the class leaderboard
@@ -601,7 +616,7 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
     hands: smazzata.hands,
     contract: contratto,
     declarer,
-    playerPositions: [declarer, dummyGamePos],
+    playerPositions: giocatori,
     openingLead: dopoLicita ? undefined : smazzata.openingLead,
     dealer: bidding?.dealer,
     vulnerability: smazzata.vulnerability,
@@ -611,7 +626,7 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
   const handlePlayCard = (displayPosition: string, cardIndex: number) => {
     if (!game.gameState) return;
     cronometro.current.segna(Date.now());
-    const gamePos = toGamePosition(displayPosition as Position, declarer);
+    const gamePos = toGamePosition(displayPosition as Position, vista);
     const hand = game.gameState.hands[gamePos];
     if (!hand || cardIndex >= hand.length) return;
     game.handleCardPlay(hand[cardIndex]);
@@ -619,7 +634,7 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
 
   const mapTrickToDisplay = (plays: { position: string; card: CardData }[]) =>
     plays.map((tp) => ({
-      position: toDisplayPosition(tp.position as Position, declarer),
+      position: toDisplayPosition(tp.position as Position, vista),
       card: tp.card,
     }));
 
@@ -637,10 +652,10 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
   const displayHands = (gs: typeof game.gameState) => {
     if (!gs) return null;
     return {
-      north: gs.hands[toGamePosition("north", declarer)] as CardData[],
-      south: gs.hands[toGamePosition("south", declarer)] as CardData[],
-      east: gs.hands[toGamePosition("east", declarer)] as CardData[],
-      west: gs.hands[toGamePosition("west", declarer)] as CardData[],
+      north: gs.hands[toGamePosition("north", vista)] as CardData[],
+      south: gs.hands[toGamePosition("south", vista)] as CardData[],
+      east: gs.hands[toGamePosition("east", vista)] as CardData[],
+      west: gs.hands[toGamePosition("west", vista)] as CardData[],
     };
   };
 
@@ -649,10 +664,14 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
     if (game.phase === "finished" && game.result && !saved.current) {
       saved.current = true;
       const res = game.result;
-      play(res.result >= 0 ? "contractMade" : "contractFailed");
+      // In difesa si vince quando il contratto cade.
+      const riuscito = difesa ? res.result < 0 : res.result >= 0;
+      play(riuscito ? "contractMade" : "contractFailed");
       setShowCelebration(true);
 
-      const xp = 30 + (res.result >= 0 ? 20 : 0) + Math.max(0, res.result) * 10;
+      const xp = difesa
+        ? 30 + (riuscito ? 20 : 0) + Math.max(0, -res.result - 1) * 10
+        : 30 + (res.result >= 0 ? 20 : 0) + Math.max(0, res.result) * 10;
       awardGameXp(`compito-${smazzata.id}`, xp);
 
       // Classify the student's play errors (rule-based, best-effort) so the
@@ -664,7 +683,7 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
             tricks: game.gameState.tricks,
             originalHands: smazzata.hands,
             trumpSuit: parseContract(contratto).trumpSuit,
-            playerPositions: [declarer, dummyGamePos],
+            playerPositions: giocatori,
             declarer,
           }).map((e) => ({ category: e.category, trick: e.trickNumber }));
         }
@@ -679,6 +698,7 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
             result: res.result,
             made: res.result >= 0,
             contract: contratto,
+            ...(difesa ? { difesa: true, declarer } : {}),
             durationMs: Date.now() - startRef.current,
             // I tempi già ripuliti: il difetto da evitare è che un intervallo
             // di quaranta minuti — scheda in secondo piano, telefono in tasca —
@@ -693,13 +713,20 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
         2200
       );
     }
-  }, [game.phase, game.result, game.gameState, declarer, dummyGamePos, smazzata, contratto, onFinish, play]);
+  }, [game.phase, game.result, game.gameState, declarer, difesa, giocatori, smazzata, contratto, onFinish, play]);
 
   const hands = displayHands(game.gameState);
   const activeDisplayPos =
     game.isPlayerTurn && game.gameState
-      ? toDisplayPosition(game.gameState.currentPlayer, declarer)
+      ? toDisplayPosition(game.gameState.currentPlayer, vista)
       : undefined;
+  /** In difesa il morto si scopre solo dopo l'attacco, come al tavolo. */
+  const mortoScoperto =
+    !!game.gameState && (game.gameState.tricks.length > 0 || game.gameState.currentTrick.length > 0);
+  const scoperta = (pos: Position) =>
+    difesa ? pos === "south" || (pos === mortoReale && mortoScoperto) : pos === "north" || pos === "south";
+  const lettera: Record<Position, string> = { north: "N", south: "S", east: "E", west: "W" };
+  const riuscita = (r: number) => (difesa ? r < 0 : r >= 0);
 
   return (
     <div className="min-h-screen bg-background px-4 pt-4">
@@ -740,13 +767,13 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
             )}
             <div className="text-center">
               <p className="text-[12px] font-bold uppercase tracking-wider text-muted-foreground">{t("Obiettivo")}</p>
-              <p className="text-lg font-bold">{tricksNeeded} prese</p>
+              <p className="text-lg font-bold">{difesa ? 14 - tricksNeeded : tricksNeeded} prese</p>
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[12px] font-bold uppercase tracking-wider text-muted-foreground">{soloGioco ? t("Prese: tue / avversari") : t("Dich. / Dif.")}</p>
+              <p className="text-[12px] font-bold uppercase tracking-wider text-muted-foreground">{soloGioco || difesa ? t("Prese: tue / avversari") : t("Dich. / Dif.")}</p>
               <p className="text-lg font-bold">
-                {partnershipOf(declarer) === "ew"
+                {partnershipOf(declarer) === "ew" && !difesa
                   ? `${game.gameState?.trickCount.ew ?? 0} / ${game.gameState?.trickCount.ns ?? 0}`
                   : `${game.gameState?.trickCount.ns ?? 0} / ${game.gameState?.trickCount.ew ?? 0}`}
               </p>
@@ -758,18 +785,18 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
         <div className="flex flex-col items-start justify-center gap-4 lg:flex-row">
           <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.15 }} className="relative w-full max-w-5xl flex-1 lg:w-auto">
             {hands ? (
-              <BridgeTable ancora={declarer}
+              <BridgeTable ancora={vista}
                 north={hands.north}
                 south={hands.south}
                 east={hands.east}
                 west={hands.west}
-                northFaceDown={false}
-                southFaceDown={false}
-                eastFaceDown={true}
-                westFaceDown={true}
+                northFaceDown={!scoperta("north")}
+                southFaceDown={!scoperta("south")}
+                eastFaceDown={!scoperta("east")}
+                westFaceDown={!scoperta("west")}
                 currentTrick={displayTrick}
                 contract={contratto}
-                declarer="S"
+                declarer={difesa ? lettera[declarer] : "S"}
                 vulnerability={smazzata.vulnerability}
                 trickCount={partnershipOf(declarer) === "ew" ? { ns: game.gameState!.trickCount.ew, ew: game.gameState!.trickCount.ns } : game.gameState!.trickCount}
                 onPlayCard={handlePlayCard}
@@ -781,17 +808,17 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
                 trumpSuit={game.gameState?.trumpSuit}
               />
             ) : (
-              <BridgeTable ancora={declarer}
-                north={smazzata.hands[toGamePosition("north", declarer)] as CardData[]}
-                south={smazzata.hands[toGamePosition("south", declarer)] as CardData[]}
-                east={smazzata.hands[toGamePosition("east", declarer)] as CardData[]}
-                west={smazzata.hands[toGamePosition("west", declarer)] as CardData[]}
-                northFaceDown={false}
-                southFaceDown={false}
-                eastFaceDown={true}
-                westFaceDown={true}
+              <BridgeTable ancora={vista}
+                north={smazzata.hands[toGamePosition("north", vista)] as CardData[]}
+                south={smazzata.hands[toGamePosition("south", vista)] as CardData[]}
+                east={smazzata.hands[toGamePosition("east", vista)] as CardData[]}
+                west={smazzata.hands[toGamePosition("west", vista)] as CardData[]}
+                northFaceDown={!scoperta("north")}
+                southFaceDown={!scoperta("south")}
+                eastFaceDown={!scoperta("east")}
+                westFaceDown={!scoperta("west")}
                 contract={contratto}
-                declarer="S"
+                declarer={difesa ? lettera[declarer] : "S"}
                 vulnerability={smazzata.vulnerability}
                 trickCount={{ ns: 0, ew: 0 }}
                 disabled={true}
@@ -800,7 +827,8 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
                 trumpSuit={parseContract(contratto).trumpSuit}
               />
             )}
-            {game.phase === "playing" && <GameTutorial />}
+            {/* Il tutorial spiega il gioco da dichiarante: in difesa direbbe il falso. */}
+            {game.phase === "playing" && !difesa && <GameTutorial />}
           </motion.div>
 
           {/*
@@ -832,7 +860,7 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
               exit={{ opacity: 0, y: -4 }}
               className={`text-sm font-semibold ${
                 game.phase === "finished"
-                  ? game.result && game.result.result >= 0
+                  ? game.result && riuscita(game.result.result)
                     ? "text-emerald-600"
                     : "text-red-500"
                   : game.isPlayerTurn
@@ -884,16 +912,16 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
               exit={{ opacity: 0, scale: 0.95 }}
               className="mx-auto mt-6 max-w-lg"
             >
-              <CelebrationCombo trigger={showCelebration} type={game.result.result >= 0 ? (game.result.result >= 2 ? "epic" : "medium") : "small"} />
+              <CelebrationCombo trigger={showCelebration} type={riuscita(game.result.result) ? (Math.abs(game.result.result) >= 2 ? "epic" : "medium") : "small"} />
               <div
                 className={`rounded-2xl border p-6 text-center ${
-                  game.result.result >= 0
+                  riuscita(game.result.result)
                     ? "border-emerald-200 bg-emerald-50 dark:border-emerald-900 dark:bg-emerald-950/30"
                     : "border-red-200 bg-red-50 dark:border-red-900 dark:bg-red-950/30"
                 }`}
               >
-                <div className="mb-3 text-4xl">{game.result.result >= 0 ? "🎉" : "😔"}</div>
-                <h3 className={`text-xl font-bold ${game.result.result >= 0 ? "text-emerald-700 dark:text-emerald-400" : "text-red-600 dark:text-red-400"}`}>
+                <div className="mb-3 text-4xl">{riuscita(game.result.result) ? "🎉" : "😔"}</div>
+                <h3 className={`text-xl font-bold ${riuscita(game.result.result) ? "text-emerald-700 dark:text-emerald-400" : "text-red-600 dark:text-red-400"}`}>
                   {soloGioco
                     ? game.result.result >= 0
                       ? t("Obiettivo raggiunto!")
@@ -904,8 +932,15 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
                         : `Contratto +${game.result.result}!`
                       : `Caduto di ${Math.abs(game.result.result)}`}
                 </h3>
+                {difesa && (
+                  <p className="mt-1 text-sm font-semibold">
+                    {game.result.result < 0 ? t("Bravo: l'avete battuto in difesa.") : t("In difesa non siete riusciti a batterlo.")}
+                  </p>
+                )}
                 <p className="mt-2 text-sm text-muted-foreground">
-                  Prese: {game.result.tricksMade} / {game.result.tricksNeeded}
+                  {difesa
+                    ? t("Il dichiarante ha fatto {n} prese su {m}.", { n: game.result.tricksMade, m: game.result.tricksNeeded })
+                    : `Prese: ${game.result.tricksMade} / ${game.result.tricksNeeded}`}
                 </p>
               </div>
             </motion.div>

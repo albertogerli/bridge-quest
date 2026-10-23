@@ -187,12 +187,13 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
           const completedTrick = newState.tricks[newState.tricks.length - 1];
           setLastTrick(completedTrick.plays);
 
-          // Sound: trick won or lost (from declarer's perspective)
+          // Sound: trick won or lost (from the human side's perspective —
+          // the declarer's, except when the human defends)
           if (completedTrick.winner) {
             const winnerSide = partnershipOf(completedTrick.winner);
-            const declarerSide = partnershipOf(configRef.current.declarer);
+            const humanSide = partnershipOf(configRef.current.playerPositions[0] ?? configRef.current.declarer);
             setTimeout(() => {
-              playSound(winnerSide === declarerSide ? "trickWon" : "trickLost");
+              playSound(winnerSide === humanSide ? "trickWon" : "trickLost");
             }, 200);
           }
 
