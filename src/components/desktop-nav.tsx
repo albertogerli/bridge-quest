@@ -6,6 +6,24 @@ import { useT } from "@/contexts/traduzioni-provider";
 import { SelettoreLingua } from "@/components/selettore-lingua";
 import { usePendingFriendRequests } from "@/hooks/use-pending-friend-requests";
 import { useNascosti } from "@/hooks/use-permessi";
+import { useSharedAuth } from "@/contexts/auth-provider";
+import { GraduationCap } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import { STRUMENTI_LEZIONE } from "@/components/istruttori/strumenti-lezione";
+
+/**
+ * L'area dell'insegnante, in cima al menù quando chi è collegato insegna.
+ *
+ * Prima il menù era lo stesso per tutti: l'insegnante ci trovava Forum,
+ * Negozio e Classifica e nessuna strada verso le sue classi o gli strumenti
+ * per la lezione — raggiungibili solo dalla home (Trevissoi, 23/10/2026: «il
+ * path dei menù e sottomenù non è completo»). Gli strumenti vengono dallo
+ * stesso elenco della home e del portale, così non divergono.
+ */
+const areaInsegnante: { href: string; label: string; Icona: LucideIcon }[] = [
+  { href: "/istruttori", label: "Le tue classi", Icona: GraduationCap },
+  ...STRUMENTI_LEZIONE.map((s) => ({ href: s.href, label: s.titolo, Icona: s.icona })),
+];
 
 const primaryNav = [
   // Le stesse quattro della barra del telefono, nello stesso ordine: chi
@@ -126,8 +144,18 @@ export function DesktopNav({ variante = "barra" }: { variante?: "barra" | "panne
   const pathname = usePercorso();
   const t = useT();
   const pendingFriends = usePendingFriendRequests();
+  const { profile } = useSharedAuth();
+  const insegna = profile?.role === "instructor" || profile?.role === "admin";
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
+  // «Le tue classi» non si accende sugli strumenti, che stanno anch'essi
+  // sotto /istruttori: lì si accende lo strumento.
+  const attivaInsegnante = (href: string) =>
+    href === "/istruttori"
+      ? pathname === "/istruttori" ||
+        (pathname.startsWith("/istruttori/") &&
+          !areaInsegnante.some((v) => v.href !== "/istruttori" && pathname.startsWith(v.href)))
+      : pathname.startsWith(href);
 
   const renderItem = (item: { href: string; icon: string; label: string }) => {
     const active = isActive(item.href);
@@ -178,6 +206,28 @@ export function DesktopNav({ variante = "barra" }: { variante?: "barra" | "panne
 
       {/* Nav items */}
       <div className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+        {insegna && (
+          <div className="pb-4">
+            <p className="px-4 pb-1 text-[12px] font-bold uppercase tracking-wider text-muted-foreground">
+              {t("Insegnante")}
+            </p>
+            {areaInsegnante.map(({ href, label, Icona }) => {
+              const active = attivaInsegnante(href);
+              return (
+                <Link key={href} href={href} aria-label={t(label)}>
+                  <div className={`flex items-center gap-3 px-4 py-2 rounded-xl text-sm transition-all active:scale-[0.97] ${
+                    active
+                      ? "bg-primary/10 text-primary font-semibold"
+                      : "text-muted-foreground hover:bg-muted/50 hover:text-foreground font-medium"
+                  }`}>
+                    <Icona className="h-5 w-5 shrink-0" aria-hidden="true" />
+                    <span>{t(label)}</span>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        )}
         {primaryNav.filter((v) => !nascosti.has(v.href)).map(renderItem)}
 
         {/* Secondary "Altro" group */}
