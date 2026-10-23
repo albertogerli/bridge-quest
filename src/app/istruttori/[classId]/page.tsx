@@ -383,9 +383,46 @@ export default function ClassDetailPage({
         )}
       </div>
 
+      {/*
+        PRIMA DELLA LEZIONE. La locandina si appende e si manda prima, e le
+        richieste d'accesso arrivano nei giorni prima: l'insegnante vuole vedere
+        a che punto sono senza andarle a cercare (Trevissoi, 23/10/2026).
+      */}
+      <div className="mb-3">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t("Prima della lezione")}</p>
+        <div className="flex flex-wrap items-center gap-2">
+          <Link href={`/istruttori/${classId}/locandina`}>
+            <Button variant="outline">{t("Locandina")}</Button>
+          </Link>
+          <Button
+            variant="outline"
+            onClick={() => {
+              if (inAttesa.length > 0) {
+                document.getElementById("richieste-in-attesa")?.scrollIntoView({ behavior: "smooth", block: "start" });
+              } else {
+                setScheda("allievi");
+                document.getElementById("schede-classe")?.scrollIntoView({ behavior: "smooth", block: "start" });
+              }
+            }}
+          >
+            {t("Richieste d'accesso")}
+            <span
+              className={`ml-2 rounded-full px-2 py-0.5 text-xs font-bold ${
+                inAttesa.length > 0 ? "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300" : "bg-muted text-muted-foreground"
+              }`}
+            >
+              {inAttesa.length === 1 ? t("1 in attesa") : t("{n} in attesa", { n: inAttesa.length })}
+            </span>
+            <span className="ml-1 rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-bold text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
+              {members.length === 1 ? t("1 accettato") : t("{n} accettati", { n: members.length })}
+            </span>
+          </Button>
+        </div>
+      </div>
+
       {/* Richieste in attesa */}
       {inAttesa.length > 0 && (
-        <Card className="mb-6 border-primary/40">
+        <Card id="richieste-in-attesa" className="mb-6 scroll-mt-20 border-primary/40">
           <CardHeader>
             <CardTitle className="text-lg">
               {t("In attesa di una risposta")} ({inAttesa.length})
@@ -531,15 +568,12 @@ export default function ClassDetailPage({
           <Link href={`/istruttori/${classId}/allievi`}>
             <Button variant="outline">{t("Allievi e tavoli")}</Button>
           </Link>
-          <Link href={`/istruttori/${classId}/locandina`}>
-            <Button variant="outline">{t("Locandina")}</Button>
-          </Link>
         </div>
       </div>
 
       {/* Tabs — controllate, così lo stato vuoto dei compiti può portare
           alle Lezioni con un clic invece di descriverle a parole. */}
-      <Tabs value={scheda} onValueChange={setScheda}>
+      <Tabs id="schede-classe" className="scroll-mt-20" value={scheda} onValueChange={setScheda}>
         {/* Al telefono le cinque schede non ci stanno: scorrono invece di
             spingere la pagina di lato (controllo del 28/09/2026). */}
         <TabsList className="max-w-full overflow-x-auto justify-start">

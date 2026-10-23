@@ -2774,5 +2774,11 @@
   "Per te": "For you",
   "Per tutta la classe": "For the whole class",
   "Salva il commento": "Save the comment",
-  "Salvato ✓ Lo trovano aprendo il compito.": "Saved ✓ Students will find it when they open the assignment."
+  "Salvato ✓ Lo trovano aprendo il compito.": "Saved ✓ Students will find it when they open the assignment.",
+  "1 accettato": "1 accepted",
+  "1 in attesa": "1 pending",
+  "Prima della lezione": "Before the lesson",
+  "Richieste d'accesso": "Join requests",
+  "{n} accettati": "{n} accepted",
+  "{n} in attesa": "{n} pending"
 }
