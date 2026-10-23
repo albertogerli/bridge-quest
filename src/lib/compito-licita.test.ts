@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { mazziereDellaMano, mazziereRegistrato, rigaCompitoLicita, stelleScritte } from "./compito-licita";
+import {
+  licitaInAscii,
+  mazziereDellaMano,
+  mazziereRegistrato,
+  rigaCompitoLicita,
+  stelleScritte,
+} from "./compito-licita";
 
 describe("mazziereDellaMano", () => {
   it("prende quello scelto dall'insegnante", () => {
@@ -51,5 +57,16 @@ describe("mazziereRegistrato", () => {
   });
   it("col passo generale resta la riserva", () => {
     expect(mazziereRegistrato({ bids: ["P", "P", "P", "P"], dichiarante: null }, "south")).toBe("south");
+  });
+});
+
+describe("licitaInAscii", () => {
+  it("riscrive semi e senza nella forma dei dati di gioco", () => {
+    expect(licitaInAscii(["1SA", "P", "2♣", "X", "XX", "2♥", "P", "4♠", "P", "P", "P"])).toEqual([
+      "1NT", "P", "2C", "X", "XX", "2H", "P", "4S", "P", "P", "P",
+    ]);
+  });
+  it("lascia com'è ciò che è già ASCII", () => {
+    expect(licitaInAscii(["1NT", "3D"])).toEqual(["1NT", "3D"]);
   });
 });

@@ -39,6 +39,7 @@ import { useAlRitorno } from "@/hooks/use-al-ritorno";
 import { segnalaSalvoRete } from "@/lib/report-error";
 import { classificaCompito } from "@/lib/riepiloghi-classe";
 import { mazziereDellaMano, mazziereRegistrato, stelleScritte } from "@/lib/compito-licita";
+import { Button } from "@/components/ui/button";
 import { Asta } from "@/components/bridge/asta";
 import { QuattroMani } from "@/components/bridge/riepilogo-mano";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -57,6 +58,8 @@ interface CellaLicita {
   par: number | null;
   bids: string[];
   mazziere: Position;
+  /** Il gioco del contratto dichiarato, quando l'allievo l'ha giocato. */
+  gioco: { contract: string; declarer: Position; tricksMade: number; tricksNeeded: number; result: number } | null;
 }
 
 const NOME_POSTO: Record<Position, string> = { north: "Nord", east: "Est", south: "Sud", west: "Ovest" };
@@ -161,6 +164,7 @@ export default function AssignmentResultsPage({
           par: typeof d.par === "number" ? d.par : null,
           bids: Array.isArray(d.bids) ? (d.bids as string[]) : [],
           mazziere: mazziereRegistrato(d, sm ? mazziereDellaMano(sm) : "south"),
+          gioco: giocoDellaLicita(d.gioco, dichiarante),
         },
       };
     }
@@ -180,6 +184,8 @@ export default function AssignmentResultsPage({
     cella: CellaLicita;
     /** Le carte della mano: la licita si corregge guardandole. */
     mani: Record<Position, Card[]> | null;
+    /** Apre il gioco carta per carta, se l'allievo ha giocato il contratto. */
+    rivedi: (() => void) | null;
   } | null>(null);
 
   function maniDi(smazzataId: string): Record<Position, Card[]> | null {
@@ -195,20 +201,30 @@ export default function AssignmentResultsPage({
     return play?.tricks && play?.hands ? play : null;
   }
 
-  function openReplay(studentId: string, smazzataId: string, studentName: string) {
+  /**
+   * `giocato`: nel compito di licita il contratto è quello dichiarato
+   * dall'allievo, non quello scritto sulla mano.
+   */
+  function openReplay(
+    studentId: string,
+    smazzataId: string,
+    studentName: string,
+    giocato?: { contract: string; declarer: Position },
+  ) {
     const play = playOf(studentId, smazzataId);
     const sm =
       validated.find((s) => s.id === smazzataId) ??
       assignment?.custom_hands?.find((s) => s.id === smazzataId);
     if (!play || !sm) return;
+    const contract = giocato?.contract ?? sm.contract;
     const gameState = {
       hands: play.hands,
       tricks: play.tricks,
-      contract: sm.contract,
-      declarer: sm.declarer,
-      trumpSuit: parseContract(sm.contract).trumpSuit,
+      contract,
+      declarer: giocato?.declarer ?? sm.declarer,
+      trumpSuit: parseContract(contract).trumpSuit,
     } as unknown as GameState;
-    setReplay({ title: `${studentName} · ${contrattoLeggibile(sm.contract)}`, gameState });
+    setReplay({ title: `${studentName} · ${contrattoLeggibile(contract)}`, gameState });
   }
 
   if (loading) {
@@ -408,6 +424,7 @@ export default function AssignmentResultsPage({
                     const cell = cellFor(m.student_id, id);
                     const playable = !!playOf(m.student_id, id);
                     const licita = cell.state !== "empty" ? cell.licita : undefined;
+                    const gioco = licita?.gioco;
                     return (
                       <td key={id} className="px-2 py-2 text-center">
                         <HeatCell
@@ -420,6 +437,10 @@ export default function AssignmentResultsPage({
                                     titolo: `${m.display_name ?? t("Allievo")} · ${colLabel(id)}`,
                                     cella: licita,
                                     mani: maniDi(id),
+                                    rivedi:
+                                      gioco && playable
+                                        ? () => openReplay(m.student_id, id, m.display_name ?? t("Allievo"), gioco)
+                                        : null,
                                   })
                               : playable
                                 ? () => openReplay(m.student_id, id, m.display_name ?? "Allievo")
@@ -653,6 +674,32 @@ export default function AssignmentResultsPage({
               {astaAperta.cella.bids.length > 0 && (
                 <Asta dealer={astaAperta.cella.mazziere} bids={astaAperta.cella.bids} ioSono="south" />
               )}
+              {astaAperta.cella.gioco && (
+                <p className="text-sm">
+                  {t("Giocato: {fatte} prese su {servono}", {
+                    fatte: astaAperta.cella.gioco.tricksMade,
+                    servono: astaAperta.cella.gioco.tricksNeeded,
+                  })}
+                  {" · "}
+                  {astaAperta.cella.gioco.result >= 0
+                    ? t("mantenuto")
+                    : t("sotto di {n}", { n: -astaAperta.cella.gioco.result })}
+                </p>
+              )}
+              {astaAperta.rivedi && (
+                <div>
+                  <Button
+                    size="sm"
+                    onClick={() => {
+                      const rivedi = astaAperta.rivedi;
+                      setAstaAperta(null);
+                      rivedi?.();
+                    }}
+                  >
+                    {t("Rivedi il gioco carta per carta")}
+                  </Button>
+                </div>
+              )}
               {astaAperta.mani && <QuattroMani deal={astaAperta.mani} />}
             </DialogContent>
           )}
@@ -664,6 +711,27 @@ export default function AssignmentResultsPage({
       </AnimatePresence>
     </div>
   );
+}
+
+/** Il gioco registrato insieme alla licita, se c'è e si legge. */
+function giocoDellaLicita(raw: unknown, dichiarante: Position | null): CellaLicita["gioco"] {
+  if (!raw || typeof raw !== "object" || !dichiarante) return null;
+  const g = raw as Record<string, unknown>;
+  if (
+    typeof g.contract !== "string" ||
+    typeof g.tricksMade !== "number" ||
+    typeof g.tricksNeeded !== "number" ||
+    typeof g.result !== "number"
+  ) {
+    return null;
+  }
+  return {
+    contract: g.contract,
+    declarer: dichiarante,
+    tricksMade: g.tricksMade,
+    tricksNeeded: g.tricksNeeded,
+    result: g.result,
+  };
 }
 
 function HeatCell({
@@ -681,10 +749,13 @@ function HeatCell({
   }
   const made = cell.state === "made";
   if (cell.licita) {
-    const { contratto, dichiarante, stelle, par } = cell.licita;
+    const { contratto, dichiarante, stelle, par, gioco } = cell.licita;
     const titolo =
       t("{stelle} stelle su 3", { stelle: stelleScritte(stelle) }) +
       (par !== null ? ` · ${t("par {par}", { par })}` : "") +
+      (gioco
+        ? ` · ${t("Giocato: {fatte} prese su {servono}", { fatte: gioco.tricksMade, servono: gioco.tricksNeeded })}`
+        : "") +
       ` · ${t("tocca per la licita")}`;
     return (
       <button

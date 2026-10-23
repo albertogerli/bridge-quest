@@ -12,7 +12,7 @@ import { GameActions } from "@/components/bridge/game-actions";
 import { useBridgeGame } from "@/hooks/use-bridge-game";
 import { useCommento } from "@/hooks/use-commento";
 import { useSmazzate, useValidatedSmazzate } from "@/store/use-smazzate-store";
-import type { Smazzata } from "@/lib/catalog";
+import type { BiddingData, Smazzata } from "@/lib/catalog";
 import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import type { Position } from "@/lib/bridge-engine";
 import {
@@ -52,8 +52,9 @@ import {
 import { ArrowLeft, Play, CheckCircle2, XCircle, Lightbulb, RotateCcw } from "lucide-react";
 import { useT } from "@/contexts/traduzioni-provider";
 import { contrattoLeggibile } from "@/lib/contratto-leggibile";
-import { CompitoLicitaMano } from "@/components/classi/compito-licita-mano";
-import { stelleScritte } from "@/lib/compito-licita";
+import { CompitoLicitaMano, type ContrattoDaGiocare } from "@/components/classi/compito-licita-mano";
+import { licitaInAscii, stelleScritte } from "@/lib/compito-licita";
+import { segnalaSalvoRete } from "@/lib/report-error";
 
 export default function CompitoPage({
   params,
@@ -72,6 +73,12 @@ export default function CompitoPage({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
+  /** Compito di licita: il contratto appena dichiarato, mentre lo si gioca. */
+  const [giocoLicita, setGiocoLicita] = useState<{
+    index: number;
+    gioco: ContrattoDaGiocare;
+    dopoLicita: { contract: string; declarer: Position; bidding: BiddingData };
+  } | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -127,6 +134,49 @@ export default function CompitoPage({
     );
   }
 
+  // Compito di licita, seconda parte: si gioca il contratto dichiarato. La
+  // riga della licita è già registrata; questa la sostituisce aggiungendo il
+  // gioco, con lo stesso `score` — la classifica di classe resta sulla licita.
+  if (assignment.licita && giocoLicita && currentIndex === giocoLicita.index) {
+    const smazzata = hands[currentIndex];
+    const { riga } = giocoLicita.gioco;
+    return (
+      <CompitoHandGame
+        key={`${smazzata.id}-gioco`}
+        smazzata={smazzata}
+        dopoLicita={giocoLicita.dopoLicita}
+        handNumber={currentIndex + 1}
+        totalHands={hands.length}
+        onFinish={async (_score, gioco) => {
+          const details = {
+            ...riga.details,
+            play: gioco.play,
+            errors: gioco.errors,
+            gioco: {
+              contract: gioco.contract,
+              tricksMade: gioco.tricksMade,
+              tricksNeeded: gioco.tricksNeeded,
+              result: gioco.result,
+              durationMs: gioco.durationMs,
+              tempi: gioco.tempi,
+            },
+          };
+          try {
+            await recordAssignmentResult({ assignmentId, smazzataId: smazzata.id, score: riga.score, details });
+          } catch (err) {
+            segnalaSalvoRete("compito-licita:gioco", err);
+          }
+          setGiocoLicita(null);
+          setCurrentIndex(null);
+        }}
+        onBack={() => {
+          setGiocoLicita(null);
+          setCurrentIndex(null);
+        }}
+      />
+    );
+  }
+
   // Compito di licita: la mano si dichiara invece di giocarsi.
   if (assignment.licita && currentIndex !== null && currentIndex < hands.length) {
     const smazzata = hands[currentIndex];
@@ -149,6 +199,17 @@ export default function CompitoPage({
           );
         }}
         onEsci={() => setCurrentIndex(null)}
+        onGioca={(gioco) =>
+          setGiocoLicita({
+            index: currentIndex,
+            gioco,
+            dopoLicita: {
+              contract: gioco.contract,
+              declarer: gioco.declarer,
+              bidding: { dealer: gioco.dealer, bids: licitaInAscii(gioco.bids) },
+            },
+          })
+        }
       />
     );
   }
@@ -485,18 +546,26 @@ interface CompitoHandGameProps {
   onBack: () => void;
   /** Il compito si gioca senza dichiarazione. */
   minibridge?: boolean;
+  /**
+   * Compito di licita: si gioca il contratto che l'allievo ha appena
+   * dichiarato, non quello scritto sulla mano. L'attacco lo sceglie il
+   * motore — quello registrato era pensato per un altro contratto.
+   */
+  dopoLicita?: { contract: string; declarer: Position; bidding: BiddingData };
 }
 
-function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, minibridge }: CompitoHandGameProps) {
+function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, minibridge, dopoLicita }: CompitoHandGameProps) {
   const t = useT();
-  const { tricksNeeded } = parseContract(smazzata.contract);
+  const contratto = dopoLicita?.contract ?? smazzata.contract;
+  const bidding = dopoLicita?.bidding ?? smazzata.bidding;
+  const { tricksNeeded } = parseContract(contratto);
   /**
    * Lezioni del gioco della carta (Fiori 1–6): il contratto non è ancora stato
    * spiegato. Si dice solo l'obiettivo in prese, e l'esito è «obiettivo
    * raggiunto / mancato» (Trevissoi, feedback 5).
    */
-  const soloGioco = senzaLicita(smazzata.lesson);
-  const declarer = smazzata.declarer;
+  const soloGioco = !dopoLicita && senzaLicita(smazzata.lesson);
+  const declarer = dopoLicita?.declarer ?? smazzata.declarer;
   const dummyGamePos = toGamePosition("north", declarer);
   const saved = useRef(false);
   // eslint-disable-next-line react-hooks/purity -- timestamp di inizio catturato una sola volta (init del ref) per il tiebreak di velocità
@@ -526,13 +595,13 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
 
   const game = useBridgeGame({
     hands: smazzata.hands,
-    contract: smazzata.contract,
+    contract: contratto,
     declarer,
     playerPositions: [declarer, dummyGamePos],
-    openingLead: smazzata.openingLead,
-    dealer: smazzata.bidding?.dealer,
+    openingLead: dopoLicita ? undefined : smazzata.openingLead,
+    dealer: bidding?.dealer,
     vulnerability: smazzata.vulnerability,
-    bidding: smazzata.bidding,
+    bidding,
   });
 
   const handlePlayCard = (displayPosition: string, cardIndex: number) => {
@@ -590,7 +659,7 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
           errors = classifyPlayErrors({
             tricks: game.gameState.tricks,
             originalHands: smazzata.hands,
-            trumpSuit: parseContract(smazzata.contract).trumpSuit,
+            trumpSuit: parseContract(contratto).trumpSuit,
             playerPositions: [declarer, dummyGamePos],
             declarer,
           }).map((e) => ({ category: e.category, trick: e.trickNumber }));
@@ -605,7 +674,7 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
             tricksNeeded: res.tricksNeeded,
             result: res.result,
             made: res.result >= 0,
-            contract: smazzata.contract,
+            contract: contratto,
             durationMs: Date.now() - startRef.current,
             // I tempi già ripuliti: il difetto da evitare è che un intervallo
             // di quaranta minuti — scheda in secondo piano, telefono in tasca —
@@ -620,7 +689,7 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
         2200
       );
     }
-  }, [game.phase, game.result, game.gameState, declarer, dummyGamePos, smazzata, onFinish, play]);
+  }, [game.phase, game.result, game.gameState, declarer, dummyGamePos, smazzata, contratto, onFinish, play]);
 
   const hands = displayHands(game.gameState);
   const activeDisplayPos =
@@ -660,7 +729,7 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
               <>
                 <div className="text-center">
                   <p className="text-[12px] font-bold uppercase tracking-wider text-muted-foreground">{t("Contratto")}</p>
-                  <p className="text-lg font-bold text-primary">{contrattoLeggibile(smazzata.contract)}</p>
+                  <p className="text-lg font-bold text-primary">{contrattoLeggibile(contratto)}</p>
                 </div>
                 <div className="h-8 w-px bg-border" />
               </>
@@ -695,7 +764,7 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
                 eastFaceDown={true}
                 westFaceDown={true}
                 currentTrick={displayTrick}
-                contract={smazzata.contract}
+                contract={contratto}
                 declarer="S"
                 vulnerability={smazzata.vulnerability}
                 trickCount={partnershipOf(declarer) === "ew" ? { ns: game.gameState!.trickCount.ew, ew: game.gameState!.trickCount.ns } : game.gameState!.trickCount}
@@ -717,14 +786,14 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
                 southFaceDown={false}
                 eastFaceDown={true}
                 westFaceDown={true}
-                contract={smazzata.contract}
+                contract={contratto}
                 declarer="S"
                 vulnerability={smazzata.vulnerability}
                 trickCount={{ ns: 0, ew: 0 }}
                 disabled={true}
                 compact={isMobile}
                 largo
-                trumpSuit={parseContract(smazzata.contract).trumpSuit}
+                trumpSuit={parseContract(contratto).trumpSuit}
               />
             )}
             {game.phase === "playing" && <GameTutorial />}
@@ -742,9 +811,9 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
           )}
 
           {/* Nel gioco della carta (Fiori 1–6) la dichiarazione non si è ancora fatta: niente licita. */}
-          {!minibridge && smazzata.bidding && !senzaLicita(smazzata.lesson) && (!isMobile || game.phase === "ready") && (
+          {!minibridge && bidding && !soloGioco && (!isMobile || game.phase === "ready") && (
             <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.25 }} className="w-full shrink-0 lg:w-48">
-              <BiddingPanel bidding={smazzata.bidding} />
+              <BiddingPanel bidding={bidding} />
             </motion.div>
           )}
         </div>

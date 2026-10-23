@@ -125,3 +125,18 @@ export function stelleScritte(stelle: number): string {
   if (intere === 0 && mezza) return "½";
   return `${intere}${mezza ? "½" : ""}`;
 }
+
+/**
+ * Le dichiarazioni nella forma dei dati di gioco: «1♠» → «1S», «3SA» → «3NT».
+ *
+ * La licita del compito usa i simboli della schermata; il pannello dell'asta
+ * della partita (`BiddingPanel`) legge la forma ASCII delle smazzate, e un
+ * «1♠» lì non trova il seme.
+ */
+export function licitaInAscii(bids: readonly string[]): string[] {
+  const semi: Record<string, string> = { "♠": "S", "♥": "H", "♦": "D", "♣": "C", SA: "NT" };
+  return bids.map((b) => {
+    const m = b.match(/^([1-7])(♠|♥|♦|♣|SA)$/);
+    return m ? m[1] + semi[m[2]] : b;
+  });
+}
