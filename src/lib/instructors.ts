@@ -170,6 +170,12 @@ export interface Assignment {
    * colonna non arriva, e il compito resta di gioco.
    */
   licita?: boolean;
+  /**
+   * Compito di licita: dopo l'asta l'allievo gioca il contratto dichiarato.
+   * Solo `false` lo esclude: senza `compito-licita-gioco-2026-10.sql` la
+   * colonna non arriva, e vale il comportamento già pubblicato — si gioca.
+   */
+  licita_gioca?: boolean;
   /** Esercizi di posizione assegnati insieme alle smazzate. */
   esercizio_ids: string[];
   /**
@@ -680,6 +686,8 @@ export async function createAssignment(input: {
   minibridge?: boolean;
   /** Compito di licita: vedi `Assignment.licita`. */
   licita?: boolean;
+  /** Compito di licita: vedi `Assignment.licita_gioca`. Di base si gioca. */
+  licitaGioca?: boolean;
   esercizioIds?: string[];
   /** Hands imported from PBN; their ids must also appear in smazzataIds */
   customHands?: Smazzata[] | null;
@@ -703,6 +711,8 @@ export async function createAssignment(input: {
   // Solo quando serve, come `custom_hands`: senza lo script la colonna non
   // esiste, e mandarla sempre romperebbe anche i compiti di gioco.
   if (input.licita) row.licita = true;
+  // Lo stesso per «solo licita»: si scrive solo il valore diverso dal default.
+  if (input.licita && input.licitaGioca === false) row.licita_gioca = false;
   // Only send the column when used, so DBs without pbn_import.sql keep working
   if (input.customHands && input.customHands.length > 0) {
     row.custom_hands = input.customHands;
