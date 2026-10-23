@@ -10,7 +10,7 @@ import { AttesaDichiarazione } from "@/components/bridge/attesa-dichiarazione";
 import { RiepilogoMano } from "@/components/bridge/riepilogo-mano";
 import { RisultatoDoppioMorto } from "@/components/bridge/risultato-doppio-morto";
 import { Stelle } from "@/components/bridge/stelle";
-import type { Card, Position, Suit } from "@/lib/bridge-engine";
+import { partnershipOf, type Card, type Position, type Suit } from "@/lib/bridge-engine";
 import type { Smazzata, Vulnerability } from "@/lib/catalog";
 import { handHcp } from "@/lib/deal-generator";
 import { calcTableAndPar, type DdsTable } from "@/lib/dds-table";
@@ -49,11 +49,10 @@ const ZONA: Record<Vulnerability, string> = {
  * torna all'elenco: chi legge il riepilogo e chiude la scheda ha comunque
  * fatto la mano.
  *
- * POI SI GIOCA IL CONTRATTO DICHIARATO, se è di Nord-Sud (`onGioca`): la
- * licita è registrata comunque, e il gioco si aggiunge alla stessa mano.
- * L'insegnante lo voleva per vedere insieme come ci arrivano e come lo
- * giocano (Allievi Mondello, 23/10/2026). Se dichiarano gli avversari la mano
- * finisce con l'asta: difendere non è ancora previsto.
+ * POI SI GIOCA IL CONTRATTO DICHIARATO (`onGioca`): la licita è registrata
+ * comunque, e il gioco si aggiunge alla stessa mano. L'insegnante lo voleva
+ * per vedere insieme come ci arrivano e come lo giocano (Allievi Mondello,
+ * 23/10/2026). Se dichiarano gli avversari l'allievo lo controgioca da Sud.
  *
  * SE IL COMPAGNO NON RISPONDE la mano non si conta e si può riprovare, come in
  * «Licita e vediamo»: un voto dato su un passo inventato misurerebbe il guasto,
@@ -156,11 +155,7 @@ export function CompitoLicitaMano({
       mazziere: dealer,
     });
     registra(riga);
-    setDaGiocare(
-      e && e.lato === "ns"
-        ? { contract: e.contratto, declarer: e.declarer, dealer, bids, riga }
-        : null,
-    );
+    setDaGiocare(e ? { contract: e.contratto, declarer: e.declarer, dealer, bids, riga } : null);
   };
 
   const chiediABen = async (chi: Position, bids: string[]) => {
@@ -342,16 +337,16 @@ export function CompitoLicitaMano({
               {t("Il risultato non è arrivato all'insegnante. Controlla la connessione e ridichiara la mano.")}
             </p>
           )}
-          {onGioca && !daGiocare && (
+          {onGioca && daGiocare && partnershipOf(daGiocare.declarer) === "ew" && (
             <p className="mt-3 text-xs text-muted-foreground">
-              {t("Il contratto è degli avversari: questa mano finisce con la licita.")}
+              {t("Il contratto è degli avversari: lo giochi in difesa, da Sud.")}
             </p>
           )}
           <div className="mt-4 flex flex-wrap gap-2">
             {onGioca && daGiocare && (
               <Button onClick={() => onGioca(daGiocare)} disabled={salvataggio === "in-corso"}>
                 <Play className="mr-1 h-4 w-4" aria-hidden="true" />
-                {t("Gioca il contratto")}
+                {partnershipOf(daGiocare.declarer) === "ew" ? t("Gioca in difesa") : t("Gioca il contratto")}
               </Button>
             )}
             <Button

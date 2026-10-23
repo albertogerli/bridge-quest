@@ -59,7 +59,15 @@ interface CellaLicita {
   bids: string[];
   mazziere: Position;
   /** Il gioco del contratto dichiarato, quando l'allievo l'ha giocato. */
-  gioco: { contract: string; declarer: Position; tricksMade: number; tricksNeeded: number; result: number } | null;
+  gioco: {
+    contract: string;
+    declarer: Position;
+    tricksMade: number;
+    tricksNeeded: number;
+    result: number;
+    /** Contratto degli avversari: l'allievo l'ha controgiocato da Sud. */
+    difesa: boolean;
+  } | null;
 }
 
 const NOME_POSTO: Record<Position, string> = { north: "Nord", east: "Est", south: "Sud", west: "Ovest" };
@@ -676,10 +684,15 @@ export default function AssignmentResultsPage({
               )}
               {astaAperta.cella.gioco && (
                 <p className="text-sm">
-                  {t("Giocato: {fatte} prese su {servono}", {
-                    fatte: astaAperta.cella.gioco.tricksMade,
-                    servono: astaAperta.cella.gioco.tricksNeeded,
-                  })}
+                  {astaAperta.cella.gioco.difesa
+                    ? t("Controgiocato in difesa: il dichiarante ha fatto {fatte} prese su {servono}", {
+                        fatte: astaAperta.cella.gioco.tricksMade,
+                        servono: astaAperta.cella.gioco.tricksNeeded,
+                      })
+                    : t("Giocato: {fatte} prese su {servono}", {
+                        fatte: astaAperta.cella.gioco.tricksMade,
+                        servono: astaAperta.cella.gioco.tricksNeeded,
+                      })}
                   {" · "}
                   {astaAperta.cella.gioco.result >= 0
                     ? t("mantenuto")
@@ -731,6 +744,7 @@ function giocoDellaLicita(raw: unknown, dichiarante: Position | null): CellaLici
     tricksMade: g.tricksMade,
     tricksNeeded: g.tricksNeeded,
     result: g.result,
+    difesa: g.difesa === true,
   };
 }
 
@@ -754,7 +768,11 @@ function HeatCell({
       t("{stelle} stelle su 3", { stelle: stelleScritte(stelle) }) +
       (par !== null ? ` · ${t("par {par}", { par })}` : "") +
       (gioco
-        ? ` · ${t("Giocato: {fatte} prese su {servono}", { fatte: gioco.tricksMade, servono: gioco.tricksNeeded })}`
+        ? ` · ${
+            gioco.difesa
+              ? t("Controgiocato in difesa: il dichiarante ha fatto {fatte} prese su {servono}", { fatte: gioco.tricksMade, servono: gioco.tricksNeeded })
+              : t("Giocato: {fatte} prese su {servono}", { fatte: gioco.tricksMade, servono: gioco.tricksNeeded })
+          }`
         : "") +
       ` · ${t("tocca per la licita")}`;
     return (
