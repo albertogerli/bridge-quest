@@ -40,6 +40,9 @@ import { segnalaSalvoRete } from "@/lib/report-error";
 import { classificaCompito } from "@/lib/riepiloghi-classe";
 import { mazziereDellaMano, mazziereRegistrato, stelleScritte } from "@/lib/compito-licita";
 import { Button } from "@/components/ui/button";
+import { MessageSquareText } from "lucide-react";
+import { CommentoCompito as RiquadroCommento } from "@/components/istruttori/commento-compito";
+import { commentiDelCompito, commentiPerMano, type CommentoCompito } from "@/lib/commenti-compito";
 import { Asta } from "@/components/bridge/asta";
 import { QuattroMani } from "@/components/bridge/riepilogo-mano";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -89,6 +92,30 @@ export default function AssignmentResultsPage({
   const [results, setResults] = useState<AssignmentResultRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  /** I commenti dell'insegnante sulle mani. `null`: tabella non ancora creata. */
+  const [commenti, setCommenti] = useState<CommentoCompito[] | null>([]);
+  /** La mano di cui si scrive il commento per tutta la classe. */
+  const [commentoClasse, setCommentoClasse] = useState<string | null>(null);
+
+  useEffect(() => {
+    let vivo = true;
+    void commentiDelCompito(assignmentId).then((c) => {
+      if (vivo) setCommenti(c);
+    });
+    return () => {
+      vivo = false;
+    };
+  }, [assignmentId]);
+
+  /** Dopo un salvataggio: la lista locale si aggiorna senza rileggere. */
+  function aggiornaCommento(smazzataId: string, studentId: string | null, testo: string) {
+    setCommenti((prima) => {
+      const altri = (prima ?? []).filter((c) => !(c.smazzataId === smazzataId && c.studentId === studentId));
+      return testo
+        ? [...altri, { smazzataId, studentId, testo, aggiornato: new Date().toISOString() }]
+        : altri;
+    });
+  }
 
   useEffect(() => {
     let active = true;
@@ -189,6 +216,8 @@ export default function AssignmentResultsPage({
   /** Compito di licita: l'asta di un allievo su una mano, aperta dalla sua casella. */
   const [astaAperta, setAstaAperta] = useState<{
     titolo: string;
+    studentId: string;
+    smazzataId: string;
     cella: CellaLicita;
     /** Le carte della mano: la licita si corregge guardandole. */
     mani: Record<Position, Card[]> | null;
@@ -418,6 +447,19 @@ export default function AssignmentResultsPage({
                   <th key={id} className="px-2 py-2 text-center font-semibold">
                     {!assignment.licita && <div className="font-mono text-xs">{colLabel(id)}</div>}
                     <div className="text-[12px] font-normal text-muted-foreground">M{i + 1}</div>
+                    {commenti && (
+                      <button
+                        type="button"
+                        onClick={() => setCommentoClasse(id)}
+                        className={`mx-auto mt-0.5 flex items-center rounded p-0.5 hover:bg-muted ${
+                          commentiPerMano(commenti, id, null).perTutti ? "text-primary" : "text-muted-foreground/60"
+                        }`}
+                        title={t("Commento sulla mano per tutta la classe")}
+                        aria-label={t("Commento sulla mano {n} per tutta la classe", { n: i + 1 })}
+                      >
+                        <MessageSquareText className="h-3.5 w-3.5" aria-hidden="true" />
+                      </button>
+                    )}
                   </th>
                 ))}
               </tr>
@@ -435,26 +477,36 @@ export default function AssignmentResultsPage({
                     const gioco = licita?.gioco;
                     return (
                       <td key={id} className="px-2 py-2 text-center">
-                        <HeatCell
-                          cell={cell}
-                          playable={playable || !!licita}
-                          onClick={
-                            licita
-                              ? () =>
-                                  setAstaAperta({
-                                    titolo: `${m.display_name ?? t("Allievo")} · ${colLabel(id)}`,
-                                    cella: licita,
-                                    mani: maniDi(id),
-                                    rivedi:
-                                      gioco && playable
-                                        ? () => openReplay(m.student_id, id, m.display_name ?? t("Allievo"), gioco)
-                                        : null,
-                                  })
-                              : playable
-                                ? () => openReplay(m.student_id, id, m.display_name ?? "Allievo")
-                                : undefined
-                          }
-                        />
+                        <span className="relative inline-block">
+                          {commenti && commentiPerMano(commenti, id, m.student_id).perTe && (
+                            <span
+                              className="absolute -right-1 -top-1 z-10 h-2.5 w-2.5 rounded-full border border-card bg-primary"
+                              title={t("Hai commentato questa mano")}
+                            />
+                          )}
+                          <HeatCell
+                            cell={cell}
+                            playable={playable || !!licita}
+                            onClick={
+                              licita
+                                ? () =>
+                                    setAstaAperta({
+                                      titolo: `${m.display_name ?? t("Allievo")} · ${colLabel(id)}`,
+                                      studentId: m.student_id,
+                                      smazzataId: id,
+                                      cella: licita,
+                                      mani: maniDi(id),
+                                      rivedi:
+                                        gioco && playable
+                                          ? () => openReplay(m.student_id, id, m.display_name ?? t("Allievo"), gioco)
+                                          : null,
+                                    })
+                                : playable
+                                  ? () => openReplay(m.student_id, id, m.display_name ?? "Allievo")
+                                  : undefined
+                            }
+                          />
+                        </span>
                       </td>
                     );
                   })}
@@ -714,6 +766,55 @@ export default function AssignmentResultsPage({
                 </div>
               )}
               {astaAperta.mani && <QuattroMani deal={astaAperta.mani} />}
+              {commenti === null ? (
+                <p className="text-xs text-muted-foreground">
+                  {t("I commenti sulle mani non sono ancora attivi: manca un aggiornamento del database.")}
+                </p>
+              ) : (
+                <>
+                  <RiquadroCommento
+                    key={`${astaAperta.studentId}-${astaAperta.smazzataId}`}
+                    assignmentId={assignmentId}
+                    smazzataId={astaAperta.smazzataId}
+                    studentId={astaAperta.studentId}
+                    etichetta={t("Commento per questo allievo")}
+                    iniziale={commentiPerMano(commenti, astaAperta.smazzataId, astaAperta.studentId).perTe ?? ""}
+                    onSalvato={(testo) => aggiornaCommento(astaAperta.smazzataId, astaAperta.studentId, testo)}
+                  />
+                  <RiquadroCommento
+                    key={`tutti-${astaAperta.smazzataId}`}
+                    assignmentId={assignmentId}
+                    smazzataId={astaAperta.smazzataId}
+                    studentId={null}
+                    etichetta={t("Commento sulla mano per tutta la classe")}
+                    iniziale={commentiPerMano(commenti, astaAperta.smazzataId, null).perTutti ?? ""}
+                    onSalvato={(testo) => aggiornaCommento(astaAperta.smazzataId, null, testo)}
+                  />
+                </>
+              )}
+            </DialogContent>
+          )}
+        </Dialog>
+
+        {/* Il commento sulla mano per tutta la classe, dall'intestazione della colonna. */}
+        <Dialog open={!!commentoClasse} onOpenChange={(aperta) => !aperta && setCommentoClasse(null)}>
+          {commentoClasse && commenti && (
+            <DialogContent className="max-h-[90dvh] overflow-y-auto p-4 sm:p-6">
+              <DialogHeader>
+                <DialogTitle>
+                  {t("Mano {n}", { n: smazzataIds.indexOf(commentoClasse) + 1 })} · {colLabel(commentoClasse)}
+                </DialogTitle>
+              </DialogHeader>
+              {maniDi(commentoClasse) && <QuattroMani deal={maniDi(commentoClasse)!} />}
+              <RiquadroCommento
+                key={`tutti-${commentoClasse}`}
+                assignmentId={assignmentId}
+                smazzataId={commentoClasse}
+                studentId={null}
+                etichetta={t("Commento sulla mano per tutta la classe")}
+                iniziale={commentiPerMano(commenti, commentoClasse, null).perTutti ?? ""}
+                onSalvato={(testo) => aggiornaCommento(commentoClasse, null, testo)}
+              />
             </DialogContent>
           )}
         </Dialog>

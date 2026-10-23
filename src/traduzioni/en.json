@@ -2760,5 +2760,19 @@
   "Gioca in difesa": "Defend the contract",
   "Il contratto è degli avversari: lo giochi in difesa, da Sud.": "The opponents own the contract: you defend it from South.",
   "Il dichiarante ha fatto {n} prese su {m}.": "Declarer took {n} tricks out of {m}.",
-  "In difesa non siete riusciti a batterlo.": "On defense, you couldn't defeat it."
+  "In difesa non siete riusciti a batterlo.": "On defense, you couldn't defeat it.",
+  "Cancella il commento": "Delete the comment",
+  "Commento per questo allievo": "Comment for this student",
+  "Commento sulla mano per tutta la classe": "Comment on the deal for the whole class",
+  "Commento sulla mano {n} per tutta la classe": "Comment on deal {n} for the whole class",
+  "Hai commentato questa mano": "You commented on this deal",
+  "I commenti non sono ancora attivi: manca un aggiornamento del database.": "Comments aren't active yet: a database update is missing.",
+  "I commenti sulle mani non sono ancora attivi: manca un aggiornamento del database.": "Comments on deals aren't active yet: a database update is missing.",
+  "Il commento dell'insegnante": "Your teacher's comment",
+  "La correzione, come la scriveresti su WhatsApp. Scrivi !s per ♠, !h per ♥, !d per ♦, !c per ♣.": "Your correction, as you'd write it on WhatsApp. Type !s for ♠, !h for ♥, !d for ♦, !c for ♣.",
+  "Non salvato. Controlla la connessione e riprova.": "Not saved. Check your connection and try again.",
+  "Per te": "For you",
+  "Per tutta la classe": "For the whole class",
+  "Salva il commento": "Save the comment",
+  "Salvato ✓ Lo trovano aprendo il compito.": "Saved ✓ Students will find it when they open the assignment."
 }
