@@ -29,6 +29,8 @@ import { senzaLicita } from "@/lib/gioco-della-carta";
 import { PannelloMinibridge } from "@/components/bridge/pannello-minibridge";
 import { PulsanteSegnalazione } from "@/components/pulsante-segnalazione";
 import { Cronometro, ripulisci } from "@/lib/tempi";
+import { commentiDelCompito, commentiPerMano, type CommentoCompito } from "@/lib/commenti-compito";
+import { createClient } from "@/lib/supabase/client";
 import { ConfrontoClasse } from "@/components/bridge/confronto-classe";
 import { ProvaDaQui } from "@/components/bridge/prova-da-qui";
 import { BenStatus } from "@/components/bridge/ben-status";
@@ -50,7 +52,7 @@ import {
   type Assignment,
   type HandResult,
 } from "@/lib/instructors";
-import { ArrowLeft, Play, CheckCircle2, XCircle, Lightbulb, RotateCcw } from "lucide-react";
+import { ArrowLeft, Play, CheckCircle2, XCircle, Lightbulb, RotateCcw, MessageSquareText } from "lucide-react";
 import { useT } from "@/contexts/traduzioni-provider";
 import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 import { CompitoLicitaMano, type ContrattoDaGiocare } from "@/components/classi/compito-licita-mano";
@@ -74,6 +76,20 @@ export default function CompitoPage({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
+  /** I commenti dell'insegnante sulle mani: i propri e quelli per tutta la classe. */
+  const [commenti, setCommenti] = useState<CommentoCompito[]>([]);
+  const [utenteId, setUtenteId] = useState<string | null>(null);
+  useEffect(() => {
+    let vivo = true;
+    void Promise.all([commentiDelCompito(assignmentId), createClient().auth.getUser()]).then(([c, { data }]) => {
+      if (!vivo) return;
+      setCommenti(c ?? []);
+      setUtenteId(data.user?.id ?? null);
+    });
+    return () => {
+      vivo = false;
+    };
+  }, [assignmentId]);
   /** Compito di licita: il contratto appena dichiarato, mentre lo si gioca. */
   const [giocoLicita, setGiocoLicita] = useState<{
     index: number;
@@ -426,6 +442,7 @@ export default function CompitoPage({
                   </Button>
                 )}
               </div>
+              <CommentiInsegnante {...commentiPerMano(commenti, hand.id, utenteId)} />
               {isPlayed && (
                 <SoluzioneMano smazzata={hand} ricarica={doneIds.size} assignmentId={assignmentId} licita={assignment.licita} />
               )}
@@ -433,6 +450,36 @@ export default function CompitoPage({
           );
         })}
       </div>
+    </div>
+  );
+}
+
+/**
+ * La correzione dell'insegnante su questa mano: quella scritta per l'allievo e
+ * quella per tutta la classe. Sempre aperta: è stata scritta per essere letta,
+ * e prima arrivava su WhatsApp come screenshot.
+ */
+function CommentiInsegnante({ perTe, perTutti }: { perTe: string | null; perTutti: string | null }) {
+  const t = useT();
+  if (!perTe && !perTutti) return null;
+  return (
+    <div className="mt-3 space-y-2 rounded-xl border border-primary/30 bg-primary/5 p-3">
+      <p className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-primary">
+        <MessageSquareText className="h-3.5 w-3.5" aria-hidden="true" />
+        {t("Il commento dell'insegnante")}
+      </p>
+      {perTe && (
+        <div>
+          <p className="text-xs font-semibold text-muted-foreground">{t("Per te")}</p>
+          <p className="whitespace-pre-line text-sm">{perTe}</p>
+        </div>
+      )}
+      {perTutti && (
+        <div>
+          <p className="text-xs font-semibold text-muted-foreground">{t("Per tutta la classe")}</p>
+          <p className="whitespace-pre-line text-sm">{perTutti}</p>
+        </div>
+      )}
     </div>
   );
 }
