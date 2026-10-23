@@ -99,7 +99,12 @@ export default function GeneraManiPage() {
   // Compito di solo gioco della carta: la dichiarazione è già fatta.
   const [conLicita, setConLicita] = useState(false);
   /** Compito di licita: gli allievi dichiarano invece di giocare. */
-  const [perLicita, setPerLicita] = useState(false);
+  /**
+   * Che cosa fanno gli allievi con le mani: le giocano col contratto già
+   * deciso, le dichiarano, o le dichiarano e giocano il contratto raggiunto.
+   */
+  const [cosaFanno, setCosaFanno] = useState<"gioco" | "licita" | "licita-gioco">("gioco");
+  const perLicita = cosaFanno !== "gioco";
   /** Compito di licita: chi dà le carte. Di base il dichiarante della mano, per cui il modello è pensato. */
   const [mazziere, setMazziere] = useState<Position | "giro" | "dichiarante">("dichiarante");
   const [assigned, setAssigned] = useState("");
@@ -307,6 +312,7 @@ export default function GeneraManiPage() {
         customHands: smazzate,
         instructorNote: template.description,
         licita: perLicita,
+        licitaGioca: cosaFanno === "licita-gioco",
       });
       setAssigned(
         perLicita
@@ -318,10 +324,14 @@ export default function GeneraManiPage() {
       // Senza `compito-licita-2026-10.sql` la colonna non c'è e PostgREST
       // risponde PGRST204: va detto, non confuso con un guasto passeggero.
       const colonnaMancante = (err as { code?: unknown } | null)?.code === "PGRST204";
+      // Con `compito-licita-gioco-2026-10.sql` non ancora eseguito manca solo
+      // la colonna di «solo licita»: le altre due scelte funzionano.
       setAssigned(
-        perLicita && colonnaMancante
-          ? t("I compiti di licita non sono ancora attivi su questo sito. Puoi assegnare le stesse mani da giocare.")
-          : "Non è stato possibile creare il compito. Riprova.",
+        cosaFanno === "licita" && colonnaMancante
+          ? t("«Dichiarano» da solo non è ancora attivo su questo sito: scegli «Dichiarano e giocano», oppure riprova più avanti.")
+          : perLicita && colonnaMancante
+            ? t("I compiti di licita non sono ancora attivi su questo sito. Puoi assegnare le stesse mani da giocare.")
+            : "Non è stato possibile creare il compito. Riprova.",
       );
     } finally {
       setAssigning(false);
@@ -661,25 +671,43 @@ export default function GeneraManiPage() {
             <legend className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">
               {t("Che cosa fanno gli allievi")}
             </legend>
-            <div className="grid gap-2 sm:grid-cols-2">
-              <label className={`flex cursor-pointer items-start gap-2 rounded-xl border p-3 ${!perLicita ? "border-figb bg-card" : "border-border"}`}>
-                <input type="radio" name="cosa-fanno" checked={!perLicita} onChange={() => setPerLicita(false)} className="mt-1" />
-                <span className="text-sm">
-                  <strong>{t("Giocano la carta")}</strong>
-                  <span className="block text-xs text-muted-foreground">
-                    {t("Ogni mano arriva con il contratto già deciso, e l'allievo la gioca.")}
+            <div className="grid gap-2 sm:grid-cols-3">
+              {(
+                [
+                  {
+                    valore: "gioco",
+                    titolo: t("Giocano la carta"),
+                    testo: t("Ogni mano arriva con il contratto già deciso, e l'allievo la gioca."),
+                  },
+                  {
+                    valore: "licita",
+                    titolo: t("Dichiarano"),
+                    testo: t("L'allievo è Sud e dichiara la mano; BEN dichiara per il compagno e per gli avversari. Il voto è il contratto raggiunto rispetto al par."),
+                  },
+                  {
+                    valore: "licita-gioco",
+                    titolo: t("Dichiarano e giocano"),
+                    testo: t("Come «Dichiarano», poi l'allievo gioca il contratto a cui è arrivato. Il voto resta quello della licita; nei risultati vedi anche le prese e il gioco carta per carta."),
+                  },
+                ] as const
+              ).map((o) => (
+                <label
+                  key={o.valore}
+                  className={`flex cursor-pointer items-start gap-2 rounded-xl border p-3 ${cosaFanno === o.valore ? "border-figb bg-card" : "border-border"}`}
+                >
+                  <input
+                    type="radio"
+                    name="cosa-fanno"
+                    checked={cosaFanno === o.valore}
+                    onChange={() => setCosaFanno(o.valore)}
+                    className="mt-1"
+                  />
+                  <span className="text-sm">
+                    <strong>{o.titolo}</strong>
+                    <span className="block text-xs text-muted-foreground">{o.testo}</span>
                   </span>
-                </span>
-              </label>
-              <label className={`flex cursor-pointer items-start gap-2 rounded-xl border p-3 ${perLicita ? "border-figb bg-card" : "border-border"}`}>
-                <input type="radio" name="cosa-fanno" checked={perLicita} onChange={() => setPerLicita(true)} className="mt-1" />
-                <span className="text-sm">
-                  <strong>{t("Dichiarano")}</strong>
-                  <span className="block text-xs text-muted-foreground">
-                    {t("L'allievo è Sud e dichiara la mano; BEN dichiara per il compagno e per gli avversari. Il voto è il contratto raggiunto rispetto al par.")}
-                  </span>
-                </span>
-              </label>
+                </label>
+              ))}
             </div>
           </fieldset>
 

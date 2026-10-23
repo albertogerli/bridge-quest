@@ -199,16 +199,20 @@ export default function CompitoPage({
           );
         }}
         onEsci={() => setCurrentIndex(null)}
-        onGioca={(gioco) =>
-          setGiocoLicita({
-            index: currentIndex,
-            gioco,
-            dopoLicita: {
-              contract: gioco.contract,
-              declarer: gioco.declarer,
-              bidding: { dealer: gioco.dealer, bids: licitaInAscii(gioco.bids) },
-            },
-          })
+        // «Solo licita»: l'insegnante ha scelto che la mano finisca con l'asta.
+        onGioca={
+          assignment.licita_gioca === false
+            ? undefined
+            : (gioco) =>
+                setGiocoLicita({
+                  index: currentIndex,
+                  gioco,
+                  dopoLicita: {
+                    contract: gioco.contract,
+                    declarer: gioco.declarer,
+                    bidding: { dealer: gioco.dealer, bids: licitaInAscii(gioco.bids) },
+                  },
+                })
         }
       />
     );

@@ -2752,5 +2752,8 @@
   "Giocato: {fatte} prese su {servono}": "Played: {fatte} tricks of {servono}",
   "mantenuto": "made",
   "sotto di {n}": "down {n}",
-  "Rivedi il gioco carta per carta": "Replay the play card by card"
+  "Rivedi il gioco carta per carta": "Replay the play card by card",
+  "Dichiarano e giocano": "They bid and play",
+  "Come «Dichiarano», poi l'allievo gioca il contratto a cui è arrivato. Il voto resta quello della licita; nei risultati vedi anche le prese e il gioco carta per carta.": "Like “They bid”, then the student plays the contract they reached. The grade is still the bidding one; in the results you also see the tricks and the card-by-card play.",
+  "«Dichiarano» da solo non è ancora attivo su questo sito: scegli «Dichiarano e giocano», oppure riprova più avanti.": "“They bid” on its own isn't active on this site yet: choose “They bid and play”, or try again later."
 }
