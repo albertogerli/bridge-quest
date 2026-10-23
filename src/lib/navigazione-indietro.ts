@@ -25,6 +25,7 @@ const STRUMENTI = [
   "genera-mani",
   "lavagna",
   "libreria",
+  "materiali",
   "proiezione",
   "studio",
   "tavolo",

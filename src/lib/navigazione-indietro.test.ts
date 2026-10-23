@@ -1,3 +1,5 @@
+import { readdirSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { destinazioneIndietro } from "./navigazione-indietro";
 
@@ -43,12 +45,25 @@ describe("destinazioneIndietro — area insegnante", () => {
     // La trappola: «studio» ha la stessa forma di un identificativo di classe.
     for (const strumento of [
       "archivio", "combinazione", "dispensa", "genera-mani",
-      "lavagna", "libreria", "studio",
+      "lavagna", "libreria", "materiali", "studio",
     ]) {
       expect(destinazioneIndietro(`/istruttori/${strumento}`)).toEqual({
         href: "/istruttori",
         etichetta: "Torna al portale",
       });
+    }
+  });
+
+  it("nessuna cartella di /istruttori finisce fra le classi", () => {
+    // L'elenco a mano aveva dimenticato «materiali» (Trevissoi, 23/10/2026):
+    // si leggono le cartelle vere, così lo strumento nuovo non può sfuggire.
+    const cartelle = readdirSync(join(__dirname, "../app/istruttori"), { withFileTypes: true })
+      .filter((d) => d.isDirectory() && !d.name.startsWith("["))
+      .map((d) => d.name);
+    expect(cartelle.length).toBeGreaterThan(5);
+    for (const nome of cartelle) {
+      const r = destinazioneIndietro(`/istruttori/${nome}`);
+      expect(r?.etichetta, nome).not.toBe("Torna alle classi");
     }
   });
 
