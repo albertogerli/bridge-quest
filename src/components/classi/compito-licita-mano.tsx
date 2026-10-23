@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, RotateCcw } from "lucide-react";
+import { ArrowLeft, Play, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
@@ -49,6 +49,12 @@ const ZONA: Record<Vulnerability, string> = {
  * torna all'elenco: chi legge il riepilogo e chiude la scheda ha comunque
  * fatto la mano.
  *
+ * POI SI GIOCA IL CONTRATTO DICHIARATO, se è di Nord-Sud (`onGioca`): la
+ * licita è registrata comunque, e il gioco si aggiunge alla stessa mano.
+ * L'insegnante lo voleva per vedere insieme come ci arrivano e come lo
+ * giocano (Allievi Mondello, 23/10/2026). Se dichiarano gli avversari la mano
+ * finisce con l'asta: difendere non è ancora previsto.
+ *
  * SE IL COMPAGNO NON RISPONDE la mano non si conta e si può riprovare, come in
  * «Licita e vediamo»: un voto dato su un passo inventato misurerebbe il guasto,
  * non l'allievo. Se tace un avversario passa d'ufficio, e lo si dice.
@@ -59,12 +65,15 @@ export function CompitoLicitaMano({
   totalHands,
   onRegistra,
   onEsci,
+  onGioca,
 }: {
   smazzata: Smazzata;
   handNumber: number;
   totalHands: number;
   onRegistra: (score: number, details: Record<string, unknown>) => Promise<void>;
   onEsci: () => void;
+  /** Gioca il contratto appena dichiarato; `riga` è la licita già registrata. */
+  onGioca?: (gioco: ContrattoDaGiocare) => void;
 }) {
   const t = useT();
   const dealer = mazziereDellaMano(smazzata);
@@ -85,6 +94,7 @@ export function CompitoLicitaMano({
   const [giocato, setGiocato] = useState<
     { level: number; strain: Strain; declarer: Position; doppio: 1 | 2 | 4 } | null
   >(null);
+  const [daGiocare, setDaGiocare] = useState<ContrattoDaGiocare | null>(null);
   const [salvataggio, setSalvataggio] = useState<"in-corso" | "fatto" | "errore" | null>(null);
   /** Una pagina che si chiude a metà asta non deve continuare a chiedere a BEN. */
   const viva = useRef(true);
@@ -136,16 +146,20 @@ export function CompitoLicitaMano({
       setContrattoFinale(t("Passo generale"));
       setGiocato(null);
     }
-    registra(
-      rigaCompitoLicita({
-        stelle: voto.stelle,
-        contratto: e?.contratto ?? null,
-        dichiarante: e?.declarer ?? null,
-        punteggio: e?.punteggio ?? 0,
-        par: calcolo.par,
-        bids,
-        mazziere: dealer,
-      }),
+    const riga = rigaCompitoLicita({
+      stelle: voto.stelle,
+      contratto: e?.contratto ?? null,
+      dichiarante: e?.declarer ?? null,
+      punteggio: e?.punteggio ?? 0,
+      par: calcolo.par,
+      bids,
+      mazziere: dealer,
+    });
+    registra(riga);
+    setDaGiocare(
+      e && e.lato === "ns"
+        ? { contract: e.contratto, declarer: e.declarer, dealer, bids, riga }
+        : null,
     );
   };
 
@@ -217,6 +231,7 @@ export function CompitoLicitaMano({
     setEsito(null);
     setContrattoFinale("");
     setGiocato(null);
+    setDaGiocare(null);
     setAnnullata(false);
     setAvversarioMuto(false);
     setSalvataggio(null);
@@ -327,8 +342,23 @@ export function CompitoLicitaMano({
               {t("Il risultato non è arrivato all'insegnante. Controlla la connessione e ridichiara la mano.")}
             </p>
           )}
+          {onGioca && !daGiocare && (
+            <p className="mt-3 text-xs text-muted-foreground">
+              {t("Il contratto è degli avversari: questa mano finisce con la licita.")}
+            </p>
+          )}
           <div className="mt-4 flex flex-wrap gap-2">
-            <Button onClick={onEsci} disabled={salvataggio === "in-corso"}>
+            {onGioca && daGiocare && (
+              <Button onClick={() => onGioca(daGiocare)} disabled={salvataggio === "in-corso"}>
+                <Play className="mr-1 h-4 w-4" aria-hidden="true" />
+                {t("Gioca il contratto")}
+              </Button>
+            )}
+            <Button
+              variant={onGioca && daGiocare ? "outline" : "default"}
+              onClick={onEsci}
+              disabled={salvataggio === "in-corso"}
+            >
               {t("Torna al compito")}
             </Button>
             <Button variant="outline" onClick={riprova} disabled={salvataggio === "in-corso"}>
@@ -344,6 +374,17 @@ export function CompitoLicitaMano({
       </p>
     </div>
   );
+}
+
+/** Il contratto che l'allievo ha appena dichiarato, pronto da giocare. */
+export interface ContrattoDaGiocare {
+  /** «4♠», «3SAX»: la forma che legge il motore di gioco. */
+  contract: string;
+  declarer: Position;
+  dealer: Position;
+  /** La licita come l'ha dichiarata, nella forma della schermata. */
+  bids: string[];
+  riga: ReturnType<typeof rigaCompitoLicita>;
 }
 
 function formatSuit(hand: readonly Card[], suit: Suit): string {

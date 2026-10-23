@@ -2746,5 +2746,11 @@
   "Chi deve dichiarare il contratto": "The player meant to declare the contract",
   "tocca per la licita": "tap for the auction",
   "{contratto} di {chi}": "{contratto} by {chi}",
-  "Vedi le carte": "See the cards"
+  "Vedi le carte": "See the cards",
+  "Il contratto è degli avversari: questa mano finisce con la licita.": "The opponents won the contract: this hand ends with the auction.",
+  "Gioca il contratto": "Play the contract",
+  "Giocato: {fatte} prese su {servono}": "Played: {fatte} tricks of {servono}",
+  "mantenuto": "made",
+  "sotto di {n}": "down {n}",
+  "Rivedi il gioco carta per carta": "Replay the play card by card"
 }
