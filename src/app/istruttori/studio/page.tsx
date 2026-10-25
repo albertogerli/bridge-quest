@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
+import { useSerieCasuale } from "@/hooks/use-serie-casuale";
 import Link from "@/components/link";
 import { useSearchParams } from "next/navigation";
 import { ArrowLeftRight, Archive, Eye, EyeOff, FlaskConical, Percent, Printer, RotateCcw, Save, Undo2 } from "lucide-react";
@@ -70,7 +71,7 @@ function Studio() {
   const manoSalvata = params.get("mano");
 
   const [modelloId, setModelloId] = useState(DEAL_TEMPLATES[0].id);
-  const [seed, setSeed] = useState(2026);
+  const [seed, setSeed] = useSerieCasuale();
   const [numeri, setNumeri] = useState(false);
   const [storia, setStoria] = useState<GameState[]>([]);
   const [stato, setStato] = useState<GameState | null>(null);

@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
+import { useSerieCasuale } from "@/hooks/use-serie-casuale";
 import Link from "@/components/link";
 import { useSearchParams } from "next/navigation";
 import { Eye, EyeOff, Users, Play, Square } from "lucide-react";
@@ -91,7 +92,7 @@ function Tavolo() {
   const tavoloRichiesto = params.get("tavolo");
   const [statoGrezzo, setStato] = useState<LiveTable | null>(null);
   const [modelloId, setModelloId] = useState(DEAL_TEMPLATES[0].id);
-  const [seed, setSeed] = useState(2026);
+  const [seed, setSeed] = useSerieCasuale();
   const [indice, setIndice] = useState(0);
   const [occupato, setOccupato] = useState(false);
   const [divisioniVisibili, setDivisioniVisibili] = useState(false);
