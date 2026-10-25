@@ -43,6 +43,14 @@ import { Button } from "@/components/ui/button";
 import { MessageSquareText } from "lucide-react";
 import { CommentoCompito as RiquadroCommento } from "@/components/istruttori/commento-compito";
 import { commentiDelCompito, commentiPerMano, type CommentoCompito } from "@/lib/commenti-compito";
+import { AssegnaStelle } from "@/components/istruttori/assegna-stelle";
+import {
+  impostaStelleInsegnante,
+  stelleAssegnate,
+  stelleDelCompito,
+  votoMano,
+  type StelleAssegnate,
+} from "@/lib/stelle-compito";
 import { Asta } from "@/components/bridge/asta";
 import { QuattroMani } from "@/components/bridge/riepilogo-mano";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -57,7 +65,14 @@ type Cell =
 interface CellaLicita {
   contratto: string | null;
   dichiarante: Position | null;
-  stelle: number;
+  /** Le stelle che valgono: dell'insegnante se ci sono; `null` se si aspettano le sue. */
+  stelle: number | null;
+  /** Le stelle calcolate dal programma, sempre. */
+  stelleProgramma: number;
+  /** Le stelle date dall'insegnante, o `null`. */
+  stelleInsegnante: number | null;
+  /** `null`: il compito ha «le stelle le assegno io» e l'insegnante non le ha ancora date. */
+  riuscita: boolean | null;
   par: number | null;
   bids: string[];
   mazziere: Position;
@@ -96,6 +111,28 @@ export default function AssignmentResultsPage({
   const [commenti, setCommenti] = useState<CommentoCompito[] | null>([]);
   /** La mano di cui si scrive il commento per tutta la classe. */
   const [commentoClasse, setCommentoClasse] = useState<string | null>(null);
+  /** Le stelle date dall'insegnante. `null`: tabella non ancora creata. */
+  const [stelleMie, setStelleMie] = useState<StelleAssegnate[] | null>([]);
+  /** «Le stelle le assegno io», cambiabile da qui. `null`: si legge dal compito. */
+  const [soloMie, setSoloMie] = useState<boolean | null>(null);
+  const [erroreSoloMie, setErroreSoloMie] = useState<string | null>(null);
+
+  useEffect(() => {
+    let vivo = true;
+    void stelleDelCompito(assignmentId).then((s) => {
+      if (vivo) setStelleMie(s);
+    });
+    return () => {
+      vivo = false;
+    };
+  }, [assignmentId]);
+
+  function aggiornaStelle(smazzataId: string, studentId: string, stelle: number | null) {
+    setStelleMie((prima) => {
+      const altre = (prima ?? []).filter((x) => !(x.smazzataId === smazzataId && x.studentId === studentId));
+      return stelle === null ? altre : [...altre, { smazzataId, studentId, stelle }];
+    });
+  }
 
   useEffect(() => {
     let vivo = true;
@@ -167,14 +204,34 @@ export default function AssignmentResultsPage({
     return m;
   }, [results]);
 
+  const soloInsegnante = soloMie ?? assignment?.stelle_insegnante === true;
+
   /** Compito di licita: le stelle di un allievo, sommate sulle mani dichiarate. */
   function stelleTotali(studentId: string): number {
     let somma = 0;
     for (const id of assignment?.smazzata_ids ?? []) {
-      const stelle = resultMap.get(`${studentId}|${id}`)?.details?.stelle;
-      if (typeof stelle === "number") somma += stelle;
+      const c = cellFor(studentId, id);
+      if (c.state !== "empty" && c.licita?.stelle != null) somma += c.licita.stelle;
     }
     return somma;
+  }
+
+  async function cambiaSoloMie(attivo: boolean) {
+    setErroreSoloMie(null);
+    const prima = soloInsegnante;
+    setSoloMie(attivo);
+    try {
+      await impostaStelleInsegnante(assignmentId, attivo);
+    } catch (err) {
+      setSoloMie(prima);
+      // Senza lo script la colonna non c'è e PostgREST risponde PGRST204.
+      if ((err as { code?: string } | null)?.code === "PGRST204") {
+        setErroreSoloMie(t("Non ancora attivo: manca un aggiornamento del database."));
+        return;
+      }
+      segnalaSalvoRete("istruttori/compito:stelle-mie", err);
+      setErroreSoloMie(t("Non salvato. Controlla la connessione e riprova."));
+    }
   }
 
   function cellFor(studentId: string, smazzataId: string): Cell {
@@ -189,13 +246,19 @@ export default function AssignmentResultsPage({
         assignment?.custom_hands?.find((s) => s.id === smazzataId);
       const dichiarante =
         typeof d.dichiarante === "string" && d.dichiarante in INIZIALE ? (d.dichiarante as Position) : null;
+      const stelleProgramma = typeof d.stelle === "number" ? d.stelle : 0;
+      const stelleInsegnante = stelleAssegnate(stelleMie, smazzataId, studentId);
+      const voto = votoMano({ automatiche: stelleProgramma, insegnante: stelleInsegnante, soloInsegnante });
       return {
-        state: d.made === true ? "made" : "down",
+        state: voto.riuscita === false ? "down" : "made",
         result: r.score,
         licita: {
           contratto: typeof d.contratto === "string" ? d.contratto : null,
           dichiarante,
-          stelle: typeof d.stelle === "number" ? d.stelle : 0,
+          stelle: voto.stelle,
+          stelleProgramma,
+          stelleInsegnante,
+          riuscita: voto.riuscita,
           par: typeof d.par === "number" ? d.par : null,
           bids: Array.isArray(d.bids) ? (d.bids as string[]) : [],
           mazziere: mazziereRegistrato(d, sm ? mazziereDellaMano(sm) : "south"),
@@ -357,7 +420,13 @@ export default function AssignmentResultsPage({
   /** La classifica di questo compito, dagli stessi esiti della griglia. */
   const classifica = classificaCompito(members, smazzataIds, (studentId, id) => {
     const r = resultMap.get(`${studentId}|${id}`);
-    return r ? { score: r.score } : null;
+    if (!r) return null;
+    // Nel compito di licita conta il voto che vale, anche quello dell'insegnante.
+    if (assignment.licita) {
+      const c = cellFor(studentId, id);
+      return { score: c.state !== "empty" && c.licita?.riuscita ? 0 : -1 };
+    }
+    return { score: r.score };
   });
   const qualcunoHaGiocato = classifica.some((r) => r.giocate > 0);
 
@@ -424,12 +493,34 @@ export default function AssignmentResultsPage({
         </span>
         {assignment.licita ? (
           <span className="text-muted-foreground">
-            {t("Compito di licita: ogni cella è il contratto raggiunto. Verde da 2 stelle in su; passa sopra per le stelle e il par.")}
+            {t("Compito di licita: ogni cella è il contratto raggiunto. Verde da 2 stelle in su; tocca una cella per la licita, le stelle e il par, e per dare le tue stelle.")}
           </span>
         ) : (
           <span className="text-muted-foreground">▶ {t("Clicca una cella giocata per rivedere la mano carta per carta")}</span>
         )}
       </div>
+
+      {assignment.licita && stelleMie !== null && (
+        <div className="mb-4 rounded-lg border border-border bg-muted/30 p-3">
+          <label className="flex cursor-pointer items-start gap-2">
+            <input
+              type="checkbox"
+              checked={soloInsegnante}
+              onChange={(e) => void cambiaSoloMie(e.target.checked)}
+              className="mt-1"
+            />
+            <span className="text-sm">
+              <strong>{t("Le stelle le assegno io")}</strong>
+              <span className="block text-xs text-muted-foreground">
+                {soloInsegnante
+                  ? t("Gli allievi non vedono il voto del programma: vedono «in attesa dell'insegnante» finché non dai le tue stelle. Le celle grigie aspettano te.")
+                  : t("Gli allievi vedono le stelle del programma, che confronta il contratto col par. Puoi correggerle mano per mano toccando una cella; con la spunta, invece, le dai solo tu.")}
+              </span>
+            </span>
+          </label>
+          {erroreSoloMie && <p className="mt-1 text-xs text-destructive">{erroreSoloMie}</p>}
+        </div>
+      )}
 
       {members.length === 0 ? (
         <p className="py-8 text-center text-sm text-muted-foreground">
@@ -728,7 +819,10 @@ export default function AssignmentResultsPage({
                     })
                   : t("Passo generale")}
                 {" · "}
-                {t("{stelle} stelle su 3", { stelle: stelleScritte(astaAperta.cella.stelle) })}
+                {astaAperta.cella.stelle === null
+                  ? t("in attesa delle tue stelle")
+                  : t("{stelle} stelle su 3", { stelle: stelleScritte(astaAperta.cella.stelle) })}
+                {astaAperta.cella.stelleInsegnante !== null && ` (${t("tue")})`}
                 {astaAperta.cella.par !== null && ` · ${t("par {par}", { par: astaAperta.cella.par })}`}
               </p>
               {astaAperta.cella.bids.length > 0 && (
@@ -766,6 +860,33 @@ export default function AssignmentResultsPage({
                 </div>
               )}
               {astaAperta.mani && <QuattroMani deal={astaAperta.mani} />}
+              {stelleMie === null ? (
+                <p className="text-xs text-muted-foreground">
+                  {t("Le stelle dell'insegnante non sono ancora attive: manca un aggiornamento del database.")}
+                </p>
+              ) : (
+                <AssegnaStelle
+                  key={`stelle-${astaAperta.studentId}-${astaAperta.smazzataId}`}
+                  assignmentId={assignmentId}
+                  smazzataId={astaAperta.smazzataId}
+                  studentId={astaAperta.studentId}
+                  programma={astaAperta.cella.stelleProgramma}
+                  iniziale={astaAperta.cella.stelleInsegnante}
+                  soloInsegnante={soloInsegnante}
+                  onSalvato={(stelle) => {
+                    aggiornaStelle(astaAperta.smazzataId, astaAperta.studentId, stelle);
+                    const voto = votoMano({
+                      automatiche: astaAperta.cella.stelleProgramma,
+                      insegnante: stelle,
+                      soloInsegnante,
+                    });
+                    setAstaAperta({
+                      ...astaAperta,
+                      cella: { ...astaAperta.cella, stelle: voto.stelle, stelleInsegnante: stelle, riuscita: voto.riuscita },
+                    });
+                  }}
+                />
+              )}
               {commenti === null ? (
                 <p className="text-xs text-muted-foreground">
                   {t("I commenti sulle mani non sono ancora attivi: manca un aggiornamento del database.")}
@@ -864,9 +985,12 @@ function HeatCell({
   }
   const made = cell.state === "made";
   if (cell.licita) {
-    const { contratto, dichiarante, stelle, par, gioco } = cell.licita;
+    const { contratto, dichiarante, stelle, stelleInsegnante, riuscita, par, gioco } = cell.licita;
     const titolo =
-      t("{stelle} stelle su 3", { stelle: stelleScritte(stelle) }) +
+      (stelle === null
+        ? t("in attesa delle tue stelle")
+        : t("{stelle} stelle su 3", { stelle: stelleScritte(stelle) }) +
+          (stelleInsegnante !== null ? ` (${t("tue")})` : "")) +
       (par !== null ? ` · ${t("par {par}", { par })}` : "") +
       (gioco
         ? ` · ${
@@ -881,13 +1005,14 @@ function HeatCell({
         type="button"
         onClick={onClick}
         className={`inline-flex h-7 min-w-12 cursor-pointer items-center justify-center gap-0.5 whitespace-nowrap rounded px-1 text-xs font-bold text-white ring-offset-1 transition hover:ring-2 hover:ring-primary/60 ${
-          made ? "bg-emerald-500" : "bg-red-500"
+          riuscita === null ? "bg-slate-400 dark:bg-slate-600" : made ? "bg-emerald-500" : "bg-red-500"
         }`}
         title={titolo}
         aria-label={`${contratto ?? t("Passo generale")}, ${titolo}`}
       >
         {contratto ?? t("Passo")}
         {contratto && dichiarante && <span className="font-normal opacity-80">{t(INIZIALE[dichiarante])}</span>}
+        {stelleInsegnante !== null && <span aria-hidden="true" className="font-normal">★</span>}
       </button>
     );
   }

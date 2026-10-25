@@ -65,6 +65,7 @@ export function CompitoLicitaMano({
   onRegistra,
   onEsci,
   onGioca,
+  stelleDallInsegnante = false,
 }: {
   smazzata: Smazzata;
   handNumber: number;
@@ -73,6 +74,13 @@ export function CompitoLicitaMano({
   onEsci: () => void;
   /** Gioca il contratto appena dichiarato; `riga` è la licita già registrata. */
   onGioca?: (gioco: ContrattoDaGiocare) => void;
+  /**
+   * Il compito ha le stelle «le assegna l'insegnante»: niente voto del
+   * programma, che confronta col par e può smentire quello che è stato
+   * spiegato in classe (25/10/2026). Si registra lo stesso, l'insegnante lo
+   * vede accanto al proprio.
+   */
+  stelleDallInsegnante?: boolean;
 }) {
   const t = useT();
   const dealer = mazziereDellaMano(smazzata);
@@ -306,11 +314,19 @@ export function CompitoLicitaMano({
 
       {esito && calcolo && (
         <div className="mt-4 rounded-2xl border border-border bg-card p-4">
-          <div className="mb-2 flex justify-center">
-            <Stelle quante={esito.stelle} className="[&_svg]:h-8 [&_svg]:w-8" />
-          </div>
+          {!stelleDallInsegnante && (
+            <div className="mb-2 flex justify-center">
+              <Stelle quante={esito.stelle} className="[&_svg]:h-8 [&_svg]:w-8" />
+            </div>
+          )}
           <p className="mb-1 text-center font-semibold">{contrattoFinale}</p>
-          <p className="mb-2 text-sm text-muted-foreground">{esito.commento}</p>
+          {stelleDallInsegnante ? (
+            <p className="mb-2 text-center text-sm text-muted-foreground">
+              {t("Le stelle di questo compito te le dà il tuo insegnante, quando corregge: le trovi nell'elenco delle mani.")}
+            </p>
+          ) : (
+            <p className="mb-2 text-sm text-muted-foreground">{esito.commento}</p>
+          )}
           <p className="mb-3 text-xs text-muted-foreground">
             {t("Il tuo contratto vale {punti}, il par della smazzata {par}.", {
               punti: esito.punteggio,
