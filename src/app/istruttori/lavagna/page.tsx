@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
+import { useSerieCasuale } from "@/hooks/use-serie-casuale";
 import Link from "@/components/link";
 import { Briciole } from "@/components/briciole";
 import { useSearchParams } from "next/navigation";
@@ -77,7 +78,7 @@ function Lavagna() {
   const [soluzioneVisibile, setSoluzioneVisibile] = useState(false);
   const [daCompito, setDaCompito] = useState<Mano[] | null>(null);
   const [modelloId, setModelloId] = useState(DEAL_TEMPLATES[0].id);
-  const [seed, setSeed] = useState(2026);
+  const [seed, setSeed] = useSerieCasuale();
   const [divisioniVisibili, setDivisioniVisibili] = useState(false);
   /**
    * Le prime lezioni del Corso Fiori si fanno senza dichiarazione: acceso

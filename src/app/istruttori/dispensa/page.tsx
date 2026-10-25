@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense, useEffect, useMemo, useState } from "react";
+import { useSerieCasuale } from "@/hooks/use-serie-casuale";
 import Link from "@/components/link";
 import { useSearchParams } from "next/navigation";
 import { Printer } from "lucide-react";
@@ -116,7 +117,7 @@ function Dispensa() {
   }, []);
   const ufficiali = modelli.filter((m) => m.ufficiale);
   const modelloId = sceltaArgomento ?? (ufficiali[0] ? ufficiali[0].id : `fisso:${DEAL_TEMPLATES[0].id}`);
-  const [seed, setSeed] = useState(2026);
+  const [seed, setSeed] = useSerieCasuale();
   const [quante, setQuante] = useState(8);
   const [note, setNote] = useState<Map<string, string>>(new Map());
   /** Formato compatto: ~24 mani per pagina, per gli hand record. */

@@ -1,6 +1,7 @@
 "use client";
 
 import { use, useCallback, useEffect, useState } from "react";
+import { useSerieCasuale } from "@/hooks/use-serie-casuale";
 import Link from "@/components/link";
 import { LayoutGrid, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -52,7 +53,7 @@ export default function AulaPage({ params }: { params: Promise<{ classId: string
   const [tavoli, setTavoli] = useState<StatoTavolo[]>([]);
   const [quanti, setQuanti] = useState(4);
   const [modelloId, setModelloId] = useState(DEAL_TEMPLATES[0].id);
-  const [seed, setSeed] = useState(2026);
+  const [seed, setSeed] = useSerieCasuale();
   const [occupato, setOccupato] = useState(false);
   const [messaggio, setMessaggio] = useState("");
   const [caricando, setCaricando] = useState(true);
