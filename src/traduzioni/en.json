@@ -2800,5 +2800,10 @@
   "le ha date l'insegnante": "given by the teacher",
   "tue": "yours",
   "{contratto} — in attesa delle stelle dell'insegnante": "{contratto} — waiting for the teacher's stars",
-  "«Le stelle le assegno io» non è ancora attivo su questo sito: togli la spunta e riprova, potrai correggere le stelle dai risultati più avanti.": "\"I'll give the stars myself\" isn't active on this site yet: uncheck it and try again; you'll be able to correct the stars from the results later."
+  "«Le stelle le assegno io» non è ancora attivo su questo sito: togli la spunta e riprova, potrai correggere le stelle dai risultati più avanti.": "\"I'll give the stars myself\" isn't active on this site yet: uncheck it and try again; you'll be able to correct the stars from the results later.",
+  "Gli allievi dichiarano e poi possono giocare il contratto: il gioco è facoltativo. Finora {g} mani giocate su {d} dichiarate; quelle giocate hanno ▶ nella cella.": "Students bid and can then play the contract: playing is optional. So far {g} hands played out of {d} bid; played hands show ▶ in the cell.",
+  "In questo compito gli allievi dichiarano soltanto: non giocano il contratto.": "In this assignment students only bid: they do not play the contract.",
+  "In questo compito si dichiara soltanto: la mano non si gioca.": "This assignment is bidding only: the hand is not played.",
+  "Non l'ha giocata: dopo l'asta il gioco è facoltativo, e questo allievo è tornato al compito.": "Not played: after the auction playing is optional, and this student went back to the assignment.",
+  "Passo generale: non c'era niente da giocare.": "Passed out: there was nothing to play."
 }

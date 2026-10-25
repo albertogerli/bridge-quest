@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, use } from "react";
+import { useEffect, useMemo, useRef, useState, use } from "react";
 import { RisposteClasse } from "@/components/istruttori/risposte-classe";
 import { BricioleClasse } from "@/components/istruttori/briciole-classe";
 import dynamic from "next/dynamic";
@@ -40,7 +40,7 @@ import { segnalaSalvoRete } from "@/lib/report-error";
 import { classificaCompito } from "@/lib/riepiloghi-classe";
 import { mazziereDellaMano, mazziereRegistrato, stelleScritte } from "@/lib/compito-licita";
 import { Button } from "@/components/ui/button";
-import { MessageSquareText } from "lucide-react";
+import { ChevronLeft, ChevronRight, MessageSquareText } from "lucide-react";
 import { CommentoCompito as RiquadroCommento } from "@/components/istruttori/commento-compito";
 import { commentiDelCompito, commentiPerMano, type CommentoCompito } from "@/lib/commenti-compito";
 import { AssegnaStelle } from "@/components/istruttori/assegna-stelle";
@@ -287,6 +287,12 @@ export default function AssignmentResultsPage({
     /** Apre il gioco carta per carta, se l'allievo ha giocato il contratto. */
     rivedi: (() => void) | null;
   } | null>(null);
+  /** Passando a un'altra mano con le frecce si riparte dall'asta, in cima. */
+  const finestraAsta = useRef<HTMLDivElement>(null);
+  const manoAperta = astaAperta ? `${astaAperta.studentId}|${astaAperta.smazzataId}` : null;
+  useEffect(() => {
+    finestraAsta.current?.scrollTo({ top: 0 });
+  }, [manoAperta]);
 
   function maniDi(smazzataId: string): Record<Position, Card[]> | null {
     const sm =
@@ -364,6 +370,50 @@ export default function AssignmentResultsPage({
     const livello = parseInt(s.contract, 10);
     return soloGioco && !Number.isNaN(livello) ? t("{n} prese", { n: livello + 6 }) : s.contract;
   };
+
+  /** La finestra della licita di un allievo su una mano; `null` se non l'ha dichiarata. */
+  function astaDi(studentId: string, smazzataId: string): NonNullable<typeof astaAperta> | null {
+    const cella = cellFor(studentId, smazzataId);
+    if (cella.state === "empty" || !cella.licita) return null;
+    const gioco = cella.licita.gioco;
+    const nome = members.find((m) => m.student_id === studentId)?.display_name ?? t("Allievo");
+    return {
+      titolo: `${nome} · ${colLabel(smazzataId)}`,
+      studentId,
+      smazzataId,
+      cella: cella.licita,
+      mani: maniDi(smazzataId),
+      rivedi: gioco && playOf(studentId, smazzataId) ? () => openReplay(studentId, smazzataId, nome, gioco) : null,
+    };
+  }
+
+  /**
+   * Le frecce della finestra: la mano dichiarata prima e dopo dello stesso
+   * allievo. L'insegnante dà le stelle una mano dopo l'altra, e chiudere e
+   * riaprire ogni volta le faceva perdere un sacco di tempo (25/10/2026).
+   */
+  function astaVicina(verso: 1 | -1): NonNullable<typeof astaAperta> | null {
+    if (!astaAperta) return null;
+    for (
+      let i = smazzataIds.indexOf(astaAperta.smazzataId) + verso;
+      i >= 0 && i < smazzataIds.length;
+      i += verso
+    ) {
+      const vicina = astaDi(astaAperta.studentId, smazzataIds[i]);
+      if (vicina) return vicina;
+    }
+    return null;
+  }
+  const astaPrima = astaVicina(-1);
+  const astaDopo = astaVicina(1);
+
+  /** Le mani dichiarate e quelle giocate davvero: il gioco, dopo l'asta, l'allievo lo sceglie. */
+  const maniLicita = assignment.licita
+    ? members.flatMap((m) =>
+        smazzataIds.map((id) => cellFor(m.student_id, id)).filter((c) => c.state !== "empty" && c.licita),
+      )
+    : [];
+  const maniGiocate = maniLicita.filter((c) => c.state !== "empty" && c.licita?.gioco).length;
 
   /**
    * I tempi di riflessione, per allievo e per mano.
@@ -479,6 +529,16 @@ export default function AssignmentResultsPage({
         {members.length} {members.length === 1 ? "allievo" : "allievi"} · {smazzataIds.length}{" "}
         {smazzataIds.length === 1 ? "mano" : "mani"}
       </p>
+      {assignment.licita && (
+        <p className="-mt-4 mb-6 text-sm text-muted-foreground">
+          {assignment.licita_gioca === false
+            ? t("In questo compito gli allievi dichiarano soltanto: non giocano il contratto.")
+            : t("Gli allievi dichiarano e poi possono giocare il contratto: il gioco è facoltativo. Finora {g} mani giocate su {d} dichiarate; quelle giocate hanno ▶ nella cella.", {
+                g: maniGiocate,
+                d: maniLicita.length,
+              })}
+        </p>
+      )}
 
       {/* Legend */}
       <div className="mb-4 flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
@@ -565,7 +625,6 @@ export default function AssignmentResultsPage({
                     const cell = cellFor(m.student_id, id);
                     const playable = !!playOf(m.student_id, id);
                     const licita = cell.state !== "empty" ? cell.licita : undefined;
-                    const gioco = licita?.gioco;
                     return (
                       <td key={id} className="px-2 py-2 text-center">
                         <span className="relative inline-block">
@@ -580,18 +639,7 @@ export default function AssignmentResultsPage({
                             playable={playable || !!licita}
                             onClick={
                               licita
-                                ? () =>
-                                    setAstaAperta({
-                                      titolo: `${m.display_name ?? t("Allievo")} · ${colLabel(id)}`,
-                                      studentId: m.student_id,
-                                      smazzataId: id,
-                                      cella: licita,
-                                      mani: maniDi(id),
-                                      rivedi:
-                                        gioco && playable
-                                          ? () => openReplay(m.student_id, id, m.display_name ?? t("Allievo"), gioco)
-                                          : null,
-                                    })
+                                ? () => setAstaAperta(astaDi(m.student_id, id))
                                 : playable
                                   ? () => openReplay(m.student_id, id, m.display_name ?? "Allievo")
                                   : undefined
@@ -807,10 +855,46 @@ export default function AssignmentResultsPage({
             la mano dall'esterno, non dal posto di chi l'ha giocata. */}
         <Dialog open={!!astaAperta} onOpenChange={(aperta) => !aperta && setAstaAperta(null)}>
           {astaAperta && (
-            <DialogContent className="max-h-[90dvh] overflow-y-auto p-4 sm:p-6">
+            <DialogContent
+              ref={finestraAsta}
+              className="max-h-[90dvh] overflow-y-auto p-4 sm:p-6"
+              onKeyDown={(e) => {
+                // Le frecce della tastiera come i pulsanti, ma non dentro un campo di testo o tra le stelle.
+                const dove = e.target as HTMLElement;
+                if (dove.closest("textarea, input, [role=radiogroup]")) return;
+                const vicina = e.key === "ArrowLeft" ? astaPrima : e.key === "ArrowRight" ? astaDopo : null;
+                if (vicina) {
+                  e.preventDefault();
+                  setAstaAperta(vicina);
+                }
+              }}
+            >
               <DialogHeader>
                 <DialogTitle>{astaAperta.titolo}</DialogTitle>
               </DialogHeader>
+              {/* Ferme in cima anche scorrendo fino alle stelle, che stanno in fondo. */}
+              <div className="sticky -top-4 z-10 -mx-4 flex items-center justify-between gap-2 bg-background px-4 py-2 sm:-top-6 sm:-mx-6 sm:px-6">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  disabled={!astaPrima}
+                  onClick={() => astaPrima && setAstaAperta(astaPrima)}
+                  aria-label={t("Mano precedente")}
+                >
+                  <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+                  {t("Precedente")}
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  disabled={!astaDopo}
+                  onClick={() => astaDopo && setAstaAperta(astaDopo)}
+                  aria-label={t("Mano successiva")}
+                >
+                  {t("Successiva")}
+                  <ChevronRight className="h-4 w-4" aria-hidden="true" />
+                </Button>
+              </div>
               <p className="text-sm">
                 {astaAperta.cella.contratto
                   ? t("{contratto} di {chi}", {
@@ -843,6 +927,15 @@ export default function AssignmentResultsPage({
                   {astaAperta.cella.gioco.result >= 0
                     ? t("mantenuto")
                     : t("sotto di {n}", { n: -astaAperta.cella.gioco.result })}
+                </p>
+              )}
+              {!astaAperta.cella.gioco && (
+                <p className="text-sm text-muted-foreground">
+                  {!astaAperta.cella.contratto
+                    ? t("Passo generale: non c'era niente da giocare.")
+                    : assignment.licita_gioca === false
+                      ? t("In questo compito si dichiara soltanto: la mano non si gioca.")
+                      : t("Non l'ha giocata: dopo l'asta il gioco è facoltativo, e questo allievo è tornato al compito.")}
                 </p>
               )}
               {astaAperta.rivedi && (
@@ -1013,6 +1106,7 @@ function HeatCell({
         {contratto ?? t("Passo")}
         {contratto && dichiarante && <span className="font-normal opacity-80">{t(INIZIALE[dichiarante])}</span>}
         {stelleInsegnante !== null && <span aria-hidden="true" className="font-normal">★</span>}
+        {gioco && <span aria-hidden="true" className="text-[12px] font-normal">▶</span>}
       </button>
     );
   }
