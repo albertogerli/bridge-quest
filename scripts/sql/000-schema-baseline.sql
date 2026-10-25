@@ -90,7 +90,8 @@ CREATE TABLE IF NOT EXISTS public.assignments (
   esercizio_ids uuid[] NOT NULL,
   link_video text,
   licita boolean NOT NULL,
-  stelle_insegnante boolean NOT NULL
+  stelle_insegnante boolean NOT NULL,
+  licita_gioca boolean NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.aste_torneo_in_corso (
@@ -4732,6 +4733,7 @@ ALTER TABLE public.assignments ALTER COLUMN minibridge SET DEFAULT false;
 ALTER TABLE public.assignments ALTER COLUMN esercizio_ids SET DEFAULT '{}'::uuid[];
 ALTER TABLE public.assignments ALTER COLUMN licita SET DEFAULT false;
 ALTER TABLE public.assignments ALTER COLUMN stelle_insegnante SET DEFAULT false;
+ALTER TABLE public.assignments ALTER COLUMN licita_gioca SET DEFAULT true;
 ALTER TABLE public.aste_torneo_in_corso ALTER COLUMN asta SET DEFAULT '{}'::text[];
 ALTER TABLE public.aste_torneo_in_corso ALTER COLUMN aggiornata_at SET DEFAULT now();
 ALTER TABLE public.badges ALTER COLUMN id SET DEFAULT nextval('badges_id_seq'::regclass);
