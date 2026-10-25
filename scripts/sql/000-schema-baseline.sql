@@ -16,7 +16,7 @@
 -- Rigenerare e committare dopo OGNI modifica allo schema, insieme allo script
 -- che l'ha causata.
 --
--- Estratto il: 2026-10-22
+-- Estratto il: 2026-10-25
 -- ============================================================================
 
 SET check_function_bodies = false;
@@ -90,7 +90,7 @@ CREATE TABLE IF NOT EXISTS public.assignments (
   esercizio_ids uuid[] NOT NULL,
   link_video text,
   licita boolean NOT NULL,
-  licita_gioca boolean NOT NULL
+  stelle_insegnante boolean NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.aste_torneo_in_corso (
@@ -219,6 +219,16 @@ CREATE TABLE IF NOT EXISTS public.collectible_cards (
   updated_at timestamp with time zone NOT NULL,
   name_en text,
   description_en text
+);
+
+CREATE TABLE IF NOT EXISTS public.commenti_compito (
+  id uuid NOT NULL,
+  assignment_id uuid NOT NULL,
+  smazzata_id text NOT NULL,
+  student_id uuid,
+  testo text NOT NULL,
+  created_at timestamp with time zone NOT NULL,
+  updated_at timestamp with time zone NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.completed_modules (
@@ -780,6 +790,16 @@ CREATE TABLE IF NOT EXISTS public.sondaggi (
   created_at timestamp with time zone NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS public.stelle_compito (
+  id uuid NOT NULL,
+  assignment_id uuid NOT NULL,
+  smazzata_id text NOT NULL,
+  student_id uuid NOT NULL,
+  stelle numeric(2,1) NOT NULL,
+  created_at timestamp with time zone NOT NULL,
+  updated_at timestamp with time zone NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS public.tornei (
   id uuid NOT NULL,
   tipo text NOT NULL,
@@ -1251,6 +1271,37 @@ begin
 
   return esito;
 end $function$
+;
+
+CREATE OR REPLACE FUNCTION public.assegna_stelle_compito(p_assignment_id uuid, p_smazzata_id text, p_student_id uuid, p_stelle numeric)
+ RETURNS void
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+  begin
+    if not is_instructor_of_assignment(p_assignment_id) then
+      raise exception 'non sei l''insegnante di questo compito' using errcode = '42501';
+    end if;
+
+    if p_stelle is null then
+      delete from stelle_compito
+      where assignment_id = p_assignment_id
+        and smazzata_id = p_smazzata_id
+        and student_id = p_student_id;
+      return;
+    end if;
+
+    if p_stelle < 0 or p_stelle > 3 or p_stelle * 2 <> floor(p_stelle * 2) then
+      raise exception 'stelle non valide: %', p_stelle using errcode = '22023';
+    end if;
+
+    insert into stelle_compito (assignment_id, smazzata_id, student_id, stelle)
+    values (p_assignment_id, p_smazzata_id, p_student_id, p_stelle)
+    on conflict (assignment_id, smazzata_id, student_id)
+    do update set stelle = excluded.stelle;
+  end;
+  $function$
 ;
 
 CREATE OR REPLACE FUNCTION public.aste_giocatore_torneo(p_torneo uuid, p_giocatore uuid)
@@ -3929,6 +3980,35 @@ AS $function$
 $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.salva_commento_compito(p_assignment_id uuid, p_smazzata_id text, p_student_id uuid, p_testo text)
+ RETURNS void
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+  declare
+    v_testo text := nullif(btrim(coalesce(p_testo, '')), '');
+  begin
+    if not is_instructor_of_assignment(p_assignment_id) then
+      raise exception 'non sei l''insegnante di questo compito' using errcode = '42501';
+    end if;
+
+    if v_testo is null then
+      delete from commenti_compito
+      where assignment_id = p_assignment_id
+        and smazzata_id = p_smazzata_id
+        and student_id is not distinct from p_student_id;
+      return;
+    end if;
+
+    insert into commenti_compito (assignment_id, smazzata_id, student_id, testo)
+    values (p_assignment_id, p_smazzata_id, p_student_id, v_testo)
+    on conflict (assignment_id, smazzata_id, coalesce(student_id, '00000000-0000-0000-0000-000000000000'::uuid))
+    do update set testo = excluded.testo;
+  end;
+  $function$
+;
+
 CREATE OR REPLACE FUNCTION public.search_users(p_query text, p_user_id uuid)
  RETURNS TABLE(id uuid, display_name text, bbo_username text, avatar_url text, asd_code text, asd_name text)
  LANGUAGE sql
@@ -4651,7 +4731,7 @@ ALTER TABLE public.assignments ALTER COLUMN soluzioni SET DEFAULT 'dopo-il-gioco
 ALTER TABLE public.assignments ALTER COLUMN minibridge SET DEFAULT false;
 ALTER TABLE public.assignments ALTER COLUMN esercizio_ids SET DEFAULT '{}'::uuid[];
 ALTER TABLE public.assignments ALTER COLUMN licita SET DEFAULT false;
-ALTER TABLE public.assignments ALTER COLUMN licita_gioca SET DEFAULT true;
+ALTER TABLE public.assignments ALTER COLUMN stelle_insegnante SET DEFAULT false;
 ALTER TABLE public.aste_torneo_in_corso ALTER COLUMN asta SET DEFAULT '{}'::text[];
 ALTER TABLE public.aste_torneo_in_corso ALTER COLUMN aggiornata_at SET DEFAULT now();
 ALTER TABLE public.badges ALTER COLUMN id SET DEFAULT nextval('badges_id_seq'::regclass);
@@ -4693,6 +4773,9 @@ ALTER TABLE public.coda_sfide_coppie ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.collectible_cards ALTER COLUMN gradient SET DEFAULT ''::text;
 ALTER TABLE public.collectible_cards ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.collectible_cards ALTER COLUMN updated_at SET DEFAULT now();
+ALTER TABLE public.commenti_compito ALTER COLUMN id SET DEFAULT gen_random_uuid();
+ALTER TABLE public.commenti_compito ALTER COLUMN created_at SET DEFAULT now();
+ALTER TABLE public.commenti_compito ALTER COLUMN updated_at SET DEFAULT now();
 ALTER TABLE public.completed_modules ALTER COLUMN id SET DEFAULT nextval('completed_modules_id_seq'::regclass);
 ALTER TABLE public.completed_modules ALTER COLUMN completed_at SET DEFAULT now();
 ALTER TABLE public.course_worlds ALTER COLUMN created_at SET DEFAULT now();
@@ -4841,6 +4924,9 @@ ALTER TABLE public.sondaggi ALTER COLUMN mostra_risultati SET DEFAULT false;
 ALTER TABLE public.sondaggi ALTER COLUMN mostra_risposta SET DEFAULT false;
 ALTER TABLE public.sondaggi ALTER COLUMN riusabile SET DEFAULT false;
 ALTER TABLE public.sondaggi ALTER COLUMN created_at SET DEFAULT now();
+ALTER TABLE public.stelle_compito ALTER COLUMN id SET DEFAULT gen_random_uuid();
+ALTER TABLE public.stelle_compito ALTER COLUMN created_at SET DEFAULT now();
+ALTER TABLE public.stelle_compito ALTER COLUMN updated_at SET DEFAULT now();
 ALTER TABLE public.tornei ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.tornei ALTER COLUMN creato_at SET DEFAULT now();
 ALTER TABLE public.tournament_results ALTER COLUMN id SET DEFAULT gen_random_uuid();
@@ -4878,6 +4964,7 @@ ALTER TABLE public.classes ADD CONSTRAINT classes_pkey PRIMARY KEY (id);
 ALTER TABLE public.club_posts ADD CONSTRAINT club_posts_pkey PRIMARY KEY (id);
 ALTER TABLE public.coda_sfide_coppie ADD CONSTRAINT coda_sfide_coppie_pkey PRIMARY KEY (id);
 ALTER TABLE public.collectible_cards ADD CONSTRAINT collectible_cards_pkey PRIMARY KEY (id);
+ALTER TABLE public.commenti_compito ADD CONSTRAINT commenti_compito_pkey PRIMARY KEY (id);
 ALTER TABLE public.completed_modules ADD CONSTRAINT completed_modules_pkey PRIMARY KEY (id);
 ALTER TABLE public.course_worlds ADD CONSTRAINT course_worlds_pkey PRIMARY KEY (id);
 ALTER TABLE public.courses ADD CONSTRAINT courses_pkey PRIMARY KEY (id);
@@ -4922,6 +5009,7 @@ ALTER TABLE public.sfida_board ADD CONSTRAINT sfida_board_pkey PRIMARY KEY (sfid
 ALTER TABLE public.sfide_coppie ADD CONSTRAINT sfide_coppie_pkey PRIMARY KEY (id);
 ALTER TABLE public.smazzate ADD CONSTRAINT smazzate_pkey PRIMARY KEY (id);
 ALTER TABLE public.sondaggi ADD CONSTRAINT sondaggi_pkey PRIMARY KEY (id);
+ALTER TABLE public.stelle_compito ADD CONSTRAINT stelle_compito_pkey PRIMARY KEY (id);
 ALTER TABLE public.tornei ADD CONSTRAINT tornei_pkey PRIMARY KEY (id);
 ALTER TABLE public.torneo_mani ADD CONSTRAINT torneo_mani_pkey PRIMARY KEY (torneo_id, numero);
 ALTER TABLE public.tournament_results ADD CONSTRAINT tournament_results_pkey PRIMARY KEY (id);
@@ -4946,6 +5034,7 @@ ALTER TABLE public.profiles ADD CONSTRAINT profiles_username_key UNIQUE (usernam
 ALTER TABLE public.push_subscriptions ADD CONSTRAINT push_subscriptions_user_id_endpoint_key UNIQUE (user_id, endpoint);
 ALTER TABLE public.risultati_mano ADD CONSTRAINT risultati_mano_mano_id_user_id_key UNIQUE (mano_id, user_id);
 ALTER TABLE public.smazzate ADD CONSTRAINT smazzate_lesson_id_board_key UNIQUE (lesson_id, board);
+ALTER TABLE public.stelle_compito ADD CONSTRAINT stelle_compito_assignment_id_smazzata_id_student_id_key UNIQUE (assignment_id, smazzata_id, student_id);
 ALTER TABLE public.tornei ADD CONSTRAINT tornei_tipo_periodo_key UNIQUE (tipo, periodo);
 ALTER TABLE public.torneo_mani ADD CONSTRAINT torneo_mani_torneo_id_mano_id_key UNIQUE (torneo_id, mano_id);
 ALTER TABLE public.tournament_results ADD CONSTRAINT tournament_results_user_id_week_num_key UNIQUE (user_id, week_num);
@@ -4972,6 +5061,7 @@ ALTER TABLE public.coda_sfide_coppie ADD CONSTRAINT coda_sfide_coppie_quante_che
 ALTER TABLE public.collectible_cards ADD CONSTRAINT collectible_cards_category_check CHECK ((category = ANY (ARRAY['tecnica'::text, 'convenzione'::text, 'strategia'::text, 'storia'::text, 'mossa'::text])));
 ALTER TABLE public.collectible_cards ADD CONSTRAINT collectible_cards_rarity_check CHECK ((rarity = ANY (ARRAY['comune'::text, 'rara'::text, 'epica'::text, 'leggendaria'::text])));
 ALTER TABLE public.collectible_cards ADD CONSTRAINT collectible_cards_unlock_check CHECK ((jsonb_typeof(unlock) = 'object'::text));
+ALTER TABLE public.commenti_compito ADD CONSTRAINT commenti_compito_testo_check CHECK (((char_length(testo) >= 1) AND (char_length(testo) <= 4000)));
 ALTER TABLE public.courses ADD CONSTRAINT courses_level_check CHECK ((level = ANY (ARRAY['base'::text, 'intermedio'::text, 'avanzato'::text])));
 ALTER TABLE public.esercizi_posizione ADD CONSTRAINT esercizi_posizione_consegna_check CHECK ((consegna = ANY (ARRAY['dichiara'::text, 'carta'::text, 'piano'::text])));
 ALTER TABLE public.eserciziario_exercises ADD CONSTRAINT eserciziario_exercises_content_check CHECK ((jsonb_typeof(content) = 'array'::text));
@@ -5022,6 +5112,7 @@ ALTER TABLE public.smazzate ADD CONSTRAINT smazzate_declarer_check CHECK ((decla
 ALTER TABLE public.smazzate ADD CONSTRAINT smazzate_hands_check CHECK (((hands ? 'north'::text) AND (hands ? 'south'::text) AND (hands ? 'east'::text) AND (hands ? 'west'::text) AND (jsonb_typeof((hands -> 'north'::text)) = 'array'::text) AND (jsonb_typeof((hands -> 'south'::text)) = 'array'::text) AND (jsonb_typeof((hands -> 'east'::text)) = 'array'::text) AND (jsonb_typeof((hands -> 'west'::text)) = 'array'::text)));
 ALTER TABLE public.smazzate ADD CONSTRAINT smazzate_opening_lead_check CHECK (((opening_lead ? 'suit'::text) AND (opening_lead ? 'rank'::text)));
 ALTER TABLE public.smazzate ADD CONSTRAINT smazzate_vulnerability_check CHECK ((vulnerability = ANY (ARRAY['none'::text, 'ns'::text, 'ew'::text, 'both'::text])));
+ALTER TABLE public.stelle_compito ADD CONSTRAINT stelle_compito_stelle_check CHECK (((stelle >= (0)::numeric) AND (stelle <= (3)::numeric) AND ((stelle * (2)::numeric) = floor((stelle * (2)::numeric)))));
 ALTER TABLE public.tornei ADD CONSTRAINT tornei_tipo_check CHECK ((tipo = ANY (ARRAY['giornaliero'::text, 'settimanale'::text])));
 ALTER TABLE public.trova_errore_scenarios ADD CONSTRAINT trova_errore_scenarios_category_check CHECK ((category = ANY (ARRAY['licita'::text, 'gioco'::text, 'difesa'::text])));
 ALTER TABLE public.trova_errore_scenarios ADD CONSTRAINT trova_errore_scenarios_correct_answer_check CHECK ((correct_answer >= 0));
@@ -5048,6 +5139,8 @@ ALTER TABLE public.classes ADD CONSTRAINT classes_instructor_id_fkey FOREIGN KEY
 ALTER TABLE public.club_posts ADD CONSTRAINT club_posts_author_id_fkey FOREIGN KEY (author_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.coda_sfide_coppie ADD CONSTRAINT coda_sfide_coppie_a1_fkey FOREIGN KEY (a1) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.coda_sfide_coppie ADD CONSTRAINT coda_sfide_coppie_a2_fkey FOREIGN KEY (a2) REFERENCES profiles(id) ON DELETE CASCADE;
+ALTER TABLE public.commenti_compito ADD CONSTRAINT commenti_compito_assignment_id_fkey FOREIGN KEY (assignment_id) REFERENCES assignments(id) ON DELETE CASCADE;
+ALTER TABLE public.commenti_compito ADD CONSTRAINT commenti_compito_student_id_fkey FOREIGN KEY (student_id) REFERENCES auth.users(id) ON DELETE CASCADE;
 ALTER TABLE public.completed_modules ADD CONSTRAINT completed_modules_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.course_worlds ADD CONSTRAINT course_worlds_course_id_fkey FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE;
 ALTER TABLE public.elenco_allievi ADD CONSTRAINT elenco_allievi_class_id_fkey FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE;
@@ -5119,6 +5212,8 @@ ALTER TABLE public.sfide_coppie ADD CONSTRAINT sfide_coppie_creatore_id_fkey FOR
 ALTER TABLE public.smazzate ADD CONSTRAINT smazzate_lesson_id_fkey FOREIGN KEY (lesson_id) REFERENCES lessons(id) ON DELETE CASCADE;
 ALTER TABLE public.sondaggi ADD CONSTRAINT sondaggi_autore_id_fkey FOREIGN KEY (autore_id) REFERENCES auth.users(id) ON DELETE SET NULL;
 ALTER TABLE public.sondaggi ADD CONSTRAINT sondaggi_class_id_fkey FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE;
+ALTER TABLE public.stelle_compito ADD CONSTRAINT stelle_compito_assignment_id_fkey FOREIGN KEY (assignment_id) REFERENCES assignments(id) ON DELETE CASCADE;
+ALTER TABLE public.stelle_compito ADD CONSTRAINT stelle_compito_student_id_fkey FOREIGN KEY (student_id) REFERENCES auth.users(id) ON DELETE CASCADE;
 ALTER TABLE public.torneo_mani ADD CONSTRAINT torneo_mani_mano_id_fkey FOREIGN KEY (mano_id) REFERENCES mani_generate(id) ON DELETE CASCADE;
 ALTER TABLE public.torneo_mani ADD CONSTRAINT torneo_mani_torneo_id_fkey FOREIGN KEY (torneo_id) REFERENCES tornei(id) ON DELETE CASCADE;
 ALTER TABLE public.tournament_results ADD CONSTRAINT tournament_results_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
@@ -5139,6 +5234,7 @@ CREATE UNIQUE INDEX coda_sfide_coppie_a2_unico ON public.coda_sfide_coppie USING
 CREATE INDEX coda_sfide_coppie_attesa_idx ON public.coda_sfide_coppie USING btree (created_at);
 CREATE INDEX collectible_cards_category_idx ON public.collectible_cards USING btree (category);
 CREATE INDEX collectible_cards_rarity_idx ON public.collectible_cards USING btree (rarity);
+CREATE UNIQUE INDEX commenti_compito_unico ON public.commenti_compito USING btree (assignment_id, smazzata_id, COALESCE(student_id, '00000000-0000-0000-0000-000000000000'::uuid));
 CREATE INDEX course_worlds_course_id_idx ON public.course_worlds USING btree (course_id);
 CREATE INDEX eserciziario_lesson_idx ON public.eserciziario_exercises USING btree (lesson_id);
 CREATE INDEX glossary_category_idx ON public.glossary USING btree (category);
@@ -5228,6 +5324,7 @@ CREATE TRIGGER asd_clubs_touch BEFORE UPDATE ON public.asd_clubs FOR EACH ROW EX
 CREATE TRIGGER bidding_sessions_last_bid BEFORE UPDATE ON public.bidding_sessions FOR EACH ROW EXECUTE FUNCTION tocca_bidding_session();
 CREATE TRIGGER class_members_segna_uscita BEFORE UPDATE ON public.class_members FOR EACH ROW EXECUTE FUNCTION segna_uscita_da_classe();
 CREATE TRIGGER collectible_cards_touch BEFORE UPDATE ON public.collectible_cards FOR EACH ROW EXECUTE FUNCTION touch_updated_at();
+CREATE TRIGGER commenti_compito_updated_at BEFORE UPDATE ON public.commenti_compito FOR EACH ROW EXECUTE FUNCTION touch_updated_at();
 CREATE TRIGGER course_worlds_touch BEFORE UPDATE ON public.course_worlds FOR EACH ROW EXECUTE FUNCTION touch_updated_at();
 CREATE TRIGGER courses_touch BEFORE UPDATE ON public.courses FOR EACH ROW EXECUTE FUNCTION touch_updated_at();
 CREATE TRIGGER eserciziario_touch BEFORE UPDATE ON public.eserciziario_exercises FOR EACH ROW EXECUTE FUNCTION touch_updated_at();
@@ -5238,6 +5335,7 @@ CREATE TRIGGER lessons_touch BEFORE UPDATE ON public.lessons FOR EACH ROW EXECUT
 CREATE TRIGGER on_login_update AFTER UPDATE OF last_login ON public.profiles FOR EACH ROW EXECUTE FUNCTION log_user_login();
 CREATE TRIGGER profiles_sync_asd_name BEFORE INSERT OR UPDATE OF asd_code, asd_name ON public.profiles FOR EACH ROW EXECUTE FUNCTION sync_asd_name();
 CREATE TRIGGER smazzate_touch BEFORE UPDATE ON public.smazzate FOR EACH ROW EXECUTE FUNCTION touch_updated_at();
+CREATE TRIGGER stelle_compito_updated_at BEFORE UPDATE ON public.stelle_compito FOR EACH ROW EXECUTE FUNCTION touch_updated_at();
 CREATE TRIGGER trova_errore_touch BEFORE UPDATE ON public.trova_errore_scenarios FOR EACH ROW EXECUTE FUNCTION touch_updated_at();
 CREATE TRIGGER weekly_challenges_touch BEFORE UPDATE ON public.weekly_challenges FOR EACH ROW EXECUTE FUNCTION touch_updated_at();
 
@@ -5257,6 +5355,7 @@ ALTER TABLE public.classes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.club_posts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.coda_sfide_coppie ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.collectible_cards ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.commenti_compito ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.completed_modules ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.course_worlds ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.courses ENABLE ROW LEVEL SECURITY;
@@ -5301,6 +5400,7 @@ ALTER TABLE public.sfida_board ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.sfide_coppie ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.smazzate ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.sondaggi ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.stelle_compito ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.tornei ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.torneo_mani ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.tournament_results ENABLE ROW LEVEL SECURITY;
@@ -5342,6 +5442,10 @@ CREATE POLICY "Instructors write for own club" ON public.club_posts AS PERMISSIV
 CREATE POLICY "Members read own club posts" ON public.club_posts AS PERMISSIVE FOR SELECT TO authenticated USING (((asd_code = my_asd_code()) OR can_post_for_asd(asd_code)));
 CREATE POLICY "La mia attesa" ON public.coda_sfide_coppie AS PERMISSIVE FOR SELECT TO authenticated USING (((auth.uid() = a1) OR (auth.uid() = a2)));
 CREATE POLICY collectible_cards_public_read ON public.collectible_cards AS PERMISSIVE FOR SELECT TO public USING (true);
+CREATE POLICY "Allievo legge i commenti per lui" ON public.commenti_compito AS PERMISSIVE FOR SELECT TO authenticated USING ((((student_id IS NULL) OR (student_id = auth.uid())) AND (EXISTS ( SELECT 1
+   FROM assignments a
+  WHERE ((a.id = commenti_compito.assignment_id) AND is_member_of_class(a.class_id))))));
+CREATE POLICY "Insegnante legge i commenti del compito" ON public.commenti_compito AS PERMISSIVE FOR SELECT TO authenticated USING (is_instructor_of_assignment(assignment_id));
 CREATE POLICY "Own modules" ON public.completed_modules AS PERMISSIVE FOR ALL TO public USING ((auth.uid() = user_id));
 CREATE POLICY course_worlds_public_read ON public.course_worlds AS PERMISSIVE FOR SELECT TO public USING (true);
 CREATE POLICY courses_public_read ON public.courses AS PERMISSIVE FOR SELECT TO public USING (true);
@@ -5454,6 +5558,10 @@ CREATE POLICY "L'insegnante aggiorna i sondaggi" ON public.sondaggi AS PERMISSIV
 CREATE POLICY "L'insegnante cancella i sondaggi" ON public.sondaggi AS PERMISSIVE FOR DELETE TO authenticated USING (is_instructor_of_class(class_id));
 CREATE POLICY "L'insegnante gestisce i sondaggi" ON public.sondaggi AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK ((is_instructor_of_class(class_id) AND (autore_id = auth.uid())));
 CREATE POLICY "La classe vede i sondaggi della classe" ON public.sondaggi AS PERMISSIVE FOR SELECT TO authenticated USING ((is_member_of_class(class_id) OR is_instructor_of_class(class_id) OR (autore_id = auth.uid())));
+CREATE POLICY "Allievo legge le sue stelle" ON public.stelle_compito AS PERMISSIVE FOR SELECT TO authenticated USING (((student_id = auth.uid()) AND (EXISTS ( SELECT 1
+   FROM assignments a
+  WHERE ((a.id = stelle_compito.assignment_id) AND is_member_of_class(a.class_id))))));
+CREATE POLICY "Insegnante legge le stelle del compito" ON public.stelle_compito AS PERMISSIVE FOR SELECT TO authenticated USING (is_instructor_of_assignment(assignment_id));
 CREATE POLICY "Tornei leggibili" ON public.tornei AS PERMISSIVE FOR SELECT TO authenticated USING (true);
 CREATE POLICY "Mani del torneo leggibili" ON public.torneo_mani AS PERMISSIVE FOR SELECT TO authenticated USING (true);
 CREATE POLICY "Authenticated can read tournament results" ON public.tournament_results AS PERMISSIVE FOR SELECT TO authenticated USING (true);
@@ -5481,6 +5589,7 @@ REVOKE ALL ON TABLE public.classes FROM PUBLIC, anon, authenticated, service_rol
 REVOKE ALL ON TABLE public.club_posts FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.coda_sfide_coppie FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.collectible_cards FROM PUBLIC, anon, authenticated, service_role;
+REVOKE ALL ON TABLE public.commenti_compito FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.completed_modules FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON SEQUENCE public.completed_modules_id_seq FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.course_worlds FROM PUBLIC, anon, authenticated, service_role;
@@ -5534,6 +5643,7 @@ REVOKE ALL ON TABLE public.sfida_board FROM PUBLIC, anon, authenticated, service
 REVOKE ALL ON TABLE public.sfide_coppie FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.smazzate FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.sondaggi FROM PUBLIC, anon, authenticated, service_role;
+REVOKE ALL ON TABLE public.stelle_compito FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.tornei FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.torneo_mani FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.tournament_results FROM PUBLIC, anon, authenticated, service_role;
@@ -5902,6 +6012,15 @@ GRANT SELECT ON TABLE public.collectible_cards TO service_role;
 GRANT TRIGGER ON TABLE public.collectible_cards TO service_role;
 GRANT TRUNCATE ON TABLE public.collectible_cards TO service_role;
 GRANT UPDATE ON TABLE public.collectible_cards TO service_role;
+GRANT SELECT ON TABLE public.commenti_compito TO authenticated;
+GRANT DELETE ON TABLE public.commenti_compito TO service_role;
+GRANT INSERT ON TABLE public.commenti_compito TO service_role;
+GRANT MAINTAIN ON TABLE public.commenti_compito TO service_role;
+GRANT REFERENCES ON TABLE public.commenti_compito TO service_role;
+GRANT SELECT ON TABLE public.commenti_compito TO service_role;
+GRANT TRIGGER ON TABLE public.commenti_compito TO service_role;
+GRANT TRUNCATE ON TABLE public.commenti_compito TO service_role;
+GRANT UPDATE ON TABLE public.commenti_compito TO service_role;
 GRANT DELETE ON TABLE public.completed_modules TO anon;
 GRANT INSERT ON TABLE public.completed_modules TO anon;
 GRANT MAINTAIN ON TABLE public.completed_modules TO anon;
@@ -6991,6 +7110,15 @@ GRANT SELECT ON TABLE public.sondaggi TO service_role;
 GRANT TRIGGER ON TABLE public.sondaggi TO service_role;
 GRANT TRUNCATE ON TABLE public.sondaggi TO service_role;
 GRANT UPDATE ON TABLE public.sondaggi TO service_role;
+GRANT SELECT ON TABLE public.stelle_compito TO authenticated;
+GRANT DELETE ON TABLE public.stelle_compito TO service_role;
+GRANT INSERT ON TABLE public.stelle_compito TO service_role;
+GRANT MAINTAIN ON TABLE public.stelle_compito TO service_role;
+GRANT REFERENCES ON TABLE public.stelle_compito TO service_role;
+GRANT SELECT ON TABLE public.stelle_compito TO service_role;
+GRANT TRIGGER ON TABLE public.stelle_compito TO service_role;
+GRANT TRUNCATE ON TABLE public.stelle_compito TO service_role;
+GRANT UPDATE ON TABLE public.stelle_compito TO service_role;
 GRANT DELETE ON TABLE public.tornei TO anon;
 GRANT INSERT ON TABLE public.tornei TO anon;
 GRANT MAINTAIN ON TABLE public.tornei TO anon;
@@ -7221,6 +7349,9 @@ REVOKE ALL ON FUNCTION public.assegna_lezione(p_class_id uuid, p_lesson_id integ
 GRANT EXECUTE ON FUNCTION public.assegna_lezione(p_class_id uuid, p_lesson_id integer, p_soluzioni text, p_due_date timestamp with time zone) TO anon;
 GRANT EXECUTE ON FUNCTION public.assegna_lezione(p_class_id uuid, p_lesson_id integer, p_soluzioni text, p_due_date timestamp with time zone) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.assegna_lezione(p_class_id uuid, p_lesson_id integer, p_soluzioni text, p_due_date timestamp with time zone) TO service_role;
+REVOKE ALL ON FUNCTION public.assegna_stelle_compito(p_assignment_id uuid, p_smazzata_id text, p_student_id uuid, p_stelle numeric) FROM PUBLIC, anon, authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.assegna_stelle_compito(p_assignment_id uuid, p_smazzata_id text, p_student_id uuid, p_stelle numeric) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.assegna_stelle_compito(p_assignment_id uuid, p_smazzata_id text, p_student_id uuid, p_stelle numeric) TO service_role;
 REVOKE ALL ON FUNCTION public.aste_giocatore_torneo(p_torneo uuid, p_giocatore uuid) FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.aste_giocatore_torneo(p_torneo uuid, p_giocatore uuid) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.aste_giocatore_torneo(p_torneo uuid, p_giocatore uuid) TO service_role;
@@ -7486,6 +7617,9 @@ REVOKE ALL ON FUNCTION public.risultati_stessa_mano(p_tipo text, p_chiave text) 
 GRANT EXECUTE ON FUNCTION public.risultati_stessa_mano(p_tipo text, p_chiave text) TO anon;
 GRANT EXECUTE ON FUNCTION public.risultati_stessa_mano(p_tipo text, p_chiave text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.risultati_stessa_mano(p_tipo text, p_chiave text) TO service_role;
+REVOKE ALL ON FUNCTION public.salva_commento_compito(p_assignment_id uuid, p_smazzata_id text, p_student_id uuid, p_testo text) FROM PUBLIC, anon, authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.salva_commento_compito(p_assignment_id uuid, p_smazzata_id text, p_student_id uuid, p_testo text) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.salva_commento_compito(p_assignment_id uuid, p_smazzata_id text, p_student_id uuid, p_testo text) TO service_role;
 REVOKE ALL ON FUNCTION public.search_users(p_query text, p_user_id uuid) FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.search_users(p_query text, p_user_id uuid) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.search_users(p_query text, p_user_id uuid) TO service_role;
