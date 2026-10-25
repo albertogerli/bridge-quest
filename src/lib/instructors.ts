@@ -176,6 +176,12 @@ export interface Assignment {
    * colonna non arriva, e vale il comportamento già pubblicato — si gioca.
    */
   licita_gioca?: boolean;
+  /**
+   * Compito di licita: le stelle le assegna l'insegnante, e l'allievo non vede
+   * il voto del programma. Senza `stelle-insegnante-2026-10.sql` la colonna non
+   * arriva: vale il voto del programma, come sempre.
+   */
+  stelle_insegnante?: boolean;
   /** Esercizi di posizione assegnati insieme alle smazzate. */
   esercizio_ids: string[];
   /**
@@ -688,6 +694,8 @@ export async function createAssignment(input: {
   licita?: boolean;
   /** Compito di licita: vedi `Assignment.licita_gioca`. Di base si gioca. */
   licitaGioca?: boolean;
+  /** Compito di licita: vedi `Assignment.stelle_insegnante`. */
+  stelleInsegnante?: boolean;
   esercizioIds?: string[];
   /** Hands imported from PBN; their ids must also appear in smazzataIds */
   customHands?: Smazzata[] | null;
@@ -713,6 +721,7 @@ export async function createAssignment(input: {
   if (input.licita) row.licita = true;
   // Lo stesso per «solo licita»: si scrive solo il valore diverso dal default.
   if (input.licita && input.licitaGioca === false) row.licita_gioca = false;
+  if (input.licita && input.stelleInsegnante) row.stelle_insegnante = true;
   // Only send the column when used, so DBs without pbn_import.sql keep working
   if (input.customHands && input.customHands.length > 0) {
     row.custom_hands = input.customHands;

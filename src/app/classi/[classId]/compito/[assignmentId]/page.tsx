@@ -58,6 +58,7 @@ import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 import { CompitoLicitaMano, type ContrattoDaGiocare } from "@/components/classi/compito-licita-mano";
 import { licitaInAscii, stelleScritte } from "@/lib/compito-licita";
 import { segnalaSalvoRete } from "@/lib/report-error";
+import { stelleAssegnate, stelleDelCompito, votoMano, type StelleAssegnate } from "@/lib/stelle-compito";
 
 export default function CompitoPage({
   params,
@@ -79,11 +80,18 @@ export default function CompitoPage({
   /** I commenti dell'insegnante sulle mani: i propri e quelli per tutta la classe. */
   const [commenti, setCommenti] = useState<CommentoCompito[]>([]);
   const [utenteId, setUtenteId] = useState<string | null>(null);
+  /** Le stelle che l'insegnante ha dato alle proprie mani, al posto di quelle del programma. */
+  const [stelleInsegnante, setStelleInsegnante] = useState<StelleAssegnate[]>([]);
   useEffect(() => {
     let vivo = true;
-    void Promise.all([commentiDelCompito(assignmentId), createClient().auth.getUser()]).then(([c, { data }]) => {
+    void Promise.all([
+      commentiDelCompito(assignmentId),
+      stelleDelCompito(assignmentId),
+      createClient().auth.getUser(),
+    ]).then(([c, s, { data }]) => {
       if (!vivo) return;
       setCommenti(c ?? []);
+      setStelleInsegnante(s ?? []);
       setUtenteId(data.user?.id ?? null);
     });
     return () => {
@@ -202,6 +210,7 @@ export default function CompitoPage({
       <CompitoLicitaMano
         key={smazzata.id}
         smazzata={smazzata}
+        stelleDallInsegnante={assignment.stelle_insegnante === true}
         handNumber={currentIndex + 1}
         totalHands={hands.length}
         onRegistra={async (score, details) => {
@@ -265,11 +274,28 @@ export default function CompitoPage({
     );
   }
 
+  /**
+   * Compito di licita: il voto che vale su una mano — quello dell'insegnante
+   * se c'è, altrimenti quello del programma, o nessuno se il compito ha le
+   * stelle «le assegna l'insegnante».
+   */
+  const votoDi = (id: string) => {
+    const r = results.get(id);
+    return votoMano({
+      automatiche: r?.stelle,
+      insegnante: stelleAssegnate(stelleInsegnante, id, utenteId),
+      soloInsegnante: assignment.stelle_insegnante === true,
+    });
+  };
+  /** Riuscita della mano; `null` se non c'è ancora un voto. */
+  const riuscitaDi = (id: string): boolean | null => {
+    const r = results.get(id);
+    if (!r) return null;
+    return assignment.licita ? votoDi(id).riuscita : r.made;
+  };
+
   const completedCount = hands.filter((h) => doneIds.has(h.id)).length;
-  const downCount = hands.filter((h) => {
-    const r = results.get(h.id);
-    return r && !r.made;
-  }).length;
+  const downCount = hands.filter((h) => riuscitaDi(h.id) === false).length;
   const nextIndex = hands.findIndex((h) => !doneIds.has(h.id));
   const allDone = completedCount === hands.length && hands.length > 0;
 
@@ -362,8 +388,9 @@ export default function CompitoPage({
         {hands.map((hand, i) => {
           const r = results.get(hand.id);
           const isPlayed = doneIds.has(hand.id) || !!r;
-          const isDown = !!r && !r.made;
-          const isMade = !!r && r.made;
+          const isDown = riuscitaDi(hand.id) === false;
+          const isMade = riuscitaDi(hand.id) === true;
+          const voto = assignment.licita && r ? votoDi(hand.id) : null;
           const isNext = i === nextIndex;
           return (
             <motion.div
@@ -409,11 +436,20 @@ export default function CompitoPage({
                       ? `Lezione ${getLessonDisplayNumber(hand.lesson)}`
                       : "Mano dell'insegnante"}
                   </p>
-                  {assignment.licita && r && (
-                    <p className={`mt-0.5 text-xs font-semibold ${isDown ? "text-red-600" : "text-emerald-600"}`}>
-                      {r.contratto
-                        ? t("{contratto} — {stelle} stelle su 3", { contratto: r.contratto, stelle: stelleScritte(r.stelle ?? 0) })
-                        : t("Passo generale — {stelle} stelle su 3", { stelle: stelleScritte(r.stelle ?? 0) })}
+                  {assignment.licita && r && voto && (
+                    <p
+                      className={`mt-0.5 text-xs font-semibold ${
+                        voto.stelle === null ? "text-muted-foreground" : isDown ? "text-red-600" : "text-emerald-600"
+                      }`}
+                    >
+                      {voto.stelle === null
+                        ? r.contratto
+                          ? t("{contratto} — in attesa delle stelle dell'insegnante", { contratto: r.contratto })
+                          : t("Passo generale — in attesa delle stelle dell'insegnante")
+                        : r.contratto
+                          ? t("{contratto} — {stelle} stelle su 3", { contratto: r.contratto, stelle: stelleScritte(voto.stelle) })
+                          : t("Passo generale — {stelle} stelle su 3", { stelle: stelleScritte(voto.stelle) })}
+                      {voto.dallInsegnante && ` · ${t("le ha date l'insegnante")}`}
                       {isDown && ` · ${t("ridichiarala")}`}
                     </p>
                   )}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useSerieCasuale } from "@/hooks/use-serie-casuale";
 import Link from "@/components/link";
 import { Download, RefreshCw, Wand2, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -86,7 +87,7 @@ export default function GeneraManiPage() {
   // Il seme è esplicito e modificabile: è ciò che rende una serie
   // riproducibile. Stesso seme e stesso modello = stesse mani, anche fra un
   // anno e su un altro computer.
-  const [seed, setSeed] = useState(2026);
+  const [seed, setSeed] = useSerieCasuale();
   const [result, setResult] = useState<ReturnType<typeof generateDeals> | null>(null);
   const [working, setWorking] = useState(false);
 
@@ -107,6 +108,8 @@ export default function GeneraManiPage() {
   const perLicita = cosaFanno !== "gioco";
   /** Compito di licita: chi dà le carte. Di base il dichiarante della mano, per cui il modello è pensato. */
   const [mazziere, setMazziere] = useState<Position | "giro" | "dichiarante">("dichiarante");
+  /** Compito di licita: le stelle le dà l'insegnante invece del programma. */
+  const [stelleMie, setStelleMie] = useState(false);
   const [assigned, setAssigned] = useState("");
   // Pubblicazione nella scorta condivisa
   const [nomeScenario, setNomeScenario] = useState("");
@@ -313,6 +316,7 @@ export default function GeneraManiPage() {
         instructorNote: template.description,
         licita: perLicita,
         licitaGioca: cosaFanno === "licita-gioco",
+        stelleInsegnante: perLicita && stelleMie,
       });
       setAssigned(
         perLicita
@@ -327,7 +331,9 @@ export default function GeneraManiPage() {
       // Con `compito-licita-gioco-2026-10.sql` non ancora eseguito manca solo
       // la colonna di «solo licita»: le altre due scelte funzionano.
       setAssigned(
-        cosaFanno === "licita" && colonnaMancante
+        perLicita && stelleMie && colonnaMancante
+          ? t("«Le stelle le assegno io» non è ancora attivo su questo sito: togli la spunta e riprova, potrai correggere le stelle dai risultati più avanti.")
+          : cosaFanno === "licita" && colonnaMancante
           ? t("«Dichiarano» da solo non è ancora attivo su questo sito: scegli «Dichiarano e giocano», oppure riprova più avanti.")
           : perLicita && colonnaMancante
             ? t("I compiti di licita non sono ancora attivi su questo sito. Puoi assegnare le stesse mani da giocare.")
@@ -797,9 +803,25 @@ export default function GeneraManiPage() {
           </div>
 
           {perLicita ? (
-            <p className="text-xs text-muted-foreground mb-4">
-              {t("Chi dà le carte decide chi parla per primo. Se il modello mette l'apertura in un posto preciso — per esempio 1SA di Nord per esercitare le risposte — scegli quel posto.")}
-            </p>
+            <>
+              <p className="text-xs text-muted-foreground mb-4">
+                {t("Chi dà le carte decide chi parla per primo. Se il modello mette l'apertura in un posto preciso — per esempio 1SA di Nord per esercitare le risposte — scegli quel posto.")}
+              </p>
+              <label className="flex items-start gap-2 mb-4 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={stelleMie}
+                  onChange={(e) => setStelleMie(e.target.checked)}
+                  className="mt-1"
+                />
+                <span className="text-sm">
+                  <strong>{t("Le stelle le assegno io")}</strong>
+                  <span className="block text-xs text-muted-foreground">
+                    {t("Gli allievi non vedono il voto del programma, che confronta il contratto col par: aspettano le tue stelle, che dai dalla pagina dei risultati toccando la casella di ogni allievo. Utile quando in classe hai spiegato accordi diversi da quelli del corso. Anche senza la spunta puoi sempre correggere le stelle di una mano.")}
+                  </span>
+                </span>
+              </label>
+            </>
           ) : (
             <label className="flex items-start gap-2 mb-4 cursor-pointer">
               <input
