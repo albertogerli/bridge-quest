@@ -38,6 +38,14 @@ const SEATS: { key: Position; label: string }[] = [
 
 const chiave = (c: Card) => `${c.suit}-${c.rank}`;
 
+/** Il posto di ogni mano nella griglia del tavolo (vedi le aree nel tavolo). */
+const AREA: Record<Position, string> = {
+  north: "[grid-area:n]",
+  west: "[grid-area:w]",
+  east: "[grid-area:e]",
+  south: "[grid-area:s]",
+};
+
 /**
  * Tavolo di studio: «e se giocassi quest'altra?»
  *
@@ -494,17 +502,27 @@ function Studio() {
         </div>
       )}
 
-      {/* Il tavolo: Nord in alto, Sud in basso, Ovest ed Est ai lati. */}
-      <div className="grid grid-cols-3 gap-2 items-start">
-        <div />
-        <Mano seat="north" {...{ stato, tocca, legaliSet, perCarta, migliore, numeri, gioca, iniziali: deal[ "north" ], mostraGiocate, scambio, primaCarta, onScambio: tocca_carta_scambio }} />
-        <div />
-        <Mano seat="west" {...{ stato, tocca, legaliSet, perCarta, migliore, numeri, gioca, iniziali: deal[ "west" ], mostraGiocate, scambio, primaCarta, onScambio: tocca_carta_scambio }} />
-        <PresaCorrente stato={stato} />
-        <Mano seat="east" {...{ stato, tocca, legaliSet, perCarta, migliore, numeri, gioca, iniziali: deal[ "east" ], mostraGiocate, scambio, primaCarta, onScambio: tocca_carta_scambio }} />
-        <div />
-        <Mano seat="south" {...{ stato, tocca, legaliSet, perCarta, migliore, numeri, gioca, iniziali: deal[ "south" ], mostraGiocate, scambio, primaCarta, onScambio: tocca_carta_scambio }} />
-        <div />
+      {/*
+        Il tavolo: Nord in alto, Sud in basso, Ovest ed Est ai lati.
+        Sul telefono tre colonne lasciavano a ogni mano un dito di spazio e le
+        carte andavano a capo due alla volta: «non si capisce niente» (Saccomanno,
+        27/10/2026). Lì Ovest ed Est stanno affiancati e la presa scende sotto
+        di loro, come nel riepilogo delle mani.
+      */}
+      <div className="grid grid-cols-2 items-start gap-2 [grid-template-areas:'n_n'_'w_e'_'p_p'_'s_s'] sm:grid-cols-3 sm:[grid-template-areas:'._n_.'_'w_p_e'_'._s_.']">
+        {(["north", "west", "east", "south"] as const).map((seat) => (
+          <div
+            key={seat}
+            className={`min-w-0 ${
+              seat === "north" || seat === "south" ? "mx-auto w-full max-w-xs sm:max-w-none" : ""
+            } ${AREA[seat]}`}
+          >
+            <Mano seat={seat} {...{ stato, tocca, legaliSet, perCarta, migliore, numeri, gioca, iniziali: deal[seat], mostraGiocate, scambio, primaCarta, onScambio: tocca_carta_scambio }} />
+          </div>
+        ))}
+        <div className="mx-auto w-full max-w-xs [grid-area:p] sm:max-w-none">
+          <PresaCorrente stato={stato} />
+        </div>
       </div>
 
       {ripart && stato && contratto && (
@@ -653,7 +671,7 @@ function Mano({
   const suoTurno = tocca === seat;
 
   return (
-    <div className={`rounded-2xl border-2 p-3 ${suoTurno ? "border-figb bg-figb/5" : "border-border bg-card"}`}>
+    <div className={`rounded-2xl border-2 p-2 sm:p-3 ${suoTurno ? "border-figb bg-figb/5" : "border-border bg-card"}`}>
       <p className="font-bold text-sm mb-1">
         {etichetta}
         {suoTurno && <span className="ml-2 text-xs font-semibold text-figb">tocca a lui</span>}
@@ -664,12 +682,16 @@ function Mano({
           .sort((a, b) => RANK_ORDER.indexOf(a.rank) - RANK_ORDER.indexOf(b.rank));
         if (delSeme.length === 0) return null;
         return (
-          <div key={suit} className="flex items-center gap-1.5 flex-wrap mb-1">
-            <SuitSymbol suit={suit} size="xs" />
+          <div key={suit} className="mb-1 flex items-start gap-1">
+            {/* Il seme resta in colonna: se le carte vanno a capo, ripartono dopo il simbolo. */}
+            <span className="flex min-h-9 shrink-0 items-center">
+              <SuitSymbol suit={suit} size="xs" />
+            </span>
+            <div className="flex min-w-0 flex-wrap items-center gap-0.5 sm:gap-1.5">
             {delSeme.map((c) => {
               if (!inManoSet.has(chiave(c))) {
                 return (
-                  <span key={chiave(c)} className="px-1.5 py-0.5 font-mono text-base text-muted-foreground/50 line-through" title="già giocata">
+                  <span key={chiave(c)} className="px-1 py-0.5 font-mono sm:px-1.5 text-base text-muted-foreground/50 line-through" title="già giocata">
                     {c.rank}
                   </span>
                 );
@@ -681,7 +703,7 @@ function Mano({
                     key={chiave(c)}
                     onClick={() => onScambio(seat, c)}
                     aria-pressed={scelta}
-                    className={`px-1.5 py-0.5 rounded-md font-mono text-base border ${
+                    className={`min-h-9 min-w-6 px-1 py-0.5 rounded-md font-mono text-base border sm:min-w-8 sm:px-1.5 ${
                       scelta ? "bg-figb text-white border-figb" : "border-border hover:bg-muted"
                     }`}
                   >
@@ -699,7 +721,7 @@ function Mano({
                   key={chiave(c)}
                   disabled={!giocabile}
                   onClick={() => gioca(c)}
-                  className={`min-h-9 min-w-8 px-1.5 py-0.5 rounded-md font-mono text-base ${
+                  className={`min-h-9 min-w-6 px-1 py-0.5 rounded-md sm:min-w-8 sm:px-1.5 font-mono text-base ${
                     giocabile
                       ? costo === 0 && numeri
                         ? "bg-emerald-100 dark:bg-emerald-950/50 hover:bg-emerald-200"
@@ -720,6 +742,7 @@ function Mano({
                 </button>
               );
             })}
+            </div>
           </div>
         );
       })}
