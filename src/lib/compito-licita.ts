@@ -25,8 +25,8 @@ import { dichiarante as dichiaranteDellAsta } from "./asta";
  *
  * Due stelle vogliono dire al massimo sei IMP lasciati rispetto al par
  * (`stelle-licita.ts`): un contratto giusto ma non il migliore. Sotto si è
- * mancata una manche o si è finiti in un contratto che non sta in piedi, e la
- * mano va ridichiarata — come una mano caduta va rigiocata.
+ * mancata una manche o si è finiti in un contratto che non sta in piedi.
+ * Dal 27/10/2026 la mano non si ridichiara: l'insegnante la corregge.
  */
 export const STELLE_PER_RIUSCITA = 2;
 

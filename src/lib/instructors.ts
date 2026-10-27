@@ -808,6 +808,11 @@ export interface HandResult {
   /** Compito di licita: le stelle del voto (anche mezze) e il contratto raggiunto. */
   stelle?: number;
   contratto?: string | null;
+  /**
+   * La riga registrata così com'è: nel compito di licita l'allievo ci rilegge
+   * la sua asta e il suo gioco, che non può più rifare.
+   */
+  details?: Record<string, unknown>;
 }
 
 export interface LeaderboardRow {
@@ -866,7 +871,7 @@ export async function getMyAssignmentResults(
     if (!out.has(aId)) out.set(aId, new Map());
     const stelle = details && typeof details.stelle === "number" ? details.stelle : undefined;
     const contratto = details && typeof details.contratto === "string" ? details.contratto : null;
-    out.get(aId)!.set(sId, { made, result: score, ...(stelle !== undefined ? { stelle, contratto } : {}) });
+    out.get(aId)!.set(sId, { made, result: score, details: details ?? undefined, ...(stelle !== undefined ? { stelle, contratto } : {}) });
   }
   return out;
 }
