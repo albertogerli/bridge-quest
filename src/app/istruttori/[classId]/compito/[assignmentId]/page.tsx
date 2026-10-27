@@ -44,6 +44,14 @@ import { ChevronLeft, ChevronRight, MessageSquareText } from "lucide-react";
 import { CommentoCompito as RiquadroCommento } from "@/components/istruttori/commento-compito";
 import { commentiDelCompito, commentiPerMano, type CommentoCompito } from "@/lib/commenti-compito";
 import { AssegnaStelle } from "@/components/istruttori/assegna-stelle";
+import { ConversazioneMano } from "@/components/classi/conversazione-mano";
+import {
+  aspettaRisposta,
+  domandeInAttesa,
+  filoDellaMano,
+  messaggiDelCompito,
+  type MessaggioCompito,
+} from "@/lib/messaggi-compito";
 import {
   impostaStelleInsegnante,
   stelleAssegnate,
@@ -138,6 +146,18 @@ export default function AssignmentResultsPage({
     let vivo = true;
     void commentiDelCompito(assignmentId).then((c) => {
       if (vivo) setCommenti(c);
+    });
+    return () => {
+      vivo = false;
+    };
+  }, [assignmentId]);
+
+  /** Le domande degli allievi sulle mani. `null`: tabella non ancora creata. */
+  const [messaggi, setMessaggi] = useState<MessaggioCompito[] | null>(null);
+  useEffect(() => {
+    let vivo = true;
+    void messaggiDelCompito(assignmentId).then((m) => {
+      if (vivo) setMessaggi(m);
     });
     return () => {
       vivo = false;
@@ -560,6 +580,32 @@ export default function AssignmentResultsPage({
         )}
       </div>
 
+      {/* Le domande degli allievi senza risposta: chi chiede non deve aspettare la lezione dopo. */}
+      {assignment.licita && domandeInAttesa(messaggi).length > 0 && (
+        <div className="mb-4 rounded-lg border border-amber-300 bg-amber-50 p-3 dark:border-amber-900 dark:bg-amber-950/30">
+          <p className="mb-2 text-sm font-semibold">{t("Domande degli allievi in attesa di risposta")}</p>
+          <ul className="space-y-1.5">
+            {domandeInAttesa(messaggi).map((d) => {
+              const nome = members.find((m) => m.student_id === d.studentId)?.display_name ?? t("Allievo");
+              const apri = astaDi(d.studentId, d.smazzataId);
+              return (
+                <li key={d.ultima.id} className="flex flex-wrap items-center gap-2 text-sm">
+                  <span className="font-medium">
+                    {nome} · {colLabel(d.smazzataId)}
+                  </span>
+                  <span className="min-w-0 flex-1 truncate text-muted-foreground">«{d.ultima.testo}»</span>
+                  {apri && (
+                    <Button size="sm" variant="outline" onClick={() => setAstaAperta(apri)}>
+                      {t("Rispondi")}
+                    </Button>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
+
       {assignment.licita && stelleMie !== null && (
         <div className="mb-4 rounded-lg border border-border bg-muted/30 p-3">
           <label className="flex cursor-pointer items-start gap-2">
@@ -628,6 +674,14 @@ export default function AssignmentResultsPage({
                     return (
                       <td key={id} className="px-2 py-2 text-center">
                         <span className="relative inline-block">
+                          {aspettaRisposta(filoDellaMano(messaggi, id, m.student_id)) && (
+                            <span
+                              className="absolute -left-1 -top-1 z-10 flex h-3.5 w-3.5 items-center justify-center rounded-full border border-card bg-amber-500 text-[12px] font-bold leading-none text-white"
+                              title={t("L'allievo ti ha fatto una domanda")}
+                            >
+                              ?
+                            </span>
+                          )}
                           {commenti && commentiPerMano(commenti, id, m.student_id).perTe && (
                             <span
                               className="absolute -right-1 -top-1 z-10 h-2.5 w-2.5 rounded-full border border-card bg-primary"
@@ -978,6 +1032,18 @@ export default function AssignmentResultsPage({
                       cella: { ...astaAperta.cella, stelle: voto.stelle, stelleInsegnante: stelle, riuscita: voto.riuscita },
                     });
                   }}
+                />
+              )}
+              {messaggi !== null && (
+                <ConversazioneMano
+                  key={`filo-${astaAperta.studentId}-${astaAperta.smazzataId}`}
+                  assignmentId={assignmentId}
+                  smazzataId={astaAperta.smazzataId}
+                  studentId={astaAperta.studentId}
+                  filo={filoDellaMano(messaggi, astaAperta.smazzataId, astaAperta.studentId)}
+                  daInsegnante
+                  nomeAllievo={members.find((m) => m.student_id === astaAperta.studentId)?.display_name ?? undefined}
+                  onScritto={(m) => setMessaggi((prima) => [...(prima ?? []), m])}
                 />
               )}
               {commenti === null ? (

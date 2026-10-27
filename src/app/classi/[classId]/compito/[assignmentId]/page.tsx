@@ -52,13 +52,16 @@ import {
   type Assignment,
   type HandResult,
 } from "@/lib/instructors";
-import { ArrowLeft, Play, CheckCircle2, XCircle, Lightbulb, RotateCcw, MessageSquareText } from "lucide-react";
+import { ArrowLeft, Play, CheckCircle2, XCircle, Lightbulb, RotateCcw, MessageSquareText, Eye, EyeOff } from "lucide-react";
 import { useT } from "@/contexts/traduzioni-provider";
 import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 import { CompitoLicitaMano, type ContrattoDaGiocare } from "@/components/classi/compito-licita-mano";
 import { licitaInAscii, stelleScritte } from "@/lib/compito-licita";
 import { segnalaSalvoRete } from "@/lib/report-error";
 import { stelleAssegnate, stelleDelCompito, votoMano, type StelleAssegnate } from "@/lib/stelle-compito";
+import { filoDellaMano, messaggiDelCompito, type MessaggioCompito } from "@/lib/messaggi-compito";
+import { ConversazioneMano } from "@/components/classi/conversazione-mano";
+import { RivediLicita } from "@/components/classi/rivedi-licita";
 
 export default function CompitoPage({
   params,
@@ -82,16 +85,22 @@ export default function CompitoPage({
   const [utenteId, setUtenteId] = useState<string | null>(null);
   /** Le stelle che l'insegnante ha dato alle proprie mani, al posto di quelle del programma. */
   const [stelleInsegnante, setStelleInsegnante] = useState<StelleAssegnate[]>([]);
+  /** Domande e risposte con l'insegnante; `null` finché lo script SQL non c'è. */
+  const [messaggi, setMessaggi] = useState<MessaggioCompito[] | null>(null);
+  /** Le mani già dichiarate aperte per rivederle. */
+  const [aperte, setAperte] = useState<Set<string>>(new Set());
   useEffect(() => {
     let vivo = true;
     void Promise.all([
       commentiDelCompito(assignmentId),
       stelleDelCompito(assignmentId),
+      messaggiDelCompito(assignmentId),
       createClient().auth.getUser(),
-    ]).then(([c, s, { data }]) => {
+    ]).then(([c, s, m, { data }]) => {
       if (!vivo) return;
       setCommenti(c ?? []);
       setStelleInsegnante(s ?? []);
+      setMessaggi(m);
       setUtenteId(data.user?.id ?? null);
     });
     return () => {
@@ -189,6 +198,11 @@ export default function CompitoPage({
           };
           try {
             await recordAssignmentResult({ assignmentId, smazzataId: smazzata.id, score: riga.score, details });
+            setResults((prev) => {
+              const r = prev.get(smazzata.id);
+              return r ? new Map(prev).set(smazzata.id, { ...r, details }) : prev;
+            });
+            setAperte((prev) => new Set(prev).add(smazzata.id));
           } catch (err) {
             segnalaSalvoRete("compito-licita:gioco", err);
           }
@@ -222,8 +236,10 @@ export default function CompitoPage({
               result: score,
               stelle: typeof details.stelle === "number" ? details.stelle : undefined,
               contratto: typeof details.contratto === "string" ? details.contratto : null,
+              details,
             }),
           );
+          setAperte((prev) => new Set(prev).add(smazzata.id));
         }}
         onEsci={() => setCurrentIndex(null)}
         // «Solo licita»: l'insegnante ha scelto che la mano finisca con l'asta.
@@ -341,14 +357,6 @@ export default function CompitoPage({
           {downCount > 0 && !assignment.licita && (
             <span className="font-bold text-red-600"> · {downCount} {downCount === 1 ? "caduta" : "cadute"} da rigiocare</span>
           )}
-          {downCount > 0 && assignment.licita && (
-            <span className="font-bold text-red-600">
-              {" · "}
-              {downCount === 1
-                ? t("1 da ridichiarare")
-                : t("{n} da ridichiarare", { n: downCount })}
-            </span>
-          )}
           {allDone && downCount === 0 && " — Compito completato! 🎉"}
         </p>
       </div>
@@ -450,7 +458,6 @@ export default function CompitoPage({
                           ? t("{contratto} — {stelle} stelle su 3", { contratto: r.contratto, stelle: stelleScritte(voto.stelle) })
                           : t("Passo generale — {stelle} stelle su 3", { stelle: stelleScritte(voto.stelle) })}
                       {voto.dallInsegnante && ` · ${t("le ha date l'insegnante")}`}
-                      {isDown && ` · ${t("ridichiarala")}`}
                     </p>
                   )}
                   {!assignment.licita && isDown && (
@@ -464,7 +471,30 @@ export default function CompitoPage({
                     <p className="mt-0.5 text-xs font-semibold text-emerald-600">{t("Mantenuto ✓")}</p>
                   )}
                 </div>
-                {(isNext || isPlayed) && (
+                {/* Nel compito di licita una mano dichiarata non si rifà: si rivede. */}
+                {assignment.licita && isPlayed && r?.details ? (
+                  <Button
+                    onClick={() =>
+                      setAperte((prev) => {
+                        const n = new Set(prev);
+                        if (n.has(hand.id)) n.delete(hand.id);
+                        else n.add(hand.id);
+                        return n;
+                      })
+                    }
+                    size="sm"
+                    variant="outline"
+                    className="shrink-0"
+                    aria-expanded={aperte.has(hand.id)}
+                  >
+                    {aperte.has(hand.id) ? (
+                      <EyeOff className="mr-1 h-3.5 w-3.5" aria-hidden="true" />
+                    ) : (
+                      <Eye className="mr-1 h-3.5 w-3.5" aria-hidden="true" />
+                    )}
+                    {aperte.has(hand.id) ? t("Chiudi") : t("Rivedi")}
+                  </Button>
+                ) : (isNext || (isPlayed && !assignment.licita)) && (
                   <Button
                     onClick={() => setCurrentIndex(i)}
                     size="sm"
@@ -479,6 +509,47 @@ export default function CompitoPage({
                 )}
               </div>
               <CommentiInsegnante {...commentiPerMano(commenti, hand.id, utenteId)} />
+              {assignment.licita && r?.details && aperte.has(hand.id) && (
+                <RivediLicita
+                  smazzata={hand}
+                  details={r.details}
+                  score={r.result}
+                  onGioca={
+                    assignment.licita_gioca === false
+                      ? undefined
+                      : (gioco) => {
+                          setGiocoLicita({
+                            index: i,
+                            gioco,
+                            dopoLicita: {
+                              contract: gioco.contract,
+                              declarer: gioco.declarer,
+                              bidding: { dealer: gioco.dealer, bids: licitaInAscii(gioco.bids) },
+                            },
+                          });
+                          setCurrentIndex(i);
+                        }
+                  }
+                />
+              )}
+              {/* Il dubbio si chiede qui, sulla mano, invece di aspettare la lezione dopo. */}
+              {assignment.licita && isPlayed && messaggi !== null && utenteId && (() => {
+                const filo = filoDellaMano(messaggi, hand.id, utenteId);
+                const { perTe, perTutti } = commentiPerMano(commenti, hand.id, utenteId);
+                if (filo.length === 0 && !perTe && !perTutti && !aperte.has(hand.id)) return null;
+                return (
+                  <div className="mt-3">
+                    <ConversazioneMano
+                      assignmentId={assignmentId}
+                      smazzataId={hand.id}
+                      studentId={utenteId}
+                      filo={filo}
+                      daInsegnante={false}
+                      onScritto={(m) => setMessaggi((prev) => [...(prev ?? []), m])}
+                    />
+                  </div>
+                );
+              })()}
               {isPlayed && (
                 <SoluzioneMano smazzata={hand} ricarica={doneIds.size} assignmentId={assignmentId} licita={assignment.licita} />
               )}

@@ -49,6 +49,10 @@ const ZONA: Record<Vulnerability, string> = {
  * torna all'elenco: chi legge il riepilogo e chiude la scheda ha comunque
  * fatto la mano.
  *
+ * L'ASTA REGISTRATA NON SI RIFÀ: l'insegnante la corregge e l'allievo la
+ * rivede dall'elenco del compito (`RivediLicita`), errore compreso. Prima la
+ * si poteva ridichiarare e l'errore spariva (Saccomanno, 27/10/2026).
+ *
  * POI SI GIOCA IL CONTRATTO DICHIARATO (`onGioca`): la licita è registrata
  * comunque, e il gioco si aggiunge alla stessa mano. L'insegnante lo voleva
  * per vedere insieme come ci arrivano e come lo giocano (Allievi Mondello,
@@ -372,10 +376,15 @@ export function CompitoLicitaMano({
             >
               {t("Torna al compito")}
             </Button>
-            <Button variant="outline" onClick={riprova} disabled={salvataggio === "in-corso"}>
-              <RotateCcw className="mr-1 h-4 w-4" aria-hidden="true" />
-              {t("Ridichiarala")}
-            </Button>
+            {/* Un'asta registrata resta quella: l'insegnante la corregge e
+                l'allievo ci torna a guardare l'errore (27/10/2026). Si rifà
+                solo se non è arrivata all'insegnante. */}
+            {salvataggio === "errore" && (
+              <Button variant="outline" onClick={riprova}>
+                <RotateCcw className="mr-1 h-4 w-4" aria-hidden="true" />
+                {t("Ridichiarala")}
+              </Button>
+            )}
           </div>
         </div>
       )}
