@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState, use } from "react";
 import { Briciole } from "@/components/briciole";
+import { useRouter } from "@/hooks/use-router-lingua";
 import Link from "@/components/link";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -78,6 +79,11 @@ export default function StudentClassPage({
   }, [leggiIscrizione]);
   useAlRitorno(leggiIscrizione, 30_000, iscrizione !== null && iscrizione.stato !== "active");
   const attivo = iscrizione?.stato === "active";
+  const router = useRouter();
+  const insegnante = iscrizione?.insegnante === true;
+  useEffect(() => {
+    if (insegnante) router.replace(`/istruttori/${classId}`);
+  }, [insegnante, router, classId]);
 
   /**
    * I materiali che l'insegnante ha già fatto uscire. Cosa è uscito lo decide

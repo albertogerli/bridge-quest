@@ -342,7 +342,7 @@ export default function LezioniPage() {
               {t("In arrivo!")}
             </h2>
             <p className="text-sm text-muted-foreground max-w-xs mx-auto">
-              Il {currentCourse.name} sarà disponibile presto. Intanto continua con il Corso Fiori!
+              Il {currentCourse.name} sarà disponibile presto. Intanto continua con il Corso di Primo Livello!
             </p>
           </motion.div>
         )}

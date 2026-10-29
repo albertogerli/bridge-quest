@@ -322,7 +322,7 @@ export default function IstruttoriPage() {
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && !saving) void handleCreate();
                 }}
-                placeholder={t("es. Corso Fiori 2026")}
+                placeholder={t("es. Corso di Primo Livello 2026")}
                 className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
                 autoFocus
               />

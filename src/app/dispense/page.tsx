@@ -161,7 +161,9 @@ function Dispense() {
             <span className="text-figb dark:text-primary font-semibold">{t("Dispense")}</span>
           </div>
           <h1 className="text-2xl font-bold text-foreground font-display">
-            {t("Dispense & Infografiche")}
+            {/* Dalla classe è il materiale del corso, e basta: «infografiche» non
+                dice niente all'allievo (Trevissoi, 29/10/2026). */}
+            {diClasse ? t("Dispense del corso") : t("Dispense & Infografiche")}
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
             {t("Materiale didattico per ogni lezione")}
@@ -282,6 +284,7 @@ function Dispense() {
                     pdfSrc={info?.pdf ?? ""}
                     courseId={selectedCourse}
                     locked={locked}
+                    diClasse={diClasse}
                   />
                 </motion.div>
               ))}
@@ -306,6 +309,7 @@ function InfographicCard({
   pdfSrc,
   courseId,
   locked,
+  diClasse,
 }: {
   lessonId: number;
   title: string;
@@ -314,6 +318,12 @@ function InfographicCard({
   pdfSrc: string;
   courseId: CourseId;
   locked: boolean;
+  /**
+   * Aperta dalla classe: niente «Vai alla lezione». Portava alla lezione del
+   * percorso generale, con i menu laterali e tutte le uscite dal percorso
+   * dell'insegnante (Trevissoi, 29/10/2026).
+   */
+  diClasse: boolean;
 }) {
   const t = useT();
   const [loaded, setLoaded] = useState(false);
@@ -406,7 +416,7 @@ function InfographicCard({
           <p className="text-[12px] font-medium text-amber-600/80 dark:text-amber-400/80 mt-1 flex items-center gap-1">
             <span>🔒</span> {t("Completa la lezione per sbloccare")}
           </p>
-        ) : (
+        ) : diClasse ? null : (
           <Link
             href={`/lezioni/${lessonId}`}
             className="text-[12px] font-semibold text-figb dark:text-primary mt-1 inline-block hover:underline"

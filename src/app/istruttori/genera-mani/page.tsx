@@ -448,7 +448,7 @@ export default function GeneraManiPage() {
           className="w-full h-12 px-4 rounded-xl border border-border bg-card text-sm mb-1"
         >
           {modelli.some((m) => m.ufficiale) && (
-            <optgroup label="Corso Fiori — modelli ufficiali">
+            <optgroup label="Corso di Primo Livello — modelli ufficiali">
               {modelli
                 .filter((m) => m.ufficiale)
                 .map((m) => (

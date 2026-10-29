@@ -33,7 +33,7 @@ export interface Course {
 
 const corsoFiori: Course = {
   id: "fiori",
-  name: "Corso Fiori",
+  name: "Corso di Primo Livello",
   subtitle: "Le basi del Bridge",
   icon: "♣",
   color: "emerald",

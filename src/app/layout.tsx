@@ -161,7 +161,7 @@ export default function RootLayout({
               "hasCourse": [
                 {
                   "@type": "Course",
-                  "name": "Corso Fiori - Le Basi",
+                  "name": "Corso di Primo Livello - Le basi",
                   "description": "13 lezioni per imparare le basi del bridge: prese, atout, piano di gioco, dichiarazione.",
                   "provider": { "@type": "Organization", "name": "FIGB" },
                   "educationalLevel": "Principiante",

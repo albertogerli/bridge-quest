@@ -877,6 +877,7 @@ function PlayingView({
           <GameActions
             canClaim={game.canClaim}
             claimStatus={game.claimStatus}
+            messaggioRifiuto={game.message}
             onClaim={game.requestClaim}
             canUndo={game.canUndo}
             onUndo={game.undoLastPlay}

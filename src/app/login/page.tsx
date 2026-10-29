@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { destinazioneSicura } from "@/lib/destinazione-login";
+import { destinazioneDopoLogin } from "@/lib/destinazione-login";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { motion, AnimatePresence } from "motion/react";
@@ -42,7 +42,7 @@ function LoginContent() {
    * `window.location.href`: senza filtro è un rimbalzo verso l'esterno che
    * parte dal nostro dominio. Vedi `destinazione-login.ts`.
    */
-  const redirectTo = destinazioneSicura(searchParams.get("redirect"));
+  const redirectTo = destinazioneDopoLogin(searchParams.get("redirect"));
   const initialMode = searchParams.get("mode") === "signup" ? "signup" : "login";
   const { signIn, signUp, uploadAvatar, resetPassword } = useSharedAuth();
   const [mode, setMode] = useState<Mode>(initialMode);

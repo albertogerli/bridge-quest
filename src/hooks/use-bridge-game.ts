@@ -502,12 +502,19 @@ export function useBridgeGame(config: GameConfig): BridgeGameHook {
     // Claim rejected
     setClaimStatus("rejected");
     setMessage(
-      fattibili !== null
-        ? tradFrase("Reclamo rifiutato: gli avversari possono ancora fare una presa.")
-        : tradFrase("Non è stato possibile verificare il reclamo: continua a giocare.")
+      fattibili === null
+        ? tradFrase("Non è stato possibile verificare il reclamo: continua a giocare.")
+        : // Le prese che la difesa fa con il suo miglior gioco: diceva sempre
+          // «ancora una presa» anche quando erano di più (Trevissoi, 29/10/2026).
+          remaining - fattibili === 1
+          ? tradFrase("Reclamo rifiutato: con il loro miglior gioco gli avversari fanno ancora una presa.")
+          : tradFrase("Reclamo rifiutato: con il loro miglior gioco gli avversari fanno ancora {n} prese.", {
+              n: remaining - fattibili,
+            })
     );
     if (claimTimerRef.current) clearTimeout(claimTimerRef.current);
-    claimTimerRef.current = setTimeout(() => setClaimStatus(null), 3000);
+    // Abbastanza a lungo da leggerlo: tre secondi sparivano prima.
+    claimTimerRef.current = setTimeout(() => setClaimStatus(null), 8000);
     return false;
   }, [gameState, phase, claimStatus, isPlayerPosition, playSound]);
 
