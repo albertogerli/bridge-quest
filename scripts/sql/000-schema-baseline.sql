@@ -16,7 +16,7 @@
 -- Rigenerare e committare dopo OGNI modifica allo schema, insieme allo script
 -- che l'ha causata.
 --
--- Estratto il: 2026-10-25
+-- Estratto il: 2026-10-29
 -- ============================================================================
 
 SET check_function_bodies = false;
@@ -152,7 +152,8 @@ CREATE TABLE IF NOT EXISTS public.class_members (
   student_id uuid NOT NULL,
   status text NOT NULL,
   joined_at timestamp with time zone NOT NULL,
-  uscito_il timestamp with time zone
+  uscito_il timestamp with time zone,
+  nome_in_classe text
 );
 
 CREATE TABLE IF NOT EXISTS public.class_messages (
@@ -538,6 +539,17 @@ CREATE TABLE IF NOT EXISTS public.materiali_lezione (
   url text NOT NULL,
   ordine integer NOT NULL,
   pubblica_dal timestamp with time zone,
+  created_at timestamp with time zone NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS public.messaggi_compito (
+  id uuid NOT NULL,
+  assignment_id uuid NOT NULL,
+  smazzata_id text NOT NULL,
+  student_id uuid NOT NULL,
+  autore_id uuid NOT NULL,
+  dall_insegnante boolean NOT NULL,
+  testo text NOT NULL,
   created_at timestamp with time zone NOT NULL
 );
 
@@ -2291,6 +2303,29 @@ AS $function$
 $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.custodisci_nome_in_classe()
+ RETURNS trigger
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+  begin
+    if auth.uid() is null then
+      return new;
+    end if;
+    if tg_op = 'INSERT' then
+      if new.nome_in_classe is not null and not is_instructor_of_class(new.class_id) then
+        new.nome_in_classe := null;
+      end if;
+    elsif new.nome_in_classe is distinct from old.nome_in_classe
+          and not is_instructor_of_class(new.class_id) then
+      new.nome_in_classe := old.nome_in_classe;
+    end if;
+    return new;
+  end;
+  $function$
+;
+
 CREATE OR REPLACE FUNCTION public.distribuzione_sondaggio(p_id uuid)
  RETURNS TABLE(opzione text, quante integer, nomi text[])
  LANGUAGE sql
@@ -3956,6 +3991,34 @@ BEGIN
 END $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.rinomina_allievo(p_class_id uuid, p_student_id uuid, p_nome text)
+ RETURNS text
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+  declare
+    v_nome text := nullif(regexp_replace(btrim(coalesce(p_nome, '')), '\s+', ' ', 'g'), '');
+  begin
+    if not is_instructor_of_class(p_class_id) then
+      raise exception 'solo l''insegnante della classe può rinominare' using errcode = '42501';
+    end if;
+    if v_nome is not null and char_length(v_nome) > 60 then
+      raise exception 'nome troppo lungo' using errcode = '22023';
+    end if;
+
+    update class_members
+       set nome_in_classe = v_nome
+     where class_id = p_class_id and student_id = p_student_id;
+    if not found then
+      raise exception 'l''allievo non è della classe' using errcode = '22023';
+    end if;
+
+    return v_nome;
+  end;
+  $function$
+;
+
 CREATE OR REPLACE FUNCTION public.risultati_stessa_mano(p_tipo text, p_chiave text)
  RETURNS TABLE(risultato integer, quanti bigint)
  LANGUAGE sql
@@ -4006,6 +4069,68 @@ AS $function$
     values (p_assignment_id, p_smazzata_id, p_student_id, v_testo)
     on conflict (assignment_id, smazzata_id, coalesce(student_id, '00000000-0000-0000-0000-000000000000'::uuid))
     do update set testo = excluded.testo;
+  end;
+  $function$
+;
+
+CREATE OR REPLACE FUNCTION public.scrivi_messaggio_compito(p_assignment_id uuid, p_smazzata_id text, p_student_id uuid, p_testo text)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+  declare
+    v_testo text := btrim(coalesce(p_testo, ''));
+    v_class uuid;
+    v_mani text[];
+    v_insegnante boolean;
+    v_riga messaggi_compito;
+  begin
+    select class_id, smazzata_ids into v_class, v_mani
+    from assignments where id = p_assignment_id;
+    if v_class is null then
+      raise exception 'compito non trovato' using errcode = '42501';
+    end if;
+
+    v_insegnante := is_instructor_of_assignment(p_assignment_id);
+    if not v_insegnante
+       and not (p_student_id = auth.uid() and is_member_of_class(v_class)) then
+      raise exception 'non puoi scrivere in questa conversazione' using errcode = '42501';
+    end if;
+
+    if char_length(v_testo) = 0 or char_length(v_testo) > 2000 then
+      raise exception 'messaggio vuoto o troppo lungo' using errcode = '22023';
+    end if;
+    if not (p_smazzata_id = any(v_mani)) then
+      raise exception 'la mano non è di questo compito' using errcode = '22023';
+    end if;
+    if v_insegnante and not exists (
+      select 1 from class_members m
+      where m.class_id = v_class and m.student_id = p_student_id
+    ) then
+      raise exception 'l''allievo non è della classe' using errcode = '22023';
+    end if;
+    if not v_insegnante and (
+      select count(*) from messaggi_compito
+      where assignment_id = p_assignment_id
+        and autore_id = auth.uid()
+        and created_at > now() - interval '1 day'
+    ) >= 40 then
+      raise exception 'troppi messaggi oggi su questo compito' using errcode = 'PT429';
+    end if;
+
+    insert into messaggi_compito (assignment_id, smazzata_id, student_id, autore_id, dall_insegnante, testo)
+    values (p_assignment_id, p_smazzata_id, p_student_id, auth.uid(), v_insegnante, v_testo)
+    returning * into v_riga;
+
+    return jsonb_build_object(
+      'id', v_riga.id,
+      'smazzata_id', v_riga.smazzata_id,
+      'student_id', v_riga.student_id,
+      'dall_insegnante', v_riga.dall_insegnante,
+      'testo', v_riga.testo,
+      'created_at', v_riga.created_at
+    );
   end;
   $function$
 ;
@@ -4860,6 +4985,8 @@ ALTER TABLE public.mani_generate ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.materiali_lezione ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.materiali_lezione ALTER COLUMN ordine SET DEFAULT 0;
 ALTER TABLE public.materiali_lezione ALTER COLUMN created_at SET DEFAULT now();
+ALTER TABLE public.messaggi_compito ALTER COLUMN id SET DEFAULT gen_random_uuid();
+ALTER TABLE public.messaggi_compito ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.modelli_mani ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.modelli_mani ALTER COLUMN ufficiale SET DEFAULT false;
 ALTER TABLE public.modelli_mani ALTER COLUMN condiviso SET DEFAULT false;
@@ -4991,6 +5118,7 @@ ALTER TABLE public.live_tables ADD CONSTRAINT live_tables_pkey PRIMARY KEY (id);
 ALTER TABLE public.login_history ADD CONSTRAINT login_history_pkey PRIMARY KEY (id);
 ALTER TABLE public.mani_generate ADD CONSTRAINT mani_generate_pkey PRIMARY KEY (id);
 ALTER TABLE public.materiali_lezione ADD CONSTRAINT materiali_lezione_pkey PRIMARY KEY (id);
+ALTER TABLE public.messaggi_compito ADD CONSTRAINT messaggi_compito_pkey PRIMARY KEY (id);
 ALTER TABLE public.modelli_mani ADD CONSTRAINT modelli_mani_pkey PRIMARY KEY (id);
 ALTER TABLE public.note_smazzate ADD CONSTRAINT note_smazzate_pkey PRIMARY KEY (autore_id, smazzata_id);
 ALTER TABLE public.partner_profiles ADD CONSTRAINT partner_profiles_pkey PRIMARY KEY (user_id);
@@ -5050,6 +5178,7 @@ ALTER TABLE public.bidding_sessions ADD CONSTRAINT bidding_sessions_check CHECK 
 ALTER TABLE public.bidding_sessions ADD CONSTRAINT bidding_sessions_dealer_check CHECK ((dealer = ANY (ARRAY['north'::text, 'east'::text, 'south'::text, 'west'::text])));
 ALTER TABLE public.challenges ADD CONSTRAINT challenges_board_count_check CHECK ((board_count = ANY (ARRAY[1, 4, 8])));
 ALTER TABLE public.challenges ADD CONSTRAINT challenges_status_check CHECK ((status = ANY (ARRAY['pending'::text, 'accepted'::text, 'playing'::text, 'completed'::text, 'declined'::text, 'expired'::text])));
+ALTER TABLE public.class_members ADD CONSTRAINT class_members_nome_in_classe_check CHECK (((nome_in_classe IS NULL) OR ((char_length(nome_in_classe) >= 1) AND (char_length(nome_in_classe) <= 60))));
 ALTER TABLE public.class_members ADD CONSTRAINT class_members_status_check CHECK ((status = ANY (ARRAY['active'::text, 'removed'::text, 'pending'::text, 'rejected'::text])));
 ALTER TABLE public.classes ADD CONSTRAINT classes_accesso_libero_valido CHECK ((accesso_libero = ANY (ARRAY['solo-il-corso'::text, 'con-pratica-libera'::text, 'tutto-aperto'::text, 'personalizzato'::text])));
 ALTER TABLE public.classes ADD CONSTRAINT classes_livello_breve CHECK (((livello IS NULL) OR (char_length(livello) <= 60)));
@@ -5089,6 +5218,7 @@ ALTER TABLE public.mani_generate ADD CONSTRAINT mani_generate_dealer_check CHECK
 ALTER TABLE public.materiali_lezione ADD CONSTRAINT materiali_lezione_testi CHECK ((((char_length(btrim(lezione)) >= 1) AND (char_length(btrim(lezione)) <= 200)) AND ((char_length(btrim(titolo)) >= 1) AND (char_length(btrim(titolo)) <= 200))));
 ALTER TABLE public.materiali_lezione ADD CONSTRAINT materiali_lezione_tipo CHECK ((tipo = ANY (ARRAY['video'::text, 'dispensa'::text, 'esercizio'::text])));
 ALTER TABLE public.materiali_lezione ADD CONSTRAINT materiali_lezione_url CHECK (((char_length(url) <= 2000) AND ((url ~* '^https?://[^[:space:]]+$'::text) OR (url ~ '^/([^/[:space:]][^[:space:]]*)?$'::text))));
+ALTER TABLE public.messaggi_compito ADD CONSTRAINT messaggi_compito_testo_check CHECK (((char_length(testo) >= 1) AND (char_length(testo) <= 2000)));
 ALTER TABLE public.partner_profiles ADD CONSTRAINT partner_profiles_availability_check CHECK ((availability <@ ARRAY['mattina'::text, 'pomeriggio'::text, 'sera'::text, 'weekend'::text]));
 ALTER TABLE public.partner_profiles ADD CONSTRAINT partner_profiles_level_check CHECK ((level = ANY (ARRAY['principiante'::text, 'intermedio'::text, 'avanzato'::text])));
 ALTER TABLE public.partner_profiles ADD CONSTRAINT partner_profiles_province_check CHECK (((province IS NULL) OR (province ~ '^[A-Z]{2}$'::text)));
@@ -5177,6 +5307,9 @@ ALTER TABLE public.live_tables ADD CONSTRAINT live_tables_sessione_id_fkey FOREI
 ALTER TABLE public.login_history ADD CONSTRAINT login_history_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.mani_generate ADD CONSTRAINT mani_generate_scenario_id_fkey FOREIGN KEY (scenario_id) REFERENCES scenari(id) ON DELETE CASCADE;
 ALTER TABLE public.materiali_lezione ADD CONSTRAINT materiali_lezione_class_id_fkey FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE;
+ALTER TABLE public.messaggi_compito ADD CONSTRAINT messaggi_compito_assignment_id_fkey FOREIGN KEY (assignment_id) REFERENCES assignments(id) ON DELETE CASCADE;
+ALTER TABLE public.messaggi_compito ADD CONSTRAINT messaggi_compito_autore_id_fkey FOREIGN KEY (autore_id) REFERENCES auth.users(id) ON DELETE CASCADE;
+ALTER TABLE public.messaggi_compito ADD CONSTRAINT messaggi_compito_student_id_fkey FOREIGN KEY (student_id) REFERENCES auth.users(id) ON DELETE CASCADE;
 ALTER TABLE public.modelli_mani ADD CONSTRAINT modelli_mani_autore_id_fkey FOREIGN KEY (autore_id) REFERENCES auth.users(id) ON DELETE SET NULL;
 ALTER TABLE public.modelli_mani ADD CONSTRAINT modelli_mani_lesson_id_fkey FOREIGN KEY (lesson_id) REFERENCES lessons(id) ON DELETE SET NULL;
 ALTER TABLE public.note_smazzate ADD CONSTRAINT note_smazzate_autore_id_fkey FOREIGN KEY (autore_id) REFERENCES auth.users(id) ON DELETE CASCADE;
@@ -5288,6 +5421,7 @@ CREATE INDEX live_tables_class_idx ON public.live_tables USING btree (class_id, 
 CREATE INDEX mani_generate_ns_hcp_idx ON public.mani_generate USING btree (ns_hcp);
 CREATE INDEX mani_generate_scenario_idx ON public.mani_generate USING btree (scenario_id, created_at DESC);
 CREATE INDEX materiali_lezione_per_classe ON public.materiali_lezione USING btree (class_id, lezione);
+CREATE INDEX messaggi_compito_filo ON public.messaggi_compito USING btree (assignment_id, smazzata_id, student_id, created_at);
 CREATE INDEX partner_profiles_looking_idx ON public.partner_profiles USING btree (looking, province) WHERE looking;
 CREATE INDEX presenze_per_classe_e_data ON public.presenze USING btree (class_id, data DESC);
 CREATE UNIQUE INDEX presenze_una_per_elenco_e_giorno ON public.presenze USING btree (class_id, elenco_id, data) WHERE (elenco_id IS NOT NULL);
@@ -5324,6 +5458,7 @@ ALTER TABLE public.friendships REPLICA IDENTITY FULL;
 -- TRIGGER
 CREATE TRIGGER asd_clubs_touch BEFORE UPDATE ON public.asd_clubs FOR EACH ROW EXECUTE FUNCTION touch_updated_at();
 CREATE TRIGGER bidding_sessions_last_bid BEFORE UPDATE ON public.bidding_sessions FOR EACH ROW EXECUTE FUNCTION tocca_bidding_session();
+CREATE TRIGGER class_members_nome_custodito BEFORE INSERT OR UPDATE ON public.class_members FOR EACH ROW EXECUTE FUNCTION custodisci_nome_in_classe();
 CREATE TRIGGER class_members_segna_uscita BEFORE UPDATE ON public.class_members FOR EACH ROW EXECUTE FUNCTION segna_uscita_da_classe();
 CREATE TRIGGER collectible_cards_touch BEFORE UPDATE ON public.collectible_cards FOR EACH ROW EXECUTE FUNCTION touch_updated_at();
 CREATE TRIGGER commenti_compito_updated_at BEFORE UPDATE ON public.commenti_compito FOR EACH ROW EXECUTE FUNCTION touch_updated_at();
@@ -5382,6 +5517,7 @@ ALTER TABLE public.live_tables ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.login_history ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.mani_generate ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.materiali_lezione ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.messaggi_compito ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.modelli_mani ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.note_smazzate ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.partner_profiles ENABLE ROW LEVEL SECURITY;
@@ -5511,6 +5647,10 @@ CREATE POLICY "Istruttori generano mani" ON public.mani_generate AS PERMISSIVE F
   WHERE ((p.id = auth.uid()) AND (p.role = ANY (ARRAY['instructor'::text, 'admin'::text]))))));
 CREATE POLICY "L'allievo vede i materiali già pubblicati" ON public.materiali_lezione AS PERMISSIVE FOR SELECT TO authenticated USING ((is_member_of_class(class_id) AND (pubblica_dal IS NOT NULL) AND (pubblica_dal <= now())));
 CREATE POLICY "L'insegnante gestisce i materiali della sua classe" ON public.materiali_lezione AS PERMISSIVE FOR ALL TO authenticated USING ((is_instructor_of_class(class_id) OR is_admin())) WITH CHECK ((is_instructor_of_class(class_id) OR is_admin()));
+CREATE POLICY "Allievo legge il suo filo" ON public.messaggi_compito AS PERMISSIVE FOR SELECT TO authenticated USING (((student_id = auth.uid()) AND (EXISTS ( SELECT 1
+   FROM assignments a
+  WHERE ((a.id = messaggi_compito.assignment_id) AND is_member_of_class(a.class_id))))));
+CREATE POLICY "Insegnante legge i messaggi del compito" ON public.messaggi_compito AS PERMISSIVE FOR SELECT TO authenticated USING (is_instructor_of_assignment(assignment_id));
 CREATE POLICY "Chi insegna crea i propri modelli" ON public.modelli_mani AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK (((autore_id = auth.uid()) AND (NOT ufficiale) AND (EXISTS ( SELECT 1
    FROM profiles p
   WHERE ((p.id = auth.uid()) AND (p.role = ANY (ARRAY['instructor'::text, 'admin'::text])))))));
@@ -5623,6 +5763,7 @@ REVOKE ALL ON TABLE public.live_tables FROM PUBLIC, anon, authenticated, service
 REVOKE ALL ON TABLE public.login_history FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.mani_generate FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.materiali_lezione FROM PUBLIC, anon, authenticated, service_role;
+REVOKE ALL ON TABLE public.messaggi_compito FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.modelli_mani FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.note_smazzate FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.partner_profiles FROM PUBLIC, anon, authenticated, service_role;
@@ -6648,6 +6789,15 @@ GRANT SELECT ON TABLE public.materiali_lezione TO service_role;
 GRANT TRIGGER ON TABLE public.materiali_lezione TO service_role;
 GRANT TRUNCATE ON TABLE public.materiali_lezione TO service_role;
 GRANT UPDATE ON TABLE public.materiali_lezione TO service_role;
+GRANT SELECT ON TABLE public.messaggi_compito TO authenticated;
+GRANT DELETE ON TABLE public.messaggi_compito TO service_role;
+GRANT INSERT ON TABLE public.messaggi_compito TO service_role;
+GRANT MAINTAIN ON TABLE public.messaggi_compito TO service_role;
+GRANT REFERENCES ON TABLE public.messaggi_compito TO service_role;
+GRANT SELECT ON TABLE public.messaggi_compito TO service_role;
+GRANT TRIGGER ON TABLE public.messaggi_compito TO service_role;
+GRANT TRUNCATE ON TABLE public.messaggi_compito TO service_role;
+GRANT UPDATE ON TABLE public.messaggi_compito TO service_role;
 GRANT DELETE ON TABLE public.modelli_mani TO anon;
 GRANT INSERT ON TABLE public.modelli_mani TO anon;
 GRANT MAINTAIN ON TABLE public.modelli_mani TO anon;
@@ -7443,6 +7593,8 @@ REVOKE ALL ON FUNCTION public.confronto_mano(p_assignment_id uuid, p_smazzata_id
 GRANT EXECUTE ON FUNCTION public.confronto_mano(p_assignment_id uuid, p_smazzata_id text) TO anon;
 GRANT EXECUTE ON FUNCTION public.confronto_mano(p_assignment_id uuid, p_smazzata_id text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.confronto_mano(p_assignment_id uuid, p_smazzata_id text) TO service_role;
+REVOKE ALL ON FUNCTION public.custodisci_nome_in_classe() FROM PUBLIC, anon, authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.custodisci_nome_in_classe() TO service_role;
 REVOKE ALL ON FUNCTION public.distribuzione_sondaggio(p_id uuid) FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.distribuzione_sondaggio(p_id uuid) TO anon;
 GRANT EXECUTE ON FUNCTION public.distribuzione_sondaggio(p_id uuid) TO authenticated;
@@ -7615,6 +7767,9 @@ GRANT EXECUTE ON FUNCTION public.puo_vedere_esercizio(p_id uuid) TO service_role
 REVOKE ALL ON FUNCTION public.review_instructor_request(p_request_id uuid, p_approve boolean, p_message text) FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.review_instructor_request(p_request_id uuid, p_approve boolean, p_message text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.review_instructor_request(p_request_id uuid, p_approve boolean, p_message text) TO service_role;
+REVOKE ALL ON FUNCTION public.rinomina_allievo(p_class_id uuid, p_student_id uuid, p_nome text) FROM PUBLIC, anon, authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.rinomina_allievo(p_class_id uuid, p_student_id uuid, p_nome text) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.rinomina_allievo(p_class_id uuid, p_student_id uuid, p_nome text) TO service_role;
 REVOKE ALL ON FUNCTION public.risultati_stessa_mano(p_tipo text, p_chiave text) FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.risultati_stessa_mano(p_tipo text, p_chiave text) TO anon;
 GRANT EXECUTE ON FUNCTION public.risultati_stessa_mano(p_tipo text, p_chiave text) TO authenticated;
@@ -7622,6 +7777,9 @@ GRANT EXECUTE ON FUNCTION public.risultati_stessa_mano(p_tipo text, p_chiave tex
 REVOKE ALL ON FUNCTION public.salva_commento_compito(p_assignment_id uuid, p_smazzata_id text, p_student_id uuid, p_testo text) FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.salva_commento_compito(p_assignment_id uuid, p_smazzata_id text, p_student_id uuid, p_testo text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.salva_commento_compito(p_assignment_id uuid, p_smazzata_id text, p_student_id uuid, p_testo text) TO service_role;
+REVOKE ALL ON FUNCTION public.scrivi_messaggio_compito(p_assignment_id uuid, p_smazzata_id text, p_student_id uuid, p_testo text) FROM PUBLIC, anon, authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.scrivi_messaggio_compito(p_assignment_id uuid, p_smazzata_id text, p_student_id uuid, p_testo text) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.scrivi_messaggio_compito(p_assignment_id uuid, p_smazzata_id text, p_student_id uuid, p_testo text) TO service_role;
 REVOKE ALL ON FUNCTION public.search_users(p_query text, p_user_id uuid) FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.search_users(p_query text, p_user_id uuid) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.search_users(p_query text, p_user_id uuid) TO service_role;
