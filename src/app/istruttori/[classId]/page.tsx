@@ -27,6 +27,7 @@ import { MandaMessaggio } from "@/components/istruttori/manda-messaggio";
 import {
   compitiSvoltiPerAllievo,
   getClassDetail,
+  nomiDoppi,
   regenerateInviteCode,
   setInviteActive,
   decidiIscrizione,
@@ -48,6 +49,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { StrumentiLezione } from "@/components/istruttori/strumenti-lezione";
 import { useAlRitorno } from "@/hooks/use-al-ritorno";
 import { ElencoAllieviEsporta } from "@/components/istruttori/elenco-allievi-esporta";
+import { RigaAllievo } from "@/components/istruttori/riga-allievo";
 
 export default function ClassDetailPage({
   params,
@@ -322,6 +324,19 @@ export default function ClassDetailPage({
   }
 
   const { classRoom, members, inAttesa, assignments } = detail;
+  const doppi = nomiDoppi(members);
+
+  /** Il nome nuovo vale subito, senza ricaricare la classe. */
+  function rinominato(studentId: string, nome: string | null) {
+    setDetail((d) =>
+      d && {
+        ...d,
+        members: d.members.map((m) =>
+          m.student_id === studentId ? { ...m, nome_in_classe: nome, display_name: nome || m.nome_profilo || null } : m,
+        ),
+      },
+    );
+  }
   const scadenza = classRoom.invite_expires_at
     ? new Date(classRoom.invite_expires_at)
     : null;
@@ -660,17 +675,13 @@ export default function ClassDetailPage({
           ) : (
             <div className="divide-y divide-border rounded-lg border border-border">
               {members.map((m) => (
-                <div key={m.student_id} className="flex items-center gap-3 px-4 py-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-muted text-sm font-semibold uppercase">
-                    {(m.display_name ?? "?").charAt(0)}
-                  </div>
-                  <span className="text-sm font-medium">
-                    {m.display_name ?? "Allievo senza nome"}
-                  </span>
-                  <span className="ml-auto text-xs text-muted-foreground">
-                    iscritto il {new Date(m.joined_at).toLocaleDateString("it-IT")}
-                  </span>
-                </div>
+                <RigaAllievo
+                  key={m.student_id}
+                  classId={classId}
+                  membro={m}
+                  doppio={doppi.has(m.student_id)}
+                  onRinominato={rinominato}
+                />
               ))}
             </div>
           )}
@@ -692,7 +703,7 @@ export default function ClassDetailPage({
 
         {/* Classifica */}
         <TabsContent value="classifica" className="mt-4">
-          <ClassLeaderboard classId={classId} />
+          <ClassLeaderboard classId={classId} nomi={new Map(members.map((m) => [m.student_id, m.display_name ?? ""]))} />
         </TabsContent>
 
         {/* Chat */}

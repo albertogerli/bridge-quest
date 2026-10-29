@@ -2825,5 +2825,11 @@
   "Rispondi all'allievo": "Reply to the student",
   "Rispondi all'allievo. Scrivi !s per ♠, !h per ♥, !d per ♦, !c per ♣.": "Reply to the student. Type !s for ♠, !h for ♥, !d for ♦, !c for ♣.",
   "Rivedi": "Review",
-  "Scrivi all'insegnante": "Write to your teacher"
+  "Scrivi all'insegnante": "Write to your teacher",
+  "Lo vedi tu, in questa classe. L'allievo non lo può cambiare. Lascia vuoto per tornare al nome del profilo.": "Only you see it, in this class. The student can't change it. Leave it empty to go back to the profile name.",
+  "Nel profilo: {nome}": "In their profile: {nome}",
+  "Nome dell'allievo in questa classe": "Student's name in this class",
+  "Per esempio: Giuseppe Rossi": "For example: Giuseppe Rossi",
+  "Un altro allievo si chiama così: dagli un nome diverso.": "Another student has the same name: give them a different one.",
+  "iscritto il {data}": "joined {data}"
 }
