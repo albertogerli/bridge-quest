@@ -103,7 +103,7 @@ export function NextUpCards({
           className="rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/40 dark:to-orange-950/30 border border-amber-200 dark:border-amber-900 p-5 text-center"
         >
           <span className="text-3xl">🎓</span>
-          <h4 className="text-lg font-semibold text-amber-800 dark:text-amber-300 mt-2">{t("Corso Fiori Completato!")}</h4>
+          <h4 className="text-lg font-semibold text-amber-800 dark:text-amber-300 mt-2">{t("Corso di Primo Livello completato!")}</h4>
           <p className="text-sm text-amber-700 dark:text-amber-300 mt-1">{t("Sei pronto per il circolo FIGB!")}</p>
         </motion.div>
       )}

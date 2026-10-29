@@ -57,7 +57,7 @@ const SECTIONS: Section[] = [
       },
       {
         emoji: "📚",
-        title: "Corso Fiori",
+        title: "Corso di Primo Livello",
         desc: "Il primo dei 4 corsi: lezioni brevi con quiz, pensate per chi parte da zero. Ogni modulo si sblocca col precedente.",
         href: "/lezioni",
         cta: "Inizia il corso",
@@ -199,7 +199,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "Non ho mai giocato a bridge. Da dove comincio?",
-    a: "Da Prima Mano: giochi subito una mano vera, guidato passo passo. Poi MiniBridge e il Corso Fiori. L'app ti suggerisce sempre il prossimo passo nella sezione Impara.",
+    a: "Da Prima Mano: giochi subito una mano vera, guidato passo passo. Poi MiniBridge e il Corso di Primo Livello. L'app ti suggerisce sempre il prossimo passo nella sezione Impara.",
   },
   {
     q: "Cosa fa la lampadina 💡 durante una mano?",

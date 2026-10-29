@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { classificaCompito, elencoAllieviCsv } from "./riepiloghi-classe";
+import { classificaCompito, elencoAllieviCsv, ordinaElenco } from "./riepiloghi-classe";
 
 describe("classificaCompito", () => {
   const allievi = [
@@ -28,5 +28,17 @@ describe("elencoAllieviCsv", () => {
     );
     expect(csv.startsWith("﻿Nome;Classe;")).toBe(true);
     expect(csv).toContain('"Rossi; ""Mario""";Corso 1;iscritto;07/10/2026;1;3');
+  });
+});
+
+describe("ordinaElenco", () => {
+  it("per classe, poi cognome, poi nome", () => {
+    const righe = [
+      { nome: "Mario Verdi", classe: "Classe 2" },
+      { nome: "Luca Rossi", classe: "Classe 1" },
+      { nome: "Anna Bianchi", classe: "Classe 1" },
+      { nome: "Giorgio Rossi", classe: "Classe 1" },
+    ];
+    expect(ordinaElenco(righe).map((r) => r.nome)).toEqual(["Anna Bianchi", "Giorgio Rossi", "Luca Rossi", "Mario Verdi"]);
   });
 });

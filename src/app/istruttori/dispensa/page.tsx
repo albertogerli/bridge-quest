@@ -236,7 +236,7 @@ function Dispensa() {
                   className="h-11 px-3 rounded-xl border border-border bg-card text-sm"
                 >
                   {ufficiali.length > 0 && (
-                    <optgroup label={t("Corso Fiori — le lezioni")}>
+                    <optgroup label={t("Corso di Primo Livello — le lezioni")}>
                       {ufficiali.map((m) => (
                         <option key={m.id} value={m.id}>
                           {m.lesson_id !== null ? t("Lezione {n} — {nome}", { n: m.lesson_id, nome: m.nome }) : m.nome}

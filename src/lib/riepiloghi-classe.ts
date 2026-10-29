@@ -63,6 +63,30 @@ export interface RigaElenco {
   iscrittoIl: string;
   compitiSvolti: number;
   compitiAssegnati: number;
+  /**
+   * Dal modulo d'adesione, quando l'allievo è stato collegato alla sua
+   * adesione: l'insegnante li cercava nell'elenco e nell'Excel (Trevissoi,
+   * 29/10/2026). Sono gli stessi dati che vede già in «Chi ha detto vengo».
+   */
+  contatto?: string;
+  note?: string;
+}
+
+/** Il cognome, per l'ordinamento: l'ultima parola del nome. */
+function cognome(nome: string): string {
+  const parole = nome.trim().split(/\s+/);
+  return parole[parole.length - 1] ?? "";
+}
+
+/**
+ * Per classe, poi per cognome, poi per nome: l'ordine del registro
+ * (Trevissoi, 29/10/2026: «non ordinato per Classe, Cognome, Nome»).
+ */
+export function ordinaElenco<T extends Pick<RigaElenco, "nome" | "classe">>(righe: readonly T[]): T[] {
+  const c = (a: string, b: string) => a.localeCompare(b, "it", { sensitivity: "base" });
+  return [...righe].sort(
+    (a, b) => c(a.classe, b.classe) || c(cognome(a.nome), cognome(b.nome)) || c(a.nome, b.nome),
+  );
 }
 
 /**
@@ -84,7 +108,9 @@ function campo(v: string | number): string {
  */
 export function elencoAllieviCsv(righe: RigaElenco[], intestazioni: string[]): string {
   const corpo = righe.map((r) =>
-    [r.nome, r.classe, r.stato, r.iscrittoIl, r.compitiSvolti, r.compitiAssegnati].map(campo).join(";"),
+    [r.nome, r.classe, r.stato, r.iscrittoIl, r.compitiSvolti, r.compitiAssegnati, r.contatto ?? "", r.note ?? ""]
+      .map(campo)
+      .join(";"),
   );
   return "﻿" + [intestazioni.map(campo).join(";"), ...corpo].join("\r\n") + "\r\n";
 }

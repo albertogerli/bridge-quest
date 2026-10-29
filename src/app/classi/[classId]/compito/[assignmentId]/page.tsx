@@ -1036,6 +1036,8 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
           <GameActions
             canClaim={game.canClaim}
             claimStatus={game.claimStatus}
+            messaggioRifiuto={game.message}
+            spiegazione={!difesa}
             onClaim={game.requestClaim}
             canUndo={game.canUndo}
             onUndo={game.undoLastPlay}

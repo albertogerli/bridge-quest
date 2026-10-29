@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { destinazioneSicura } from "./destinazione-login";
+import { destinazioneDopoLogin, destinazioneSicura } from "./destinazione-login";
 
 describe("la destinazione dopo il login", () => {
   it("lascia passare i percorsi interni", () => {
@@ -30,5 +30,26 @@ describe("la destinazione dopo il login", () => {
     expect(destinazioneSicura(null)).toBe("/");
     expect(destinazioneSicura(undefined)).toBe("/");
     expect(destinazioneSicura("")).toBe("/");
+  });
+});
+
+describe("destinazioneDopoLogin", () => {
+  it("non riapre la pagina d'ingresso del Forum: si va alla home", () => {
+    expect(destinazioneDopoLogin("/forum")).toBe("/");
+    expect(destinazioneDopoLogin("/forum/")).toBe("/");
+    expect(destinazioneDopoLogin("/forum?tab=recenti")).toBe("/");
+    expect(destinazioneDopoLogin("/en/forum")).toBe("/en");
+    expect(destinazioneDopoLogin("/classifica")).toBe("/");
+  });
+
+  it("un collegamento preciso resta dov'è", () => {
+    expect(destinazioneDopoLogin("/forum/29")).toBe("/forum/29");
+    expect(destinazioneDopoLogin("/classi/x/compito/y")).toBe("/classi/x/compito/y");
+    expect(destinazioneDopoLogin("/en/gioca")).toBe("/en/gioca");
+  });
+
+  it("le destinazioni esterne restano escluse", () => {
+    expect(destinazioneDopoLogin("//evil.example")).toBe("/");
+    expect(destinazioneDopoLogin(null)).toBe("/");
   });
 });

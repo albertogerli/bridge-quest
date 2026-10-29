@@ -15,7 +15,7 @@ import { elencoAllieviCsv, type RigaElenco } from "@/lib/riepiloghi-classe";
  */
 export function ElencoAllieviEsporta({ righe, titolo }: { righe: RigaElenco[]; titolo: string }) {
   const t = useT();
-  const intestazioni = [t("Nome"), t("Classe"), t("Stato"), t("Iscritto il"), t("Compiti svolti"), t("Compiti assegnati")];
+  const intestazioni = [t("Nome"), t("Classe"), t("Stato"), t("Iscritto il"), t("Compiti svolti"), t("Compiti assegnati"), t("Contatto"), t("Note")];
 
   function esporta() {
     const csv = elencoAllieviCsv(righe, intestazioni);
@@ -38,7 +38,7 @@ export function ElencoAllieviEsporta({ righe, titolo }: { righe: RigaElenco[]; t
     const corpo = righe
       .map(
         (r) =>
-          `<tr><td>${esc(r.nome)}</td><td>${esc(r.classe)}</td><td>${esc(r.stato)}</td><td>${esc(r.iscrittoIl)}</td><td class="n">${r.compitiSvolti}</td><td class="n">${r.compitiAssegnati}</td></tr>`,
+          `<tr><td>${esc(r.nome)}</td><td>${esc(r.classe)}</td><td>${esc(r.stato)}</td><td>${esc(r.iscrittoIl)}</td><td class="n">${r.compitiSvolti}</td><td class="n">${r.compitiAssegnati}</td><td>${esc(r.contatto ?? "")}</td><td>${esc(r.note ?? "")}</td></tr>`,
       )
       .join("");
     finestra.document.write(`<!doctype html><html lang="it"><head><meta charset="utf-8"><title>${esc(titolo)}</title>

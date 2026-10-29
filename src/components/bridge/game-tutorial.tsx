@@ -103,6 +103,18 @@ function ArrowUp() {
   );
 }
 
+/** L'evento con cui un pulsante fuori dal tavolo riapre la spiegazione. */
+const EVENTO_RIAPRI = "bq:riapri-tutorial";
+
+/**
+ * Riapre la spiegazione del tavolo, quando la si vuole rivedere.
+ * Trevissoi (29/10/2026): «dovrebbe presentarsi solo la prima volta, si deve
+ * poter saltare e riprendere all'occorrenza».
+ */
+export function riapriTutorial() {
+  window.dispatchEvent(new Event(EVENTO_RIAPRI));
+}
+
 export function GameTutorial() {
   const t = useT();
   const [visible, setVisible] = useState(false);
@@ -113,10 +125,22 @@ export function GameTutorial() {
       if (localStorage.getItem(STORAGE_KEY) !== "true") {
         // eslint-disable-next-line react-hooks/set-state-in-effect -- stato client-only (localStorage) letto dopo il mount per evitare hydration mismatch SSR: pattern intenzionale
         setVisible(true);
+        // Vista una volta vale come vista: chi chiude la pagina a metà non
+        // se la ritrova da capo alla mano dopo. Per rivederla c'è il pulsante.
+        localStorage.setItem(STORAGE_KEY, "true");
       }
     } catch {
       // localStorage unavailable, don't show
     }
+  }, []);
+
+  useEffect(() => {
+    const riapri = () => {
+      setCurrentStep(0);
+      setVisible(true);
+    };
+    window.addEventListener(EVENTO_RIAPRI, riapri);
+    return () => window.removeEventListener(EVENTO_RIAPRI, riapri);
   }, []);
 
   const dismiss = () => {

@@ -18,12 +18,26 @@ import { statoMiaIscrizione, type MemberStatus } from "@/lib/instructors";
 export interface StatoClasseAllievo {
   stato: MemberStatus | null;
   nome: string | null;
+  /**
+   * Chi apre la pagina è l'insegnante di questa classe: la pagina giusta per
+   * lui è la sua, non quella dell'allievo con «Non sei iscritto a questa
+   * classe» (Trevissoi, 29/10/2026: ci arrivava dal menu di rientro).
+   */
+  insegnante?: boolean;
 }
 
 export async function statoClasseAllievo(classId: string): Promise<StatoClasseAllievo> {
   const stato = await statoMiaIscrizione(classId);
-  if (stato === null) return { stato, nome: null };
   const supabase = createClient();
+  if (stato === null) {
+    // La policy di `classes` la riga la mostra all'insegnante che la tiene.
+    const [{ data: utente }, { data: classe }] = await Promise.all([
+      supabase.auth.getUser(),
+      supabase.from("classes").select("instructor_id").eq("id", classId).maybeSingle(),
+    ]);
+    const insegnante = !!utente.user && classe?.instructor_id === utente.user.id;
+    return { stato, nome: null, insegnante };
+  }
   const { data, error } = await supabase.from("classes").select("name").eq("id", classId).maybeSingle();
   if (error) throw error;
   return { stato, nome: (data?.name as string | undefined) ?? null };

@@ -26,3 +26,29 @@ export function destinazioneSicura(grezza: string | null | undefined): string {
   if (p.startsWith("/\\")) return "/";
   return p;
 }
+
+/**
+ * Le pagine d'ingresso di una sezione che non vale la pena di riaprire dopo
+ * il login. Si arriva al login da lì quando il browser completa da solo
+ * l'indirizzo (`bridgelab.it/f…` → `/forum`): la persona non le ha chieste, e
+ * a login fatto si ritrovava nel Forum invece che nella sua home — insegnante
+ * e allievo, anche in una finestra in incognito (Trevissoi, 29/10/2026).
+ *
+ * Solo la pagina d'ingresso: `/forum/29` è un collegamento a un post preciso
+ * e resta dov'è.
+ */
+const INGRESSI_DA_NON_RIAPRIRE = ["/forum", "/amici", "/classifica", "/negozio", "/collezione", "/obiettivi"];
+
+/**
+ * Dove andare a login fatto: la destinazione chiesta, se è sicura e se è
+ * qualcosa di preciso; altrimenti la home (nella lingua dell'indirizzo).
+ */
+export function destinazioneDopoLogin(grezza: string | null | undefined): string {
+  const sicura = destinazioneSicura(grezza);
+  const [percorso] = sicura.split(/[?#]/);
+  const inglese = percorso === "/en" || percorso.startsWith("/en/");
+  const senzaPrefisso = inglese ? percorso.slice(3) || "/" : percorso;
+  const pulito = senzaPrefisso.length > 1 ? senzaPrefisso.replace(/\/+$/, "") : senzaPrefisso;
+  if (INGRESSI_DA_NON_RIAPRIRE.includes(pulito)) return inglese ? "/en" : "/";
+  return sicura;
+}
