@@ -18,9 +18,12 @@ const medal = (i: number) => (i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "�
 export function ClassLeaderboard({
   classId,
   highlightUserId,
+  nomi,
 }: {
   classId: string;
   highlightUserId?: string;
+  /** Per l'insegnante: i nomi dati agli allievi nella classe, al posto di quelli del profilo. */
+  nomi?: ReadonlyMap<string, string>;
 }) {
   const t = useT();
   const [rows, setRows] = useState<LeaderboardRow[]>([]);
@@ -83,7 +86,7 @@ export function ClassLeaderboard({
               >
                 <td className="px-3 py-2 text-left text-base">{medal(i)}</td>
                 <td className="px-3 py-2">
-                  {r.student_name ?? "Allievo"}
+                  {nomi?.get(r.student_id) || r.student_name || "Allievo"}
                   {me && <span className="ml-1 text-xs text-primary">(tu)</span>}
                 </td>
                 <td className="px-2 py-2 text-center">

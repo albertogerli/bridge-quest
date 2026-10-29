@@ -121,7 +121,20 @@ export interface ClassMember {
    */
   uscito_il?: string | null;
   // Joined from profiles (when fetched via getClassDetail)
+  /**
+   * Il nome da mostrare: quello dato dall'insegnante nella classe se c'è,
+   * altrimenti quello del profilo. Tutte le pagine dell'insegnante leggono
+   * questo, e così il nome in classe arriva dappertutto senza toccarle.
+   */
   display_name?: string | null;
+  /**
+   * Il nome dato dall'insegnante in questa classe (`class_members.nome_in_classe`).
+   * L'allievo non lo può cambiare: con due Giuseppe, quello che dichiara male
+   * si voleva prendere i meriti dell'altro (regia di un corso, 29/10/2026).
+   */
+  nome_in_classe?: string | null;
+  /** Il nome che l'allievo ha scelto nel profilo. */
+  nome_profilo?: string | null;
   avatar_url?: string | null;
 }
 
@@ -298,7 +311,7 @@ export async function getClassDetail(classId: string): Promise<ClassDetail> {
     supabase.from("classes").select("*").eq("id", classId).maybeSingle(),
     supabase
       .from("class_members")
-      .select("class_id, student_id, status, joined_at")
+      .select("class_id, student_id, status, joined_at, nome_in_classe")
       .eq("class_id", classId)
       // `active` e `pending` insieme, in una query sola: chi è in attesa va
       // mostrato all'insegnante, e sono le stesse righe con lo stesso profilo
@@ -322,6 +335,7 @@ export async function getClassDetail(classId: string): Promise<ClassDetail> {
     student_id: string;
     status: MemberStatus;
     joined_at: string;
+    nome_in_classe: string | null;
   }[];
 
   // Resolve display names in one batched query.
@@ -344,7 +358,9 @@ export async function getClassDetail(classId: string): Promise<ClassDetail> {
     student_id: m.student_id,
     status: m.status,
     joined_at: m.joined_at,
-    display_name: profileMap.get(m.student_id)?.display_name ?? null,
+    display_name: m.nome_in_classe || profileMap.get(m.student_id)?.display_name || null,
+    nome_in_classe: m.nome_in_classe,
+    nome_profilo: profileMap.get(m.student_id)?.display_name ?? null,
     avatar_url: profileMap.get(m.student_id)?.avatar_url ?? null,
   }));
 
@@ -504,6 +520,39 @@ export async function rinominaClasse(classId: string, nome: string): Promise<voi
     .select("id");
   if (error) throw error;
   if (!data?.length) throw new ClasseNonToccata();
+}
+
+/** La riga più lunga che `rinomina_allievo` accetta. */
+export const LUNGHEZZA_NOME_IN_CLASSE = 60;
+
+/**
+ * Dà all'allievo un nome in questa classe; vuoto torna al nome del profilo.
+ * Restituisce il nome salvato, ripulito dal database. Lancia l'errore.
+ * Da `scripts/sql/nome-in-classe-2026-10.sql`.
+ */
+export async function rinominaAllievo(classId: string, studentId: string, nome: string): Promise<string | null> {
+  const supabase = createClient();
+  const { data, error } = await supabase.rpc("rinomina_allievo", {
+    p_class_id: classId,
+    p_student_id: studentId,
+    p_nome: nome.trim().slice(0, LUNGHEZZA_NOME_IN_CLASSE),
+  });
+  if (error) throw error;
+  return (data as string | null) ?? null;
+}
+
+/**
+ * Gli allievi che nella classe si chiamano come un altro, maiuscole e spazi
+ * a parte: l'insegnante li deve distinguere prima di leggere un risultato.
+ */
+export function nomiDoppi(membri: readonly { student_id: string; display_name?: string | null }[]): Set<string> {
+  const perNome = new Map<string, string[]>();
+  for (const m of membri) {
+    const chiave = (m.display_name ?? "").trim().replace(/\s+/g, " ").toLocaleLowerCase("it");
+    if (!chiave) continue;
+    perNome.set(chiave, [...(perNome.get(chiave) ?? []), m.student_id]);
+  }
+  return new Set([...perNome.values()].filter((ids) => ids.length > 1).flat());
 }
 
 /**
