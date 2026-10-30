@@ -107,8 +107,14 @@ export function HomeInsegnante({
           {t("Area insegnanti")}
         </p>
         <h1 className="font-display text-3xl font-bold text-foreground sm:text-4xl">
-          {nome ? `Ciao ${nome}` : "Ciao"}
+          {nome ? t("Ciao {nome}", { nome }) : t("Ciao")}
         </h1>
+        {/* Il nome è quello scritto alla registrazione: chi si è registrato
+            come «insegnante» si sentiva salutare «Ciao insegnante» e non
+            sapeva dove cambiarlo (Trevissoi, 29/10/2026). */}
+        <Link href="/profilo" className="text-xs font-medium text-muted-foreground hover:text-foreground hover:underline">
+          {nome ? t("Non ti chiami così? Cambia il nome nel profilo") : t("Scrivi il tuo nome nel profilo")}
+        </Link>
       </motion.div>
 
       {totaleInAttesa > 0 && (

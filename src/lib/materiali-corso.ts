@@ -62,8 +62,9 @@ const CARTELLA = "/materiali/gioco-della-carta";
 export const MATERIALI_CORSO: ModuloMateriali[] = [
   {
     titolo: "Il gioco della carta",
-    descrizione: "Vincenti e affrancabili, la difesa, gli affrancamenti, il piano di gioco a senz'atout e con l'atout.",
+    descrizione: "Le regole della lezione 0, vincenti e affrancabili, la difesa, gli affrancamenti, il piano di gioco a senz'atout e con l'atout.",
     slide: [
+      { titolo: "Lezione 0: le regole per cominciare", file: `${CARTELLA}/slide-lezione-zero.pdf`, pagine: 9, lezioni: [0] },
       { titolo: "Vincenti e affrancabili, l'attacco e il terzo di mano", file: `${CARTELLA}/slide-vincenti-e-affrancabili.pdf`, pagine: 22, lezioni: [1, 2] },
       { titolo: "Il piano di gioco", file: `${CARTELLA}/slide-piano-di-gioco.pdf`, pagine: 24, lezioni: [3, 4] },
       { titolo: "Il gioco ad atout", file: `${CARTELLA}/slide-gioco-ad-atout.pdf`, pagine: 14, lezioni: [5, 6] },

@@ -2462,7 +2462,6 @@
   "{n} pagine": "{n} pages",
   "Slide e dispense ufficiali, da proiettare o da stampare": "Official slides and handouts, ready to project or print",
   "Il gioco della carta": "Card play",
-  "Vincenti e affrancabili, la difesa, gli affrancamenti, il piano di gioco a senz'atout e con l'atout.": "Winners and establishable cards, defense, establishing tricks, and the play plan in notrump and with trumps.",
   "Vincenti e affrancabili, l'attacco e il terzo di mano": "Winners and establishable cards, the opening lead and third hand",
   "Il piano di gioco": "The play plan",
   "Il gioco ad atout": "Playing with trumps",
@@ -2854,5 +2853,11 @@
   "Introduzione del morto": "Introducing the Dummy",
   "Il piano di gioco a senz'atout (2)": "The No Trump Play Plan (2)",
   "Tutoraggio: il gioco a senz'atout": "Guided practice: No Trump play",
-  "Tutoraggio: a senz'atout e ad atout": "Guided practice: No Trump and trump play"
+  "Tutoraggio: a senz'atout e ad atout": "Guided practice: No Trump and trump play",
+  "Ciao {nome}": "Hi {nome}",
+  "Ciao": "Hi",
+  "Non ti chiami così? Cambia il nome nel profilo": "Not your name? Change it in your profile",
+  "Scrivi il tuo nome nel profilo": "Add your name in your profile",
+  "Lezione 0: le regole per cominciare": "Lesson 0: the rules to get started",
+  "Le regole della lezione 0, vincenti e affrancabili, la difesa, gli affrancamenti, il piano di gioco a senz'atout e con l'atout.": "The rules from lesson 0, winners and establishable cards, defense, establishing tricks, and the play plan in notrump and with trumps."
 }
