@@ -15,6 +15,8 @@ import {
   type EsercizioPosizione,
 } from "@/lib/esercizi-posizione";
 import { parsePbn } from "@/lib/pbn";
+import { MATERIALI_CORSO, type ManiCommissione } from "@/lib/materiali-corso";
+import { reportError } from "@/lib/report-error";
 import type { Smazzata } from "@/lib/catalog";
 import {
   smazzataDifficulty,
@@ -95,22 +97,41 @@ export default function NuovoCompitoPage({
   const [importErrors, setImportErrors] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  function aggiungiPbn(text: string) {
+    // Unique-per-import id prefix so two imports never collide
+    const prefix = `pbn-${Date.now().toString(36)}`;
+    const { deals, errors } = parsePbn(text, prefix);
+    setImportErrors(errors);
+    if (deals.length > 0) {
+      setImported((prev) => [...prev, ...deals]);
+      // Imported hands start selected: that's why the instructor loaded them
+      setSelected((prev) => {
+        const next = new Set(prev);
+        for (const d of deals) next.add(d.id);
+        return next;
+      });
+    }
+  }
+
+  // ── Le smazzate della Commissione che il catalogo non ha ───────────────
+  const [commissioneCaricate, setCommissioneCaricate] = useState<Set<string>>(new Set());
+  const maniCommissione = MATERIALI_CORSO.flatMap((m) => m.mani);
+
+  async function caricaCommissione(m: ManiCommissione) {
+    try {
+      const risposta = await fetch(m.file);
+      if (!risposta.ok) throw new Error(`HTTP ${risposta.status}`);
+      aggiungiPbn(await risposta.text());
+      setCommissioneCaricate((prev) => new Set(prev).add(m.file));
+    } catch (err) {
+      reportError("nuovo-compito:mani-commissione", err);
+      setImportErrors([t("Non sono riuscito a caricare le mani: controlla la connessione e riprova.")]);
+    }
+  }
+
   async function handlePbnFile(file: File) {
     try {
-      const text = await file.text();
-      // Unique-per-import id prefix so two imports never collide
-      const prefix = `pbn-${Date.now().toString(36)}`;
-      const { deals, errors } = parsePbn(text, prefix);
-      setImportErrors(errors);
-      if (deals.length > 0) {
-        setImported((prev) => [...prev, ...deals]);
-        // Imported hands start selected: that's why the instructor loaded them
-        setSelected((prev) => {
-          const next = new Set(prev);
-          for (const d of deals) next.add(d.id);
-          return next;
-        });
-      }
+      aggiungiPbn(await file.text());
     } catch {
       setImportErrors(["Impossibile leggere il file PBN."]);
     } finally {
@@ -339,6 +360,30 @@ export default function NuovoCompitoPage({
             }}
           />
         </div>
+
+        {maniCommissione.length > 0 && (
+          <div className="mt-3 border-t border-border pt-3">
+            <p className="text-sm font-semibold">{t("Mani della Commissione")}</p>
+            <p className="mb-2 text-xs text-muted-foreground">
+              {t("Le smazzate del corso della Commissione che non sono tra le mani delle lezioni: otto per argomento, con il contratto e senza commento.")}
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {maniCommissione.map((m) => (
+                <Button
+                  key={m.file}
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  disabled={commissioneCaricate.has(m.file)}
+                  onClick={() => void caricaCommissione(m)}
+                >
+                  {commissioneCaricate.has(m.file) ? "✓ " : "+ "}
+                  {t(m.titolo)}
+                </Button>
+              ))}
+            </div>
+          </div>
+        )}
 
         {importErrors.length > 0 && (
           <ul className="mt-3 space-y-1 text-xs text-amber-700 dark:text-amber-400">

@@ -20,7 +20,10 @@ export function CollegamentoMateriale({
   className?: string;
   children: React.ReactNode;
 }) {
-  if (eInterno(url)) {
+  // Un file del sito (la dispensa o gli esercizi in PDF) è interno ma non è
+  // una pagina: si apre a parte come un PDF esterno.
+  const file = /\.[a-z0-9]+$/i.test(url.split(/[?#]/)[0]);
+  if (eInterno(url) && !file) {
     return (
       <Link href={url} className={className}>
         {children}

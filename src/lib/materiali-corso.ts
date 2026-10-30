@@ -20,11 +20,41 @@ export interface Materiale {
   lezioni: number[];
 }
 
+/**
+ * Gli esercizi dell'eserciziario della Commissione, così come li ha mandati:
+ * PDF originali, divisi in due. Il foglio da dare all'allievo non ha le
+ * soluzioni, che stanno in un file a parte per l'insegnante.
+ *
+ * Non sono quiz interattivi perché le domande vivono di diagrammi e di
+ * risposte aperte («quante prese siete destinati a perdere?»): trascriverle
+ * a scelta multipla vorrebbe dire riscriverle, e quello spetta agli autori.
+ */
+export interface Esercizi extends Materiale {
+  /** Percorso pubblico del PDF con le sole soluzioni. */
+  soluzioni: string;
+}
+
+/**
+ * Smazzate della Commissione che nel catalogo non ci sono, in PBN: si
+ * aggiungono a un compito da «Nuovo compito». Le altre lezioni della
+ * Commissione hanno le stesse mani del catalogo, già con il commento.
+ * Si rigenerano con `scripts/materiali/commissione/mani-commissione.mjs`.
+ */
+export interface ManiCommissione {
+  titolo: string;
+  file: string;
+  smazzate: number;
+  /** Le lezioni BridgeLab più vicine all'argomento. */
+  lezioni: number[];
+}
+
 export interface ModuloMateriali {
   titolo: string;
   descrizione: string;
   slide: Materiale[];
   dispense: Materiale[];
+  esercizi: Esercizi[];
+  mani: ManiCommissione[];
 }
 
 const CARTELLA = "/materiali/gioco-della-carta";
@@ -45,5 +75,36 @@ export const MATERIALI_CORSO: ModuloMateriali[] = [
       { titolo: "Il piano di gioco a senz'atout", file: `${CARTELLA}/dispensa-piano-di-gioco-a-senza-atout.pdf`, pagine: 4, lezioni: [4] },
       { titolo: "Il gioco ad atout", file: `${CARTELLA}/dispensa-gioco-ad-atout.pdf`, pagine: 8, lezioni: [5, 6] },
     ],
+    esercizi: [
+      { titolo: "Vincenti e affrancabili", file: `${CARTELLA}/esercizi-vincenti-e-affrancabili.pdf`, soluzioni: `${CARTELLA}/soluzioni-vincenti-e-affrancabili.pdf`, pagine: 2, lezioni: [1] },
+      { titolo: "Il punto di vista dei difensori", file: `${CARTELLA}/esercizi-punto-di-vista-dei-difensori.pdf`, soluzioni: `${CARTELLA}/soluzioni-punto-di-vista-dei-difensori.pdf`, pagine: 2, lezioni: [2] },
+      { titolo: "Affrancamenti di lunga e di posizione", file: `${CARTELLA}/esercizi-affrancamenti-di-lunga-e-di-posizione.pdf`, soluzioni: `${CARTELLA}/soluzioni-affrancamenti-di-lunga-e-di-posizione.pdf`, pagine: 2, lezioni: [3] },
+      { titolo: "Il piano di gioco a senz'atout", file: `${CARTELLA}/esercizi-piano-di-gioco-a-senza-atout.pdf`, soluzioni: `${CARTELLA}/soluzioni-piano-di-gioco-a-senza-atout.pdf`, pagine: 2, lezioni: [4] },
+      { titolo: "Il gioco ad atout", file: `${CARTELLA}/esercizi-gioco-ad-atout.pdf`, soluzioni: `${CARTELLA}/soluzioni-gioco-ad-atout.pdf`, pagine: 4, lezioni: [5, 6] },
+    ],
+    mani: [
+      { titolo: "Introduzione del morto", file: `${CARTELLA}/mani-introduzione-del-morto.pbn`, smazzate: 8, lezioni: [3] },
+      { titolo: "Il piano di gioco a senz'atout (2)", file: `${CARTELLA}/mani-piano-di-gioco-a-senza-atout-2.pbn`, smazzate: 8, lezioni: [4] },
+      { titolo: "Tutoraggio: il gioco a senz'atout", file: `${CARTELLA}/mani-tutoraggio-gioco-a-senza.pbn`, smazzate: 8, lezioni: [4] },
+      { titolo: "Tutoraggio: a senz'atout e ad atout", file: `${CARTELLA}/mani-tutoraggio-senza-e-atout.pbn`, smazzate: 8, lezioni: [5, 6] },
+    ],
   },
 ];
+
+/** La dispensa della Commissione per una lezione BridgeLab, se c'è. */
+export function dispensaDellaLezione(lessonId: number): Materiale | null {
+  for (const m of MATERIALI_CORSO) {
+    const d = m.dispense.find((x) => x.lezioni.includes(lessonId));
+    if (d) return d;
+  }
+  return null;
+}
+
+/** Gli esercizi della Commissione per una lezione BridgeLab, se ci sono. */
+export function eserciziDellaLezione(lessonId: number): Esercizi | null {
+  for (const m of MATERIALI_CORSO) {
+    const e = m.esercizi.find((x) => x.lezioni.includes(lessonId));
+    if (e) return e;
+  }
+  return null;
+}

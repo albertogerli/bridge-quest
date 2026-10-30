@@ -14,6 +14,7 @@ import { useGameStore } from "@/store/use-game-store";
 import { useT } from "@/contexts/traduzioni-provider";
 import { useLingua } from "@/hooks/use-lingua";
 import { materialiPubblicati } from "@/lib/materiali-lezione-db";
+import { dispensaDellaLezione } from "@/lib/materiali-corso";
 
 const courseColors: Record<CourseId, { active: string; inactive: string; border: string }> = {
   fiori: { active: "bg-emerald-500 text-white", inactive: "text-emerald-700 dark:text-emerald-300", border: "border-emerald-200 dark:border-emerald-900" },
@@ -339,6 +340,7 @@ function InfographicCard({
     }
   }, []);
   const lessonNumber = getLessonDisplayNumber(lessonId);
+  const dispensa = dispensaDellaLezione(lessonId);
 
   return (
     <div className="card-clean rounded-2xl bg-card overflow-hidden group">
@@ -423,6 +425,18 @@ function InfographicCard({
           >
             {t("Vai alla lezione →")}
           </Link>
+        )}
+        {/* Il fascicolo della Commissione da leggere e stampare, dove c'è:
+            l'infografica è un riassunto, la dispensa è il testo. */}
+        {!locked && dispensa && (
+          <a
+            href={dispensa.file}
+            target="_blank"
+            rel="noopener"
+            className="text-[12px] font-semibold text-figb dark:text-primary mt-1 block hover:underline"
+          >
+            {t("Dispensa da stampare (PDF)")}
+          </a>
         )}
       </div>
     </div>

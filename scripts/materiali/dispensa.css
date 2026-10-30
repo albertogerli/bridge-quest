@@ -5,7 +5,7 @@
   size: A4;
   margin: 15mm 17mm 17mm;
   @bottom-left {
-    content: "BridgeLab · Il gioco della carta";
+    content: "Scuola Bridge FIGB · Commissione Insegnamento · BridgeLab";
     font-family: "Inter", sans-serif; font-size: 8pt; color: #5b6475;
   }
   @bottom-right {
