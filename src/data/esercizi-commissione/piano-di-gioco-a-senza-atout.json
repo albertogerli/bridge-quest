@@ -1,0 +1,397 @@
+{
+  "slug": "piano-di-gioco-a-senza-atout",
+  "titolo": "Il piano di gioco a senz'atout",
+  "lezioni": [
+    4
+  ],
+  "temi": [
+    {
+      "tema": "Tema 4",
+      "titolo": "Piano di gioco a senz'atout",
+      "esercizi": [
+        {
+          "numero": 1,
+          "consegna": "Quali di queste figure presentano un blocco (tale da impedire l'incasso di tutte le vincenti senza uscire dal colore)?",
+          "figure": [
+            {
+              "etichetta": "1",
+              "nord": {
+                "X": "KJ1093"
+              },
+              "sud": {
+                "X": "AQ"
+              }
+            },
+            {
+              "etichetta": "2",
+              "nord": {
+                "X": "AKQ"
+              },
+              "sud": {
+                "X": "J10983"
+              }
+            },
+            {
+              "etichetta": "3",
+              "nord": {
+                "X": "KQJ"
+              },
+              "sud": {
+                "X": "A1093"
+              }
+            },
+            {
+              "etichetta": "4",
+              "nord": {
+                "X": "Q10976"
+              },
+              "sud": {
+                "X": "AKJ"
+              }
+            },
+            {
+              "etichetta": "5",
+              "nord": {
+                "X": "QJ109"
+              },
+              "sud": {
+                "X": "AK"
+              }
+            }
+          ],
+          "soluzione": "Figura 1: nessun blocco, basta giocare l'Asso, poi la Dama superata dal Re, e proseguire con J109.\nFigura 2: il colore è bloccato\nFigura 3: nessun blocco, basta incassare due onori di Nord e poi superare il terzo con l'Asso.\nFigura 4: anche questa è facile: Asso, Re, e fante superato dalla Dama. 5 prese fluide!\nFigura 5: il colore è bloccato"
+        },
+        {
+          "numero": 2,
+          "consegna": "Quante volte, se proprio fosse necessario per manovrare altri colori, potete trasferire la presa da Sud a Nord con i seguenti esempi di carte?",
+          "figure": [
+            {
+              "etichetta": "1",
+              "nord": {
+                "X": "KJ5"
+              },
+              "sud": {
+                "X": "AQ4"
+              }
+            },
+            {
+              "etichetta": "2",
+              "nord": {
+                "X": "Q108"
+              },
+              "sud": {
+                "X": "AKJ97"
+              }
+            },
+            {
+              "etichetta": "3",
+              "nord": {
+                "X": "A1032"
+              },
+              "sud": {
+                "X": "KQJ4"
+              }
+            },
+            {
+              "etichetta": "4",
+              "nord": {
+                "X": "A108"
+              },
+              "sud": {
+                "X": "KQJ97"
+              }
+            },
+            {
+              "etichetta": "5",
+              "nord": {
+                "X": "KQ8"
+              },
+              "sud": {
+                "X": "AJ109"
+              }
+            }
+          ],
+          "soluzione": "Fig. 1: DUE volte; la Q presa dal K, e la cartina presa dal J. E nessuno spreco: sono sempre 3 prese.\nFig. 2: TRE volte, superando di misura: il 7 per l'8, il 9 per il 10, il fante per la dama\nFig. 3: DUE, (se si ha cura di non giocare il 4 per l'Asso); Re superato dall'Asso, poi il 4 per il 10.\nFig. 4: TRE: un onore superato con l'Asso, poi il 9 per il 10, e il 7 per l'8.\nFig. 5: DUE, una volta con il Re e una con la Dama."
+        },
+        {
+          "numero": 3,
+          "consegna": "Giocate 3NT in tutti gli esempi seguenti, e ricevete l'attacco J di Quadri. Quale colore rappresenta la vostra maggior sorgente di prese?",
+          "figure": [
+            {
+              "etichetta": "1",
+              "nord": {
+                "S": "K43",
+                "H": "K86",
+                "D": "A94",
+                "C": "KJ954"
+              },
+              "sud": {
+                "S": "A872",
+                "H": "A94",
+                "D": "K52",
+                "C": "Q10"
+              },
+              "errataOriginale": "Nord ha 14 carte e Sud 12"
+            },
+            {
+              "etichetta": "2",
+              "nord": {
+                "S": "QJ973",
+                "H": "A102",
+                "D": "K87",
+                "C": "A7"
+              },
+              "sud": {
+                "S": "108",
+                "H": "K643",
+                "D": "AQ2",
+                "C": "K954"
+              }
+            },
+            {
+              "etichetta": "3",
+              "nord": {
+                "S": "A76",
+                "H": "K2",
+                "D": "983",
+                "C": "876543"
+              },
+              "sud": {
+                "S": "J1043",
+                "H": "AQ4",
+                "D": "AQ3",
+                "C": "AK2"
+              },
+              "errataOriginale": "Nord ha 14 carte, e il 3♦ è sia in Nord sia in Sud"
+            },
+            {
+              "etichetta": "4",
+              "nord": {
+                "S": "Q109",
+                "H": "KJ1085",
+                "D": "653",
+                "C": "983"
+              },
+              "sud": {
+                "S": "AKJ6",
+                "H": "Q2",
+                "D": "AK",
+                "C": "J10762"
+              },
+              "errataOriginale": "Nord ha 14 carte"
+            }
+          ],
+          "soluzione": "1) Fiori  2) picche  3) fiori  4) cuori"
+        },
+        {
+          "numero": 4,
+          "consegna": "Quale divisione dei resti vi potrebbe impedire di incassare, nei seguenti colori, tante prese quante sono le carte del lato lungo?",
+          "figure": [
+            {
+              "etichetta": "1",
+              "nord": {
+                "X": "K8752"
+              },
+              "sud": {
+                "X": "AQ4"
+              }
+            },
+            {
+              "etichetta": "2",
+              "nord": {
+                "X": "QJ1086"
+              },
+              "sud": {
+                "X": "AK4"
+              }
+            },
+            {
+              "etichetta": "3",
+              "nord": {
+                "X": "A98752"
+              },
+              "sud": {
+                "X": "K643"
+              }
+            },
+            {
+              "etichetta": "4",
+              "nord": {
+                "X": "AK32"
+              },
+              "sud": {
+                "X": "Q7654"
+              }
+            },
+            {
+              "etichetta": "5",
+              "nord": {
+                "X": "KQ8765"
+              },
+              "sud": {
+                "X": "A432"
+              }
+            }
+          ],
+          "soluzione": "Figura 1: la 4-2, o peggio la 5-0\nFigura 2: nessuna! Faremo 5 prese filate (Asso, Re, e piccola per Nord) con qualunque distribuzione.\nFigura 3: solo la 3-0\nFigura 4: solo la 4-0\nFigura 5: nessuna! Nella peggiore delle ipotesi J109 sono nella stessa mano… ma cadono sotto AKQ."
+        },
+        {
+          "numero": 5,
+          "consegna": "Nelle seguenti figure avete molte prese da incassare o affrancare. Quale (o quali) sono i primi onori che giocate?",
+          "figure": [
+            {
+              "etichetta": "1",
+              "nord": {
+                "X": "KQ1063"
+              },
+              "sud": {
+                "X": "AJ5"
+              }
+            },
+            {
+              "etichetta": "2",
+              "nord": {
+                "X": "A3"
+              },
+              "sud": {
+                "X": "KQJ105"
+              }
+            },
+            {
+              "etichetta": "3",
+              "nord": {
+                "X": "AQ754"
+              },
+              "sud": {
+                "X": "KJ2"
+              }
+            },
+            {
+              "etichetta": "4",
+              "nord": {
+                "X": "KQ2"
+              },
+              "sud": {
+                "X": "J10954"
+              }
+            },
+            {
+              "etichetta": "5",
+              "nord": {
+                "X": "KJ1085"
+              },
+              "sud": {
+                "X": "AQ6"
+              }
+            }
+          ],
+          "soluzione": "Figura 1: Asso e fante (o fante e asso, nulla cambia) e poi cartina verso la lunga di fronte\nFigura 2: l'Asso, poi la cartina verso la lunga di Sud.\nFigura 3: Re e Fante (o fante e poi Re, è uguale) e poi cartina per la lunga di Nord\nFigura 4: Re e Dama di Nord devono essere giocati per primi, sia che l'avversario metta l'asso subito, sia che rifiuti la presa\nFigura 5: L'asso e la dama (o viceversa) e poi la cartina verso la lunga."
+        },
+        {
+          "numero": 6,
+          "consegna": "Quanti ingressi (o rientri) ci sono nella mano di Nord? (attacco Q di ♠)",
+          "figure": [
+            {
+              "etichetta": "a",
+              "nord": {
+                "S": "76",
+                "H": "543",
+                "D": "J543",
+                "C": "AQ108"
+              },
+              "sud": {
+                "S": "AK5",
+                "H": "AQJ10",
+                "D": "Q102",
+                "C": "KJ9"
+              }
+            },
+            {
+              "etichetta": "b",
+              "nord": {
+                "S": "A103",
+                "H": "J4",
+                "D": "QJ82",
+                "C": "Q765"
+              },
+              "sud": {
+                "S": "K42",
+                "H": "AKQ73",
+                "D": "AK",
+                "C": "AJ4"
+              }
+            },
+            {
+              "etichetta": "c",
+              "nord": {
+                "S": "106",
+                "H": "J4",
+                "D": "986542",
+                "C": "Q76"
+              },
+              "sud": {
+                "S": "AK3",
+                "H": "AKQ2",
+                "D": "AKQ",
+                "C": "J108"
+              }
+            }
+          ],
+          "soluzione": "Mano a) ce ne sono TRE, tutti nel colore di Fiori, sempre superando di misura la carta che si gioca partendo da Sud (K → A, J → Q, 9 → 10). E ci servono tutti, perché il colore di cuori va mosso dal morto verso la mano; se il Re è in Est, questo colore ci darà 4 prese. A condizione che possiamo ripetere l'impasse finché non comparirà il Re. Ecco perché è così importante valutare “quante volte” possiamo usare le fiori per spostarci!\nMano b) certamente una volta a cuori, e quasi certamente DUE volte a picche. È infatti ragionevole pensare che l'attacco di Q♠ venga da una sequenza di QJ9.. quindi, se si vince la presa con l'asso, poi si potrà giocare piccola picche per il 10 e fare l'impasse al Fante, ottenendo sia una presa in più che un ingresso in più.\nMano c) uno solo, preziosissimo: il J di cuori. Prezioso perché le quadri sono bloccate, e dopo aver incassato ♦AKQ, ammesso che i resti siano benevoli… vorremo andare al morto a incassare le altre quadri! Non sperate nella Dama di fiori: se l'avversario NON vuole farvi andare al morto, userà Asso o Re solo quando potrà catturare la Dama (= vi lascerà prendere quando giocherete J o 10)"
+        },
+        {
+          "numero": 7,
+          "consegna": "È in presa Sud, e siamo alle ultime carte: nell'ipotesi che si vedano tutte e quattro le mani, quante prese farà Sud muovendo per primo? Che carta dovrà giocare?",
+          "figure": [
+            {
+              "etichetta": "1",
+              "nord": {
+                "X": "543"
+              },
+              "ovest": {
+                "X": "KJ9"
+              },
+              "est": {
+                "X": "876"
+              },
+              "sud": {
+                "X": "AQ10"
+              }
+            },
+            {
+              "etichetta": "2",
+              "nord": {
+                "X": "864"
+              },
+              "ovest": {
+                "X": "KQ9"
+              },
+              "est": {
+                "X": "753"
+              },
+              "sud": {
+                "X": "AJ10"
+              }
+            },
+            {
+              "etichetta": "3",
+              "nord": {
+                "X": "753"
+              },
+              "ovest": {
+                "X": "J96"
+              },
+              "est": {
+                "X": "K84"
+              },
+              "sud": {
+                "X": "AQ10"
+              }
+            }
+          ],
+          "soluzione": "È importante anche abituarsi a ragionare… a carte viste!\nFigura 1: se Sud gioca l'Asso farà solo UNA presa. Se gioca la dama o il 10… ne farà DUE.\nFigura 2: se Sud gioca l'Asso farà solo UNA presa. Se gioca il fante o il 10… ne farà DUE.\nFigura 3: l'unica carta che consente a Sud di fare 2 prese è il 10. Sarà preso da Ovest… ma poi dovrà uscire, e Sud farà le restanti DUE.. E se il 10 viene vinto da Est? Meglio ancora!!"
+        }
+      ]
+    }
+  ]
+}

@@ -456,7 +456,7 @@ function ModuloMateriale({
       return { titolo: t("La dispensa"), url: `/dispense?classe=${classId}&corso=${l.corsoId}&lezione=${l.lessonId}` };
     }
     const e = eserciziDellaLezione(l.lessonId);
-    if (e) return { titolo: t("Gli esercizi: {titolo}", { titolo: t(e.titolo) }), url: e.file };
+    if (e) return { titolo: t("Gli esercizi: {titolo}", { titolo: t(e.titolo) }), url: e.online };
     return { titolo: t("L'esercizio"), url: `/classi/${classId}/compito/${l.assignmentId}` };
   }
 

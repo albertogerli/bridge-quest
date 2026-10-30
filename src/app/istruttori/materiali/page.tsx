@@ -5,6 +5,7 @@ import type { LucideIcon } from "lucide-react";
 import { Briciole } from "@/components/briciole";
 import { useT } from "@/contexts/traduzioni-provider";
 import { useLingua } from "@/hooks/use-lingua";
+import Link from "@/components/link";
 import { MATERIALI_CORSO, type Esercizi, type ManiCommissione, type Materiale } from "@/lib/materiali-corso";
 
 /**
@@ -96,7 +97,7 @@ function GruppoEsercizi({ esercizi }: { esercizi: Esercizi[] }) {
     <div className="mb-5">
       <h3 className="text-sm font-semibold text-muted-foreground mb-1">{t("Esercizi")}</h3>
       <p className="text-xs text-muted-foreground mb-2">
-        {t("Il foglio per gli allievi è senza soluzioni: le trovi a parte. Per darlo alla classe, pubblicalo dai «Materiali dopo la lezione» della classe.")}
+        {t("A schermo l'allievo risponde e poi apre la soluzione di ogni esercizio; il foglio da stampare è senza soluzioni, che trovi a parte. Per darli alla classe, pubblicali dai «Materiali dopo la lezione» della classe.")}
       </p>
       <ul className="grid gap-2 sm:grid-cols-2">
         {esercizi.map((e) => (
@@ -110,8 +111,11 @@ function GruppoEsercizi({ esercizi }: { esercizi: Esercizi[] }) {
                 {etichettaLezioni(e.lezioni, t)} · {t("{n} pagine", { n: e.pagine })}
               </p>
               <p className="mt-1 flex flex-wrap gap-x-3 text-xs font-semibold">
+                <Link href={e.online} className="text-primary hover:underline">
+                  {t("A schermo")}
+                </Link>
                 <a href={e.file} target="_blank" rel="noopener" className="text-primary hover:underline">
-                  {t("Esercizi")}
+                  {t("Da stampare")}
                 </a>
                 <a href={e.soluzioni} target="_blank" rel="noopener" className="text-primary hover:underline">
                   {t("Soluzioni")}

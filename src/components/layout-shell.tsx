@@ -65,7 +65,10 @@ const FULL_SCREEN_ROUTES = ["/login", "/admin", "/istruttori/lavagna", "/istrutt
 // `/reset-password` è pubblica perché la sessione del recupero arriva nel
 // frammento del link e la installa la pagina stessa: il cancello, non
 // vedendola ancora, rimandava al login e il link si perdeva.
-const PUBLIC_ROUTES = ["/", "/login", "/registrati", "/auth", "/reset-password", "/privacy", "/termini", "/accessibilita", "/glossario", "/istruttori/proiezione", "/aula", "/evento", "/stampa-mano"];
+// `/esercizi` è pubblica come i PDF da cui viene: l'insegnante manda il link
+// alla classe, e chi non ha ancora l'account deve trovare gli esercizi, non
+// il login.
+const PUBLIC_ROUTES = ["/", "/login", "/registrati", "/auth", "/reset-password", "/privacy", "/termini", "/accessibilita", "/glossario", "/esercizi", "/istruttori/proiezione", "/aula", "/evento", "/stampa-mano"];
 
 export function LayoutShell({ children }: { children: React.ReactNode }) {
   return (
