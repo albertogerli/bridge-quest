@@ -1,0 +1,324 @@
+{
+  "slug": "punto-di-vista-dei-difensori",
+  "titolo": "Il punto di vista dei difensori",
+  "lezioni": [
+    2
+  ],
+  "temi": [
+    {
+      "tema": "Tema 2",
+      "titolo": "Il punto di vista dei difensori",
+      "esercizi": [
+        {
+          "numero": 1,
+          "consegna": "Rispondete alle seguenti domande:\na) Un giocatore possiede ♣ KQJ53. Che carta deve giocare se è primo di mano? E se è terzo di mano?\nb) Che carta promette l'attacco di J?\nc) Quale carta esclude chi attacca con la Q?\nd) L'attacco con il J mostra che quel giocatore non possiede di certo in mano carte più alte del fante. È esatto?\ne) Nei seguenti esempi che colore scegliete per l'attacco (contratto a Senza)? E che carta?",
+          "figure": [
+            {
+              "etichetta": "a",
+              "ovest": {
+                "S": "AJ3",
+                "H": "KQ5",
+                "D": "72",
+                "C": "QJ983"
+              }
+            },
+            {
+              "etichetta": "b",
+              "ovest": {
+                "S": "KJ5",
+                "H": "AQ",
+                "D": "9764",
+                "C": "K854"
+              }
+            },
+            {
+              "etichetta": "c",
+              "ovest": {
+                "S": "863",
+                "H": "KQJ2",
+                "D": "AK",
+                "C": "J1054"
+              }
+            },
+            {
+              "etichetta": "d",
+              "ovest": {
+                "S": "87",
+                "H": "AQ",
+                "D": "Q10654",
+                "C": "K853"
+              }
+            }
+          ],
+          "soluzione": "a) Il Re quando è in prima posizione, il Fante quando è in terza posizione.\nb) Il 10.\nc) Il Re.\nd) Non è vero: quel che è certo è che non ha la dama. Ma potrebbe avere AJ10x… o KJ10x.\ne) Q, 4, K, 4."
+        },
+        {
+          "numero": 2,
+          "consegna": "Siete in Est, il vostro compagno ha attaccato con una cartina. Che carta giocate se il morto gioca piccola?",
+          "figure": [
+            {
+              "etichetta": "a",
+              "nord": {
+                "X": "865"
+              },
+              "ovest": {
+                "X": "…2"
+              },
+              "est": {
+                "X": "KJ4"
+              }
+            },
+            {
+              "etichetta": "b",
+              "nord": {
+                "X": "Q97"
+              },
+              "ovest": {
+                "X": "…2"
+              },
+              "est": {
+                "X": "KJ10"
+              }
+            },
+            {
+              "etichetta": "c",
+              "nord": {
+                "X": "863"
+              },
+              "ovest": {
+                "X": "…2"
+              },
+              "est": {
+                "X": "QJ94"
+              }
+            },
+            {
+              "etichetta": "d",
+              "nord": {
+                "X": "J65"
+              },
+              "ovest": {
+                "X": "…2"
+              },
+              "est": {
+                "X": "KQ10"
+              }
+            },
+            {
+              "etichetta": "e",
+              "nord": {
+                "X": "974"
+              },
+              "ovest": {
+                "X": "…2"
+              },
+              "est": {
+                "X": "AK5"
+              }
+            },
+            {
+              "etichetta": "f",
+              "nord": {
+                "X": "Q103"
+              },
+              "ovest": {
+                "X": "…2"
+              },
+              "est": {
+                "X": "KJ9"
+              }
+            }
+          ],
+          "soluzione": "a) Il K.\nb) Il 10.\nc) Il J.\nd) Il 10.\ne) Il K.\nf) Il 9."
+        },
+        {
+          "numero": 3,
+          "consegna": "Chi ha sbagliato tra Est e Ovest?",
+          "figure": [
+            {
+              "etichetta": "a",
+              "nord": {
+                "X": "J43"
+              },
+              "ovest": {
+                "X": "K10965"
+              },
+              "est": {
+                "X": "Q72"
+              },
+              "sud": {
+                "X": "A8"
+              },
+              "nota": "La giocata si è svolta: 5...3...Q...A. Dopodiché Sud ha potuto fare una seconda presa con il J. Ha sbagliato Est o Ovest?"
+            },
+            {
+              "etichetta": "b",
+              "nord": {
+                "X": "854"
+              },
+              "ovest": {
+                "X": "AJ1062"
+              },
+              "est": {
+                "X": "K93"
+              },
+              "sud": {
+                "X": "Q7"
+              },
+              "nota": "La presa si è svolta così: J...4...3...Q. Sud ha fatto una presa impossibile! Ha sbagliato Est o Ovest?"
+            },
+            {
+              "etichetta": "c",
+              "nord": {
+                "X": "754"
+              },
+              "ovest": {
+                "X": "A10862"
+              },
+              "est": {
+                "X": "KJ3"
+              },
+              "sud": {
+                "X": "Q9"
+              },
+              "nota": "La presa si è svolta così: 2...4...J...Q. Sud ha fatto una presa impossibile, grazie all'errore di…?"
+            }
+          ],
+          "soluzione": "a) Ha sbagliato Ovest, attaccando con il 5 anziché con il 10 (sequenza). Se avesse giocato il 10 Est avrebbe salvato la sua dama, riservandosi di giocarla solo se il morto impegnava il Fante.\nb) Ha sbagliato Est: sa perfettamente che la dama è in mano a Sud, quindi DEVE mettere il Re!\nc) Est; non sono affatto equivalenti, Re e Fante. Poiché è suo dovere cercare di vincere la presa, la carta da giocare è quella più alta: il Re."
+        },
+        {
+          "numero": 4,
+          "consegna": "Rispondete a questi quiz...",
+          "figure": [
+            {
+              "etichetta": "a",
+              "nord": {
+                "X": "J83"
+              },
+              "ovest": {
+                "X": "K764"
+              },
+              "est": {
+                "X": "…10"
+              },
+              "sud": {
+                "X": "…A"
+              },
+              "nota": "(Siete in Ovest) Avete attaccato con il 4, Nord ha messo il 3, Est il 10 e Sud ha preso con l'asso. Chi ha la Q? Chi ha il 9?"
+            },
+            {
+              "etichetta": "b",
+              "nord": {
+                "X": "754"
+              },
+              "ovest": {
+                "X": "Q8632"
+              },
+              "est": {
+                "X": "…J"
+              },
+              "sud": {
+                "X": "…A"
+              },
+              "nota": "(Siete in Ovest) Avete attaccato con il 2, sul 4 del morto il vostro compagno ha messo il J e Sud ha preso con l'asso. Chi ha il K? Chi ha il 10?"
+            },
+            {
+              "etichetta": "c",
+              "nord": {
+                "X": "874"
+              },
+              "ovest": {
+                "X": "…J"
+              },
+              "est": {
+                "X": "632"
+              },
+              "sud": {
+                "X": "…A"
+              },
+              "nota": "(Voi siete in Est) Vedete Ovest attaccare con il J, 4 di Nord e Sud prendere con l'asso. Sapete dire, al di là della cortina fumogena che Sud ha messo in piedi per confondervi, chi ha il K? Chi ha la Dama? Chi ha il 10?"
+            },
+            {
+              "etichetta": "d",
+              "nord": {
+                "X": "A96"
+              },
+              "ovest": {
+                "X": "…J"
+              },
+              "est": {
+                "X": "82"
+              },
+              "sud": {
+                "X": "…Q"
+              },
+              "nota": "(Voi siete in Est) Sapreste dire da quale figura di carte ha attaccato il vostro compagno, viste le carte della prima presa?"
+            }
+          ],
+          "soluzione": "a) Sud, con AQ, avrebbe preso con la dama: quindi la Q è in Est. Ma il 9 è in Sud, perché Est con 10 e 9 avrebbe giocato il 9.\nb) Se avesse avuto K e J, Est sull'attacco avrebbe giocato il Re. Quindi il Re è in Sud. E anche il 10, carta negata dal Fante di Est.\nc) Sappiamo che la dama è in Sud (l'attacco di J la nega), e il solo motivo per cui Sud non l'ha usata nella prima presa è che è equivalente all'Asso: Sud ha AKQ, Ovest J109.\nd) Non da J109 (il 9 è al morto) né da J108 (l'8 l'abbiamo noi). Quindi, certamente, da KJ10x."
+        },
+        {
+          "numero": 5,
+          "consegna": "Nei seguenti esempi siete Ovest e vedete le carte del morto in Nord. Supponendo che nel colore dato tutti i valori che mancano siano in mano al giocante, quante sono come minimo le prese che vi spetta fare?",
+          "figure": [
+            {
+              "etichetta": "a",
+              "nord": {
+                "X": "643"
+              },
+              "ovest": {
+                "X": "AQ10"
+              }
+            },
+            {
+              "etichetta": "b",
+              "nord": {
+                "X": "A65"
+              },
+              "ovest": {
+                "X": "Q102"
+              }
+            },
+            {
+              "etichetta": "c",
+              "nord": {
+                "X": "J10"
+              },
+              "ovest": {
+                "X": "AQ94"
+              }
+            },
+            {
+              "etichetta": "d",
+              "nord": {
+                "X": "QJ"
+              },
+              "ovest": {
+                "X": "A1062"
+              }
+            },
+            {
+              "etichetta": "e",
+              "nord": {
+                "X": "AK7"
+              },
+              "ovest": {
+                "X": "QJ9"
+              }
+            },
+            {
+              "etichetta": "f",
+              "nord": {
+                "X": "543"
+              },
+              "ovest": {
+                "X": "AJ108"
+              }
+            }
+          ],
+          "soluzione": "a) 3, sempre che non ci muoviamo mai per primi.\nb) 1; se Sud dovesse giocare il Fante, basterà coprirlo con la dama.\nc) 3; Asso e Dama sono evidenti… ma faremo anche il 9. Sempre che non ci muoviamo noi.\nd) 2: anche il 10 vincerà la sua presa, comunque giochi Sud.\ne) 1. Basterà giocare il 9 se Sud muove piccola, e coprire con un pezzo se Sud muove il 10 di mano.\nf) 3. L'asso mangia un pezzo grosso, poi Sud potrà incassare l'altro su cui daremo l'8, e J10 sono vincenti."
+        }
+      ]
+    }
+  ]
+}

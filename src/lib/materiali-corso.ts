@@ -25,13 +25,14 @@ export interface Materiale {
  * PDF originali, divisi in due. Il foglio da dare all'allievo non ha le
  * soluzioni, che stanno in un file a parte per l'insegnante.
  *
- * Non sono quiz interattivi perché le domande vivono di diagrammi e di
- * risposte aperte («quante prese siete destinati a perdere?»): trascriverle
- * a scelta multipla vorrebbe dire riscriverle, e quello spetta agli autori.
+ * A schermo (`online`) sono le stesse domande, trascritte in
+ * `src/data/esercizi-commissione/`: vedi `src/lib/esercizi-commissione.ts`.
  */
 export interface Esercizi extends Materiale {
   /** Percorso pubblico del PDF con le sole soluzioni. */
   soluzioni: string;
+  /** La stessa scheda da fare a schermo, con le soluzioni da aprire una alla volta. */
+  online: string;
 }
 
 /**
@@ -77,11 +78,11 @@ export const MATERIALI_CORSO: ModuloMateriali[] = [
       { titolo: "Il gioco ad atout", file: `${CARTELLA}/dispensa-gioco-ad-atout.pdf`, pagine: 8, lezioni: [5, 6] },
     ],
     esercizi: [
-      { titolo: "Vincenti e affrancabili", file: `${CARTELLA}/esercizi-vincenti-e-affrancabili.pdf`, soluzioni: `${CARTELLA}/soluzioni-vincenti-e-affrancabili.pdf`, pagine: 2, lezioni: [1] },
-      { titolo: "Il punto di vista dei difensori", file: `${CARTELLA}/esercizi-punto-di-vista-dei-difensori.pdf`, soluzioni: `${CARTELLA}/soluzioni-punto-di-vista-dei-difensori.pdf`, pagine: 2, lezioni: [2] },
-      { titolo: "Affrancamenti di lunga e di posizione", file: `${CARTELLA}/esercizi-affrancamenti-di-lunga-e-di-posizione.pdf`, soluzioni: `${CARTELLA}/soluzioni-affrancamenti-di-lunga-e-di-posizione.pdf`, pagine: 2, lezioni: [3] },
-      { titolo: "Il piano di gioco a senz'atout", file: `${CARTELLA}/esercizi-piano-di-gioco-a-senza-atout.pdf`, soluzioni: `${CARTELLA}/soluzioni-piano-di-gioco-a-senza-atout.pdf`, pagine: 2, lezioni: [4] },
-      { titolo: "Il gioco ad atout", file: `${CARTELLA}/esercizi-gioco-ad-atout.pdf`, soluzioni: `${CARTELLA}/soluzioni-gioco-ad-atout.pdf`, pagine: 4, lezioni: [5, 6] },
+      { titolo: "Vincenti e affrancabili", file: `${CARTELLA}/esercizi-vincenti-e-affrancabili.pdf`, soluzioni: `${CARTELLA}/soluzioni-vincenti-e-affrancabili.pdf`, online: `/esercizi/vincenti-e-affrancabili`, pagine: 2, lezioni: [1] },
+      { titolo: "Il punto di vista dei difensori", file: `${CARTELLA}/esercizi-punto-di-vista-dei-difensori.pdf`, soluzioni: `${CARTELLA}/soluzioni-punto-di-vista-dei-difensori.pdf`, online: `/esercizi/punto-di-vista-dei-difensori`, pagine: 2, lezioni: [2] },
+      { titolo: "Affrancamenti di lunga e di posizione", file: `${CARTELLA}/esercizi-affrancamenti-di-lunga-e-di-posizione.pdf`, soluzioni: `${CARTELLA}/soluzioni-affrancamenti-di-lunga-e-di-posizione.pdf`, online: `/esercizi/affrancamenti-di-lunga-e-di-posizione`, pagine: 2, lezioni: [3] },
+      { titolo: "Il piano di gioco a senz'atout", file: `${CARTELLA}/esercizi-piano-di-gioco-a-senza-atout.pdf`, soluzioni: `${CARTELLA}/soluzioni-piano-di-gioco-a-senza-atout.pdf`, online: `/esercizi/piano-di-gioco-a-senza-atout`, pagine: 2, lezioni: [4] },
+      { titolo: "Il gioco ad atout", file: `${CARTELLA}/esercizi-gioco-ad-atout.pdf`, soluzioni: `${CARTELLA}/soluzioni-gioco-ad-atout.pdf`, online: `/esercizi/gioco-ad-atout`, pagine: 4, lezioni: [5, 6] },
     ],
     mani: [
       { titolo: "Introduzione del morto", file: `${CARTELLA}/mani-introduzione-del-morto.pbn`, smazzate: 8, lezioni: [3] },

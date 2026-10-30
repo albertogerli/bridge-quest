@@ -1,0 +1,471 @@
+{
+  "slug": "affrancamenti-di-lunga-e-di-posizione",
+  "titolo": "Affrancamenti di lunga e di posizione",
+  "lezioni": [
+    3
+  ],
+  "temi": [
+    {
+      "tema": "Tema 3",
+      "titolo": "Affrancamenti di lunga e posizione",
+      "esercizi": [
+        {
+          "numero": 1,
+          "consegna": "Tra mano e morto avete in un colore il numero di carte assegnate; scrivete come possono essere divisi i resti nei due casi più probabili:",
+          "figure": [
+            {
+              "etichetta": "1",
+              "nord": {
+                "X": "xxxx"
+              },
+              "sud": {
+                "X": "xxx"
+              }
+            },
+            {
+              "etichetta": "2",
+              "nord": {
+                "X": "xxxx"
+              },
+              "sud": {
+                "X": "xx"
+              }
+            },
+            {
+              "etichetta": "3",
+              "nord": {
+                "X": "xxxxx"
+              },
+              "sud": {
+                "X": "xxxx"
+              }
+            },
+            {
+              "etichetta": "4",
+              "nord": {
+                "X": "xxx"
+              },
+              "sud": {
+                "X": "xxxxx"
+              }
+            },
+            {
+              "etichetta": "5",
+              "nord": {
+                "X": "xxxxx"
+              },
+              "sud": {
+                "X": "xxxxx"
+              }
+            }
+          ],
+          "soluzione": "Caso 1, abbiamo 7 carte; ne mancano 6: divisioni più probabili 3-3 e 4-2\nCaso 2, abbiamo 6 carte; ne mancano 7: divisioni più probabili 4-3 e 5-2\nCaso 3, abbiamo 9 carte; ne mancano 4: divisioni più probabili 2-2 e 3-1\nCaso 4, abbiamo 8 carte; ne mancano 5: divisioni più probabili 3-2 e 4-1\nCaso 5, abbiamo 10 carte; ne mancano 3: uniche divisioni possibili 2-1 e 3-0"
+        },
+        {
+          "numero": 2,
+          "consegna": "Nei seguenti esempi dite…\na) se è possibile affrancare prese di lunga o no,\nb) quante ne potreste affrancare se la divisione dei resti fosse la più vantaggiosa:",
+          "figure": [
+            {
+              "etichetta": "1",
+              "nord": {
+                "X": "A9753"
+              },
+              "sud": {
+                "X": "K8642"
+              }
+            },
+            {
+              "etichetta": "2",
+              "nord": {
+                "X": "KQ42"
+              },
+              "sud": {
+                "X": "A853"
+              }
+            },
+            {
+              "etichetta": "3",
+              "nord": {
+                "X": "AQ54"
+              },
+              "sud": {
+                "X": "K2"
+              }
+            },
+            {
+              "etichetta": "4",
+              "nord": {
+                "X": "KQ5"
+              },
+              "sud": {
+                "X": "A432"
+              }
+            },
+            {
+              "etichetta": "5",
+              "nord": {
+                "X": "AK7654"
+              },
+              "sud": {
+                "X": "832"
+              }
+            }
+          ],
+          "soluzione": "Figura 1: sì, TRE se il colore è diviso 2-1\nFigura 2: sì, UNA se il colore è diviso 3-2\nFigura 3: nessuna (anche se il colore fosse diviso 4-3, non affrancheremmo mai la quarta carta)\nFigura 4: sì, UNA, se il colore è diviso 3-3\nFigura 5: sì, QUATTRO, se il colore è diviso 2-2"
+        },
+        {
+          "numero": 3,
+          "consegna": "Nei seguenti esempi sapreste dire…\na) quante prese potete affrancare di forza?\nb) quante prese potete affrancare di lunga se i resti sono divisi al meglio?\nc) la divisione dei resti influisce (sì/no) sul numero di affrancabili?",
+          "figure": [
+            {
+              "etichetta": "1",
+              "nord": {
+                "X": "K8763"
+              },
+              "sud": {
+                "X": "A642"
+              },
+              "errataOriginale": "il 6 è sia in Nord (K8763) sia in Sud (A642)"
+            },
+            {
+              "etichetta": "2",
+              "nord": {
+                "X": "KQ742"
+              },
+              "sud": {
+                "X": "J65"
+              }
+            },
+            {
+              "etichetta": "3",
+              "nord": {
+                "X": "AK873"
+              },
+              "sud": {
+                "X": "Q2"
+              }
+            },
+            {
+              "etichetta": "4",
+              "nord": {
+                "X": "KQ9"
+              },
+              "sud": {
+                "X": "J10862"
+              }
+            },
+            {
+              "etichetta": "5",
+              "nord": {
+                "X": "QJ94"
+              },
+              "sud": {
+                "X": "10865"
+              }
+            }
+          ],
+          "soluzione": "Figura 1: a) nessuna. b) quattro, se il colore è diviso 2-2 c) sì\nFigura 2: a) due: abbiamo KQJ! b) DUE, se i resti sono 3-2 c) sì\nFigura 3: a) nessuna b) DUE, se i resti sono 3-3 c) sì\nFigura 4: a) QUATTRO b) nessuna c) no\nFigura 5: a) DUE b) nessuna, coincidono con le prese affrancate di forza c) no"
+        },
+        {
+          "numero": 4,
+          "consegna": "Quale dei giocatori seduti in E-O ha il «fermo» nel colore mosso da N-S?",
+          "figure": [
+            {
+              "etichetta": "1",
+              "nord": {
+                "X": "K75"
+              },
+              "ovest": {
+                "X": "9832"
+              },
+              "est": {
+                "X": "J10"
+              },
+              "sud": {
+                "X": "AQ64"
+              }
+            },
+            {
+              "etichetta": "2",
+              "nord": {
+                "X": "A72"
+              },
+              "ovest": {
+                "X": "QJ"
+              },
+              "est": {
+                "X": "1065"
+              },
+              "sud": {
+                "X": "K9843"
+              }
+            },
+            {
+              "etichetta": "3",
+              "nord": {
+                "X": "K86432"
+              },
+              "ovest": {
+                "X": "975"
+              },
+              "est": {
+                "X": "QJ"
+              },
+              "sud": {
+                "X": "A10"
+              }
+            }
+          ],
+          "soluzione": "Figura 1: Ovest\nFigura 2: Est\nFigura 3: Ovest"
+        },
+        {
+          "numero": 5,
+          "consegna": "Indicate quali sono le carte che potrebbero fornirvi una presa supplementare, oltre a quelle – ammesso che ne abbiate – già franche:",
+          "figure": [
+            {
+              "etichetta": "1",
+              "nord": {
+                "X": "KJ5"
+              },
+              "sud": {
+                "X": "A64"
+              }
+            },
+            {
+              "etichetta": "2",
+              "nord": {
+                "X": "Q432"
+              },
+              "sud": {
+                "X": "A765"
+              }
+            },
+            {
+              "etichetta": "3",
+              "nord": {
+                "X": "K762"
+              },
+              "sud": {
+                "X": "43"
+              }
+            },
+            {
+              "etichetta": "4",
+              "nord": {
+                "X": "762"
+              },
+              "sud": {
+                "X": "AQ54"
+              }
+            },
+            {
+              "etichetta": "5",
+              "nord": {
+                "X": "AK5"
+              },
+              "sud": {
+                "X": "J643"
+              }
+            }
+          ],
+          "soluzione": "Figura 1: il Fante di Nord;\nFigura 2: la Dama di Nord;\nFigura 3: il Re di Nord;\nFigura 4: la Dama di Sud\nFigura 5: il Fante di Sud"
+        },
+        {
+          "numero": 6,
+          "consegna": "Volendo fare il maggior numero possibile di prese in questo colore, e potendo iniziare a vostro piacimento da Sud o da Nord…",
+          "figure": [
+            {
+              "etichetta": "1",
+              "nord": {
+                "X": "AQ963"
+              },
+              "sud": {
+                "X": "7542"
+              },
+              "nota": "a) Inizio da Nord e gioco la dama, per far scendere il Re\nb) Inizio da Sud, gioco il 2 e provo a mettere la dama\nc) Nord o Sud è Indifferente: tiro l'Asso e spero che il Re cada"
+            },
+            {
+              "etichetta": "2",
+              "nord": {
+                "X": "A9763"
+              },
+              "sud": {
+                "X": "Q8542"
+              },
+              "nota": "a) Inizio da Sud e gioco la dama, per fare l'impasse al Re\nb) Inizio da Nord e gioco piccola verso la Dama\nc) Indifferente: tiro l'Asso e spero che il Re cada"
+            },
+            {
+              "etichetta": "3",
+              "nord": {
+                "X": "J653"
+              },
+              "sud": {
+                "X": "AK42"
+              },
+              "nota": "a) Inizio da Nord e gioco il fante, per fare l'impasse alla Dama\nb) Inizio da Sud e gioco piccola verso il Fante\nc) tiro l'Asso e il Re e spero che la Dama cada"
+            }
+          ],
+          "soluzione": "Figura 1: soluzione b\nFigura 2: soluzione c\nFigura 3: soluzione c"
+        },
+        {
+          "numero": 7,
+          "consegna": "Per realizzare il massimo delle prese, da quale parte cominciate a muovere questi colori: da Sud o da Nord?",
+          "figure": [
+            {
+              "etichetta": "1",
+              "nord": {
+                "X": "KQ3"
+              },
+              "sud": {
+                "X": "642"
+              }
+            },
+            {
+              "etichetta": "2",
+              "nord": {
+                "X": "QJ109"
+              },
+              "sud": {
+                "X": "A765"
+              }
+            },
+            {
+              "etichetta": "3",
+              "nord": {
+                "X": "AK102"
+              },
+              "sud": {
+                "X": "J93"
+              }
+            },
+            {
+              "etichetta": "4",
+              "nord": {
+                "X": "KJ102"
+              },
+              "sud": {
+                "X": "954"
+              }
+            },
+            {
+              "etichetta": "5",
+              "nord": {
+                "X": "875"
+              },
+              "sud": {
+                "X": "QJ6"
+              }
+            }
+          ],
+          "soluzione": "Figura 1: cartina da Sud verso KQ. Se vinciamo la presa torniamo in Sud usando un altro colore e riproviamo a giocare cartina verso l'onore restante: otterremo 2 prese, se l'Asso è in Ovest.\nFigura 2: iniziamo da Nord, se non compare il Re da parte di Est stiamo bassi. Se vinciamo la presa ripetiamo la manovra; otterremo 4 prese se il re è in Est.\nFigura 3: da Sud, con il fante o il 9. Se non compare la dama da parte di Ovest, stiamo bassi.\nFigura 4: da Sud. Giochiamo il 9, e stiamo bassi se Ovest gioca cartina.\nFigura 5: da Nord verso QJx. Se Est gioca cartina mettiamo un onore. Nell'ipotesi – probabile – che venga catturato, torniamo in presa in Nord in un altro seme e giochiamo ancora cartina verso l'onore rimasto."
+        },
+        {
+          "numero": 8,
+          "consegna": "Negli esempi che seguono vorreste che il K fosse in Est o in Ovest?",
+          "figure": [
+            {
+              "etichetta": "1",
+              "nord": {
+                "X": "AQ5"
+              },
+              "sud": {
+                "X": "642"
+              }
+            },
+            {
+              "etichetta": "2",
+              "nord": {
+                "X": "QJ65"
+              },
+              "sud": {
+                "X": "A1093"
+              }
+            },
+            {
+              "etichetta": "3",
+              "nord": {
+                "X": "Q8762"
+              },
+              "sud": {
+                "X": "A9543"
+              }
+            },
+            {
+              "etichetta": "4",
+              "nord": {
+                "X": "A92"
+              },
+              "sud": {
+                "X": "Q54"
+              }
+            },
+            {
+              "etichetta": "5",
+              "nord": {
+                "X": "Q5"
+              },
+              "sud": {
+                "X": "A8763"
+              }
+            }
+          ],
+          "soluzione": "Fig. 1: Re in Ovest! Giocheremo piccole verso la Dama, e farà presa\nFig. 2: Re in Est; faremo l'impasse più volte e realizzeremo tutte le prese\nFig. 3: … dovunque, purché secco!\nFig. 4: in Est, giocheremo cartina verso la dama: Est farà il Re, o subito o dopo, ma la dama si affrancherà.\nFig. 5: in Ovest; come per la figura 4, giocheremo piccola verso la Dama. Ovest farà il suo Re, ma la dama si affrancherà."
+        },
+        {
+          "numero": 9,
+          "consegna": "Guardate questi esempi e dite:\n- qual è l'onore che certamente dovremo perdere?\n- qual è invece l'onore che dovremmo evitare di pagare?",
+          "figure": [
+            {
+              "etichetta": "1",
+              "nord": {
+                "X": "KQ96"
+              },
+              "sud": {
+                "X": "10542"
+              }
+            },
+            {
+              "etichetta": "2",
+              "nord": {
+                "X": "J1094"
+              },
+              "sud": {
+                "X": "K642"
+              },
+              "errataOriginale": "il 4 è sia in Nord (J1094) sia in Sud (K642)"
+            },
+            {
+              "etichetta": "3",
+              "nord": {
+                "X": "Q965"
+              },
+              "sud": {
+                "X": "J43"
+              }
+            },
+            {
+              "etichetta": "4",
+              "nord": {
+                "X": "K1065"
+              },
+              "sud": {
+                "X": "Q762"
+              },
+              "errataOriginale": "il 6 è sia in Nord (K1065) sia in Sud (Q762)"
+            },
+            {
+              "etichetta": "5",
+              "nord": {
+                "X": "765"
+              },
+              "sud": {
+                "X": "Q1092"
+              }
+            }
+          ],
+          "soluzione": "Fig. 1: dovremo sempre perdere l'Asso, speriamo di non dover dare la presa al FANTE\nFig. 2: dovremo sempre perdere l'Asso, speriamo di non dover dare la presa alla DAMA\nFig. 3: dovremo sempre perdere l'Asso e il Re, speriamo di non dover dare la presa al DIECI\nFig. 4: dovremo sempre perdere l'Asso, speriamo di non dover dare la presa al FANTE\nFig. 5: dovremo sempre perdere l'Asso e il Re, speriamo di non dover dare la presa al FANTE"
+        }
+      ]
+    }
+  ]
+}

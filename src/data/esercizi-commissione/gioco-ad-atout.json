@@ -1,0 +1,643 @@
+{
+  "slug": "gioco-ad-atout",
+  "titolo": "Il gioco ad atout",
+  "lezioni": [
+    5,
+    6
+  ],
+  "temi": [
+    {
+      "tema": "Tema 5",
+      "titolo": "Il gioco ad atout",
+      "esercizi": [
+        {
+          "numero": 1,
+          "consegna": "Qual è il colore più conveniente da scegliere come atout, per Nord Sud?",
+          "figure": [
+            {
+              "etichetta": "1",
+              "nord": {
+                "S": "KQJ6",
+                "H": "J8742",
+                "D": "4",
+                "C": "AK7"
+              },
+              "sud": {
+                "S": "A108",
+                "H": "A653",
+                "D": "KQJ109",
+                "C": "3"
+              }
+            },
+            {
+              "etichetta": "2",
+              "nord": {
+                "S": "Q7",
+                "H": "KQJ8",
+                "D": "AK32",
+                "C": "A98"
+              },
+              "sud": {
+                "S": "J108543",
+                "H": "A6",
+                "D": "Q876",
+                "C": "5"
+              }
+            },
+            {
+              "etichetta": "3",
+              "nord": {
+                "S": "65",
+                "H": "KQ98",
+                "D": "AJ52",
+                "C": "J87"
+              },
+              "sud": {
+                "S": "A85",
+                "H": "AJ76",
+                "D": "KQ76",
+                "C": "54"
+              },
+              "errataOriginale": "il 5♠ è sia in Nord sia in Sud"
+            }
+          ],
+          "soluzione": "Mano 1: cuori, fit di 9 carte\nMano 2: picche, fit di 8 carte. Anche a quadri abbiamo 8 carte, ma l'atout picche vale di più. Sono brutte? Vero, mancano Asso e Re, ma esiste forse un contratto in cui possiamo evitare di perdere quelle due prese??? No, quindi tanto vale sceglierlo come atout!\nMano 3: cuori, fit di 8 carte. Anche a quadri, ma… stesso discorso fatto per la mano 2!"
+        },
+        {
+          "numero": 2,
+          "consegna": "Avete scelto atout picche; Ovest attacca con A♦ e, se vince la presa, prosegue con K♦ ecc. Quante prese siete destinati a perdere, prima di poter tagliare?",
+          "figure": [
+            {
+              "etichetta": "1",
+              "nord": {
+                "S": "KQ43",
+                "D": "943"
+              },
+              "sud": {
+                "S": "AJ72",
+                "D": "752"
+              }
+            },
+            {
+              "etichetta": "2",
+              "nord": {
+                "S": "KQ43",
+                "D": "987"
+              },
+              "sud": {
+                "S": "AJ72",
+                "D": "2"
+              }
+            },
+            {
+              "etichetta": "3",
+              "nord": {
+                "S": "KQ43",
+                "D": "9832"
+              },
+              "sud": {
+                "S": "AJ72",
+                "D": ""
+              }
+            },
+            {
+              "etichetta": "4",
+              "nord": {
+                "S": "KQ43",
+                "D": "65"
+              },
+              "sud": {
+                "S": "AJ72",
+                "D": "975"
+              },
+              "errataOriginale": "il 5♦ è sia in Nord sia in Sud"
+            }
+          ],
+          "soluzione": "Mano 1: TRE, sia il morto che la mano rispondono tre volte\nMano 2: UNA, poi Sud è in grado di tagliare\nMano 3: nessuna, Sud taglia immediatamente\nMano 4: DUE, il terzo giro può essere tagliato con le atout di Nord"
+        },
+        {
+          "numero": 3,
+          "consegna": "Atout picche; in tutti i seguenti casi potete tagliare delle carte di cuori. Quali di questi casi rappresentano un allungamento di prese?",
+          "figure": [
+            {
+              "etichetta": "1",
+              "nord": {
+                "S": "KQ4",
+                "H": "A43"
+              },
+              "sud": {
+                "S": "AJ982",
+                "H": "2"
+              }
+            },
+            {
+              "etichetta": "2",
+              "nord": {
+                "S": "K943",
+                "H": "97"
+              },
+              "sud": {
+                "S": "AQJ2",
+                "H": "AK6"
+              }
+            },
+            {
+              "etichetta": "3",
+              "nord": {
+                "S": "KQ103",
+                "H": "A832"
+              },
+              "sud": {
+                "S": "AJ762",
+                "H": "4"
+              }
+            },
+            {
+              "etichetta": "4",
+              "nord": {
+                "S": "K94",
+                "H": "AK4"
+              },
+              "sud": {
+                "S": "AQJ62",
+                "H": "75"
+              }
+            }
+          ],
+          "soluzione": "Mano 1: no, nessun guadagno perché tagliamo dalla parte lunga: avevamo diritto a fare 5 prese di lunga, se tagliamo due volte faremo 3 prese + 2 tagli, sempre 5!\nMano 2: si, tagliando il 6 di ♥ con una picche di Nord guadagniamo una presa: 4 picche della mano + 1 taglio = 5\nMano 3: Si, se tagliamo tutte e tre le cartine di cuori otterremo 7 prese dal colore: le 4 atout del morto + 3 tagli fatti dalla mano. Vero, tagliamo dalla parte lunga, ma… così tante volte che diventa la parte corta!\nMano 4: nessun guadagno, il taglio viene fatto dalla parte lunga."
+        },
+        {
+          "numero": 4,
+          "consegna": "Atout cuori; nei seguenti casi le quadri, colore laterale, si presta ad un affrancamento di taglio. Dite qual è la divisione dei resti ottimale e, se si verifica, quante prese supplementari vi offrirà il colore:",
+          "figure": [
+            {
+              "etichetta": "1",
+              "nord": {
+                "H": "KQ42",
+                "D": "AK543"
+              },
+              "sud": {
+                "H": "AJ98",
+                "D": "72"
+              }
+            },
+            {
+              "etichetta": "2",
+              "nord": {
+                "H": "KQ42",
+                "D": "7"
+              },
+              "sud": {
+                "H": "AJ98",
+                "D": "AK8562"
+              }
+            },
+            {
+              "etichetta": "3",
+              "nord": {
+                "H": "KQ42",
+                "D": "AKQ53"
+              },
+              "sud": {
+                "H": "AJ98",
+                "D": "4"
+              }
+            },
+            {
+              "etichetta": "4",
+              "nord": {
+                "H": "KQ42",
+                "D": ""
+              },
+              "sud": {
+                "H": "AJ98",
+                "D": "AK7652"
+              }
+            }
+          ],
+          "soluzione": "Mano 1: la divisione 3-3 ci consentirebbe di affrancare altre 2 prese. Giocheremo Asso e Re di quadri e quadri tagliata, se cadono tutte le quadri il 5 e il 4 di Nord si saranno affrancati.\nMano 2: abbiamo ancora 7 carte, se il colore è diviso 3-3 basterà un solo taglio per affrancare altre 3 prese oltre ad Asso e Re.\nMano 3: se le quadri sono divise 4-3, basterà un solo taglio; oltre ad AKQ, incasseremo la quinta carta\nMano 4: abbiamo 6 carte, loro 7. Se sono divise 4-3, un taglio solo non basterà… ma due sì. E otterremo di affrancare altre due prese."
+        },
+        {
+          "numero": 5,
+          "consegna": "L'avversario gioca il contratto indicato, dite in ognuno degli esempi con quale carta attaccate:",
+          "figure": [
+            {
+              "etichetta": "1",
+              "ovest": {
+                "S": "76",
+                "H": "KQ109",
+                "D": "J9752",
+                "C": "73"
+              },
+              "nota": "Contratto: 4♠"
+            },
+            {
+              "etichetta": "2",
+              "ovest": {
+                "S": "10742",
+                "H": "K53",
+                "D": "8",
+                "C": "AQ963"
+              },
+              "nota": "Contratto: 4♥"
+            },
+            {
+              "etichetta": "3",
+              "ovest": {
+                "S": "QJ4",
+                "H": "86",
+                "D": "KQ2",
+                "C": "J10986"
+              },
+              "nota": "Contratto: 6♠"
+            },
+            {
+              "etichetta": "4",
+              "ovest": {
+                "S": "1092",
+                "H": "KJ",
+                "D": "AJ953",
+                "C": "Q63"
+              },
+              "nota": "Contratto: 5♣"
+            }
+          ],
+          "soluzione": "Mano 1: se non tenete le carte troppo strette, il Re di cuori salta sul tavolo da solo.\nMano 2: il più accattivante è il singolo di quadri. A Fiori non possiamo muoverci (l'asso rischia di regalare, e la piccola di più), cuori è pericoloro, picche è la sola alternativa.\nMano 3: K di quadri, senza alternative. Affranchiamo una presa rapida nella figura della Q♦, e se faremo una presa a picche. Come è moto probabile, forse batteremo lo slam.\nMano 4: se l'avversario gioca 5♣ è ragionevole pensare che abbia tutti – o quasi – i punti che non vediamo. Questa volta, come tante, l'attacco è scelto per esclusione: a fiori certamente no (la Q potrebbe far presa, se non ci muoviamo); cuori certamente no (potremmo fare una presa, se non ci muoviamo), anche a quadri sarebbe meglio non muoversi: incassare l'asso significa certamente liberare K e Q ai nemici. Non resta che il… 10♠."
+        },
+        {
+          "numero": 6,
+          "consegna": "Siete Giocanti nel contratto di 4♥; l'avversario attacca come indicato. Che deduzioni siete in grado di fare su lunghezze e/o onori del colore di attacco?",
+          "figure": [
+            {
+              "etichetta": "1",
+              "nord": {
+                "S": "76",
+                "H": "K765",
+                "D": "AQ87",
+                "C": "KJ5"
+              },
+              "sud": {
+                "S": "A984",
+                "H": "AQJ94",
+                "D": "K2",
+                "C": "32"
+              },
+              "nota": "Attacco: 4♣"
+            },
+            {
+              "etichetta": "2",
+              "nord": {
+                "S": "QJ6",
+                "H": "A965",
+                "D": "AK62",
+                "C": "A3"
+              },
+              "sud": {
+                "S": "1074",
+                "H": "KQ742",
+                "D": "Q10",
+                "C": "765"
+              },
+              "nota": "Attacco: J♦"
+            },
+            {
+              "etichetta": "3",
+              "nord": {
+                "S": "A873",
+                "H": "K74",
+                "D": "Q76",
+                "C": "A103"
+              },
+              "sud": {
+                "S": "42",
+                "H": "QJ10932",
+                "D": "KJ2",
+                "C": "K4"
+              },
+              "nota": "Attacco: Q♣"
+            },
+            {
+              "etichetta": "4",
+              "nord": {
+                "S": "9843",
+                "H": "AKJ4",
+                "D": "K3",
+                "C": "A87"
+              },
+              "sud": {
+                "S": "AK2",
+                "H": "10863",
+                "D": "QJ964",
+                "C": "4"
+              },
+              "nota": "Attacco: 2♥"
+            }
+          ],
+          "soluzione": "Mano 1. Anche l'avversario ha fatto il corso… e sa che non si attacca sotto Asso nei contratti ad atout. Quindi, di una cosa siamo certi: l'Asso è a destra, e mettere il Re è un suicidio. Mettiamo il fante, se AQ sono in Est… pazienza, se la Q è in Ovest salveremo una presa.\nMano 2: Ovest ha attaccato da fante secco, o Fante secondo: lo sappiamo per certo, perché abbiamo il 10. Vinciamo con la dama e battiamo atout, prima di subire un taglio.\nMano 3: siamo certi al 99% che l'attacco provenga da QJ, e la presenza del 10♣ al morto ci consentirà di fare tre prese nel colore. Battiamo atout… e poi ricordiamoci di rigiocare, dalla mano, piccola fiori per il 10.\nMano 4: dov'è la dama di cuori?? C'è un pazzo che, avendo Qxx o Qx in atout, attaccherebbe in quel colore rischiando di perdere una presa possibile? La situazione più probabile è che Ovest abbia tre cartine di cuori, e negli altri colori figura da cui non si… muove volentieri. Non ci sono certezze ma… questo impasse è meglio non farlo: giocare Asso e Re, avrete probabilmente la gioia di vedere la dama che cade, in Est."
+        }
+      ]
+    },
+    {
+      "tema": "Tema 6",
+      "titolo": "Il piano di gioco ad atout",
+      "esercizi": [
+        {
+          "numero": 1,
+          "consegna": "Siete impegnati nel contratto di 6♥, l'avversario attacca come indicato. Affrontate immediatamente la battuta delle atout, o c'è qualcosa di più urgente da fare?",
+          "figure": [
+            {
+              "etichetta": "1",
+              "nord": {
+                "S": "J85",
+                "H": "KQ874",
+                "D": "KQ6",
+                "C": "A7"
+              },
+              "sud": {
+                "S": "AKQ6",
+                "H": "J10652",
+                "D": "A5",
+                "C": "42"
+              },
+              "nota": "Attacco: K♣"
+            },
+            {
+              "etichetta": "2",
+              "nord": {
+                "S": "A4",
+                "H": "J97",
+                "D": "7632",
+                "C": "AJ86"
+              },
+              "sud": {
+                "S": "875",
+                "H": "AKQ62",
+                "D": "A",
+                "C": "KQ75"
+              },
+              "nota": "Attacco: J♦"
+            },
+            {
+              "etichetta": "3",
+              "nord": {
+                "S": "A4",
+                "H": "KJ4",
+                "D": "J76",
+                "C": "KQ1076"
+              },
+              "sud": {
+                "S": "K83",
+                "H": "AQ1083",
+                "D": "A3",
+                "C": "AJ5"
+              },
+              "nota": "Attacco: Q♠"
+            },
+            {
+              "etichetta": "4",
+              "nord": {
+                "S": "A3",
+                "H": "K875",
+                "D": "AQJ9",
+                "C": "A92"
+              },
+              "sud": {
+                "S": "K7",
+                "H": "A96432",
+                "D": "K2",
+                "C": "863"
+              },
+              "nota": "Attacco: 2♣"
+            }
+          ],
+          "soluzione": "Mano 1: se battiamo le atout subito, l'avversario incassa al volo anche una fiori e siamo sotto: prima è necessario, con un minimo rischio, incassare A, K e Q di quadri e scartare la cartina di fiori. Poi, atout.\nMano 2: abbiamo 11 prese, e nessuna affrancabile possibile; se prima di toccare le atout incassiamo l'Asso di picche e cediamo una picche, poi potremo tagliarne una al morto. Che sarà la 12^ presa.\nMano 3: abbiamo 13 vincenti, le avremmo anche se giocassimo 7 NT. Quindi, per evitare sorprese, battiamo le atout e poi tutto il resto. Inutile tagliare una picche: più di 13 prese non si possono fare!\nMano 4: se le atout fossero 2-1 avremmo 13 prese. Vinciamo l'attacco e incassiamo gli onori di cuori; se cadono tutte incassiamo anche il resto. Se per caso fossero 3-0… non è ancora detto che lo Slam non vada in porto: lasceremo l'atout in mano al difensore e proseguiremo con K♦ e quadri, proseguendo a incassarle e scartando sempre fiori. Se chi è in grado di tagliare ha almeno tre carte di quadri, manterremo lo slam (taglierà solo sul quarto giro, ma poi non potrà più incassare nessuna presa a fiori perché le abbiamo scartate tutte)"
+        },
+        {
+          "numero": 2,
+          "consegna": "Siete impegnati nel contratto di 4♠. Potete mettere in atto un piano di gioco che allunghi le prese con i tagli?",
+          "figure": [
+            {
+              "etichetta": "1",
+              "nord": {
+                "S": "1093",
+                "H": "A95",
+                "D": "QJ72",
+                "C": "KQ8"
+              },
+              "sud": {
+                "S": "KQJ62",
+                "H": "K3",
+                "D": "AK5",
+                "C": "J95"
+              },
+              "nota": "Attacco: Q♥"
+            },
+            {
+              "etichetta": "2",
+              "nord": {
+                "S": "KQJ7",
+                "H": "A954",
+                "D": "A2",
+                "C": "AK"
+              },
+              "sud": {
+                "S": "A1098",
+                "H": "2",
+                "D": "K873",
+                "C": "8643"
+              },
+              "nota": "Attacco: K♥",
+              "errataOriginale": "Nord ha 12 carte"
+            },
+            {
+              "etichetta": "3",
+              "nord": {
+                "S": "KQ7",
+                "H": "Q2",
+                "D": "AK74",
+                "C": "A763"
+              },
+              "sud": {
+                "S": "J109842",
+                "H": "KJ1093",
+                "D": "5",
+                "C": "9"
+              },
+              "nota": "Attacco: Q♣"
+            },
+            {
+              "etichetta": "4",
+              "nord": {
+                "S": "J97",
+                "H": "K852",
+                "D": "73",
+                "C": "AK75"
+              },
+              "sud": {
+                "S": "AKQ63",
+                "H": "A74",
+                "D": "984",
+                "C": "96"
+              },
+              "nota": "Attacco: Q♣"
+            }
+          ],
+          "soluzione": "Mano 1: no; l'unico taglio fattibile è a cuori, ma non allunga le prese. Battiamo le atout: all'avversario spettano i due assi, tutte le altre prese sono nostre, dopo che avremo eliminato le picche.\nMano 2: certamente si; le atout sono 4 e 4, sta a noi valutare quale debba diventare la parte corta”. Possiamo tagliare al morto sia le fiori che le quadri… ma la strada più semplice è tagliare in mano le tre cartine di cuori! Batteremo atout (con le picche del morto) solo dopo che avremo fatto i tre tagli.\nMano 3: non abbiamo convenienza a farlo, visto che a fianco delle atout abbiamo un colore lungo e facilmente affrancabile. Battiamo atout e poi giochiamo cuori. Agli avversari spettano solo i due assi.\nMano 4: si, abbiamo solo 9 prese e la decima la otterremo tagliando una quadri al morto. Quindi giochiamo subito quadri, e poi ancora quadri qualunque sia il rinvio degli avversari."
+        },
+        {
+          "numero": 3,
+          "consegna": "Accanto alle atout avete questo colore, da cui – tagliando una o più volte – potreste affrancare prese supplementari. Quanti tagli dovrete fare per raggiungere l'obiettivo, se i resti sono divisi al meglio?",
+          "figure": [
+            {
+              "etichetta": "1",
+              "nord": {
+                "X": "K9762"
+              },
+              "sud": {
+                "X": "A5"
+              }
+            },
+            {
+              "etichetta": "2",
+              "nord": {
+                "X": "A97653"
+              },
+              "sud": {
+                "X": "4"
+              }
+            },
+            {
+              "etichetta": "3",
+              "nord": {
+                "X": "4"
+              },
+              "sud": {
+                "X": "AK762"
+              }
+            },
+            {
+              "etichetta": "4",
+              "nord": {
+                "X": "7"
+              },
+              "sud": {
+                "X": "AKQ65"
+              }
+            },
+            {
+              "etichetta": "5",
+              "nord": {
+                "X": "AK5432"
+              },
+              "sud": {
+                "X": "6"
+              }
+            }
+          ],
+          "soluzione": "Fig. 1: basterà un solo taglio, se il colore è diviso 3-3. Affrancheremo 2 prese.\nFig. 2: basteranno 2 tagli, se il colore è diviso 3-3. Affrancheremo 3 prese.\nFig. 3: basteranno 2 tagli, se il colore è diviso 4-3. Affrancheremo una presa.\nFig. 4: basterà 1 taglio, se il colore è diviso 4-3. Affrancheremo una presa.\nFig. 5: basterà 1 taglio, se il colore è diviso 3-3. Affrancheremo 3 prese"
+        },
+        {
+          "numero": 4,
+          "consegna": "Giocate un contratto a Cuori, seduti in Sud. Quando scende il morto, preferireste che avesse le carte dell'esempio a), b) o c)?",
+          "figure": [
+            {
+              "etichetta": "a",
+              "nord": {
+                "S": "KQ63",
+                "H": "QJ54",
+                "D": "876",
+                "C": "76"
+              },
+              "sud": {
+                "S": "7",
+                "H": "K9862",
+                "D": "AK43",
+                "C": "Q84"
+              }
+            },
+            {
+              "etichetta": "b",
+              "nord": {
+                "S": "Q643",
+                "H": "AQ75",
+                "D": "8",
+                "C": "7652"
+              },
+              "sud": {
+                "S": "7",
+                "H": "K9862",
+                "D": "AK43",
+                "C": "Q84"
+              }
+            },
+            {
+              "etichetta": "c",
+              "nord": {
+                "S": "643",
+                "H": "A7543",
+                "D": "42",
+                "C": "KJ2"
+              },
+              "sud": {
+                "S": "7",
+                "H": "K9862",
+                "D": "AK43",
+                "C": "Q84"
+              },
+              "errataOriginale": "il 4♦ è sia nel morto c) sia nelle carte di Sud"
+            }
+          ],
+          "soluzione": "La migliore è la c); non ha punti “sprecati” a picche, colore in cui ci proteggiamo già con i tagli; ha un fit di 5 carte (con Axxxx per Kxxxx è probabile non perdere nessuna presa!), porta valori a Fiori che sono utili per valorizzare la nostra Dama. È l'unica mano che ci dà la quasi certezza di fare 11 prese."
+        },
+        {
+          "numero": 5,
+          "consegna": "Giocate 4♥. Se poteste vedere il morto prima che Ovest attacchi…\na) Qual è il colore di attacco che vi darebbe più danno?\nb) Se Ovest attaccasse con il 3 di ♣, prendereste col K♣ del morto o giochereste cartina?\nc) Se l'attacco fosse a quadri, quale seme muovereste per primo?\nd) Se l'attacco fosse A♠ e K♠, avreste certezza di mantenere il contratto?",
+          "figure": [
+            {
+              "nord": {
+                "S": "532",
+                "H": "K985",
+                "D": "AQ8",
+                "C": "K62"
+              },
+              "sud": {
+                "S": "J8",
+                "H": "QJ1072",
+                "D": "K3",
+                "C": "AJ105"
+              }
+            }
+          ],
+          "soluzione": "a) picche\nb) cartina; l'attacco a fiori ci evita di dover indovinare l'impasse alla Dama, basta stare bassi e aspettare per prendere di misura sulla carta di Est. Mettere il Re del morto vuol dire vanificare l'attacco favorevole che l'avversario ci ha fatto.\nc) ancora quadri (nell'ordine: K, poi Asso e dama) per scartare rapidamente una cartina di picche\nd) no; visto che la difesa incasserà ancora l'asso di atout, l'esito del contratto dipenderà dall'indovinare la posizione della dama di fiori. Se la sbagliamo, andremo sotto."
+        },
+        {
+          "numero": 6,
+          "consegna": "Giocate un contratto a picche. Ovest attacca con la Q♥…\na) Dopo l'attacco sono possibili 11 prese. Vedete come?\nb) Vi conviene battere subito le atout?\nc) Quale attacco vi avrebbe limitato a 9 prese?\nd) Se l'attacco fosse stato a fiori, avreste fatto 11 prese ungualmente?",
+          "figure": [
+            {
+              "nord": {
+                "S": "92",
+                "H": "7",
+                "D": "K654",
+                "C": "A76532"
+              },
+              "sud": {
+                "S": "KQJ1087",
+                "H": "A94",
+                "D": "A9",
+                "C": "84"
+              },
+              "nota": "Attacco: Q♥"
+            }
+          ],
+          "soluzione": "a) si, abbiamo la possibilità di tagliare due cuori con le atout di Nord! Asso di cuori e cuori tagliata, quadri per l'asso e cuori tagliata. Cederemo solo l'asso di atout e una fiori.\nb) assolutamente no: vedi punto a)\nc) l'attacco – e il ritorno – in atout avrebbe fatto sparire le due cartine del morto, e quindi i due tagli che avremmo potuto fare.\nd) si: avremmo preso, incassato l'asso di cuori e cuori taglio, quadri per l'asso e cuori taglio."
+        },
+        {
+          "numero": 7,
+          "consegna": "Quanto valgono i seguenti contratti? (in prima e in seconda)\n3♦ + 2\n4♥\n5♣\n2♠ + 1\n3♠",
+          "soluzione": "3♦ + 2: 150 (60 le prese dichiarate, + 40 per le due prese in più, + 50 di bonus del parziale)\n4♥: 420 in prima, 620 in seconda (120 è il valore delle prese dichiarate, + il bonus di manche che è 300 o 500 a seconda della zona)\n5♣: 400 in prima o 600 in seconda (100 è il valore delle prese dichiarate, + il bonus di manche che è 300 o 500 a seconda della zona)\n2♠ + 1: 140 (60 le prese dichiarate, + 30 per la presa in più, + 50 di bonus del parziale)\n3♠: 140 (90 le prese dichiarate, + il bonus del parziale)"
+        }
+      ]
+    }
+  ]
+}

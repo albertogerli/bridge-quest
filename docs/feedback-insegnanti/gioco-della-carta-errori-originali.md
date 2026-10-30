@@ -88,3 +88,27 @@ qui.
 Inglese: «The Double Bid» (lezione 11) andrebbe «takeout double»; il titolo
 della lezione 12 usa «intervention», in ACBL si dice «overcall» o
 «competitive bidding».
+
+## Eserciziario «Corso Fiori» (zip del corso 2026, 27/10/2026)
+
+Trovati trascrivendo gli esercizi per `/esercizi`. Le figure sono riportate
+come sono stampate, con una nota per l'allievo; correggerle spetta agli autori.
+
+| Scheda | Dove | Cosa non torna |
+|---|---|---|
+| Affrancamenti di lunga e di posizione | Tema 3, es. 3, figura 1 | il 6 è sia in Nord (K8763) sia in Sud (A642) |
+| Affrancamenti di lunga e di posizione | Tema 3, es. 9, figura 2 | il 4 è sia in Nord (J1094) sia in Sud (K642) |
+| Affrancamenti di lunga e di posizione | Tema 3, es. 9, figura 4 | il 6 è sia in Nord (K1065) sia in Sud (Q762) |
+| Il gioco ad atout | Tema 5, es. 1, figura 3 | il 5♠ è sia in Nord sia in Sud |
+| Il gioco ad atout | Tema 5, es. 2, figura 4 | il 5♦ è sia in Nord sia in Sud |
+| Il gioco ad atout | Tema 6, es. 2, figura 2 | Nord ha 12 carte |
+| Il gioco ad atout | Tema 6, es. 4, figura c | il 4♦ è sia nel morto c) sia nelle carte di Sud |
+| Il piano di gioco a senz'atout | Tema 4, es. 3, figura 1 | Nord ha 14 carte e Sud 12 |
+| Il piano di gioco a senz'atout | Tema 4, es. 3, figura 3 | Nord ha 14 carte, e il 3♦ è sia in Nord sia in Sud |
+| Il piano di gioco a senz'atout | Tema 4, es. 3, figura 4 | Nord ha 14 carte |
+| Vincenti e affrancabili | Tema 1, es. 3, figura 1 | il 4♦ è sia in Nord sia in Sud, e Sud ha 14 carte |
+| Vincenti e affrancabili | Tema 1, es. 3, figura 3 | il 3♦ è sia in Nord sia in Sud |
+
+Nelle smazzate della Commissione (lezioni 03, 06, 07, 10) nessuna carta sbagliata:
+il controllo a carte viste dà alcuni contratti sotto di una o due prese con la
+difesa perfetta, normale per mani didattiche.

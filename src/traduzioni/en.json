@@ -2840,7 +2840,6 @@
   "Dispensa da stampare (PDF)": "Printable handout (PDF)",
   "Esercizi": "Exercises",
   "Gli esercizi: {titolo}": "Exercises: {titolo}",
-  "Il foglio per gli allievi è senza soluzioni: le trovi a parte. Per darlo alla classe, pubblicalo dai «Materiali dopo la lezione» della classe.": "The student sheet has no solutions: you'll find them separately. To give it to the class, publish it from the class's “Materials after the lesson”.",
   "La dispensa: {titolo}": "Handout: {titolo}",
   "Le slide da proiettare in aula, le dispense e gli esercizi da stampare o mandare agli allievi.": "Slides to project in class, plus handouts and exercises to print or send to students.",
   "Le smazzate del corso della Commissione che non sono tra le mani delle lezioni: otto per argomento, con il contratto e senza commento.": "The Teaching Committee course deals that aren't among the lesson hands: eight per topic, with the contract and no commentary.",
@@ -2859,5 +2858,16 @@
   "Non ti chiami così? Cambia il nome nel profilo": "Not your name? Change it in your profile",
   "Scrivi il tuo nome nel profilo": "Add your name in your profile",
   "Lezione 0: le regole per cominciare": "Lesson 0: the rules to get started",
-  "Le regole della lezione 0, vincenti e affrancabili, la difesa, gli affrancamenti, il piano di gioco a senz'atout e con l'atout.": "The rules from lesson 0, winners and establishable cards, defense, establishing tricks, and the play plan in notrump and with trumps."
+  "Le regole della lezione 0, vincenti e affrancabili, la difesa, gli affrancamenti, il piano di gioco a senz'atout e con l'atout.": "The rules from lesson 0, winners and establishable cards, defense, establishing tricks, and the play plan in notrump and with trumps.",
+  "Gli esercizi sono in italiano.": "The exercises are in Italian.",
+  "Il foglio da stampare (PDF)": "Printable sheet (PDF)",
+  "Testi ed esercizi: Commissione Insegnamento FIGB · Scuola Bridge FIGB.": "Texts and exercises: FIGB Teaching Committee · Scuola Bridge FIGB.",
+  "Nella figura {n} dell'originale c'è un errore: {errore}. L'abbiamo segnalato agli autori.": "Figure {n} in the original has an error: {errore}. We've reported it to the authors.",
+  "Nascondi la soluzione": "Hide the solution",
+  "Mostra la soluzione": "Show the solution",
+  "A schermo": "On screen",
+  "Da stampare": "Printable",
+  "A schermo l'allievo risponde e poi apre la soluzione di ogni esercizio; il foglio da stampare è senza soluzioni, che trovi a parte. Per darli alla classe, pubblicali dai «Materiali dopo la lezione» della classe.": "On screen, students answer and then open each exercise's solution; the printable sheet has no solutions, which you'll find separately. To give them to the class, publish them from the class's “Materials after the lesson”.",
+  "Esercizi della lezione": "Lesson exercises",
+  "Rispondi senza aiuti, poi apri la soluzione. Se un esercizio ti mette in difficoltà, chiedi in aula.": "Answer on your own, then open the solution. If an exercise gives you trouble, ask in class."
 }

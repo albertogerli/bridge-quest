@@ -1,0 +1,177 @@
+{
+  "slug": "vincenti-e-affrancabili",
+  "titolo": "Vincenti e affrancabili",
+  "lezioni": [
+    1
+  ],
+  "temi": [
+    {
+      "tema": "Tema 1",
+      "titolo": "Vincenti e affrancabili",
+      "esercizi": [
+        {
+          "numero": 1,
+          "consegna": "Rispondete alle seguenti domande:\na) Quand'è che un giocatore scarta?\nb) Quand'è che il primo di mano scarta?\nc) Nord ha: ♠ AKQJ; quante di queste carte sono affrancabili?\nd) In una presa vengono giocati l'8, il J, la Q e l'Asso. Qual è al momento, tra quelle rimaste, l'ordine delle tre carte più alte?\ne) L'attacco tocca al vostro compagno, e voi avete: ♠ – ♥ – ♦ – ♣ AKQJ1098765432. Quante prese farete?\nf) Nel corso di una presa, il giocatore che ha più vantaggi è il primo? Il secondo? Il terzo? Il quarto?",
+          "soluzione": "a) Quando non ha più carte per rispondere nel seme dominante della presa in corso.\nb) Mai!!\nc) Nessuna: sono già tutte vincenti.\nd) K, 10, 9.\ne) Nessuna!\nf) Il quarto."
+        },
+        {
+          "numero": 2,
+          "consegna": "Nelle seguenti figure, sapreste dire\na) quante carte vincenti ed equivalenti ci sono sulla linea?\nb) quante sono le prese a disposizione, con certezza assoluta?",
+          "figure": [
+            {
+              "etichetta": "1",
+              "nord": {
+                "X": "A9753"
+              },
+              "sud": {
+                "X": "KQ642"
+              }
+            },
+            {
+              "etichetta": "2",
+              "nord": {
+                "X": "KQJ"
+              },
+              "sud": {
+                "X": "A109"
+              }
+            },
+            {
+              "etichetta": "3",
+              "nord": {
+                "X": "AQ5"
+              },
+              "sud": {
+                "X": "KJ1072"
+              }
+            },
+            {
+              "etichetta": "4",
+              "nord": {
+                "X": "KJ65"
+              },
+              "sud": {
+                "X": "AQ432"
+              }
+            },
+            {
+              "etichetta": "5",
+              "nord": {
+                "X": "AKQ6543"
+              },
+              "sud": {
+                "X": "J2"
+              }
+            }
+          ],
+          "soluzione": "Fig. 1 – a) 3, AKQ  b) 5: abbiamo 10 carte, anche se J109 fossero nella stessa mano, cadrebbero.\nFig. 2 – a) 6 vincenti, ma…  b) solo 3 prese.\nFig. 3 – a) 5: AKQJ10.  b) 5, perché Sud ha 5 carte.\nFig. 4 – a) 4: AKQJ.  b) 5: Sud ha 5 carte e anche se 10, 9, 8, 7 fossero nella stessa mano, cadrebbero.\nFig. 5 – a) 4: AKQJ.  b) 7: Nord ha 7 carte e anche se 10, 9, 8, 7 fossero nella stessa mano, cadrebbero."
+        },
+        {
+          "numero": 3,
+          "consegna": "Le vostre carte sono in Sud, quelle del vostro compagno in Nord. Quante prese avete immediatamente disponibili, colore per colore?",
+          "figure": [
+            {
+              "etichetta": "1",
+              "nord": {
+                "S": "KQ8",
+                "H": "J6",
+                "D": "AQ4",
+                "C": "K9754"
+              },
+              "sud": {
+                "S": "AJ7",
+                "H": "KQ109",
+                "D": "K43",
+                "C": "QJ102"
+              },
+              "errataOriginale": "il 4♦ è sia in Nord sia in Sud, e Sud ha 14 carte"
+            },
+            {
+              "etichetta": "2",
+              "nord": {
+                "S": "QJ97",
+                "H": "K32",
+                "D": "KJ76",
+                "C": "AQ"
+              },
+              "sud": {
+                "S": "AK4",
+                "H": "AQJ654",
+                "D": "Q2",
+                "C": "KJ"
+              }
+            },
+            {
+              "etichetta": "3",
+              "nord": {
+                "S": "AQ86",
+                "H": "K2",
+                "D": "J983",
+                "C": "863"
+              },
+              "sud": {
+                "S": "K3",
+                "H": "AQ",
+                "D": "AKQ43",
+                "C": "AJ72"
+              },
+              "errataOriginale": "il 3♦ è sia in Nord sia in Sud"
+            },
+            {
+              "etichetta": "4",
+              "nord": {
+                "S": "762",
+                "H": "KJ4",
+                "D": "KQJ108",
+                "C": "Q6"
+              },
+              "sud": {
+                "S": "KQJ",
+                "H": "AQ9",
+                "D": "9732",
+                "C": "KJ5"
+              }
+            }
+          ],
+          "soluzione": "Fig. 1 – 3 a picche, 3 a quadri.\nFig. 2 – 4 a picche, 6 a cuori, 2 a fiori.\nFig. 3 – 3 a picche, 2 a cuori, 5 a quadri, 1 a fiori.\nFig. 4 – 3 a cuori."
+        },
+        {
+          "numero": 4,
+          "consegna": "Negli esempi dell'esercizio 3, avete carte affrancabili sulla linea? Quante, colore per colore?",
+          "soluzione": "Fig. 1 – 3 a cuori, 4 a fiori.\nFig. 2 – 2 a quadri.\nFig. 3 – nessuna.\nFig. 4 – 2 a picche, 4 a quadri, 2 a fiori."
+        },
+        {
+          "numero": 5,
+          "consegna": "Scrivete le seguenti mani (usando A, K, Q, J e x per le carte inferiori):\na) re e fante quinti, asso secondo, dama e 10 terzi e fante terzo\nb) re dama fante sesti, doubleton, singolo e dama quarta\nc) dieci quarto, dama e fante quinti, re e fante terzi e asso secco\nd) quattro cartine, dama seconda, asso e fante quinti, re secondo",
+          "soluzione": "a) ♠ KJxxx ♥ Ax ♦ Q10x ♣ Jxx\nb) ♠ KQJxxx ♥ xx ♦ x ♣ Qxxx\nc) ♠ 10xxx ♥ QJxxx ♦ KJx ♣ A\nd) ♠ xxxx ♥ Qx ♦ AJxxx ♣ Kx"
+        },
+        {
+          "numero": 6,
+          "consegna": "In Sud vedete questo morto, e prevedete di fare tantissime prese. Sapreste dire qual è l'attacco peggiore che potreste ricevere?",
+          "figure": [
+            {
+              "nord": {
+                "S": "543",
+                "H": "543",
+                "D": "A",
+                "C": "KQJ1095"
+              },
+              "sud": {
+                "S": "A762",
+                "H": "A762",
+                "D": "KQJ7",
+                "C": "A"
+              }
+            }
+          ],
+          "soluzione": "Quadri, provare per credere. Obbligandovi a usare subito l'asso del morto, non riuscirete più a incassare tutte le fiori di Nord."
+        },
+        {
+          "numero": 7,
+          "consegna": "Quanto valgono i seguenti contratti, in prima e in seconda?\n1NT + 2\n3NT\n2NT + 1\n6NT",
+          "soluzione": "1NT + 2 vale 150 (40 la presa dichiarata, + 60 le due prese in più, + 50 di bonus per il parziale).\n3NT vale 400 in prima (100 le prese, e 300 il bonus) e 600 in seconda (100 le prese, e 500 il bonus).\n2NT + 1 vale esattamente come 1NT + 2!\n6NT vale 990 in prima (190 le prese, + 300 di bonus manche, + 500 bonus slam) e 1440 in seconda (190 le prese, + 500 di bonus manche, + 750 bonus slam)."
+        }
+      ]
+    }
+  ]
+}
