@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { BricioleClasse } from "@/components/istruttori/briciole-classe";
 import { useT } from "@/contexts/traduzioni-provider";
 import { useLingua } from "@/hooks/use-lingua";
+import { dispensaDellaLezione, eserciziDellaLezione } from "@/lib/materiali-corso";
 import { useCatalog } from "@/store/use-catalog-store";
 import { getClassAssignments } from "@/lib/instructors";
 import { getYouTubeWatchUrl } from "@/components/maestro-video";
@@ -447,9 +448,15 @@ function ModuloMateriale({
       const video = getYouTubeWatchUrl(l.lessonId);
       return video ? { titolo: t("La videolezione"), url: video } : { titolo: "", url: "" };
     }
+    // La dispensa e gli esercizi della Commissione, dove ci sono: sono il
+    // fascicolo da leggere e stampare, non le mani (Trevissoi, 29/10/2026).
     if (tp === "dispensa") {
+      const d = dispensaDellaLezione(l.lessonId);
+      if (d) return { titolo: t("La dispensa: {titolo}", { titolo: t(d.titolo) }), url: d.file };
       return { titolo: t("La dispensa"), url: `/dispense?classe=${classId}&corso=${l.corsoId}&lezione=${l.lessonId}` };
     }
+    const e = eserciziDellaLezione(l.lessonId);
+    if (e) return { titolo: t("Gli esercizi: {titolo}", { titolo: t(e.titolo) }), url: e.file };
     return { titolo: t("L'esercizio"), url: `/classi/${classId}/compito/${l.assignmentId}` };
   }
 
