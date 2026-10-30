@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Lezione zero</title>
+<link rel="stylesheet" href="../base.css">
+<link rel="stylesheet" href="../slide.css">
+<!--
+  Dalla «Nuova Lezione Zero» della Commissione Insegnamento (zip del corso
+  2026, 27/10/2026): stesso contenuto, stesso esempio delle prime due prese,
+  impaginato come le altre slide e senza nomi d'autore.
+-->
+<style>
+  .slide.copertina { background: linear-gradient(135deg, var(--figb-scuro), var(--figb) 55%, var(--figb-chiaro)); color: #fff; justify-content: center; padding: 0 96px; }
+  .slide.copertina::before { display: none; }
+  .slide.copertina::after { content: "♠ ♥ ♦ ♣"; position: absolute; right: -10px; top: -40px; font-size: 220px; letter-spacing: -10px; opacity: 0.07; white-space: nowrap; }
+  .copertina .occhiello { font-size: 18px; }
+  .copertina h1 { color: #fff; font-size: 92px; margin: 14px 0 18px; }
+  .copertina .sotto { font-size: 28px; opacity: 0.9; }
+  .copertina .marchio { position: absolute; right: 64px; bottom: 44px; }
+  .copertina .marchio img { height: 40px; background: #fff; border-radius: 10px; padding: 6px 12px; }
+
+  .grande { font-size: 30px; line-height: 1.35; font-weight: 600; }
+  .medio { font-size: 24px; line-height: 1.4; }
+  .tenue { color: var(--tenue); }
+  b.f { color: var(--figb); }
+  b.r { color: var(--rosso); }
+  .fascia { text-align: center; font-size: 26px; font-weight: 700; color: #fff; background: var(--figb); border-radius: 14px; padding: 14px 20px; }
+  .fascia.oro { background: var(--oro-velo); color: #7a5a14; border-left: 6px solid var(--oro); text-align: left; }
+  .centro { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 28px; text-align: center; }
+  .numerone { font-family: "Bricolage Grotesque", sans-serif; font-size: 120px; font-weight: 800; color: var(--figb); line-height: 1; }
+
+  .tavolino { width: 180px; height: 180px; border-radius: 26px; background: radial-gradient(circle at 50% 45%, #1f7a4f, #135c3a); display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); grid-template-areas: ". n ." "o . e" ". s ."; place-items: center; color: #fff; font-size: 30px; font-weight: 800; box-shadow: 0 10px 30px rgba(19, 92, 58, 0.25); }
+  .tavolino span:nth-child(1) { grid-area: n; } .tavolino span:nth-child(2) { grid-area: o; }
+  .tavolino span:nth-child(3) { grid-area: e; } .tavolino span:nth-child(4) { grid-area: s; }
+
+  .gerarchia { display: grid; gap: 22px; }
+  .gerarchia .riga { display: grid; grid-template-columns: 150px 1fr; align-items: center; gap: 20px; }
+  .gerarchia .eti { font-size: 18px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--tenue); }
+  .gerarchia .mazzetto { --w: 84px; }
+
+  .definizioni { display: grid; gap: 18px; }
+  .definizioni p { background: var(--carta); border: 1px solid var(--linea); border-radius: 14px; padding: 18px 24px; font-size: 26px; }
+  .definizioni b { color: var(--figb); }
+
+  /* l'esempio delle due prese: quattro carte a croce intorno al tavolo */
+  .prese { display: grid; grid-template-columns: 1fr auto 1fr; gap: 30px; align-items: center; flex: 1; }
+  .presa { display: grid; justify-items: center; gap: 10px; }
+  .presa h3 { font-size: 20px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--rosso); }
+  .croce { display: grid; grid-template-columns: repeat(3, auto); grid-template-rows: repeat(3, auto); gap: 8px 12px; place-items: center; }
+  .croce .tav { width: 110px; height: 110px; border-radius: 16px; background: radial-gradient(circle at 50% 45%, #1f7a4f, #135c3a); color: #fff; font-weight: 800; display: grid; place-items: center; font-size: 15px; }
+  .croce .mazzetto { --w: 72px; }
+  .croce .vince .carta { outline: 4px solid var(--oro); outline-offset: 2px; border-radius: 6px; }
+  .nota { font-size: 19px; color: var(--tenue); text-align: center; max-width: 440px; line-height: 1.35; }
+  .nota b { color: var(--inchiostro); }
+  .freccia { font-size: 60px; color: var(--oro); font-weight: 800; }
+
+  .passi { display: grid; gap: 16px; }
+  .passo { display: grid; grid-template-columns: 64px 1fr; align-items: center; gap: 18px; }
+  .passo .num { font-family: "Bricolage Grotesque", sans-serif; font-size: 52px; font-weight: 800; color: var(--figb); text-align: center; }
+  .passo .testo { background: var(--carta); border: 1px solid var(--linea); border-radius: 14px; padding: 20px 26px; font-size: 26px; font-weight: 600; }
+
+  .giochiamo { justify-content: center; align-items: center; text-align: center; }
+  .giochiamo h1 { font-size: 96px; margin: 0 0 20px; }
+</style>
+</head>
+<body>
+
+<!-- 1 -->
+<section class="slide copertina">
+  <div class="occhiello">Corso di Primo Livello</div>
+  <h1 class="display">Benvenuti alla lezione 0!</h1>
+  <p class="sotto">Le regole per cominciare a giocare</p>
+  <div class="marchio"><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 2 -->
+<section class="slide">
+  <div class="occhiello">Lezione 0</div>
+  <h1 class="display">Si gioca in coppia</h1>
+  <div class="centro">
+    <div class="tavolino"><span>N</span><span>O</span><span>E</span><span>S</span></div>
+    <p class="grande">Quattro giocatori, due coppie: <b class="f">Nord-Sud</b> contro <b class="f">Est-Ovest</b>.</p>
+    <p class="medio tenue">Il compagno siede di fronte.</p>
+  </div>
+  <div class="piede"><span>Scuola Bridge FIGB · Commissione Insegnamento · Lezione 0</span><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 3 -->
+<section class="slide">
+  <div class="occhiello">Lezione 0</div>
+  <h1 class="display">Il mazzo e la distribuzione</h1>
+  <div class="centro">
+    <div class="fascia" style="width:760px">Mazzo di carte francesi, senza jolly</div>
+    <div class="fascia" style="width:760px">Si distribuisce una carta a testa, in senso orario</div>
+    <span class="freccia">↓</span>
+    <p><span class="numerone">13</span> <span class="grande">carte a testa</span></p>
+  </div>
+  <div class="piede"><span>Scuola Bridge FIGB · Commissione Insegnamento · Lezione 0</span><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 4 -->
+<section class="slide">
+  <div class="occhiello">Lezione 0</div>
+  <h1 class="display">Il bridge è un gioco di prese</h1>
+  <div class="fascia oro" style="font-size:26px;margin-bottom:34px">Scopo: realizzare il massimo numero di prese.</div>
+  <h2 class="grande" style="margin-bottom:22px">La gerarchia delle carte, dalla più alta alla più bassa</h2>
+  <div class="gerarchia">
+    <div class="riga"><span class="eti">Onori</span><span data-carte="S:AKQJ10"></span></div>
+    <div class="riga"><span class="eti">Cartine</span><span data-carte="S:98765432"></span></div>
+  </div>
+  <div class="piede"><span>Scuola Bridge FIGB · Commissione Insegnamento · Lezione 0</span><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 5 -->
+<section class="slide">
+  <div class="occhiello">Lezione 0</div>
+  <h1 class="display">Si gioca in senso orario</h1>
+  <div style="display:grid;grid-template-columns:auto 1fr;gap:56px;align-items:center;flex:1">
+    <div class="tavolino" style="width:220px;height:220px"><span>N</span><span>O</span><span>E</span><span>S</span></div>
+    <div class="definizioni">
+      <p><b>Attacco</b> = la prima carta giocata</p>
+      <p><b>Presa</b> = l'insieme delle 4 carte giocate, una per giocatore</p>
+      <p><b>Dopo ogni presa</b> gioca per primo chi l'ha vinta</p>
+    </div>
+  </div>
+  <div class="piede"><span>Scuola Bridge FIGB · Commissione Insegnamento · Lezione 0</span><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 6 -->
+<section class="slide">
+  <div class="occhiello">Lezione 0</div>
+  <h1 class="display">La regola del gioco</h1>
+  <div class="centro">
+    <p class="display" style="font-size:64px;font-weight:800"><b class="r">Rispondere «a colore»</b></p>
+    <p class="grande tenue" style="font-weight:500">si gioca una carta del seme giocato per primo, se la si ha</p>
+    <p class="grande">per un totale di <b class="f" style="font-size:44px">13 prese</b></p>
+  </div>
+  <div class="piede"><span>Scuola Bridge FIGB · Commissione Insegnamento · Lezione 0</span><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 7 -->
+<section class="slide">
+  <div class="occhiello">Lezione 0</div>
+  <h1 class="display">Esempio: le prime due prese di una smazzata</h1>
+  <div class="prese">
+    <div class="presa">
+      <h3>Prima presa</h3>
+      <div class="croce">
+        <span></span><span data-carte="H:7"></span><span></span>
+        <span data-carte="H:2"></span><span class="tav">Ovest<br>attacca</span><span data-carte="H:J"></span>
+        <span></span><span data-carte="H:K" class="vince"></span><span></span>
+      </div>
+      <p class="nota">Ovest attacca, gli altri rispondono a cuori. <b>Sud vince la presa</b> con il Re…</p>
+    </div>
+    <span class="freccia">→</span>
+    <div class="presa">
+      <h3>Seconda presa</h3>
+      <div class="croce">
+        <span></span><span data-carte="C:10"></span><span></span>
+        <span data-carte="C:Q" class="vince"></span><span class="tav">Sud<br>gioca</span><span data-carte="D:6"></span>
+        <span></span><span data-carte="C:3"></span><span></span>
+      </div>
+      <p class="nota">…e gioca la prima carta della presa successiva. <b>Est non ha fiori e «scarta»</b> un quadri: vince la Dama di Ovest.</p>
+    </div>
+  </div>
+  <div class="piede"><span>Scuola Bridge FIGB · Commissione Insegnamento · Lezione 0</span><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 8 -->
+<section class="slide">
+  <div class="occhiello">Lezione 0</div>
+  <h1 class="display">Le carte giocate non si mischiano!</h1>
+  <div class="passi" style="margin-top:20px;gap:22px">
+    <div class="passo"><span class="num">1</span><span class="testo">Ognuno tiene davanti a sé le proprie carte giocate</span></div>
+    <div class="passo"><span class="num">2</span><span class="testo">A fine smazzata il risultato si scrive sullo <b class="f">score</b></span></div>
+    <div class="passo"><span class="num">3</span><span class="testo">Le carte tornano nel <b class="f">board</b>, ognuno nella sua tasca</span></div>
+  </div>
+  <div class="piede"><span>Scuola Bridge FIGB · Commissione Insegnamento · Lezione 0</span><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<!-- 9 -->
+<section class="slide giochiamo">
+  <h1 class="display">Giochiamo!</h1>
+  <p class="grande tenue" style="margin-bottom:34px">Tre smazzate libere</p>
+  <div class="tavolino"><span>N</span><span>O</span><span>E</span><span>S</span></div>
+  <div class="piede"><span>Scuola Bridge FIGB · Commissione Insegnamento · Lezione 0</span><img src="../../../public/logo-bridgelab.svg" alt=""></div>
+</section>
+
+<script src="../carte.js"></script>
+</body>
+</html>
