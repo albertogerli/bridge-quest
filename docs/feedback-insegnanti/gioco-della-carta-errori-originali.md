@@ -15,7 +15,7 @@ Sorgenti: `scripts/materiali/gioco-della-carta/`. Per rigenerare tutto:
 
 | Dove | Cosa non torna |
 |---|---|
-| Dispensa *Il piano di gioco a senz'atout*, primo esempio (3SA, attacco ♥2) | Nord ♠86 ♥K5 ♦KQ1075 ♣872 ha 12 carte; Sud ♠AKQ3 ♥A72 ♦J32 ♣A654 ne ha 14 |
+| Dispensa *Il piano di gioco a senz'atout*, primo esempio (3SA, attacco ♥2) | Nord ♠86 ♥K5 ♦KQ1075 ♣872 ha 12 carte; Sud ♠AKQ3 ♥A72 ♦J32 ♣A654 ne ha 14. **Corretta il 30/10/2026** con la mano del Word della Commissione nello zip del 27/10 («Lezione 05 e 06», Nord ♣8742, Sud ♣A65); la copia «… 2» dello stesso zip ha ancora l'errore |
 | Slide *Il piano di gioco*, n. 21 (stessa mano) | Sud è ♠AK53 ♥A72 ♦J32 ♣AK54: ancora 14 carte, e diverso dalla dispensa |
 | Dispensa *Il piano di gioco a senz'atout*, colpo in bianco (1SA, attacco ♠4) | Sud ♠985 ♥1032 ♦63 ♣K8653 ha 14 carte |
 | Dispensa *Il gioco ad atout*, affrancamento di lunga con i tagli | Il 4♠ è sia in Nord (KJ4) sia in Ovest (74); il 7♥ sia in Nord (A7) sia in Est (KJ74). Mancano 3♠ e 2♥ |
