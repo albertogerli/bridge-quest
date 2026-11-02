@@ -4,9 +4,11 @@ import { useState, useEffect, useRef, useCallback, useMemo, Suspense } from "rea
 import { motion, AnimatePresence } from "motion/react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "@/hooks/use-router-lingua";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BridgeTable } from "@/components/bridge/bridge-table";
+import { FoglioMano, PannelloMano } from "@/components/bridge/pannello-mano";
+import { contrattoLeggibile } from "@/lib/contratto-leggibile";
+import { ArrowLeft } from "lucide-react";
 import { useBridgeGame } from "@/hooks/use-bridge-game";
 import type { Position, Card } from "@/lib/bridge-engine";
 import { parseContract, toDisplayPosition, toGamePosition, sortHand, partnershipOf } from "@/lib/bridge-engine";
@@ -421,70 +423,75 @@ function SfidaLinkContent() {
   // ── Playing / Finished mode ──
   const { tricksNeeded } = parseContract(contract);
 
+  const preseDich = partnershipOf(declarer) === "ew"
+    ? `${game.gameState?.trickCount.ew ?? 0} / ${game.gameState?.trickCount.ns ?? 0}`
+    : `${game.gameState?.trickCount.ns ?? 0} / ${game.gameState?.trickCount.ew ?? 0}`;
+  const pannello = (
+    <PannelloMano
+      soloUltima
+      prese={game.gameState?.tricks ?? []}
+      presaInCorso={game.gameState?.currentTrick ?? []}
+      licita={null}
+      intestazione={
+        <div className="flex flex-wrap items-end gap-x-5 gap-y-2">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t("Contratto")}</p>
+            <p className="font-display text-2xl font-extrabold text-primary">{contrattoLeggibile(contract)}</p>
+          </div>
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t("Obiettivo")}</p>
+            <p className="text-lg font-bold">{t("{n} prese", { n: tricksNeeded })}</p>
+          </div>
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t("Dich. / Dif.")}</p>
+            <p className="text-lg font-bold tabular-nums">{preseDich}</p>
+          </div>
+        </div>
+      }
+    />
+  );
+
   return (
     <div className="pt-4 px-4 pb-24">
       <div className="mx-auto max-w-6xl">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-3"
-        >
-          <div className="flex items-center justify-center gap-2 mb-2">
-            <Link
-              href="/gioca"
-              aria-label={t("Torna ai giochi")}
-              className="absolute left-4 top-4 flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-muted-foreground hover:bg-muted/70"
-            >
-              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
-                <polyline points="15,18 9,12 15,6" />
-              </svg>
-            </Link>
-            <Badge className="bg-figb/10 text-figb dark:bg-primary/15 dark:text-primary text-[12px] font-bold border-0">
-              {mode === "playing-create" || mode === "finished" ? "Sfida via Link" : "Sfida Ricevuta"}
-            </Badge>
+        {/* DIREZIONE «IBRIDO» (02/11/2026): una riga sola, la pillola del contratto apre prese e licita. */}
+        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-3 flex items-center gap-3">
+          <Link
+            href="/gioca"
+            aria-label={t("Torna ai giochi")}
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground hover:bg-muted/70"
+          >
+            <ArrowLeft className="h-5 w-5" aria-hidden="true" />
+          </Link>
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              {mode === "playing-create" || mode === "finished" ? t("Sfida via Link") : t("Sfida Ricevuta")} · Seed {seed}
+            </p>
+            <h1 className="truncate font-display text-base font-bold sm:text-lg">{t("Sfida via Link")}</h1>
+          </div>
+          <span className="hidden sm:block">
             <BenStatus available={game.benAvailable} />
-          </div>
-          <h1 className="text-lg font-bold text-foreground font-display">{t("Sfida via Link")}</h1>
-          <p className="text-xs text-muted-foreground mt-1">Seed: {seed}</p>
+          </span>
+          <FoglioMano
+            daSchermo="2xl"
+            etichetta={
+              <span className="tabular-nums">
+                {contrattoLeggibile(contract)}
+                <span className="font-normal text-muted-foreground"> · {preseDich}</span>
+              </span>
+            }
+          >
+            {pannello}
+          </FoglioMano>
         </motion.div>
 
-        {/* Contract bar */}
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="mb-4 flex items-center justify-center"
-        >
-          <div className="card-elevated rounded-xl bg-card px-4 py-2 flex items-center gap-5 text-sm">
-            <div className="text-center">
-              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">{t("Contratto")}</p>
-              <p className="text-lg font-bold text-emerald-dark">{contract}</p>
-            </div>
-            <div className="h-8 w-px bg-border" />
-            <div className="text-center">
-              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">{t("Obiettivo")}</p>
-              <p className="text-lg font-bold text-foreground">{tricksNeeded} prese</p>
-            </div>
-            <div className="h-8 w-px bg-border" />
-            <div className="text-center">
-              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">{t("Dich. / Dif.")}</p>
-              <p className="text-lg font-bold text-foreground">
-                {partnershipOf(declarer) === "ew"
-                  ? `${game.gameState?.trickCount.ew ?? 0} / ${game.gameState?.trickCount.ns ?? 0}`
-                  : `${game.gameState?.trickCount.ns ?? 0} / ${game.gameState?.trickCount.ew ?? 0}`}
-              </p>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Bridge Table */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.2 }}
-          className="flex-1 max-w-3xl mx-auto relative"
-        >
+        {/*
+          Il tavolo e il pannello con prese e licita: a lato solo sugli
+          schermi larghi (la pagina ha anche la colonna destra del portale),
+          prima lo apre la pillola. Nelle sfide solo l'ultima presa, come al tavolo.
+        */}
+        <div className="grid items-start gap-4 2xl:grid-cols-[minmax(0,1fr)_18rem]">
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }} className="relative w-full min-w-0">
           {displayedHands ? (
             <BridgeTable ancora={declarer}
               north={displayedHands.north}
@@ -508,7 +515,12 @@ function SfidaLinkContent() {
               trumpSuit={game.gameState?.trumpSuit}
             />
           ) : null}
-        </motion.div>
+          </motion.div>
+
+          <aside className="grid gap-4 2xl:sticky 2xl:top-4">
+            <div className="hidden overflow-hidden rounded-2xl border border-border bg-card 2xl:block">{pannello}</div>
+          </aside>
+        </div>
 
         {/* Message */}
         <div className="mt-4 text-center">

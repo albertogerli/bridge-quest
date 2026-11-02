@@ -9,9 +9,9 @@ import { useState, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "motion/react";
 import Link from "@/components/link";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BridgeTable } from "@/components/bridge/bridge-table";
+import { FoglioMano, PannelloMano } from "@/components/bridge/pannello-mano";
 import { useCommento } from "@/hooks/use-commento";
 import { useBridgeGame } from "@/hooks/use-bridge-game";
 import { usePlayableSmazzate, useSmazzate } from "@/store/use-smazzate-store";
@@ -412,65 +412,79 @@ function WeeklyHandGame({ smazzata, handNumber, challenge, onFinish, onBack }: W
       ? toDisplayPosition(game.gameState.currentPlayer, declarer)
       : undefined;
 
+  const preseDich = partnershipOf(declarer) === "ew"
+    ? `${game.gameState?.trickCount.ew ?? 0} / ${game.gameState?.trickCount.ns ?? 0}`
+    : `${game.gameState?.trickCount.ns ?? 0} / ${game.gameState?.trickCount.ew ?? 0}`;
+  const pannello = (
+    <PannelloMano
+      soloUltima
+      prese={game.gameState?.tricks ?? []}
+      presaInCorso={game.gameState?.currentTrick ?? []}
+      licita={smazzata.bidding ?? null}
+      intestazione={
+        <div className="flex flex-wrap items-end gap-x-5 gap-y-2">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t("Contratto")}</p>
+            <p className="font-display text-2xl font-extrabold text-primary">{contrattoLeggibile(smazzata.contract)}</p>
+          </div>
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t("Obiettivo")}</p>
+            <p className="text-lg font-bold">{t("{n} prese", { n: tricksNeeded })}</p>
+          </div>
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t("Dich. / Dif.")}</p>
+            <p className="text-lg font-bold tabular-nums">{preseDich}</p>
+          </div>
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">XP</p>
+            <p className="text-lg font-bold text-amber-600 dark:text-amber-400">{challenge.xpMultiplier}x</p>
+          </div>
+        </div>
+      }
+    />
+  );
+
   return (
     <div className="pt-4 px-4 min-h-screen bg-background">
       <div className="mx-auto max-w-6xl">
-        {/* Header */}
-        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-3">
-          <div className="flex items-center justify-center gap-2 mb-2">
-            <button
-              onClick={onBack}
-              aria-label={t("Torna ai giochi")}
-              className="absolute left-4 top-4 flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-muted-foreground hover:bg-muted/70"
-            >
-              <ArrowLeft className="h-4 w-4" />
-            </button>
-            <Badge className={`bg-gradient-to-r ${challenge.gradient} text-white text-[12px] font-bold border-0`}>
-              {challenge.name}
-            </Badge>
-            <Badge className="bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 text-[12px] font-bold border-0">
-              Mano {handNumber}/5
-            </Badge>
+        {/* DIREZIONE «IBRIDO» (02/11/2026): una riga sola, la pillola del contratto apre prese e licita. */}
+        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-3 flex items-center gap-3">
+          <button
+            onClick={onBack}
+            aria-label={t("Torna ai giochi")}
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground hover:bg-muted/70"
+          >
+            <ArrowLeft className="h-5 w-5" aria-hidden="true" />
+          </button>
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              {challenge.name} · {t("Mano {n} di {m}", { n: handNumber, m: 5 })}<span className="hidden sm:inline"> · {t("Lezione")} {getLessonDisplayNumber(smazzata.lesson)} · Board {smazzata.board}</span>
+            </p>
+            <h1 className="truncate font-display text-base font-bold sm:text-lg">{smazzata.title}</h1>
+          </div>
+          <span className="hidden sm:block">
             <BenStatus available={game.benAvailable} aiLevel={game.aiLevel} />
-          </div>
-          <h1 className="text-lg font-bold text-foreground">{smazzata.title}</h1>
-          <p className="text-xs text-muted-foreground mt-1">
-            Lezione {getLessonDisplayNumber(smazzata.lesson)} · Board {smazzata.board}
-          </p>
+          </span>
+          <FoglioMano
+            daSchermo="2xl"
+            etichetta={
+              <span className="tabular-nums">
+                {contrattoLeggibile(smazzata.contract)}
+                <span className="font-normal text-muted-foreground"> · {preseDich}</span>
+              </span>
+            }
+          >
+            {pannello}
+          </FoglioMano>
         </motion.div>
 
-        {/* Contract bar */}
-        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="mb-4 flex items-center justify-center">
-          <div className="card-elevated rounded-xl bg-card px-4 py-2 flex items-center gap-5 text-sm">
-            <div className="text-center">
-              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">{t("Contratto")}</p>
-              <p className="text-lg font-bold text-figb dark:text-primary">{contrattoLeggibile(smazzata.contract)}</p>
-            </div>
-            <div className="h-8 w-px bg-border" />
-            <div className="text-center">
-              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">{t("Obiettivo")}</p>
-              <p className="text-lg font-bold text-foreground">{tricksNeeded} prese</p>
-            </div>
-            <div className="h-8 w-px bg-border" />
-            <div className="text-center">
-              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">{t("Dich. / Dif.")}</p>
-              <p className="text-lg font-bold text-foreground">
-                {partnershipOf(declarer) === "ew"
-                  ? `${game.gameState?.trickCount.ew ?? 0} / ${game.gameState?.trickCount.ns ?? 0}`
-                  : `${game.gameState?.trickCount.ns ?? 0} / ${game.gameState?.trickCount.ew ?? 0}`}
-              </p>
-            </div>
-            <div className="h-8 w-px bg-border" />
-            <div className="text-center">
-              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">XP</p>
-              <p className="text-lg font-bold text-amber-600 dark:text-amber-400">{challenge.xpMultiplier}x</p>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Bridge Table + Bidding */}
-        <div className="flex flex-col lg:flex-row gap-4 items-start justify-center">
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }} className="w-full lg:w-auto flex-1 max-w-3xl relative">
+        {/*
+          Il tavolo e il pannello con prese e licita: a lato solo sugli
+          schermi larghi (la pagina ha anche la colonna destra del portale),
+          prima lo apre la pillola. Nelle sfide solo l'ultima presa, come al tavolo.
+        */}
+        <div className="grid items-start gap-4 2xl:grid-cols-[minmax(0,1fr)_18rem]">
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }} className="relative w-full min-w-0">
             {hands ? (
               <BridgeTable ancora={declarer}
                 north={hands.north}
@@ -515,11 +529,15 @@ function WeeklyHandGame({ smazzata, handNumber, challenge, onFinish, onBack }: W
             {game.phase === "playing" && <GameTutorial />}
           </motion.div>
 
-          {smazzata.bidding && (!isMobile || game.phase === "ready") && (
-            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }} className="w-full lg:w-48 shrink-0">
-              <BiddingPanel bidding={smazzata.bidding} />
-            </motion.div>
-          )}
+          <aside className="grid gap-4 2xl:sticky 2xl:top-4">
+            <div className="hidden overflow-hidden rounded-2xl border border-border bg-card 2xl:block">{pannello}</div>
+            {/* Sul telefono, prima di cominciare, la licita si legge senza aprire niente: come prima. */}
+            {smazzata.bidding && isMobile && game.phase === "ready" && (
+              <div className="2xl:hidden">
+                <BiddingPanel bidding={smazzata.bidding} />
+              </div>
+            )}
+          </aside>
         </div>
 
         {/* Message */}

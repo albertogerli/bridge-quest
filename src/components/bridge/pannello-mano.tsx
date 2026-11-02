@@ -37,16 +37,25 @@ export interface PannelloManoProps {
   licita?: BiddingData | null;
   /** In alto: contratto, obiettivo e prese, come li dice la pagina. */
   intestazione: ReactNode;
+  /**
+   * Solo l'ultima presa chiusa (e quella in corso), come al tavolo vero: la
+   * presa girata si può rivedere finché non si gioca la carta successiva.
+   * Nelle sfide a punteggio il registro completo sarebbe un aiuto che gli
+   * avversari al tavolo non hanno (decisione del 02/11/2026).
+   */
+  soloUltima?: boolean;
 }
 
-export function PannelloMano({ prese, presaInCorso, licita, intestazione }: PannelloManoProps) {
+export function PannelloMano({ prese, presaInCorso, licita, intestazione, soloUltima = false }: PannelloManoProps) {
   const t = useT();
   const [scheda, setScheda] = useState<"prese" | "licita">("prese");
   const nomi: Record<Position, string> = { north: t("Nord"), east: t("Est"), south: t("Sud"), west: t("Ovest") };
-  const righe = [
-    ...prese.map((p) => ({ plays: p.plays, winner: p.winner })),
-    ...(presaInCorso.length ? [{ plays: presaInCorso, winner: undefined }] : []),
+  const tutte = [
+    ...prese.map((p, i) => ({ n: i + 1, plays: p.plays, winner: p.winner as Position | undefined })),
+    ...(presaInCorso.length ? [{ n: prese.length + 1, plays: presaInCorso, winner: undefined }] : []),
   ];
+  // Al tavolo la presa girata si rivede solo finché non si gioca la successiva.
+  const righe = soloUltima ? tutte.slice(-1) : tutte;
 
   return (
     <div className="grid gap-0">
@@ -74,7 +83,11 @@ export function PannelloMano({ prese, presaInCorso, licita, intestazione }: Pann
           <BiddingPanel bidding={licita} />
         </div>
       ) : righe.length === 0 ? (
-        <p className="px-4 py-4 text-sm text-muted-foreground">{t("Qui compaiono le prese, una riga per presa, appena si comincia a giocare.")}</p>
+        <p className="px-4 py-4 text-sm text-muted-foreground">
+          {soloUltima
+            ? t("Qui compare l'ultima presa, appena si comincia a giocare.")
+            : t("Qui compaiono le prese, una riga per presa, appena si comincia a giocare.")}
+        </p>
       ) : (
         <div className="max-h-[50vh] overflow-y-auto lg:max-h-[60vh]">
           <table className="w-full border-collapse text-sm tabular-nums">
@@ -87,9 +100,9 @@ export function PannelloMano({ prese, presaInCorso, licita, intestazione }: Pann
               </tr>
             </thead>
             <tbody>
-              {righe.map((r, i) => (
-                <tr key={i} className="border-b border-border last:border-0">
-                  <td className="px-3 py-1.5 text-muted-foreground">{i + 1}</td>
+              {righe.map((r) => (
+                <tr key={r.n} className="border-b border-border last:border-0">
+                  <td className="px-3 py-1.5 text-muted-foreground">{r.n}</td>
                   {COLONNE.map((p) => {
                     const g = r.plays.find((x) => x.position === p);
                     const primo = r.plays[0]?.position === p;
@@ -110,7 +123,11 @@ export function PannelloMano({ prese, presaInCorso, licita, intestazione }: Pann
               ))}
             </tbody>
           </table>
-          <p className="px-3 py-2 text-xs text-muted-foreground">{t("Sottolineata la carta d'attacco, in grassetto quella che ha vinto la presa.")}</p>
+          <p className="px-3 py-2 text-xs text-muted-foreground">
+            {soloUltima
+              ? t("Come al tavolo: si vede solo l'ultima presa. Sottolineata la carta d'attacco, in grassetto quella che ha vinto.")
+              : t("Sottolineata la carta d'attacco, in grassetto quella che ha vinto la presa.")}
+          </p>
         </div>
       )}
     </div>
