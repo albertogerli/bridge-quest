@@ -16,7 +16,7 @@
 -- Rigenerare e committare dopo OGNI modifica allo schema, insieme allo script
 -- che l'ha causata.
 --
--- Estratto il: 2026-10-29
+-- Estratto il: 2026-11-02
 -- ============================================================================
 
 SET check_function_bodies = false;
@@ -4021,27 +4021,48 @@ AS $function$
 
 CREATE OR REPLACE FUNCTION public.risultati_stessa_mano(p_tipo text, p_chiave text)
  RETURNS TABLE(risultato integer, quanti bigint)
- LANGUAGE sql
+ LANGUAGE plpgsql
  STABLE SECURITY DEFINER
  SET search_path TO 'public'
 AS $function$
-  with prime as (
-    select distinct on (gr.user_id) (gr.details->>'result')::integer as r
-      from public.game_results gr
-     where gr.game_type = p_tipo
-       and gr.details ? 'result'
-       and (gr.details->>'result') ~ '^-?[0-9]+$'
-       and case p_tipo
-             when 'smazzata'          then gr.details->>'smazzataId' = p_chiave
-             when 'mano-del-giorno'   then gr.details->>'smazzataId' = p_chiave
-             when 'sfida'             then gr.details->>'date' = p_chiave
-             when 'sfida-settimanale' then (gr.details->>'weekChallenge') || '#' || (gr.details->>'handNumber') = p_chiave
-             else false
-           end
-     order by gr.user_id, gr.created_at asc
-  )
-  select r, count(*) from prime group by r order by r desc;
-$function$
+  begin
+    if p_tipo in ('smazzata', 'mano-del-giorno') then
+      return query
+        with prime as (
+          select distinct on (gr.user_id) (gr.details->>'result')::integer as r
+            from public.game_results gr
+           where gr.game_type in ('smazzata', 'mano-del-giorno')
+             and gr.game_type = p_tipo
+             and gr.details->>'smazzataId' = p_chiave
+             and (gr.details->>'result') ~ '^-?[0-9]+$'
+           order by gr.user_id, gr.created_at asc
+        )
+        select p.r, count(*) from prime p group by p.r order by p.r desc;
+    elsif p_tipo = 'sfida' then
+      return query
+        with prime as (
+          select distinct on (gr.user_id) (gr.details->>'result')::integer as r
+            from public.game_results gr
+           where gr.game_type = 'sfida'
+             and gr.details->>'date' = p_chiave
+             and (gr.details->>'result') ~ '^-?[0-9]+$'
+           order by gr.user_id, gr.created_at asc
+        )
+        select p.r, count(*) from prime p group by p.r order by p.r desc;
+    elsif p_tipo = 'sfida-settimanale' then
+      return query
+        with prime as (
+          select distinct on (gr.user_id) (gr.details->>'result')::integer as r
+            from public.game_results gr
+           where gr.game_type = 'sfida-settimanale'
+             and (gr.details->>'weekChallenge') || '#' || (gr.details->>'handNumber') = p_chiave
+             and (gr.details->>'result') ~ '^-?[0-9]+$'
+           order by gr.user_id, gr.created_at asc
+        )
+        select p.r, count(*) from prime p group by p.r order by p.r desc;
+    end if;
+  end;
+  $function$
 ;
 
 CREATE OR REPLACE FUNCTION public.salva_commento_compito(p_assignment_id uuid, p_smazzata_id text, p_student_id uuid, p_testo text)
@@ -5394,6 +5415,9 @@ CREATE INDEX idx_friendships_status ON public.friendships USING btree (status);
 CREATE INDEX idx_friendships_user_id ON public.friendships USING btree (user_id);
 CREATE INDEX idx_game_results_assignment ON public.game_results USING btree (assignment_id) WHERE (assignment_id IS NOT NULL);
 CREATE INDEX idx_game_results_platform ON public.game_results USING btree (platform, created_at DESC);
+CREATE INDEX idx_game_results_sfida_data ON public.game_results USING btree (((details ->> 'date'::text))) WHERE (game_type = 'sfida'::text);
+CREATE INDEX idx_game_results_sfida_settimanale ON public.game_results USING btree (((((details ->> 'weekChallenge'::text) || '#'::text) || (details ->> 'handNumber'::text)))) WHERE (game_type = 'sfida-settimanale'::text);
+CREATE INDEX idx_game_results_smazzata_id ON public.game_results USING btree (game_type, ((details ->> 'smazzataId'::text))) WHERE (game_type = ANY (ARRAY['smazzata'::text, 'mano-del-giorno'::text]));
 CREATE INDEX idx_game_results_type ON public.game_results USING btree (game_type, score DESC);
 CREATE INDEX idx_game_results_user ON public.game_results USING btree (user_id, created_at DESC);
 CREATE INDEX idx_instructor_requests_status ON public.instructor_requests USING btree (status, created_at DESC);
