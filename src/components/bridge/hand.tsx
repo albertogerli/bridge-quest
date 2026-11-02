@@ -3,6 +3,7 @@
 import { motion } from "motion/react";
 import { PlayingCard, type CardData } from "./playing-card";
 import { handAriaLabel, positionAriaLabel } from "@/lib/card-labels";
+import { ordineSemiAlternato } from "@/lib/ordine-semi";
 
 const GAP = 2; // px gap between cards in fluid mode
 
@@ -42,6 +43,20 @@ export function Hand({
       ? Math.min(MAX_CARD_WIDTH, Math.floor((containerWidth - GAP * (cards.length - 1)) / cards.length))
       : undefined;
 
+  /*
+   * L'ORDINE SI CAMBIA SOLO A VIDEO. I semi si mostrano alternando nero e
+   * rosso (`ordine-semi.ts`), ma l'elenco che arriva resta quello del motore:
+   * ogni carta porta con sé il suo indice originale, e `onSelectCard` riceve
+   * quello. Così il motore e il robot vedono la mano di sempre e nessuna loro
+   * scelta cambia. Il primo seme dell'elenco resta primo: è l'atout, quando
+   * il motore l'ha messo davanti.
+   */
+  const presenti = [...new Set(cards.map((c) => c.suit))];
+  const ordineSemi = ordineSemiAlternato(presenti, cards[0]?.suit);
+  const mostrate = cards
+    .map((card, i) => ({ card, i }))
+    .sort((a, b) => ordineSemi.indexOf(a.card.suit) - ordineSemi.indexOf(b.card.suit) || a.i - b.i);
+
   const isHighlighted = (card: CardData) =>
     highlightedCards.some((c) => c.suit === card.suit && c.rank === card.rank);
 
@@ -58,7 +73,7 @@ export function Hand({
             : handAriaLabel(cards, position)
         }
       >
-        {cards.map((card, index) => (
+        {mostrate.map(({ card, i }, index) => (
           <motion.div
             key={`${card.suit}-${card.rank}`}
             initial={{ y: 10 }}
@@ -69,10 +84,10 @@ export function Hand({
             <PlayingCard
               card={card}
               faceDown={faceDown}
-              selected={selectedIndex === index}
+              selected={selectedIndex === i}
               highlighted={!faceDown && isHighlighted(card)}
               disabled={disabled || (highlightedCards.length > 0 && !isHighlighted(card))}
-              onClick={() => onSelectCard?.(index)}
+              onClick={() => onSelectCard?.(i)}
               cardWidth={cardWidth}
               noHover={noHover}
             />
@@ -103,7 +118,7 @@ export function Hand({
           : handAriaLabel(cards, position)
       }
     >
-      {cards.map((card, index) => (
+      {mostrate.map(({ card, i }, index) => (
         <motion.div
           key={`${card.suit}-${card.rank}`}
           initial={{ y: 10 }}
@@ -118,10 +133,10 @@ export function Hand({
           <PlayingCard
             card={card}
             faceDown={faceDown}
-            selected={selectedIndex === index}
+            selected={selectedIndex === i}
             highlighted={!faceDown && isHighlighted(card)}
             disabled={disabled || (highlightedCards.length > 0 && !isHighlighted(card))}
-            onClick={() => onSelectCard?.(index)}
+            onClick={() => onSelectCard?.(i)}
             size={size}
             noHover={noHover}
           />

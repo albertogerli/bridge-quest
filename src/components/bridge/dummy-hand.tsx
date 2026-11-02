@@ -3,6 +3,7 @@
 import { motion } from "motion/react";
 import type { CardData } from "./playing-card";
 import { cardAriaLabel, handAriaLabel } from "@/lib/card-labels";
+import { ordineSemiAlternato } from "@/lib/ordine-semi";
 
 /**
  * Dummy hand displayed as vertical columns by suit (classic bridge style)
@@ -40,10 +41,9 @@ export function DummyHand({
   compact?: boolean;
   trumpSuit?: string | null;
 }) {
-  // Put trump suit first when playing a suit contract
-  const displayOrder = trumpSuit
-    ? [trumpSuit as CardData["suit"], ...SUIT_ORDER.filter((s) => s !== trumpSuit)]
-    : SUIT_ORDER;
+  // L'atout per primo, poi nero e rosso alternati: lo stesso ordine della mano
+  // di chi gioca (vedi `ordine-semi.ts`).
+  const displayOrder = ordineSemiAlternato(SUIT_ORDER, trumpSuit as CardData["suit"] | null | undefined);
 
   // Group cards by suit
   const bySuit: Record<string, { card: CardData; originalIndex: number }[]> = {};

@@ -19,7 +19,8 @@ export interface TrickPlayDisplay {
   card: CardData;
 }
 
-import { toGamePosition, type Position } from "@/lib/bridge-engine";
+import { toGamePosition, type Position, type Suit } from "@/lib/bridge-engine";
+import { ordineSemiAlternato } from "@/lib/ordine-semi";
 export interface BridgeTableProps {
   /**
    * Il posto VERO di chi sta in basso, quando il tavolo è ruotato.
@@ -79,9 +80,8 @@ const suitColorClass: Record<string, string> = {
 /** Side dummy (E/W): suits as rows, ranks laid horizontally within each suit.
  *  Read-only — the dummy on a side is always controlled by the (AI) declarer. */
 function SideDummy({ cards, trumpSuit }: { cards: CardData[]; trumpSuit?: string | null }) {
-  const order: string[] = trumpSuit
-    ? [trumpSuit, ...["spade", "heart", "diamond", "club"].filter((s) => s !== trumpSuit)]
-    : ["spade", "heart", "diamond", "club"];
+  // L'atout per primo, poi nero e rosso alternati, come la mano di chi gioca.
+  const order: string[] = ordineSemiAlternato(["spade", "heart", "diamond", "club"], trumpSuit as Suit | null | undefined);
   const rankVal: Record<string, number> = { A: 14, K: 13, Q: 12, J: 11, "10": 10, "9": 9, "8": 8, "7": 7, "6": 6, "5": 5, "4": 4, "3": 3, "2": 2 };
   return (
     <div
