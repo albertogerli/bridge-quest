@@ -24,12 +24,18 @@ import type { Vulnerability } from "@/lib/catalog";
  * faceva la carta giusta.
  */
 
-export type Consegna = "dichiara" | "carta" | "piano";
+/**
+ * «scelta»: una domanda con le sue risposte da scegliere, con o senza mano —
+ * i test della Commissione (Trevissoi, 02/11/2026). Vedi
+ * `scripts/sql/esercizi-scelta-multipla-2026-11.sql`.
+ */
+export type Consegna = "dichiara" | "carta" | "piano" | "scelta";
 
 export const ETICHETTE_CONSEGNA: Record<Consegna, string> = {
   dichiara: "Cosa dichiari?",
   carta: "Quale carta giochi?",
   piano: "Come pianifichi il gioco?",
+  scelta: "Scegli la risposta",
 };
 
 export interface EsercizioPosizione {
@@ -56,6 +62,8 @@ export interface EsercizioPosizione {
   gruppo: string | null;
   class_id: string | null;
   created_at: string;
+  /** Solo per «scelta»: le risposte fra cui scegliere, in ordine. */
+  opzioni?: string[];
 }
 
 export type NuovoEsercizio = Omit<EsercizioPosizione, "id" | "autore_id" | "created_at">;
@@ -99,6 +107,9 @@ export async function salvaEsercizio(e: NuovoEsercizio): Promise<{ id: string } 
     .from("esercizi_posizione")
     .insert({
       ...e,
+      // Senza lo script delle domande a scelta la colonna non c'è: si manda
+      // solo quando serve, e gli esercizi di sempre si salvano come prima.
+      opzioni: e.opzioni && e.opzioni.length > 0 ? e.opzioni : undefined,
       autore_id: user.id,
       risposte_norm: e.risposte.map(normalizzaRisposta),
     })
@@ -228,4 +239,15 @@ export function giocateInOrdine(stato: {
   for (const t of stato.tricks) for (const p of t.plays) fuori.push({ seat: p.position, card: p.card });
   for (const p of stato.currentTrick) fuori.push({ seat: p.position, card: p.card });
   return fuori;
+}
+
+/** Cancella un esercizio dell'insegnante. Chi l'ha già fatto tiene la sua risposta nei risultati. */
+export async function cancellaEsercizio(id: string): Promise<boolean> {
+  const supabase = createClient();
+  const { error } = await supabase.from("esercizi_posizione").delete().eq("id", id);
+  if (error) {
+    segnalaSalvoRete("esercizi:cancella", error);
+    return false;
+  }
+  return true;
 }

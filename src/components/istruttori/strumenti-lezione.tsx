@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "@/components/link";
-import { Archive, BookOpen, ChevronRight, FlaskConical, Presentation, Printer, Users, Wand2, Library, Layers } from "lucide-react";
+import { Archive, BookOpen, ChevronRight, FlaskConical, ListChecks, Presentation, Printer, Users, Wand2, Library, Layers } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useT } from "@/contexts/traduzioni-provider";
 
@@ -68,6 +68,12 @@ export const STRUMENTI_LEZIONE: Strumento[] = [
     titolo: "Materiali del corso",
     descrizione: "Slide e dispense ufficiali, da proiettare o da stampare",
     icona: BookOpen,
+  },
+  {
+    href: "/istruttori/domande",
+    titolo: "Domande a scelta",
+    descrizione: "I test della Commissione nei compiti: risposte registrate e classifica",
+    icona: ListChecks,
   },
   {
     href: "/istruttori/dispensa",

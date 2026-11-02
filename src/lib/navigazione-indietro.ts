@@ -22,6 +22,7 @@ const STRUMENTI = [
   "archivio",
   "combinazione",
   "dispensa",
+  "domande",
   "genera-mani",
   "lavagna",
   "libreria",

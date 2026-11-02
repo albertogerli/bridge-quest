@@ -348,10 +348,44 @@ export default function NuovoCompitoPage({
       {/* Gli esercizi di posizione salvati a lezione */}
       {esercizi.length > 0 && (
         <div className="mb-6 rounded-lg border border-border p-4">
-          <p className="mb-1 text-sm font-semibold">{t("Le posizioni che hai salvato")}</p>
+          <p className="mb-1 text-sm font-semibold">{t("Le posizioni e le domande che hai salvato")}</p>
           <p className="mb-3 text-xs text-muted-foreground">
             {t("Vanno nel compito insieme alle mani: l'allievo le trova in fondo all'elenco.")}
           </p>
+          {/* Un test della Commissione sono venti domande: si prendono tutte insieme. */}
+          {(() => {
+            const gruppi = [...new Set(esercizi.map((e) => e.gruppo).filter((g): g is string => !!g))];
+            if (gruppi.length === 0) return null;
+            return (
+              <div className="mb-3 flex flex-wrap gap-2">
+                {gruppi.map((g) => {
+                  const ids = esercizi.filter((e) => e.gruppo === g).map((e) => e.id);
+                  const tutti = ids.every((id) => eserciziScelti.has(id));
+                  return (
+                    <Button
+                      key={g}
+                      type="button"
+                      size="sm"
+                      variant={tutti ? "default" : "outline"}
+                      onClick={() =>
+                        setEserciziScelti((prev) => {
+                          const n = new Set(prev);
+                          for (const id of ids) {
+                            if (tutti) n.delete(id);
+                            else n.add(id);
+                          }
+                          return n;
+                        })
+                      }
+                    >
+                      {tutti ? "✓ " : "+ "}
+                      {g} · {ids.length}
+                    </Button>
+                  );
+                })}
+              </div>
+            );
+          })()}
           <div className="max-h-56 space-y-1.5 overflow-y-auto">
             {esercizi.map((e) => {
               const scelto = eserciziScelti.has(e.id);

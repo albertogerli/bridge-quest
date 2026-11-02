@@ -49,7 +49,7 @@ export default function EsercizioPage({
 
   const [esercizio, setEsercizio] = useState<EsercizioPerAllievo | null>(null);
   const [caricando, setCaricando] = useState(true);
-  const [risposta, setRisposta] = useState("");
+  const [testoRisposta, setRisposta] = useState("");
   const [dato, setDato] = useState<(EsitoEsercizio & { testo: string }) | null>(null);
   const [spiegazione, setSpiegazione] = useState(false);
   const [erroreRisposta, setErroreRisposta] = useState(false);
@@ -68,8 +68,10 @@ export default function EsercizioPage({
     };
   }, [esercizioId]);
 
-  async function rispondi() {
+  async function rispondi(scelta?: string) {
     if (!esercizio) return;
+    // Nelle domande a scelta la risposta è l'opzione toccata, non il campo di testo.
+    const risposta = scelta ?? testoRisposta;
     // Il responso lo dà il database: qui le risposte attese non ci sono mai
     // state e non ci devono essere. Se la chiamata non riesce non si inventa
     // un verdetto — dire «giusto» per non lasciare la pagina ferma sarebbe
@@ -191,15 +193,39 @@ export default function EsercizioPage({
         </p>
       )}
 
-      <ManoInChiaro carte={mia} etichetta={`La tua mano (${NOME[esercizio.posizione]})`} />
+      {/* Una domanda a scelta può non avere una mano: allora non si disegna. */}
+      {mia.length > 0 && <ManoInChiaro carte={mia} etichetta={`La tua mano (${NOME[esercizio.posizione]})`} />}
       {morto && <ManoInChiaro carte={morto} etichetta="Il morto" />}
 
-      {!dato ? (
+      {!dato && esercizio.consegna === "scelta" && (esercizio.opzioni?.length ?? 0) > 0 ? (
+        /*
+         * La domanda a scelta: un tocco è la risposta. Niente «Rispondi» da
+         * premere dopo — il test della Commissione è fatto così, e un passaggio
+         * in più per ogni domanda, su venti domande, è quello che fa smettere.
+         */
+        <div className="mt-6 grid gap-2" role="group" aria-label={t("Scegli la risposta")}>
+          {esercizio.opzioni!.map((o) => (
+            <button
+              key={o}
+              type="button"
+              onClick={() => void rispondi(o)}
+              className="min-h-12 rounded-xl border border-border bg-card px-4 py-3 text-left text-sm font-medium transition-colors hover:border-primary hover:bg-primary/5"
+            >
+              {o}
+            </button>
+          ))}
+          {erroreRisposta && (
+            <p className="text-sm text-red-600">
+              {t("Non riesco a correggere adesso. Riprova fra un momento.")}
+            </p>
+          )}
+        </div>
+      ) : !dato ? (
         <div className="mt-6 space-y-3">
           <input
-            value={risposta}
+            value={testoRisposta}
             onChange={(e) => setRisposta(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && risposta.trim() && void rispondi()}
+            onKeyDown={(e) => e.key === "Enter" && testoRisposta.trim() && void rispondi()}
             placeholder={
               esercizio.consegna === "dichiara"
                 ? "La tua dichiarazione, es. 3SA"
@@ -209,7 +235,7 @@ export default function EsercizioPage({
             }
             className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm"
           />
-          <Button onClick={() => void rispondi()} disabled={!risposta.trim()} className="w-full">
+          <Button onClick={() => void rispondi()} disabled={!testoRisposta.trim()} className="w-full">
             {t("Rispondi")}
           </Button>
           {erroreRisposta && (

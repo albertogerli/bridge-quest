@@ -146,7 +146,7 @@ export function SalvaEsercizio({
           />
 
           <div className="flex flex-wrap gap-1.5">
-            {(Object.keys(ETICHETTE_CONSEGNA) as Consegna[]).map((c) => (
+            {(Object.keys(ETICHETTE_CONSEGNA) as Consegna[]).filter((c) => c !== "scelta").map((c) => (
               <button
                 key={c}
                 onClick={() => setConsegna(c)}

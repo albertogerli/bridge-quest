@@ -81,6 +81,11 @@ export function RisposteClasse({ esercizioIds, righe }: { esercizioIds: string[]
                 <p className="text-sm font-semibold">
                   {t("Domanda {n}", { n: n + 1 })} · {e.titolo || t(ETICHETTE_CONSEGNA[e.consegna])}
                 </p>
+                {e.domanda && e.consegna === "scelta" && (
+                  <p className="mt-1 text-sm">{e.domanda}</p>
+                )}
+                {/* Una domanda a scelta può non avere una mano: niente righe di trattini. */}
+                {mano.length > 0 && (
                 <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 font-mono text-base">
                   {SEMI.map((seme) => (
                     <span key={seme} className="flex items-center gap-1">
@@ -93,6 +98,7 @@ export function RisposteClasse({ esercizioIds, righe }: { esercizioIds: string[]
                     </span>
                   ))}
                 </div>
+                )}
                 {e.bids?.length > 0 && (
                   <p className="mt-1 text-sm text-muted-foreground">
                     {t("Licita finora")}: {e.bids.join(" – ")}
