@@ -88,3 +88,6 @@ grant execute on function public.risultati_stessa_mano(text, text) to authentica
 
 comment on function public.risultati_stessa_mano(text, text) is
   'Quanti giocatori hanno ottenuto ciascun risultato sulla stessa mano, prima partita di ognuno. Solo conteggi. Un ramo per tipo, ognuno sul suo indice.';
+
+insert into public.script_applicati (nome) values ('risultati-stessa-mano-indici-2026-11.sql')
+on conflict (nome) do nothing;
