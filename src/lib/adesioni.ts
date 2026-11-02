@@ -136,3 +136,20 @@ export function gruppiSimili(adesioni: readonly Adesione[]): GruppoSimili[] {
     return true;
   });
 }
+
+/**
+ * «Giuseppe Rossi» → «Giuseppe R.»: il nome da proporre quando in classe due
+ * allievi si chiamano uguale. L'ha chiesto Trevissoi il 02/11/2026: invece di
+ * inventarsi un nome diverso, l'iniziale del cognome.
+ *
+ * Il cognome è l'ultima parola: «Maria Grazia De Luca» → «Maria Grazia De L.»
+ * sarebbe sbagliato, ma con un nome solo non c'è niente da proporre e con due
+ * parole il caso è quello comune. `null` quando la parola è una sola.
+ */
+export function nomeConIniziale(nomeCompleto: string | null | undefined): string | null {
+  const parole = (nomeCompleto ?? "").trim().split(/\s+/).filter(Boolean);
+  if (parole.length < 2) return null;
+  const cognome = parole[parole.length - 1];
+  const nome = parole.slice(0, -1).join(" ");
+  return `${nome} ${cognome.charAt(0).toLocaleUpperCase("it-IT")}.`;
+}

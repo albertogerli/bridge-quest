@@ -2894,5 +2894,14 @@
   "Foglio delle mani": "Hand sheet",
   "Le mani da consegnare, con le soluzioni in fondo": "The hands to hand out, with solutions at the end",
   "Gli esercizi della Commissione Insegnamento, un argomento per pagina. Rispondi senza aiuti, poi apri la soluzione.": "The Teaching Committee's exercises, one topic per page. Answer on your own, then open the solution.",
-  "{n} esercizi": "{n} exercises"
+  "{n} esercizi": "{n} exercises",
+  "Il corso «{nome}»": "The course «{nome}»",
+  "Le smazzate del corso della Commissione che non sono tra le mani delle lezioni: otto per argomento, con il contratto e senza commento. Tocca un argomento: le otto mani si aggiungono al compito, già scelte, nell'elenco qui sotto.": "The Committee's course deals that are not among the lesson hands: eight per topic, with the contract and no commentary. Tap a topic: its eight deals are added to the assignment, already selected, in the list below.",
+  "Lo leggono gli allievi in cima alla pagina della classe e nella loro home, sotto il benvenuto al corso.": "Students read it at the top of the class page and on their home page, under the course welcome.",
+  "Manda il modulo d'iscrizione": "Send the sign-up form",
+  "Messaggio di benvenuto per gli allievi": "Welcome message for students",
+  "Per esempio: ci vediamo ogni martedì alle 20.30. Portate un quaderno!": "For example: see you every Tuesday at 8:30 pm. Bring a notebook!",
+  "Prepara la locandina: il suo QR e il link da mandare su WhatsApp portano al modulo d'iscrizione.": "Prepare the poster: its QR code and the link to send on WhatsApp lead to the sign-up form.",
+  "Questo allievo è entrato con il codice, senza compilare il modulo d'iscrizione. Il modulo lo compila chi non è ancora iscritto: dal QR della locandina, o dal link «Manda il modulo d'iscrizione» nella pagina della classe. Se l'ha compilato, lo colleghi da «Hanno detto che vengono».": "This student joined with the code, without filling in the sign-up form. The form is for people who are not enrolled yet: from the poster's QR code, or from the «Send the sign-up form» link on the class page. If they did fill it in, link it from «Said they're coming».",
+  "Usa «{nome}»": "Use «{nome}»"
 }

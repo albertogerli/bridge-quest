@@ -22,7 +22,8 @@ import { Rubinetto } from "@/components/istruttori/rubinetto";
 import { RevisioniDaAprire } from "@/components/istruttori/revisioni-da-aprire";
 import { ElencoAdesioni } from "@/components/istruttori/elenco-adesioni";
 import { IngressoAula } from "@/components/istruttori/ingresso-aula";
-import { invitoClasse } from "@/lib/whatsapp";
+import { invitoClasse, moduloIscrizione } from "@/lib/whatsapp";
+import { indirizzoEvento } from "@/lib/qr";
 import { MandaMessaggio } from "@/components/istruttori/manda-messaggio";
 import {
   compitiSvoltiPerAllievo,
@@ -409,6 +410,19 @@ export default function ClassDetailPage({
           <Link href={`/istruttori/${classId}/locandina`}>
             <Button variant="outline">{t("Locandina")}</Button>
           </Link>
+          {/* Il modulo d'iscrizione è la pagina del QR della locandina: senza
+              locandina salvata quella pagina è vuota, e allora si dice perché. */}
+          {Object.keys(classRoom.locandina ?? {}).length > 0 ? (
+            <MandaMessaggio
+              testo={moduloIscrizione(classRoom.name, indirizzoEvento(classRoom.invite_code))}
+              oggetto={t("Il corso «{nome}»", { nome: classRoom.name })}
+              etichetta={t("Manda il modulo d'iscrizione")}
+            />
+          ) : (
+            <span className="text-xs text-muted-foreground">
+              {t("Prepara la locandina: il suo QR e il link da mandare su WhatsApp portano al modulo d'iscrizione.")}
+            </span>
+          )}
           <Button
             variant="outline"
             onClick={() => {
@@ -896,6 +910,31 @@ export default function ClassDetailPage({
 
           {/* Come si riconosce questa classe nell'elenco. Con più corsi aperti
               insieme, il nome da solo non basta: vedi `etichetta-classe.ts`. */}
+          {/*
+            Il messaggio dell'insegnante, in cima alla pagina della classe e
+            alla home dell'allievo (`BenvenutoCorso`). È la descrizione della
+            classe: c'era già, ma si scriveva solo alla creazione e non si
+            capiva a chi andasse (Trevissoi, 02/11/2026).
+          */}
+          <div className="space-y-1.5 border-t border-border pt-4">
+            <label htmlFor="benvenuto" className="text-sm font-medium">{t("Messaggio di benvenuto per gli allievi")}</label>
+            <textarea
+              id="benvenuto"
+              defaultValue={classRoom.description ?? ""}
+              placeholder={t("Per esempio: ci vediamo ogni martedì alle 20.30. Portate un quaderno!")}
+              maxLength={600}
+              rows={3}
+              disabled={busy}
+              onBlur={(e) => {
+                const v = e.target.value.trim();
+                if (v !== (classRoom.description ?? "")) void cambiaImpostazione({ description: v || null });
+              }}
+              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
+            />
+            <p className="text-xs text-muted-foreground">
+              {t("Lo leggono gli allievi in cima alla pagina della classe e nella loro home, sotto il benvenuto al corso.")}
+            </p>
+          </div>
           <div className="grid gap-3 border-t border-border pt-4 sm:grid-cols-3">
             <div className="space-y-1.5">
               <label htmlFor="livello" className="text-sm font-medium">{t("Livello")}</label>

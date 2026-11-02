@@ -452,6 +452,8 @@ export async function aggiornaImpostazioniClasse(
     posti_liberi?: boolean;
     link_video?: string | null;
     livello?: string | null;
+    /** Il messaggio di benvenuto agli allievi (Trevissoi, 02/11/2026). */
+    description?: string | null;
     soluzioni_predefinite?: VisibilitaSoluzioni;
     locandina?: Record<string, unknown>;
     video_tavolo?: boolean;

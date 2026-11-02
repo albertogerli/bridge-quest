@@ -17,11 +17,14 @@ export function BricioleClasse({
   classId,
   nome,
   pagina,
+  area = "istruttori",
 }: {
   classId: string;
   /** Se la pagina il nome lo ha già, non serve rileggerlo. */
   nome?: string | null;
   pagina: string;
+  /** Di chi è la pagina: dell'insegnante (`/istruttori`) o dell'allievo (`/classi`). */
+  area?: "istruttori" | "classi";
 }) {
   const [letto, setLetto] = useState<string | null>(null);
   useEffect(() => {
@@ -40,8 +43,10 @@ export function BricioleClasse({
   return (
     <Briciole
       percorso={[
-        { etichetta: "Le tue classi", href: "/istruttori" },
-        { etichetta: nome || letto || "La classe", href: `/istruttori/${classId}` },
+        area === "classi"
+          ? { etichetta: "Le mie classi", href: "/classi" }
+          : { etichetta: "Le tue classi", href: "/istruttori" },
+        { etichetta: nome || letto || "La classe", href: `/${area}/${classId}` },
         { etichetta: pagina },
       ]}
     />

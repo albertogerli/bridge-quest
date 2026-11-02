@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
-  candidatiPerAdesione, contattoNormalizzato, gruppiSimili, nomeNormalizzato,
+  candidatiPerAdesione, contattoNormalizzato, gruppiSimili, nomeConIniziale, nomeNormalizzato,
   type Adesione,
 } from "./adesioni";
 
@@ -143,5 +143,18 @@ describe("chi collegare a un'adesione: si suggerisce, non si decide", () => {
     const c = candidatiPerAdesione({ nome: "Carlo Neri" }, membri, new Set());
     expect(c).toHaveLength(4);
     expect(c[0].display_name).toBe("Anna Verdi");
+  });
+});
+
+describe("nomeConIniziale", () => {
+  it("tiene il nome e mette l'iniziale del cognome", () => {
+    expect(nomeConIniziale("Giuseppe Rossi")).toBe("Giuseppe R.");
+    expect(nomeConIniziale("  giuseppe   verdi ")).toBe("giuseppe V.");
+    expect(nomeConIniziale("Maria Grazia Bianchi")).toBe("Maria Grazia B.");
+  });
+  it("con una parola sola non propone niente", () => {
+    expect(nomeConIniziale("Giuseppe")).toBeNull();
+    expect(nomeConIniziale("")).toBeNull();
+    expect(nomeConIniziale(null)).toBeNull();
   });
 });

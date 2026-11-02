@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LUNGHEZZA_NOME_IN_CLASSE, rinominaAllievo, type ClassMember } from "@/lib/instructors";
 import { segnalaSalvoRete } from "@/lib/report-error";
+import { nomeConIniziale } from "@/lib/adesioni";
+import { createClient } from "@/lib/supabase/client";
 import { useT } from "@/contexts/traduzioni-provider";
 import { useLingua } from "@/hooks/use-lingua";
 
@@ -36,6 +38,49 @@ export function RigaAllievo({
   const [stato, setStato] = useState<"fermo" | "in-corso" | "errore" | "non-tuo">("fermo");
 
   const nome = membro.display_name ?? t("Allievo senza nome");
+
+  /*
+   * Con due allievi dallo stesso nome si propone «Nome I.», con l'iniziale del
+   * cognome (Trevissoi, 02/11/2026). Il cognome viene dal modulo d'adesione
+   * collegato all'allievo, che ha il nome intero; se non c'è, dal nome del
+   * profilo quando è di due parole.
+   */
+  const [proposta, setProposta] = useState<string | null>(null);
+  useEffect(() => {
+    if (!doppio) return;
+    let vivo = true;
+    void (async () => {
+      let completo: string | null = null;
+      try {
+        const { data } = await createClient()
+          .from("adesioni")
+          .select("nome")
+          .eq("class_id", classId)
+          .eq("user_id", membro.student_id)
+          .limit(1)
+          .maybeSingle();
+        completo = (data?.nome as string | undefined) ?? null;
+      } catch (err) {
+        segnalaSalvoRete("istruttori/classe:nome-con-iniziale", err);
+      }
+      const p = nomeConIniziale(completo) ?? nomeConIniziale(membro.nome_profilo);
+      if (vivo) setProposta(p && p !== nome ? p : null);
+    })();
+    return () => { vivo = false; };
+  }, [doppio, classId, membro.student_id, membro.nome_profilo, nome]);
+
+  async function usaProposta() {
+    if (!proposta) return;
+    setStato("in-corso");
+    try {
+      const salvato = await rinominaAllievo(classId, membro.student_id, proposta);
+      onRinominato(membro.student_id, salvato);
+      setStato("fermo");
+    } catch (err) {
+      segnalaSalvoRete("istruttori/classe:rinomina-allievo", err);
+      setStato("errore");
+    }
+  }
   const profiloDiverso =
     !!membro.nome_in_classe && !!membro.nome_profilo && membro.nome_profilo.trim() !== membro.nome_in_classe;
 
@@ -114,7 +159,23 @@ export function RigaAllievo({
             {doppio && (
               <p className="text-xs font-semibold text-amber-700 dark:text-amber-300">
                 {t("Un altro allievo si chiama così: dagli un nome diverso.")}
+                {proposta && (
+                  <>
+                    {" "}
+                    <button
+                      type="button"
+                      onClick={() => void usaProposta()}
+                      disabled={stato === "in-corso"}
+                      className="underline underline-offset-2 hover:no-underline"
+                    >
+                      {t("Usa «{nome}»", { nome: proposta })}
+                    </button>
+                  </>
+                )}
               </p>
+            )}
+            {!modifica && stato === "errore" && (
+              <p className="text-xs text-destructive">{t("Non salvato. Controlla la connessione e riprova.")}</p>
             )}
           </div>
           <Button size="sm" variant="ghost" onClick={apri} className="ml-auto">

@@ -1,5 +1,7 @@
 "use client";
 
+import { BricioleMateriale } from "@/components/briciole-materiale";
+
 import { Suspense, useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
@@ -149,18 +151,9 @@ function Dispense() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-2"
         >
-          <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
-            {/* Chi arriva da un link WhatsApp deve capire che è roba del suo
-                corso, non «le dispense del sito»: la briciola torna alla classe. */}
-            <Link
-              href={classeDiProvenienza ? `/classi/${classeDiProvenienza}` : "/lezioni"}
-              className="hover:text-figb dark:hover:text-primary transition-colors"
-            >
-              {classeDiProvenienza ? t("La tua classe") : t("Lezioni")}
-            </Link>
-            <span>/</span>
-            <span className="text-figb dark:text-primary font-semibold">{t("Dispense")}</span>
-          </div>
+          {/* Chi arriva da un link WhatsApp deve capire che è roba del suo
+              corso, non «le dispense del sito»: la briciola torna alla classe. */}
+          <BricioleMateriale classe={classeDiProvenienza} passi={[{ etichetta: t("Dispense") }]} />
           <h1 className="text-2xl font-bold text-foreground font-display">
             {/* Dalla classe è il materiale del corso, e basta: «infografiche» non
                 dice niente all'allievo (Trevissoi, 29/10/2026). */}

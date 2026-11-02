@@ -157,7 +157,7 @@ export function ElencoAllieviTutte({ classi }: { classi: ClassRoom[] }) {
                           ) : (
                             <p className="text-muted-foreground">
                               {t(
-                                "Nessun modulo d'adesione collegato a questo allievo. Si collega da «Hanno detto che vengono», nella pagina della classe.",
+                                "Questo allievo è entrato con il codice, senza compilare il modulo d'iscrizione. Il modulo lo compila chi non è ancora iscritto: dal QR della locandina, o dal link «Manda il modulo d'iscrizione» nella pagina della classe. Se l'ha compilato, lo colleghi da «Hanno detto che vengono».",
                               )}
                             </p>
                           )}

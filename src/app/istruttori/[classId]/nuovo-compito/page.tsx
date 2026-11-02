@@ -290,6 +290,34 @@ export default function NuovoCompitoPage({
         </div>
       </div>
 
+      {/*
+        LE MANI DELLA COMMISSIONE IN EVIDENZA, prima di tutto il resto. Stavano
+        dentro il riquadro «Importa da file PBN», e Trevissoi non le ha trovate
+        (02/11/2026): chi non importa file quel riquadro lo salta.
+      */}
+      {maniCommissione.length > 0 && (
+        <div className="mb-6 rounded-2xl border border-primary/30 bg-primary/5 p-4">
+          <p className="font-display text-lg font-bold">{t("Mani della Commissione")}</p>
+          <p className="mb-3 text-sm text-muted-foreground">
+            {t("Le smazzate del corso della Commissione che non sono tra le mani delle lezioni: otto per argomento, con il contratto e senza commento. Tocca un argomento: le otto mani si aggiungono al compito, già scelte, nell'elenco qui sotto.")}
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {maniCommissione.map((m) => (
+              <Button
+                key={m.file}
+                type="button"
+                variant={commissioneCaricate.has(m.file) ? "outline" : "default"}
+                disabled={commissioneCaricate.has(m.file)}
+                onClick={() => void caricaCommissione(m)}
+              >
+                {commissioneCaricate.has(m.file) ? "✓ " : "+ "}
+                {t(m.titolo)}
+              </Button>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Gli esercizi di posizione salvati a lezione */}
       {esercizi.length > 0 && (
         <div className="mb-6 rounded-lg border border-border p-4">
@@ -360,30 +388,6 @@ export default function NuovoCompitoPage({
             }}
           />
         </div>
-
-        {maniCommissione.length > 0 && (
-          <div className="mt-3 border-t border-border pt-3">
-            <p className="text-sm font-semibold">{t("Mani della Commissione")}</p>
-            <p className="mb-2 text-xs text-muted-foreground">
-              {t("Le smazzate del corso della Commissione che non sono tra le mani delle lezioni: otto per argomento, con il contratto e senza commento.")}
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {maniCommissione.map((m) => (
-                <Button
-                  key={m.file}
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  disabled={commissioneCaricate.has(m.file)}
-                  onClick={() => void caricaCommissione(m)}
-                >
-                  {commissioneCaricate.has(m.file) ? "✓ " : "+ "}
-                  {t(m.titolo)}
-                </Button>
-              ))}
-            </div>
-          </div>
-        )}
 
         {importErrors.length > 0 && (
           <ul className="mt-3 space-y-1 text-xs text-amber-700 dark:text-amber-400">

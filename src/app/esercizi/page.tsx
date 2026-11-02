@@ -2,6 +2,7 @@
 
 import { ChevronRight } from "lucide-react";
 import Link from "@/components/link";
+import { BricioleMateriale } from "@/components/briciole-materiale";
 import { useT } from "@/contexts/traduzioni-provider";
 import { SCHEDE_ESERCIZI } from "@/lib/esercizi-commissione";
 
@@ -19,6 +20,7 @@ export default function EserciziIndicePage() {
   return (
     <div className="px-4 pt-6 pb-24">
       <div className="mx-auto max-w-3xl">
+        <BricioleMateriale passi={[{ etichetta: t("Esercizi") }]} />
         <p className="text-xs font-semibold uppercase tracking-wide text-primary">{t("Corso di Primo Livello")}</p>
         <h1 className="font-display text-2xl font-bold sm:text-3xl">{t("Esercizi")}</h1>
         <p className="mt-1 text-sm text-muted-foreground">

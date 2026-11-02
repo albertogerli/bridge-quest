@@ -152,3 +152,20 @@ export function materialiLezioneWhatsApp(opzioni: {
 
   return righe.join("\n");
 }
+
+/**
+ * Il modulo d'iscrizione, da mandare a chi non è ancora allievo.
+ *
+ * È lo stesso indirizzo del QR della locandina (`/evento/<codice>`): racconta
+ * il corso e chiede «vengo», con nome e contatto. Trevissoi, 02/11/2026: «la
+ * richiesta iniziale era il QR della locandina o, in alternativa, un link che
+ * di solito veicolo a mezzo WhatsApp».
+ */
+export function moduloIscrizione(nomeClasse: string, indirizzo: string): string {
+  return [
+    `Ciao! Ecco le informazioni sul corso «${nomeClasse}».`,
+    ``,
+    `Se vuoi partecipare, lascia nome e recapito qui:`,
+    indirizzo,
+  ].join("\n");
+}
