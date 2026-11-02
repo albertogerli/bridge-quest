@@ -2880,5 +2880,10 @@
   "Segui {n} corsi": "You are taking {n} courses",
   "scade {giorno}": "due {giorno}",
   "{n} mani giocate su {m}": "{n} of {m} deals played",
-  "Porta la mano {n} al tavolo condiviso": "Take deal {n} to the shared table"
+  "Porta la mano {n} al tavolo condiviso": "Take deal {n} to the shared table",
+  "Cosa vedere": "What to show",
+  "Mano {n} di {m}": "Deal {n} of {m}",
+  "Prese e licita": "Tricks and bidding",
+  "Qui compaiono le prese, una riga per presa, appena si comincia a giocare.": "The tricks appear here, one row per trick, as soon as play starts.",
+  "Sottolineata la carta d'attacco, in grassetto quella che ha vinto la presa.": "The card led is underlined; the card that won the trick is in bold."
 }

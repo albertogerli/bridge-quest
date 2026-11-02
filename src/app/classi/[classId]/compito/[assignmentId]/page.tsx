@@ -5,7 +5,6 @@ import { Briciole } from "@/components/briciole";
 import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "motion/react";
 import Link from "@/components/link";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BridgeTable } from "@/components/bridge/bridge-table";
 import { GameActions } from "@/components/bridge/game-actions";
@@ -25,6 +24,7 @@ import {
 import type { CardData } from "@/components/bridge/playing-card";
 import { classifyPlayErrors } from "@/lib/play-error-classifier";
 import { BiddingPanel } from "@/components/bridge/bidding-panel";
+import { FoglioMano, PannelloMano } from "@/components/bridge/pannello-mano";
 import { senzaLicita } from "@/lib/gioco-della-carta";
 import { PannelloMinibridge } from "@/components/bridge/pannello-minibridge";
 import { PulsanteSegnalazione } from "@/components/pulsante-segnalazione";
@@ -882,62 +882,82 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
   const lettera: Record<Position, string> = { north: "N", south: "S", east: "E", west: "W" };
   const riuscita = (r: number) => (difesa ? r < 0 : r >= 0);
 
+  const preseDich = partnershipOf(declarer) === "ew" && !difesa
+    ? `${game.gameState?.trickCount.ew ?? 0} / ${game.gameState?.trickCount.ns ?? 0}`
+    : `${game.gameState?.trickCount.ns ?? 0} / ${game.gameState?.trickCount.ew ?? 0}`;
+  const obiettivo = difesa ? 14 - tricksNeeded : tricksNeeded;
+  // Nel gioco della carta (Fiori 1–6) e nel minibridge la licita non si mostra.
+  const licitaVisibile = !minibridge && !soloGioco ? bidding ?? null : null;
+  const intestazione = (
+    <div className="flex flex-wrap items-end gap-x-5 gap-y-2">
+      {!soloGioco && (
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t("Contratto")}</p>
+          <p className="font-display text-2xl font-extrabold text-primary">{contrattoLeggibile(contratto)}</p>
+        </div>
+      )}
+      <div>
+        <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t("Obiettivo")}</p>
+        <p className="text-lg font-bold">{t("{n} prese", { n: obiettivo })}</p>
+      </div>
+      <div>
+        <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{soloGioco || difesa ? t("Prese: tue / avversari") : t("Dich. / Dif.")}</p>
+        <p className="text-lg font-bold tabular-nums">{preseDich}</p>
+      </div>
+    </div>
+  );
+  const pannello = (
+    <PannelloMano
+      prese={game.gameState?.tricks ?? []}
+      presaInCorso={game.gameState?.currentTrick ?? []}
+      licita={licitaVisibile}
+      intestazione={intestazione}
+    />
+  );
+
+  /*
+   * DIREZIONE «IBRIDO» (02/11/2026). In alto una riga sola: indietro, quale
+   * mano, e la pillola del contratto che sul telefono apre il pannello dal
+   * basso. Il tavolo prende il resto dello schermo; sul computer il pannello
+   * con prese e licita sta sempre a destra.
+   */
   return (
-    <div className="min-h-screen bg-background px-4 pt-4">
+    <div className="min-h-screen bg-background px-4 pt-3">
       <div className="mx-auto max-w-6xl">
-        {/* Header */}
-        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="relative mb-3 text-center">
+        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-3 flex items-center gap-3">
           <button
             onClick={onBack}
-            className="absolute left-0 top-0 flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-muted-foreground hover:bg-muted/70"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground hover:bg-muted/70"
+            aria-label={t("Torna al compito")}
           >
-            <ArrowLeft className="h-4 w-4" />
+            <ArrowLeft className="h-5 w-5" aria-hidden="true" />
           </button>
-          <div className="mb-2 flex items-center justify-center gap-2">
-            <Badge variant="outline">{t("Compito")}</Badge>
-            <Badge variant="outline">Mano {handNumber}/{totalHands}</Badge>
-            <BenStatus available={game.benAvailable} aiLevel={game.aiLevel} />
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              {t("Mano {n} di {m}", { n: handNumber, m: totalHands })}
+              <span className="hidden sm:inline">
+                {smazzata.lesson > 0 ? ` · ${t("Lezione")} ${getLessonDisplayNumber(smazzata.lesson)}` : ""}
+              </span>
+            </p>
+            <h1 className="truncate font-display text-base font-bold sm:text-lg">{smazzata.title}</h1>
           </div>
-          <h1 className="text-lg font-bold">{smazzata.title}</h1>
-          <p className="mt-1 text-xs text-muted-foreground">
-            {smazzata.lesson > 0
-              ? `Lezione ${getLessonDisplayNumber(smazzata.lesson)} · `
-              : "Mano dell'insegnante · "}
-            Board {smazzata.board}
-          </p>
+          <span className="hidden sm:block">
+            <BenStatus available={game.benAvailable} aiLevel={game.aiLevel} />
+          </span>
+          <FoglioMano
+            etichetta={
+              <span className="tabular-nums">
+                {soloGioco ? t("{n} prese", { n: obiettivo }) : contrattoLeggibile(contratto)}
+                <span className="font-normal text-muted-foreground"> · {preseDich}</span>
+              </span>
+            }
+          >
+            {pannello}
+          </FoglioMano>
         </motion.div>
 
-        {/* Contract bar */}
-        <div className="mb-4 flex items-center justify-center">
-          <div className="flex items-center gap-5 rounded-xl border border-border bg-card px-4 py-2 text-sm">
-            {!soloGioco && (
-              <>
-                <div className="text-center">
-                  <p className="text-[12px] font-bold uppercase tracking-wider text-muted-foreground">{t("Contratto")}</p>
-                  <p className="text-lg font-bold text-primary">{contrattoLeggibile(contratto)}</p>
-                </div>
-                <div className="h-8 w-px bg-border" />
-              </>
-            )}
-            <div className="text-center">
-              <p className="text-[12px] font-bold uppercase tracking-wider text-muted-foreground">{t("Obiettivo")}</p>
-              <p className="text-lg font-bold">{difesa ? 14 - tricksNeeded : tricksNeeded} prese</p>
-            </div>
-            <div className="h-8 w-px bg-border" />
-            <div className="text-center">
-              <p className="text-[12px] font-bold uppercase tracking-wider text-muted-foreground">{soloGioco || difesa ? t("Prese: tue / avversari") : t("Dich. / Dif.")}</p>
-              <p className="text-lg font-bold">
-                {partnershipOf(declarer) === "ew" && !difesa
-                  ? `${game.gameState?.trickCount.ew ?? 0} / ${game.gameState?.trickCount.ns ?? 0}`
-                  : `${game.gameState?.trickCount.ns ?? 0} / ${game.gameState?.trickCount.ew ?? 0}`}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Bridge table + bidding */}
-        <div className="flex flex-col items-start justify-center gap-4 lg:flex-row">
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.15 }} className="relative w-full max-w-5xl flex-1 lg:w-auto">
+        <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_20rem]">
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.15 }} className="relative w-full min-w-0">
             {hands ? (
               <BridgeTable ancora={vista}
                 north={hands.north}
@@ -985,23 +1005,25 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
             {game.phase === "playing" && !difesa && <GameTutorial />}
           </motion.div>
 
-          {/*
-            In minibridge la cassetta non si mostra: l'allievo della prima
-            lezione non l'ha ancora vista, e metterla lì — anche solo da
-            leggere — è la cosa che il minibridge esiste per evitare.
-          */}
-          {minibridge && game.phase === "ready" && (
-            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.25 }} className="w-full shrink-0 lg:w-64">
-              <PannelloMinibridge mani={smazzata.hands} compatto />
-            </motion.div>
-          )}
-
-          {/* Nel gioco della carta (Fiori 1–6) la dichiarazione non si è ancora fatta: niente licita. */}
-          {!minibridge && bidding && !soloGioco && (!isMobile || game.phase === "ready") && (
-            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.25 }} className="w-full shrink-0 lg:w-48">
-              <BiddingPanel bidding={bidding} />
-            </motion.div>
-          )}
+          <aside className="grid gap-4 lg:sticky lg:top-4">
+            {/*
+              In minibridge la cassetta non si mostra: l'allievo della prima
+              lezione non l'ha ancora vista, e metterla lì — anche solo da
+              leggere — è la cosa che il minibridge esiste per evitare.
+            */}
+            {minibridge && game.phase === "ready" && (
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.25 }}>
+                <PannelloMinibridge mani={smazzata.hands} compatto />
+              </motion.div>
+            )}
+            <div className="hidden overflow-hidden rounded-2xl border border-border bg-card lg:block">{pannello}</div>
+            {/* Sul telefono, prima di cominciare, la licita si legge senza aprire niente: come prima. */}
+            {licitaVisibile && isMobile && game.phase === "ready" && (
+              <div className="lg:hidden">
+                <BiddingPanel bidding={licitaVisibile} />
+              </div>
+            )}
+          </aside>
         </div>
 
         {/* Message */}
