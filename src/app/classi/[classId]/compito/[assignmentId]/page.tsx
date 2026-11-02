@@ -1017,8 +1017,8 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
               </motion.div>
             )}
             <div className="hidden overflow-hidden rounded-2xl border border-border bg-card lg:block">{pannello}</div>
-            {/* Sul telefono, prima di cominciare, la licita si legge senza aprire niente: come prima. */}
-            {licitaVisibile && isMobile && game.phase === "ready" && (
+            {/* Prima di cominciare, finché il pannello non è affiancato (sotto lg), la licita si legge senza aprire il foglio. */}
+            {licitaVisibile && game.phase === "ready" && (
               <div className="lg:hidden">
                 <BiddingPanel bidding={licitaVisibile} />
               </div>

@@ -19,6 +19,7 @@ export function Hand({
   noHover = false,
   overlapOverride,
   containerWidth,
+  trumpSuit,
 }: {
   cards: CardData[];
   selectedIndex?: number;
@@ -32,6 +33,7 @@ export function Hand({
   overlapOverride?: number;
   /** When set, cards distribute evenly across this width with no overlap */
   containerWidth?: number;
+  trumpSuit?: string | null;
 }) {
   const isVertical = position === "east" || position === "west";
 
@@ -48,11 +50,18 @@ export function Hand({
    * rosso (`ordine-semi.ts`), ma l'elenco che arriva resta quello del motore:
    * ogni carta porta con sé il suo indice originale, e `onSelectCard` riceve
    * quello. Così il motore e il robot vedono la mano di sempre e nessuna loro
-   * scelta cambia. Il primo seme dell'elenco resta primo: è l'atout, quando
-   * il motore l'ha messo davanti.
+   * scelta cambia. L'atout va davanti: se non è passato esplicitamente, lo si
+   * deduce dalla prima carta solo quando non è picche (perché picche è già il
+   * primo seme dell'ordine naturale anche a senza atout).
    */
   const presenti = [...new Set(cards.map((c) => c.suit))];
-  const ordineSemi = ordineSemiAlternato(presenti, cards[0]?.suit);
+  const atout =
+    trumpSuit !== undefined
+      ? (trumpSuit as CardData["suit"] | null)
+      : cards[0]?.suit !== "spade"
+        ? cards[0]?.suit
+        : null;
+  const ordineSemi = ordineSemiAlternato(presenti, atout);
   const mostrate = cards
     .map((card, i) => ({ card, i }))
     .sort((a, b) => ordineSemi.indexOf(a.card.suit) - ordineSemi.indexOf(b.card.suit) || a.i - b.i);

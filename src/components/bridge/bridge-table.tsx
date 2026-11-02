@@ -388,6 +388,7 @@ export function BridgeTable({
             disabled={disabled || activePosition !== "north"}
             noHover={isCompact}
             containerWidth={northAvailable}
+            trumpSuit={trumpSuit}
           />
         )}
       </div>
@@ -413,6 +414,7 @@ export function BridgeTable({
             disabled={disabled || activePosition !== "south"}
             noHover={isCompact}
             containerWidth={southAvailable}
+            trumpSuit={trumpSuit}
           />
         )}
         <div className="text-center mt-1">
@@ -436,6 +438,7 @@ export function BridgeTable({
               size={isCompact ? "xs" : "sm"}
               position="east"
               disabled={true}
+              trumpSuit={trumpSuit}
             />
           )}
           <span className={`text-[12px] font-bold uppercase tracking-wider [writing-mode:vertical-lr] ${isActive("east") ? "text-amber" : "text-white/80"}`}>
@@ -461,6 +464,7 @@ export function BridgeTable({
               size={isCompact ? "xs" : "sm"}
               position="west"
               disabled={true}
+              trumpSuit={trumpSuit}
             />
           )}
         </div>
