@@ -2869,5 +2869,15 @@
   "Da stampare": "Printable",
   "A schermo l'allievo risponde e poi apre la soluzione di ogni esercizio; il foglio da stampare è senza soluzioni, che trovi a parte. Per darli alla classe, pubblicali dai «Materiali dopo la lezione» della classe.": "On screen, students answer and then open each exercise's solution; the printable sheet has no solutions, which you'll find separately. To give them to the class, publish them from the class's “Materials after the lesson”.",
   "Esercizi della lezione": "Lesson exercises",
-  "Rispondi senza aiuti, poi apri la soluzione. Se un esercizio ti mette in difficoltà, chiedi in aula.": "Answer on your own, then open the solution. If an exercise gives you trouble, ask in class."
+  "Rispondi senza aiuti, poi apri la soluzione. Se un esercizio ti mette in difficoltà, chiedi in aula.": "Answer on your own, then open the solution. If an exercise gives you trouble, ask in class.",
+  "Apri": "Open",
+  "Apri il compito": "Open the assignment",
+  "Dopo": "Next",
+  "Gioca la mano {n}": "Play deal {n}",
+  "Inizia dalla prima mano": "Start with the first deal",
+  "Le tue carte della prossima mano": "Your cards for the next deal",
+  "Per il corso": "For the course",
+  "Segui {n} corsi": "You are taking {n} courses",
+  "scade {giorno}": "due {giorno}",
+  "{n} mani giocate su {m}": "{n} of {m} deals played"
 }

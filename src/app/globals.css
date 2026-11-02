@@ -69,6 +69,11 @@
   --color-felt: #15803d;
   --color-felt-light: #16a34a;
   --color-felt-dark: #14532d;
+  /* Il panno della direzione «Ibrido» (02/11/2026): più profondo del felt, per
+     i riquadri dove compaiono le carte fuori dal tavolo (il compito in home). */
+  --color-panno: #0E5A3C;
+  --color-panno-chiaro: #13704B;
+  --color-panno-scuro: #0A4630;
   --color-emerald: #047857;
   /* emerald-600 su avorio non arriva a 4.5:1 per il testo piccolo (3.4–3.65): axe, 2 ottobre */
   --color-emerald-600: #047857;
@@ -196,6 +201,13 @@
 .tono-seme-heart:hover   { background: color-mix(in srgb, #e11d48 18%, transparent); }
 .tono-seme-spade:hover   { background: color-mix(in srgb, #64748b 24%, transparent); }
 .tono-seme-sa:hover      { background: color-mix(in srgb, #003DA5 18%, transparent); }
+
+/* Il panno dove le carte compaiono fuori dal tavolo: chiaro in alto, scuro ai
+   bordi. Esadecimali e non var(): i colori di `@theme inline` diventano classi,
+   non variabili disponibili a runtime (vedi --color-panno lassù). */
+.panno-bg {
+  background: radial-gradient(120% 100% at 50% 0%, #13704B 0%, #0E5A3C 50%, #0A4630 100%);
+}
 
 /* Card table felt - for the play area only */
 .felt-bg {

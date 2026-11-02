@@ -377,6 +377,7 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
       <>
         <AvvisoRichiesteAmicizia className="mx-4 mt-4 sm:mx-auto sm:max-w-3xl" />
         <HomeAllievo
+          nome={authProfile?.display_name ?? null}
           onVaiAllaBacheca={() => {
             ricordaPreferenzaBacheca(true);
             setVuoleLaBacheca(true);
