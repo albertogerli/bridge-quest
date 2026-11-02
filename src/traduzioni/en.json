@@ -2879,5 +2879,6 @@
   "Per il corso": "For the course",
   "Segui {n} corsi": "You are taking {n} courses",
   "scade {giorno}": "due {giorno}",
-  "{n} mani giocate su {m}": "{n} of {m} deals played"
+  "{n} mani giocate su {m}": "{n} of {m} deals played",
+  "Porta la mano {n} al tavolo condiviso": "Take deal {n} to the shared table"
 }

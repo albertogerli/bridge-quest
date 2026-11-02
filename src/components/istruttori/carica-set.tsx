@@ -8,7 +8,7 @@ import { segnalaSalvoRete } from "@/lib/report-error";
 import { CONTRATTI } from "@/lib/live-table";
 
 /** Il contratto nella notazione del tavolo (`SA`, senza contri), o `null` se non si riconosce. */
-function perIlTavolo(contratto: string | null | undefined): string | null {
+export function perIlTavolo(contratto: string | null | undefined): string | null {
   if (!contratto) return null;
   const c = contratto.trim().replace(/NT$/i, "SA").replace(/X+$/i, "");
   return CONTRATTI.includes(c) ? c : null;

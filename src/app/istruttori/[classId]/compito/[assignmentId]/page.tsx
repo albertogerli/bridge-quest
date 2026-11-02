@@ -40,7 +40,8 @@ import { segnalaSalvoRete } from "@/lib/report-error";
 import { classificaCompito } from "@/lib/riepiloghi-classe";
 import { mazziereDellaMano, mazziereRegistrato, stelleScritte } from "@/lib/compito-licita";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, MessageSquareText } from "lucide-react";
+import { ChevronLeft, ChevronRight, MessageSquareText, Presentation } from "lucide-react";
+import Link from "@/components/link";
 import { CommentoCompito as RiquadroCommento } from "@/components/istruttori/commento-compito";
 import { commentiDelCompito, commentiPerMano, type CommentoCompito } from "@/lib/commenti-compito";
 import { AssegnaStelle } from "@/components/istruttori/assegna-stelle";
@@ -644,6 +645,20 @@ export default function AssignmentResultsPage({
                   <th key={id} className="px-2 py-2 text-center font-semibold">
                     {!assignment.licita && <div className="font-mono text-xs">{colLabel(id)}</div>}
                     <div className="text-[12px] font-normal text-muted-foreground">M{i + 1}</div>
+                    {/*
+                      LA MANO SBAGLIATA DA TANTI SI PORTA AL TAVOLO CONDIVISO,
+                      quello che si proietta in aula: si apre con il compito
+                      caricato e questa mano davanti. Al tavolo si vedono le
+                      carte, non chi ha sbagliato (direzione «Ibrido», 02/11/2026).
+                    */}
+                    <Link
+                      href={`/istruttori/tavolo?classe=${classId}&compito=${assignmentId}&mano=${i}`}
+                      className="mx-auto mt-0.5 flex w-max items-center rounded p-0.5 text-muted-foreground/70 hover:bg-muted hover:text-primary"
+                      title={t("Porta la mano {n} al tavolo condiviso", { n: i + 1 })}
+                      aria-label={t("Porta la mano {n} al tavolo condiviso", { n: i + 1 })}
+                    >
+                      <Presentation className="h-3.5 w-3.5" aria-hidden="true" />
+                    </Link>
                     {commenti && (
                       <button
                         type="button"

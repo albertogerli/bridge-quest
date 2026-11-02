@@ -7,7 +7,8 @@ import { useSearchParams } from "next/navigation";
 import { Eye, EyeOff, Users, Play, Square } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { contrattoLeggibile } from "@/lib/contratto-leggibile";
-import { CaricaSet } from "@/components/istruttori/carica-set";
+import { CaricaSet, perIlTavolo } from "@/components/istruttori/carica-set";
+import { getSmazzataById } from "@/lib/catalog";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { reportError } from "@/lib/report-error";
 import type { Card, Position } from "@/lib/bridge-engine";
@@ -18,6 +19,7 @@ import { parAssignmentFromContracts } from "@/lib/par-contract";
 import {
   ClasseNonTrovata,
   createAssignment,
+  getAssignment,
   getClassDetail,
   getMyClasses,
   type ClassMember,
@@ -168,6 +170,43 @@ function Tavolo() {
   );
   const mani = useMemo(() => elenco.map((e) => e.hands), [elenco]);
 
+  /*
+   * DAL COMPITO AL TAVOLO. La tabella dei risultati di un compito porta qui
+   * con `?compito=…&mano=…`: si carica il compito come set e si mette davanti
+   * la mano scelta, quella su cui la classe è andata sotto. Le altre restano
+   * nel set, per passare alla successiva senza tornare indietro.
+   */
+  const compitoRichiesto = params.get("compito");
+  const manoRichiesta = Number(params.get("mano") ?? 0);
+  useEffect(() => {
+    if (!compitoRichiesto) return;
+    let vivo = true;
+    (async () => {
+      try {
+        const a = await getAssignment(compitoRichiesto);
+        const smazzate = await Promise.all(
+          a.smazzata_ids.map(async (id) => a.custom_hands?.find((h) => h.id === id) ?? (await getSmazzataById(id))),
+        );
+        if (!vivo) return;
+        const mani = smazzate.flatMap((s, i) =>
+          s ? [{
+            hands: s.hands as Record<Position, Card[]>,
+            titolo: `${a.title} — ${t("mano {n}", { n: i + 1 })}`,
+            contract: perIlTavolo(s.contract),
+            declarer: perIlTavolo(s.contract) ? s.declarer : null,
+          }] : [],
+        );
+        if (!mani.length) return;
+        setSetCaricato({ etichetta: a.title, mani });
+        setIndice(Math.min(Math.max(0, manoRichiesta), mani.length - 1));
+      } catch (err) {
+        reportError("tavolo:compito", err);
+      }
+    })();
+    return () => { vivo = false; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- si carica una volta per indirizzo; t cambia solo con la lingua
+  }, [compitoRichiesto, manoRichiesta]);
+
   /**
    * IL CONTRATTO DEL TAVOLO, che prima non veniva mai impostato.
    *
@@ -202,26 +241,28 @@ function Tavolo() {
   const apri = useCallback(async () => {
     if (!classId || !mani.length) return;
     setOccupato(true);
-    const scelto = await contrattoDellaMano(mani[0], elenco[0]);
+    // Si apre sulla mano davanti: la prima, o quella scelta dalla tabella del compito.
+    const i = Math.min(indice, mani.length - 1);
+    const scelto = await contrattoDellaMano(mani[i], elenco[i]);
     const id = await openLiveTable({
       classId,
-      hands: mani[0],
-      titolo: elenco[0].titolo,
+      hands: mani[i],
+      titolo: elenco[i].titolo,
       contract: scelto.contract,
       declarer: scelto.declarer,
     });
-    setIndice(0);
+    setIndice(i);
     setTableId(id);
     if (id) {
       await registraManoVista(id, {
-        hands: mani[0],
-        titolo: elenco[0].titolo,
+        hands: mani[i],
+        titolo: elenco[i].titolo,
         contract: scelto.contract,
         declarer: scelto.declarer,
       });
     }
     setOccupato(false);
-  }, [classId, mani, elenco, contrattoDellaMano]);
+  }, [classId, mani, elenco, contrattoDellaMano, indice]);
 
   const mandaMano = async (i: number) => {
     if (!tableId || !mani[i]) return;
