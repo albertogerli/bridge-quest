@@ -120,8 +120,26 @@ export function PannelloMano({ prese, presaInCorso, licita, intestazione }: Pann
 /**
  * La pillola del contratto sul telefono: tocca e si apre il pannello dal basso.
  * Sul computer il pannello è già a lato, e la pillola resta solo da leggere.
+ *
+ * `daSchermo` è la larghezza da cui il pannello sta a lato: `lg` di norma,
+ * `2xl` nelle pagine che hanno anche la colonna destra del portale. Le classi
+ * sono scritte per intero perché Tailwind le trovi.
  */
-export function FoglioMano({ etichetta, children }: { etichetta: ReactNode; children: ReactNode }) {
+const CLASSI = {
+  lg: { pillola: "lg:pointer-events-none lg:shadow-none", nascosto: "lg:hidden" },
+  "2xl": { pillola: "2xl:pointer-events-none 2xl:shadow-none", nascosto: "2xl:hidden" },
+} as const;
+
+export function FoglioMano({
+  etichetta,
+  children,
+  daSchermo = "lg",
+}: {
+  etichetta: ReactNode;
+  children: ReactNode;
+  daSchermo?: keyof typeof CLASSI;
+}) {
+  const c = CLASSI[daSchermo];
   const t = useT();
   const [aperto, setAperto] = useState(false);
   const chiudi = useRef<HTMLButtonElement>(null);
@@ -140,15 +158,16 @@ export function FoglioMano({ etichetta, children }: { etichetta: ReactNode; chil
         type="button"
         onClick={() => setAperto(true)}
         aria-expanded={aperto}
-        className="flex min-h-10 items-center gap-2 rounded-full border border-border bg-card px-3 text-sm font-semibold shadow-sm lg:pointer-events-none lg:shadow-none"
+        className={`flex min-h-10 items-center gap-2 rounded-full border border-border bg-card px-3 text-sm font-semibold shadow-sm ${c.pillola}`}
       >
         {etichetta}
-        <ChevronDown className="h-4 w-4 text-muted-foreground lg:hidden" aria-hidden="true" />
+        <ChevronDown className={`h-4 w-4 text-muted-foreground ${c.nascosto}`} aria-hidden="true" />
       </button>
+      {/* Sopra la barra di navigazione in basso (z-50) e al banner dei cookie (z-60). */}
       {aperto && (
-        <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true" aria-label={t("Prese e licita")}>
+        <div className={`fixed inset-0 z-[70] ${c.nascosto}`} role="dialog" aria-modal="true" aria-label={t("Prese e licita")}>
           <button type="button" className="absolute inset-0 bg-black/40" aria-label={t("Chiudi")} onClick={() => setAperto(false)} />
-          <div className="absolute inset-x-0 bottom-0 max-h-[80vh] overflow-y-auto rounded-t-3xl bg-card pb-[env(safe-area-inset-bottom)] shadow-lg">
+          <div className="absolute inset-x-0 bottom-0 mx-auto max-h-[80vh] w-full max-w-lg overflow-y-auto rounded-t-3xl bg-card pb-[env(safe-area-inset-bottom)] shadow-lg">
             <button
               ref={chiudi}
               type="button"
