@@ -2890,5 +2890,9 @@
   "Come al tavolo: si vede solo l'ultima presa. Sottolineata la carta d'attacco, in grassetto quella che ha vinto.": "As at the table, only the last trick is shown. The card led is underlined; the winning card is in bold.",
   "Crea Sfida": "Create Challenge",
   "Sfida Ricevuta": "Challenge Received",
-  "Qui compare l'ultima presa, appena si comincia a giocare.": "The last trick shows here once play begins."
+  "Qui compare l'ultima presa, appena si comincia a giocare.": "The last trick shows here once play begins.",
+  "Foglio delle mani": "Hand sheet",
+  "Le mani da consegnare, con le soluzioni in fondo": "The hands to hand out, with solutions at the end",
+  "Gli esercizi della Commissione Insegnamento, un argomento per pagina. Rispondi senza aiuti, poi apri la soluzione.": "The Teaching Committee's exercises, one topic per page. Answer on your own, then open the solution.",
+  "{n} esercizi": "{n} exercises"
 }

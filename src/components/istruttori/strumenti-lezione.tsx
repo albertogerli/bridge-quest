@@ -71,8 +71,11 @@ export const STRUMENTI_LEZIONE: Strumento[] = [
   },
   {
     href: "/istruttori/dispensa",
-    titolo: "Dispensa",
-    descrizione: "Il foglio da consegnare, con le soluzioni in fondo",
+    // Non «Dispensa»: la dispensa è il fascicolo della Commissione, in
+    // «Materiali del corso». Con lo stesso nome Trevissoi cercava quella e
+    // trovava questa (02/11/2026).
+    titolo: "Foglio delle mani",
+    descrizione: "Le mani da consegnare, con le soluzioni in fondo",
     icona: Printer,
   },
 ];

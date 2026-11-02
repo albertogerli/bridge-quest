@@ -212,8 +212,8 @@ function Dispensa() {
     <div className="min-h-screen px-4 py-6 max-w-4xl mx-auto">
       {/* Comandi: spariscono in stampa */}
       <div className="print:hidden mb-6">
-        <Briciole percorso={[{ etichetta: "Le tue classi", href: "/istruttori" }, { etichetta: "Dispensa" }]} />
-        <h1 className="text-2xl font-bold font-display mb-1">{t("Dispensa")}</h1>
+        <Briciole percorso={[{ etichetta: "Le tue classi", href: "/istruttori" }, { etichetta: "Foglio delle mani" }]} />
+        <h1 className="text-2xl font-bold font-display mb-1">{t("Foglio delle mani")}</h1>
         <p className="text-sm text-muted-foreground mb-4">
           {parte === "dispensa"
             ? t("Il foglio da consegnare a fine lezione: solo le mani, senza le risposte.")

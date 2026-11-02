@@ -20,6 +20,7 @@ import { OspiteConverti } from "@/components/ospite-converti";
 import { SiteFooter } from "@/components/site-footer";
 import { TornaIndietro } from "@/components/torna-indietro";
 import { destinazioneIndietro } from "@/lib/navigazione-indietro";
+import { rientroAllaHome } from "@/lib/destinazione-login";
 import { useT } from "@/contexts/traduzioni-provider";
 import { useExitIntent } from "@/hooks/use-exit-intent";
 import type { UserProfile } from "@/hooks/use-profile";
@@ -180,6 +181,27 @@ function LayoutShellInner({ children }: { children: React.ReactNode }) {
 
   // Configure native status bar (no-op on web)
   useEffect(() => { configureStatusBar(); }, []);
+
+  /*
+   * Chi riapre il browser e si ritrova nel Forum (scheda ripristinata, o
+   * l'indirizzo completato dal browser) va alla home: vedi `rientroAllaHome`.
+   * Solo al primo disegno; dopo si tiene l'ora dell'ultima visita.
+   */
+  useEffect(() => {
+    let ultimaVisita: number | null = null;
+    try { ultimaVisita = Number(localStorage.getItem("bq_ultima_visita")) || null; } catch {}
+    let daQuestoSito = false;
+    try { daQuestoSito = Boolean(document.referrer) && new URL(document.referrer).origin === window.location.origin; } catch {}
+    // Ricaricare la pagina non è un rientro. «back_forward» invece sì: è
+    // anche il tipo con cui Chrome riapre le schede ripristinate.
+    const tipo = (performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined)?.type;
+    if (tipo === "reload") daQuestoSito = true;
+    const casa = rientroAllaHome(window.location.pathname, { ultimaVisita, ora: Date.now(), daQuestoSito });
+    if (casa) window.location.replace(casa);
+  }, []);
+  useEffect(() => {
+    try { localStorage.setItem("bq_ultima_visita", String(Date.now())); } catch {}
+  }, [pathname]);
 
   // Continuous Supabase sync (runs on every page, no-op if not logged in)
   useSupabaseSync();

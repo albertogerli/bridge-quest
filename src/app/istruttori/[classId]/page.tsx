@@ -553,7 +553,9 @@ export default function ClassDetailPage({
       <div className="mb-3">
         <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t("Dopo la lezione")}</p>
         <div className="flex flex-wrap gap-2">
-          <Link href="/istruttori/dispensa">
+          {/* La dispensa vera: il fascicolo della Commissione. Prima portava al
+              generatore di fogli di mani, e Trevissoi non la trovava (02/11/2026). */}
+          <Link href="/istruttori/materiali">
             <Button variant="outline">1 · {t("Dispensa")}</Button>
           </Link>
           <Link href={`/istruttori/${classId}/nuovo-compito`}>

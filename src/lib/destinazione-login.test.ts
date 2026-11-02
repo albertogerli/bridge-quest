@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { destinazioneDopoLogin, destinazioneSicura } from "./destinazione-login";
+import { destinazioneDopoLogin, destinazioneSicura, rientroAllaHome } from "./destinazione-login";
 
 describe("la destinazione dopo il login", () => {
   it("lascia passare i percorsi interni", () => {
@@ -51,5 +51,30 @@ describe("destinazioneDopoLogin", () => {
   it("le destinazioni esterne restano escluse", () => {
     expect(destinazioneDopoLogin("//evil.example")).toBe("/");
     expect(destinazioneDopoLogin(null)).toBe("/");
+  });
+});
+
+describe("rientroAllaHome", () => {
+  const ora = 1_000_000_000;
+  const fuori = { ultimaVisita: ora - 2 * 60 * 60 * 1000, ora, daQuestoSito: false };
+
+  it("chi riapre il browser sul Forum dopo un'assenza va alla home", () => {
+    expect(rientroAllaHome("/forum", fuori)).toBe("/");
+    expect(rientroAllaHome("/en/classifica", fuori)).toBe("/en");
+    expect(rientroAllaHome("/forum", { ...fuori, ultimaVisita: null })).toBe("/");
+  });
+
+  it("chi ci arriva da una pagina del sito resta dov'è", () => {
+    expect(rientroAllaHome("/forum", { ...fuori, daQuestoSito: true })).toBeNull();
+  });
+
+  it("chi era sul sito pochi minuti fa resta dov'è", () => {
+    expect(rientroAllaHome("/forum", { ...fuori, ultimaVisita: ora - 5 * 60 * 1000 })).toBeNull();
+  });
+
+  it("le altre pagine e i post precisi non si toccano", () => {
+    expect(rientroAllaHome("/forum/29", fuori)).toBeNull();
+    expect(rientroAllaHome("/istruttori", fuori)).toBeNull();
+    expect(rientroAllaHome("/", fuori)).toBeNull();
   });
 });

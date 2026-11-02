@@ -16,23 +16,26 @@ import { corsiAttivi } from "@/lib/percorso-allievo";
  * chiesto due volte (feedback del 02/10 e del 12/10/2026). La navigazione
  * generale resta raggiungibile, dietro un solo tasto.
  *
- * DOVE: sotto `/istruttori` e `/classi`, sempre; su `/dispense?classe=…`; sulla home solo per chi
- * insegna o è iscritto ad almeno una classe non archiviata — per tutti gli altri la
- * home resta quella di sempre.
+ * DOVE: sotto `/istruttori` e `/classi`, sempre; su `/dispense?classe=…`; sulla home
+ * e sul materiale del corso (`/dispense`, `/esercizi`) per chi insegna o è
+ * iscritto ad almeno una classe non archiviata — per tutti gli altri restano
+ * quelle di sempre. Il materiale l'ha chiesto Trevissoi il 02/11/2026: dagli
+ * esercizi «ricompaiono le bande laterali».
  */
 export function useModalitaCorso(): boolean {
   const percorso = usePercorso();
   const { user, profile } = useSharedAuth();
   const sullaHome = percorso === "/";
+  const sulMateriale = percorso.startsWith("/dispense") || percorso.startsWith("/esercizi");
   const dallaClasse = useSyncExternalStore(ascoltaIndirizzo, haClasse, () => false);
-  // Le classi servono solo per decidere la home: altrove non si chiedono.
-  const { classes } = useEnrolledClasses(Boolean(user) && sullaHome);
+  // Le classi servono solo per decidere la home e il materiale: altrove non si chiedono.
+  const { classes } = useEnrolledClasses(Boolean(user) && (sullaHome || sulMateriale));
   if (!user) return false;
   if (percorso.startsWith("/istruttori") || percorso.startsWith("/classi")) return true;
   // Le dispense aperte DA UNA CLASSE sono materiale del corso: stessa cornice
   // della classe, non quella del percorso generale con livello e streak.
   if (percorso.startsWith("/dispense") && dallaClasse) return true;
-  if (!sullaHome) return false;
+  if (!sullaHome && !sulMateriale) return false;
   const insegna = profile?.role === "instructor" || profile?.role === "admin";
   // Un corso archiviato è finito: chi segue solo quello torna alla home di sempre.
   return insegna || corsiAttivi(classes).length > 0;

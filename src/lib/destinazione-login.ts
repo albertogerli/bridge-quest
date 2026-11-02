@@ -52,3 +52,31 @@ export function destinazioneDopoLogin(grezza: string | null | undefined): string
   if (INGRESSI_DA_NON_RIAPRIRE.includes(pulito)) return inglese ? "/en" : "/";
   return sicura;
 }
+
+/** Dopo quanto tempo di assenza una pagina d'ingresso non si riapre da sola. */
+export const ASSENZA_PER_TORNARE_A_CASA_MS = 30 * 60 * 1000;
+
+/**
+ * Dove mandare chi APRE il sito direttamente su una pagina d'ingresso
+ * (`/forum`, `/classifica`…) dopo un'assenza: alla home. `null` = resta dov'è.
+ *
+ * PERCHÉ. Il login non riapre più il Forum (`destinazioneDopoLogin`), ma
+ * Trevissoi l'ha rivisto il 02/11/2026: chiusa la finestra senza uscire, al
+ * rientro — anche a PC spento e riacceso — si ritrovava nel Forum. Non è il
+ * sito a riaprirlo: è il browser, che ripristina le schede o completa
+ * «bridgelab.it» con l'indirizzo più visitato. La sessione è ancora valida,
+ * quindi non passa dal login e quella regola non scatta.
+ *
+ * Si riconosce l'arrivo «da fuori» dal referrer (vuoto o di un altro sito) e
+ * dal tempo dall'ultima visita: chi passa dal Forum alla classifica dentro il
+ * sito, o ricarica la pagina, resta dov'è.
+ */
+export function rientroAllaHome(
+  percorso: string,
+  { ultimaVisita, ora, daQuestoSito }: { ultimaVisita: number | null; ora: number; daQuestoSito: boolean },
+): string | null {
+  if (daQuestoSito) return null;
+  if (ultimaVisita !== null && ora - ultimaVisita < ASSENZA_PER_TORNARE_A_CASA_MS) return null;
+  const casa = destinazioneDopoLogin(percorso);
+  return casa !== destinazioneSicura(percorso) ? casa : null;
+}

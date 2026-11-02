@@ -380,7 +380,7 @@ export function AssegnaLezioni({ classId, onCambiato }: { classId: string; onCam
                           />
                           <Link href={`/istruttori/dispensa?compito=${compito.assignment_id}`}>
                             <Button size="sm" variant="ghost">
-                              {t("Dispensa")}
+                              {t("Foglio delle mani")}
                             </Button>
                           </Link>
                           <Link href={`/istruttori/${classId}/compito/${compito.assignment_id}`}>
