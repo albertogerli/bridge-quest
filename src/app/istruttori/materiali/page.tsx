@@ -7,6 +7,7 @@ import { useT } from "@/contexts/traduzioni-provider";
 import { useLingua } from "@/hooks/use-lingua";
 import Link from "@/components/link";
 import { MATERIALI_CORSO, type Esercizi, type ManiCommissione, type Materiale } from "@/lib/materiali-corso";
+import { MODULI_PROGRAMMA, PROGRAMMA_PRIMO_LIVELLO } from "@/lib/programma-corso";
 
 /**
  * Slide da proiettare e dispense da stampare, modulo per modulo.
@@ -28,6 +29,8 @@ export default function MaterialiPage() {
           {t("Le slide da proiettare in aula, le dispense e gli esercizi da stampare o mandare agli allievi.")}
           {lingua === "en" && <> {t("I PDF sono in italiano.")}</>}
         </p>
+
+        <Programma />
 
         {MATERIALI_CORSO.map((modulo) => (
           <section key={modulo.titolo} className="mb-8">
@@ -163,5 +166,51 @@ function GruppoMani({ mani }: { mani: ManiCommissione[] }) {
         ))}
       </ul>
     </div>
+  );
+}
+
+/**
+ * Il programma ufficiale, lezione per lezione, con quello che il sito ha per
+ * ciascuna. Vedi `programma-corso.ts`: la corrispondenza è da confermare.
+ */
+function Programma() {
+  const t = useT();
+  const titoliMani = new Map(MATERIALI_CORSO.flatMap((m) => m.mani.map((x) => [x.file, x.titolo] as const)));
+  return (
+    <section className="mb-10">
+      <h2 className="text-lg font-bold font-display">{t("Programma del Corso di Primo Livello")}</h2>
+      <p className="text-sm text-muted-foreground mb-4">
+        {t("Le venti lezioni della Commissione e, per ognuna, la lezione del sito da assegnare o le smazzate da giocare in aula. Le lezioni di gioco non hanno teoria nuova: si gioca al tavolo con il tutoraggio.")}
+      </p>
+      {([1, 2] as const).map((modulo) => (
+        <div key={modulo} className="mb-5">
+          <h3 className="text-sm font-semibold text-muted-foreground mb-2">{t(MODULI_PROGRAMMA[modulo])}</h3>
+          <ol className="divide-y divide-border overflow-hidden rounded-2xl border border-border bg-card">
+            {PROGRAMMA_PRIMO_LIVELLO.filter((l) => l.modulo === modulo).map((l) => (
+              <li key={l.numero} className="flex gap-3 px-4 py-3">
+                <span className="w-7 shrink-0 font-display text-lg font-bold tabular-nums text-primary">{l.numero}</span>
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-semibold">{t(l.titolo)}</p>
+                  <p className="mt-0.5 flex flex-wrap gap-x-3 text-xs text-muted-foreground">
+                    <span>{l.tipo === "gioco" ? t("Gioco") : t("Teoria e gioco")}</span>
+                    {l.lezioniSito.map((id) => (
+                      <Link key={id} href={`/lezioni/${id}`} className="font-semibold text-primary hover:underline">
+                        {t("Lezione {n} del sito", { n: id })}
+                      </Link>
+                    ))}
+                    {l.mani.map((f) => (
+                      <span key={f}>{t("Mani: {titolo}", { titolo: t(titoliMani.get(f) ?? "") })}</span>
+                    ))}
+                    {l.lezioniSito.length === 0 && l.mani.length === 0 && (
+                      <span>{l.tipo === "gioco" ? t("Smazzate da scegliere in «Nuovo compito»") : t("Materiale in preparazione")}</span>
+                    )}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      ))}
+    </section>
   );
 }

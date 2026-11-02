@@ -190,6 +190,12 @@ export interface Assignment {
    */
   licita_gioca?: boolean;
   /**
+   * Contratto o solo «almeno X prese»: vedi `soloObiettivo`. Senza
+   * `compito-solo-obiettivo-2026-11.sql` la colonna non arriva, e decide la
+   * lezione come prima.
+   */
+  solo_obiettivo?: boolean | null;
+  /**
    * Compito di licita: le stelle le assegna l'insegnante, e l'allievo non vede
    * il voto del programma. Senza `stelle-insegnante-2026-10.sql` la colonna non
    * arriva: vale il voto del programma, come sempre.
@@ -747,6 +753,8 @@ export async function createAssignment(input: {
   licitaGioca?: boolean;
   /** Compito di licita: vedi `Assignment.stelle_insegnante`. */
   stelleInsegnante?: boolean;
+  /** Vedi `Assignment.solo_obiettivo`. `undefined` = decide la lezione. */
+  soloObiettivo?: boolean;
   esercizioIds?: string[];
   /** Hands imported from PBN; their ids must also appear in smazzataIds */
   customHands?: Smazzata[] | null;
@@ -773,15 +781,23 @@ export async function createAssignment(input: {
   // Lo stesso per «solo licita»: si scrive solo il valore diverso dal default.
   if (input.licita && input.licitaGioca === false) row.licita_gioca = false;
   if (input.licita && input.stelleInsegnante) row.stelle_insegnante = true;
+  // Solo se l'insegnante l'ha scelto: senza lo script la colonna non c'è.
+  if (typeof input.soloObiettivo === "boolean") row.solo_obiettivo = input.soloObiettivo;
   // Only send the column when used, so DBs without pbn_import.sql keep working
   if (input.customHands && input.customHands.length > 0) {
     row.custom_hands = input.customHands;
   }
-  const { data, error } = await supabase
+  let { data, error } = await supabase
     .from("assignments")
     .insert(row)
     .select()
     .single();
+  // La colonna `solo_obiettivo` arriva con uno script da eseguire a mano: finché
+  // non c'è, il compito si crea lo stesso e decide la lezione, come prima.
+  if (error?.code === "PGRST204" && "solo_obiettivo" in row) {
+    delete row.solo_obiettivo;
+    ({ data, error } = await supabase.from("assignments").insert(row).select().single());
+  }
 
   if (error) throw error;
   return data as Assignment;

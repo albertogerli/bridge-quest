@@ -78,6 +78,12 @@ export default function NuovoCompitoPage({
   const [soluzioni, setSoluzioni] = useState<VisibilitaSoluzioni>("dopo-il-gioco");
   const [minibridge, setMinibridge] = useState(false);
   /**
+   * I «due set di smazzate» (Trevissoi, 02/11/2026): le stesse carte, con il
+   * contratto oppure con «Obiettivo: almeno X prese». `lezione` = come prima,
+   * decide la lezione della mano (gioco della carta = solo obiettivo).
+   */
+  const [annuncio, setAnnuncio] = useState<"lezione" | "contratto" | "obiettivo">("lezione");
+  /**
    * Gli esercizi di posizione salvati a lezione.
    *
    * Compaiono qui e non in una pagina a parte: l'insegnante che compone il
@@ -191,6 +197,7 @@ export default function NuovoCompitoPage({
         dueDate: dueDate ? new Date(dueDate).toISOString() : null,
         soluzioni,
         minibridge,
+        soloObiettivo: annuncio === "lezione" ? undefined : annuncio === "obiettivo",
         esercizioIds: Array.from(eserciziScelti),
         customHands,
       });
@@ -276,6 +283,26 @@ export default function NuovoCompitoPage({
               : t("Il commento del maestro non arriva nemmeno al browser dell'allievo finché non gli spetta.")}
           </p>
         </div>
+        {!minibridge && (
+          <div className="space-y-1.5">
+            <label htmlFor="annuncio" className="text-sm font-medium">
+              {t("Cosa dire all'allievo")}
+            </label>
+            <select
+              id="annuncio"
+              value={annuncio}
+              onChange={(e) => setAnnuncio(e.target.value as typeof annuncio)}
+              className={`${selectClass} w-full`}
+            >
+              <option value="lezione">{t("Come la lezione della mano")}</option>
+              <option value="contratto">{t("Il contratto")}</option>
+              <option value="obiettivo">{t("Solo l'obiettivo: «almeno X prese»")}</option>
+            </select>
+            <p className="text-xs text-muted-foreground">
+              {t("Le carte sono le stesse. Senza il contratto l'allievo legge quante prese deve fare, e l'esito è «obiettivo raggiunto» o «mancato». «Come la lezione»: solo l'obiettivo nelle lezioni del gioco della carta, il contratto nelle altre.")}
+            </p>
+          </div>
+        )}
         <div className="space-y-1.5">
           <label htmlFor="note" className="text-sm font-medium">
             {t("Nota per gli allievi")} <span className="text-muted-foreground">(facoltativa)</span>

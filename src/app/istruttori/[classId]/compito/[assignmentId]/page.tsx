@@ -32,7 +32,7 @@ import {
   type TempiMano,
 } from "@/lib/tempi";
 import { NotaSmazzata } from "@/components/istruttori/nota-smazzata";
-import { senzaLicita } from "@/lib/gioco-della-carta";
+import { soloObiettivo } from "@/lib/gioco-della-carta";
 import { useT } from "@/contexts/traduzioni-provider";
 import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 import { useAlRitorno } from "@/hooks/use-al-ritorno";
@@ -378,7 +378,7 @@ export default function AssignmentResultsPage({
    * perché l'insegnante questa schermata la condivide con gli allievi
    * (Trevissoi, feedback 5).
    */
-  const soloGioco = senzaLicita(assignment.lesson_id);
+  const soloGioco = soloObiettivo(assignment.solo_obiettivo, assignment.lesson_id);
   const colLabel = (id: string) => {
     // Nel compito di licita il contratto è quello che gli allievi devono
     // trovare: scriverlo in testa alla colonna lo dava per già deciso, e

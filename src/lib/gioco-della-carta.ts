@@ -12,3 +12,15 @@ export function senzaLicita(lessonId: number | null | undefined): boolean {
   if (lessonId == null) return false;
   return getCourseIdFromLessonId(lessonId) === "fiori" && lessonId >= 1 && lessonId <= 6;
 }
+
+/**
+ * Se all'allievo si dice solo «almeno X prese», senza il contratto.
+ *
+ * L'insegnante lo sceglie nel compito (`assignments.solo_obiettivo`, i «due
+ * set di smazzate» chiesti da Trevissoi il 02/11/2026); se non l'ha scelto —
+ * o la colonna non c'è ancora — decide la lezione della mano, come prima.
+ */
+export function soloObiettivo(sceltaDelCompito: boolean | null | undefined, lessonId: number | null | undefined): boolean {
+  if (typeof sceltaDelCompito === "boolean") return sceltaDelCompito;
+  return senzaLicita(lessonId);
+}

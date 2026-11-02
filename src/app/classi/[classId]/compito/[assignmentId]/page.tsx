@@ -25,7 +25,7 @@ import type { CardData } from "@/components/bridge/playing-card";
 import { classifyPlayErrors } from "@/lib/play-error-classifier";
 import { BiddingPanel } from "@/components/bridge/bidding-panel";
 import { FoglioMano, PannelloMano } from "@/components/bridge/pannello-mano";
-import { senzaLicita } from "@/lib/gioco-della-carta";
+import { soloObiettivo } from "@/lib/gioco-della-carta";
 import { PannelloMinibridge } from "@/components/bridge/pannello-minibridge";
 import { PulsanteSegnalazione } from "@/components/pulsante-segnalazione";
 import { Cronometro, ripulisci } from "@/lib/tempi";
@@ -268,6 +268,7 @@ export default function CompitoPage({
       <CompitoHandGame
         smazzata={smazzata}
         minibridge={assignment.minibridge}
+        soloObiettivoCompito={assignment.solo_obiettivo}
         handNumber={currentIndex + 1}
         totalHands={hands.length}
         onFinish={async (score, details) => {
@@ -437,7 +438,7 @@ export default function CompitoPage({
                   <p className="text-xs text-muted-foreground">
                     {assignment.licita
                       ? t("Da dichiarare: sei Sud")
-                      : senzaLicita(hand.lesson)
+                      : soloObiettivo(assignment.solo_obiettivo, hand.lesson)
                       ? t("Obiettivo {n} prese", { n: parseContract(hand.contract).tricksNeeded })
                       : t("Contratto {c}", { c: contrattoLeggibile(hand.contract) })} ·{" "}
                     {hand.lesson > 0
@@ -462,7 +463,7 @@ export default function CompitoPage({
                   )}
                   {!assignment.licita && isDown && (
                     <p className="mt-0.5 text-xs font-bold text-red-600">
-                      {senzaLicita(hand.lesson)
+                      {soloObiettivo(assignment.solo_obiettivo, hand.lesson)
                         ? t("Obiettivo mancato — rigioca questa mano")
                         : <>Caduto{r ? ` di ${Math.abs(r.result)}` : ""} — rigioca questa mano</>}
                     </p>
@@ -706,6 +707,8 @@ interface CompitoHandGameProps {
   onBack: () => void;
   /** Il compito si gioca senza dichiarazione. */
   minibridge?: boolean;
+  /** La scelta dell'insegnante: contratto o solo «almeno X prese». Vedi `soloObiettivo`. */
+  soloObiettivoCompito?: boolean | null;
   /**
    * Compito di licita: si gioca il contratto che l'allievo ha appena
    * dichiarato, non quello scritto sulla mano. L'attacco lo sceglie il
@@ -719,7 +722,7 @@ interface CompitoHandGameProps {
   dopoLicita?: { contract: string; declarer: Position; bidding: BiddingData };
 }
 
-function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, minibridge, dopoLicita }: CompitoHandGameProps) {
+function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, minibridge, dopoLicita, soloObiettivoCompito }: CompitoHandGameProps) {
   const t = useT();
   const contratto = dopoLicita?.contract ?? smazzata.contract;
   const bidding = dopoLicita?.bidding ?? smazzata.bidding;
@@ -729,7 +732,7 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
    * spiegato. Si dice solo l'obiettivo in prese, e l'esito è «obiettivo
    * raggiunto / mancato» (Trevissoi, feedback 5).
    */
-  const soloGioco = !dopoLicita && senzaLicita(smazzata.lesson);
+  const soloGioco = !dopoLicita && soloObiettivo(soloObiettivoCompito, smazzata.lesson);
   const declarer = dopoLicita?.declarer ?? smazzata.declarer;
   const difesa = !!dopoLicita && partnershipOf(declarer) === "ew";
   /**
