@@ -16,7 +16,7 @@
 -- Rigenerare e committare dopo OGNI modifica allo schema, insieme allo script
 -- che l'ha causata.
 --
--- Estratto il: 2026-11-02
+-- Estratto il: 2026-11-03
 -- ============================================================================
 
 SET check_function_bodies = false;
@@ -91,7 +91,8 @@ CREATE TABLE IF NOT EXISTS public.assignments (
   link_video text,
   licita boolean NOT NULL,
   stelle_insegnante boolean NOT NULL,
-  licita_gioca boolean NOT NULL
+  licita_gioca boolean NOT NULL,
+  solo_obiettivo boolean
 );
 
 CREATE TABLE IF NOT EXISTS public.aste_torneo_in_corso (
@@ -308,7 +309,8 @@ CREATE TABLE IF NOT EXISTS public.esercizi_posizione (
   gruppo text,
   class_id uuid,
   created_at timestamp with time zone NOT NULL,
-  risposte_norm text[] NOT NULL
+  risposte_norm text[] NOT NULL,
+  opzioni text[] NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.eserciziario_exercises (
@@ -2570,35 +2572,38 @@ CREATE OR REPLACE FUNCTION public.esercizio_per_allievo(p_id uuid)
  STABLE SECURITY DEFINER
  SET search_path TO ''
 AS $function$
-declare
-  e public.esercizi_posizione%rowtype;
-  v_morto text;
-  v_mani jsonb := '{}'::jsonb;
-begin
-  if not public.puo_vedere_esercizio(p_id) then return null; end if;
-  select * into e from public.esercizi_posizione where id = p_id;
+  declare
+    e public.esercizi_posizione%rowtype;
+    v_morto text;
+    v_mani jsonb := '{}'::jsonb;
+  begin
+    if not public.puo_vedere_esercizio(p_id) then return null; end if;
+    select * into e from public.esercizi_posizione where id = p_id;
 
-  v_mani := jsonb_build_object(e.posizione, e.hands -> e.posizione);
-
-  if jsonb_array_length(e.played) > 0 and e.declarer is not null then
-    v_morto := case e.declarer
-      when 'north' then 'south' when 'south' then 'north'
-      when 'east'  then 'west'  when 'west'  then 'east' end;
-    if v_morto is not null and v_morto <> e.posizione then
-      v_mani := v_mani || jsonb_build_object(v_morto, e.hands -> v_morto);
+    if jsonb_exists(e.hands, e.posizione) then
+      v_mani := jsonb_build_object(e.posizione, e.hands -> e.posizione);
     end if;
-  end if;
 
-  return jsonb_build_object(
-    'id', e.id, 'autore_id', e.autore_id, 'titolo', e.titolo,
-    'consegna', e.consegna, 'domanda', e.domanda, 'hands', v_mani,
-    'dealer', e.dealer, 'vulnerability', e.vulnerability,
-    'bids', to_jsonb(e.bids), 'played', e.played, 'posizione', e.posizione,
-    'contract', e.contract, 'declarer', e.declarer,
-    'gruppo', e.gruppo, 'class_id', e.class_id, 'created_at', e.created_at,
-    'quante_risposte', coalesce(array_length(e.risposte, 1), 0)
-  );
-end $function$
+    if jsonb_array_length(e.played) > 0 and e.declarer is not null then
+      v_morto := case e.declarer
+        when 'north' then 'south' when 'south' then 'north'
+        when 'east'  then 'west'  when 'west'  then 'east' end;
+      if v_morto is not null and v_morto <> e.posizione and jsonb_exists(e.hands, v_morto) then
+        v_mani := v_mani || jsonb_build_object(v_morto, e.hands -> v_morto);
+      end if;
+    end if;
+
+    return jsonb_build_object(
+      'id', e.id, 'autore_id', e.autore_id, 'titolo', e.titolo,
+      'consegna', e.consegna, 'domanda', e.domanda, 'hands', v_mani,
+      'dealer', e.dealer, 'vulnerability', e.vulnerability,
+      'bids', to_jsonb(e.bids), 'played', e.played, 'posizione', e.posizione,
+      'contract', e.contract, 'declarer', e.declarer,
+      'gruppo', e.gruppo, 'class_id', e.class_id, 'created_at', e.created_at,
+      'opzioni', to_jsonb(e.opzioni),
+      'quante_risposte', coalesce(array_length(e.risposte, 1), 0)
+    );
+  end $function$
 ;
 
 CREATE OR REPLACE FUNCTION public.evento_da_codice(p_codice text)
@@ -4943,6 +4948,7 @@ ALTER TABLE public.esercizi_posizione ALTER COLUMN posizione SET DEFAULT 'south'
 ALTER TABLE public.esercizi_posizione ALTER COLUMN risposte SET DEFAULT '{}'::text[];
 ALTER TABLE public.esercizi_posizione ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.esercizi_posizione ALTER COLUMN risposte_norm SET DEFAULT '{}'::text[];
+ALTER TABLE public.esercizi_posizione ALTER COLUMN opzioni SET DEFAULT '{}'::text[];
 ALTER TABLE public.eserciziario_exercises ALTER COLUMN content SET DEFAULT '[]'::jsonb;
 ALTER TABLE public.eserciziario_exercises ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.eserciziario_exercises ALTER COLUMN updated_at SET DEFAULT now();
@@ -5215,7 +5221,7 @@ ALTER TABLE public.collectible_cards ADD CONSTRAINT collectible_cards_rarity_che
 ALTER TABLE public.collectible_cards ADD CONSTRAINT collectible_cards_unlock_check CHECK ((jsonb_typeof(unlock) = 'object'::text));
 ALTER TABLE public.commenti_compito ADD CONSTRAINT commenti_compito_testo_check CHECK (((char_length(testo) >= 1) AND (char_length(testo) <= 4000)));
 ALTER TABLE public.courses ADD CONSTRAINT courses_level_check CHECK ((level = ANY (ARRAY['base'::text, 'intermedio'::text, 'avanzato'::text])));
-ALTER TABLE public.esercizi_posizione ADD CONSTRAINT esercizi_posizione_consegna_check CHECK ((consegna = ANY (ARRAY['dichiara'::text, 'carta'::text, 'piano'::text])));
+ALTER TABLE public.esercizi_posizione ADD CONSTRAINT esercizi_posizione_consegna_check CHECK ((consegna = ANY (ARRAY['dichiara'::text, 'carta'::text, 'piano'::text, 'scelta'::text])));
 ALTER TABLE public.eserciziario_exercises ADD CONSTRAINT eserciziario_exercises_content_check CHECK ((jsonb_typeof(content) = 'array'::text));
 ALTER TABLE public.forum_posts ADD CONSTRAINT forum_posts_category_check CHECK ((category = ANY (ARRAY['lezioni'::text, 'strategia'::text, 'tornei'::text, 'generale'::text, 'off-topic'::text])));
 ALTER TABLE public.friendships ADD CONSTRAINT friendships_status_check CHECK ((status = ANY (ARRAY['pending'::text, 'accepted'::text, 'declined'::text])));
@@ -7454,6 +7460,7 @@ GRANT SELECT (declarer) ON TABLE public.esercizi_posizione TO authenticated;
 GRANT SELECT (gruppo) ON TABLE public.esercizi_posizione TO authenticated;
 GRANT SELECT (class_id) ON TABLE public.esercizi_posizione TO authenticated;
 GRANT SELECT (created_at) ON TABLE public.esercizi_posizione TO authenticated;
+GRANT SELECT (opzioni) ON TABLE public.esercizi_posizione TO authenticated;
 GRANT SELECT (id) ON TABLE public.profiles TO authenticated;
 GRANT SELECT (display_name) ON TABLE public.profiles TO authenticated;
 GRANT SELECT (bbo_username) ON TABLE public.profiles TO authenticated;
