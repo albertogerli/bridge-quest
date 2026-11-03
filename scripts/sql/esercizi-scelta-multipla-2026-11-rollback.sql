@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION public.esercizio_per_allievo(p_id uuid)
  LANGUAGE plpgsql
  STABLE SECURITY DEFINER
  SET search_path TO ''
-AS $function$
+AS $fn$
 declare
   e public.esercizi_posizione%rowtype;
   v_morto text;
@@ -40,7 +40,7 @@ begin
     'gruppo', e.gruppo, 'class_id', e.class_id, 'created_at', e.created_at,
     'quante_risposte', coalesce(array_length(e.risposte, 1), 0)
   );
-end $function$;
+end $fn$;
 
 alter table public.esercizi_posizione drop column if exists opzioni;
 delete from public.script_applicati where nome = 'esercizi-scelta-multipla-2026-11.sql';
