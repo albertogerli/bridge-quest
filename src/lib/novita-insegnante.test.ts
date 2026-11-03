@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { maniConNovita, scrittiPerAllievo, segnaVisto, ultimoMomento, vistoFinoA } from "./novita-insegnante";
+import { istante, maniConNovita, scrittiPerAllievo, segnaVisto, ultimoMomento, vistoFinoA } from "./novita-insegnante";
 
 const IO = "allievo-1";
 
@@ -41,6 +41,23 @@ describe("maniConNovita", () => {
   it("i microsecondi accorciati da Postgres non ingannano il confronto", () => {
     // «.68306» è «.683060»: viene prima di «.683064».
     expect(maniConNovita([{ smazzataId: "a", quando: "2026-11-03T06:15:07.683064+00:00" }], "2026-11-03T06:15:07.68306+00:00")).toEqual(["a"]);
+  });
+});
+
+describe("istante: il tempo, non la stringa", () => {
+  it("Z e +00:00 sono lo stesso momento, e l'ordine regge fra i due", () => {
+    expect(istante("2026-11-03T06:15:07Z")).toBe(istante("2026-11-03T06:15:07+00:00"));
+    expect(maniConNovita([{ smazzataId: "a", quando: "2026-11-03T06:15:07.5Z" }], "2026-11-03T06:15:07.4+00:00")).toEqual(["a"]);
+    expect(maniConNovita([{ smazzataId: "a", quando: "2026-11-03T06:15:07Z" }], "2026-11-03T06:15:07.000001+00:00")).toEqual([]);
+  });
+
+  it("i fusi diversi si confrontano sull'ora vera", () => {
+    expect(istante("2026-11-03T07:15:07+01:00")).toBe(istante("2026-11-03T06:15:07+00:00"));
+  });
+
+  it("tiene i microsecondi, che Date.parse da solo perderebbe", () => {
+    expect(istante("2026-11-03T06:15:07.683064+00:00") - istante("2026-11-03T06:15:07.683063+00:00")).toBe(1);
+    expect(istante("2026-11-03T06:15:07.68306+00:00")).toBe(istante("2026-11-03T06:15:07.683060+00:00"));
   });
 });
 

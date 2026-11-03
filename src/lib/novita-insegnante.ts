@@ -27,6 +27,31 @@ export interface ScrittoInsegnante {
 
 const CHIAVE = (assignmentId: string) => `bq_letto_compito:${assignmentId}`;
 
+/**
+ * Un momento ISO in microsecondi dall'epoca, per confrontarlo con un altro.
+ *
+ * NON SI CONFRONTANO LE STRINGHE. Con quello che manda oggi PostgREST
+ * («…07.68306+00:00», zeri finali tolti) il confronto lessicografico regge,
+ * ma per caso: basta un «Z» al posto di «+00:00», o un altro fuso, e l'ordine
+ * delle stringhe non è più quello del tempo (osservazione esterna, 03/11/2026).
+ * E `Date.parse` da solo non basta: tiene i millesimi e butta i microsecondi,
+ * così due cose scritte nello stesso millesimo sembrerebbero una sola.
+ */
+export function istante(iso: string): number {
+  const m = iso.trim().match(/^(.+?T\d{2}:\d{2}:\d{2})(?:\.(\d+))?(Z|[+-]\d{2}(?::?\d{2})?)?$/i);
+  if (!m) return Number.NaN;
+  const secondi = Date.parse(`${m[1]}${m[3] ?? "Z"}`);
+  const micro = Number((m[2] ?? "").padEnd(6, "0").slice(0, 6));
+  return secondi * 1000 + micro;
+}
+
+/** a viene dopo b? Se uno dei due non si legge, ripiega sul confronto di stringhe. */
+function dopo(a: string, b: string): boolean {
+  const x = istante(a);
+  const y = istante(b);
+  return Number.isNaN(x) || Number.isNaN(y) ? a > b : x > y;
+}
+
 /** Fin dove l'allievo ha letto in questo compito; `null` se non l'ha mai aperto da qui. */
 export function vistoFinoA(assignmentId: string): string | null {
   try {
@@ -41,14 +66,14 @@ export function segnaVisto(assignmentId: string, scritti: readonly ScrittoInsegn
   const ultima = ultimoMomento(scritti);
   if (!ultima) return;
   const prima = vistoFinoA(assignmentId);
-  if (prima && prima >= ultima) return;
+  if (prima && !dopo(ultima, prima)) return;
   try {
     localStorage.setItem(CHIAVE(assignmentId), ultima);
   } catch {}
 }
 
 export function ultimoMomento(scritti: readonly ScrittoInsegnante[]): string | null {
-  return scritti.reduce<string | null>((m, s) => (m === null || s.quando > m ? s.quando : m), null);
+  return scritti.reduce<string | null>((m, s) => (m === null || dopo(s.quando, m) ? s.quando : m), null);
 }
 
 /**
@@ -74,7 +99,7 @@ export function scrittiPerAllievo(
 export function maniConNovita(scritti: readonly ScrittoInsegnante[], visto: string | null): string[] {
   const mani: string[] = [];
   for (const s of scritti) {
-    if (visto !== null && s.quando <= visto) continue;
+    if (visto !== null && !dopo(s.quando, visto)) continue;
     if (!mani.includes(s.smazzataId)) mani.push(s.smazzataId);
   }
   return mani;
