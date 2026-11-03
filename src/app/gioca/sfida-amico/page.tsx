@@ -593,8 +593,8 @@ function ActiveChallenge({
 
           <aside className="grid gap-4 2xl:sticky 2xl:top-4">
             <div className="hidden overflow-hidden rounded-2xl border border-border bg-card 2xl:block">{pannello}</div>
-            {/* Sul telefono, prima di cominciare, la licita si legge senza aprire niente: come prima. */}
-            {smazzata.bidding && isMobile && game.phase === "ready" && (
+            {/* Prima di cominciare, finché il pannello non è affiancato (sotto 2xl), la licita si legge senza aprire il foglio. */}
+            {smazzata.bidding && game.phase === "ready" && (
               <div className="2xl:hidden">
                 <BiddingPanel bidding={smazzata.bidding} />
               </div>
