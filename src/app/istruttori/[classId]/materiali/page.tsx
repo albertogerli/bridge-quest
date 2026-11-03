@@ -264,7 +264,9 @@ export default function MaterialiLezionePage({ params }: { params: Promise<{ cla
                               url={m.url}
                               className="block truncate text-sm text-primary underline-offset-2 hover:underline"
                             >
-                              {m.url}
+                              {/* Un indirizzo interno («/dispense?classe=…&corso=fiori») non
+                                  dice niente a chi legge: si scrive cosa apre. */}
+                              {m.url.startsWith("/") ? t("Apri sul sito") : m.url}
                             </CollegamentoMateriale>
                           </div>
                           {stato === "pubblicato" ? (

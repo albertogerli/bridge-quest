@@ -1,0 +1,100 @@
+% Lezione 18 · Apertura di 2♣, sottoaperture e richiesta d'assi — BridgeLab, mani generate per il Corso di Primo Livello
+
+[Event "2♣ e poi 2SA"]
+[Board "1"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:KQJ.AQ9.AJT6.KQJ A53.KJ832.742.54 642.764.83.AT863 T987.T5.KQ95.972"]
+[Declarer "N"]
+[Contract "3NT"]
+[Auction "N"]
+2C Pass 2D Pass
+2NT Pass 3NT Pass
+Pass Pass
+{Nord ha 23 punti bilanciati: oltre i 21–22 dell'apertura di 2SA, apre 2♣, l'apertura forte. Sud dà la risposta d'attesa, 2♦. Nord ridichiara 2SA: mostra la bilanciata di 23–24. Sud ha 4 punti, quanto basta per la manche: 3SA.}
+
+[Event "2♣, appoggio e richiesta d'assi"]
+[Board "2"]
+[Dealer "E"]
+[Vulnerable "NS"]
+[Deal "N:Q.Q9763.874.9752 AKJ9743.T.AKQJ.A T2.A852.932.QT83 865.KJ4.T65.KJ64"]
+[Declarer "E"]
+[Contract "6S"]
+[Auction "E"]
+2C Pass 2D Pass
+2S Pass 3S Pass
+4NT Pass 5C Pass
+6S Pass Pass Pass
+{Est, 22 punti e sette picche, apre 2♣. Sulla risposta d'attesa, 2♦, dichiara le picche, e Ovest le appoggia: 3♠. Con il colore trovato, Est ha tre assi e chiede il quarto: 4SA, la richiesta d'assi. 5♣ vuol dire nessun asso (o tutti e quattro, che qui non può essere): ne manca uno solo, e lo slam si dichiara. 6♠.}
+
+[Event "Sottoapertura di 2♥"]
+[Board "3"]
+[Dealer "S"]
+[Vulnerable "EW"]
+[Deal "N:KQJ876.4.K5.A854 A5.JT3.AJ932.T97 32.AQ9765.74.KJ3 T94.K82.QT86.Q62"]
+[Declarer "S"]
+[Contract "2H"]
+[Auction "S"]
+2H Pass Pass Pass
+{Sud ha 10 punti e sei buone cuori: non abbastanza per aprire di 1, abbastanza per la sottoapertura, 2♥ (6–10 punti, sei carte). Nord ha 13 punti e una cuori: la manche è lontana, e passa.}
+
+[Event "Sottoapertura di 2♠ e manche"]
+[Board "4"]
+[Dealer "W"]
+[Vulnerable "All"]
+[Deal "N:A87.JT64.8764.53 KJ6.A5.AKJ3.K642 5.Q972.T92.AJT98 QT9432.K83.Q5.Q7"]
+[Declarer "W"]
+[Contract "4S"]
+[Auction "W"]
+2S Pass 4S Pass
+Pass Pass
+{Ovest sottoapre 2♠: 9 punti e sei picche. Est ha 19 punti e tre picche: il fit c'è, e contando le prese della mano del compagno la manche è a portata. Chiude a 4♠.}
+
+[Event "Sottoapertura a livello 3"]
+[Board "5"]
+[Dealer "N"]
+[Vulnerable "NS"]
+[Deal "N:954.A94.KJ87542. KJ6.KT62.9.K8543 87.QJ7.QT6.AQJT9 AQT32.853.A3.762"]
+[Declarer "N"]
+[Contract "3D"]
+[Auction "N"]
+3D Pass Pass Pass
+{Nord ha sette quadri e 8 punti: apre 3♦, la sottoapertura di livello 3, e toglie spazio agli avversari. Sud, 12 punti, non ha né i punti né il fit per la manche: passa.}
+
+[Event "Richiesta d'assi e slam"]
+[Board "6"]
+[Dealer "E"]
+[Vulnerable "EW"]
+[Deal "N:72.KQT94.T876.QT Q9543.A.QJ43.AKJ J6.8752.K9.98543 AKT8.J63.A52.762"]
+[Declarer "E"]
+[Contract "6S"]
+[Auction "E"]
+1S Pass 3S Pass
+4NT Pass 5H Pass
+6S Pass Pass Pass
+{Est apre 1♠ e Ovest appoggia a salto, 3♠: 11–12 punti e quattro picche. Est, 17 punti e una mano sbilanciata, pensa allo slam: prima di dichiararlo chiede gli assi, 4SA. 5♥ ne mostra due: in linea ci sono tutti e quattro, e Est dichiara 6♠.}
+
+[Event "Richiesta d'assi e fermata a livello 5"]
+[Board "7"]
+[Dealer "S"]
+[Vulnerable "All"]
+[Deal "N:QJ62.J742.AJ42.K T95.863.873.T864 K.AKQT95.K65.QJ2 A8743..QT9.A9753"]
+[Declarer "S"]
+[Contract "5H"]
+[Auction "S"]
+1H Pass 3H Pass
+4NT Pass 5D Pass
+5H Pass Pass Pass
+{Sud apre 1♥ e Nord appoggia a salto, 3♥. Sud, 18 punti e sei cuori, chiede gli assi: 4SA. 5♦ ne mostra uno solo. Con un asso a testa ne mancano due, e lo slam non si chiama: Sud si ferma a 5♥. È a questo che serve la richiesta d'assi: a non dichiarare uno slam che gli avversari battono con due assi.}
+
+[Event "Sottoapertura di 3♠ e manche"]
+[Board "8"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "N:T42.87.KJ876.AT8 J95.AQT94.A.K932 .KJ65.Q9543.QJ64 AKQ8763.32.T2.75"]
+[Declarer "W"]
+[Contract "4S"]
+[Auction "W"]
+3S Pass 4S Pass
+Pass Pass
+{Ovest apre 3♠: sette picche e 9 punti. Est ha 14 punti e tre picche: sa che il compagno ha poco fuori dal colore, ma le sue carte bastano per la decima presa. 4♠.}

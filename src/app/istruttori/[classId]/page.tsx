@@ -573,7 +573,7 @@ export default function ClassDetailPage({
             <Button variant="outline">1 · {t("Dispensa")}</Button>
           </Link>
           <Link href={`/istruttori/${classId}/nuovo-compito`}>
-            <Button variant="outline">2 · {t("Esercizio")}</Button>
+            <Button variant="outline">2 · {t("Nuovo compito")}</Button>
           </Link>
           <Button variant="outline" onClick={() => setScheda("lezioni")}>
             3 · {t("Smazzate della lezione, video e materiali")}
@@ -634,14 +634,14 @@ export default function ClassDetailPage({
                 {t("Nessun compito ancora.")}
               </p>
               <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
-                {t("Due modi per dare da giocare alla classe. «Mani di una lezione»: un tocco e gli allievi trovano come compito tutte le smazzate di una lezione del corso. «Compito su misura»: scegli tu le mani, una per una.")}
+                {t("Due modi per dare da giocare alla classe. «Mani di una lezione»: un tocco e gli allievi trovano come compito tutte le smazzate di una lezione del corso. «Nuovo compito»: le smazzate del programma o le mani che scegli tu.")}
               </p>
               <div className="mt-4 flex flex-wrap justify-center gap-2">
                 <Button onClick={() => setScheda("lezioni")}>
                   {t("Mani di una lezione")}
                 </Button>
                 <Link href={`/istruttori/${classId}/nuovo-compito`}>
-                  <Button variant="outline">{t("Compito su misura")}</Button>
+                  <Button variant="outline">{t("Nuovo compito")}</Button>
                 </Link>
               </div>
             </div>

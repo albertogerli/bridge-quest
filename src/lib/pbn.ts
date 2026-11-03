@@ -5,7 +5,9 @@
  * assign hands from any dealing program (Dealer4, BridgeComposer, BBO…).
  *
  * Supported tags: Board, Dealer, Vulnerable, Deal, Contract, Declarer,
- * Event, Play (only the opening lead is read). Everything else is ignored.
+ * Event, Play (only the opening lead is read), Auction (the calls become the
+ * hand's bidding) and the `{…}` commentary of a record. Everything else is
+ * ignored.
  * Hands without a playable contract (e.g. "Pass") are reported and skipped.
  */
 
@@ -61,27 +63,55 @@ interface PbnRecord {
   tags: Map<string, string>;
   playLeader: Position | null;
   firstPlayCard: string | null; // e.g. "H5"
+  /** Calls of the [Auction] section, in PBN spelling ("1H", "Pass", "AP"). */
+  auction: string[];
+  /** Text of the `{…}` commentary blocks, joined. */
+  commentary: string[];
 }
+
+const nuovoRecord = (): PbnRecord => ({
+  tags: new Map(), playLeader: null, firstPlayCard: null, auction: [], commentary: [],
+});
 
 /** Split raw PBN text into game records. A record ends at a blank line that
  *  follows a Deal tag, or when a tag repeats (new game without separator). */
 function splitRecords(text: string): PbnRecord[] {
   const records: PbnRecord[] = [];
-  let current: PbnRecord = { tags: new Map(), playLeader: null, firstPlayCard: null };
+  let current = nuovoRecord();
   let inPlay = false;
+  let inAuction = false;
+  /** Inside a `{…}` commentary that spans lines. */
+  let commento: string[] | null = null;
 
   const push = () => {
     if (current.tags.size > 0) records.push(current);
-    current = { tags: new Map(), playLeader: null, firstPlayCard: null };
+    current = nuovoRecord();
     inPlay = false;
+    inAuction = false;
   };
 
   for (const rawLine of text.split(/\r?\n/)) {
+    if (commento) {
+      const fine = rawLine.indexOf("}");
+      commento.push(fine >= 0 ? rawLine.slice(0, fine) : rawLine);
+      if (fine >= 0) {
+        current.commentary.push(commento.join(" ").replace(/\s+/g, " ").trim());
+        commento = null;
+      }
+      continue;
+    }
     const line = rawLine.trim();
     if (line.startsWith("%")) continue; // comment / directive
+    if (line.startsWith("{")) {
+      const fine = line.indexOf("}");
+      if (fine >= 0) current.commentary.push(line.slice(1, fine).trim());
+      else commento = [line.slice(1)];
+      continue;
+    }
     if (line === "") {
       if (current.tags.has("DEAL")) push();
       inPlay = false;
+      inAuction = false;
       continue;
     }
 
@@ -90,6 +120,7 @@ function splitRecords(text: string): PbnRecord[] {
       const name = tagMatch[1].toUpperCase();
       const value = tagMatch[2];
       inPlay = false;
+      inAuction = false;
       // Repeated tag without blank-line separator → new game starts here
       if (current.tags.has(name)) push();
       current.tags.set(name, value);
@@ -97,6 +128,13 @@ function splitRecords(text: string): PbnRecord[] {
         current.playLeader = SEAT[value.toUpperCase()] ?? null;
         inPlay = true;
       }
+      if (name === "AUCTION") inAuction = true;
+      continue;
+    }
+
+    if (inAuction) {
+      // Annotations like "=1=" or "$1" are not calls.
+      current.auction.push(...line.split(/\s+/).filter((c) => c && !/^(=\d+=|\$\d+|\*)$/.test(c)));
       continue;
     }
 
@@ -199,6 +237,25 @@ export function defaultOpeningLead(hand: Card[], trumpLetter: string | null): Ca
   return suitCards[suitCards.length - 1]; // lowest
 }
 
+/**
+ * [Auction "N"] + "1H Pass 2H AP" → { dealer: "north", bids: ["1H","P","2H","P","P","P"] },
+ * the shape of `smazzate.bidding`. `null` when there is no usable auction.
+ */
+function licitaDaPbn(primo: string | undefined, chiamate: string[]): { dealer: Position; bids: string[] } | null {
+  const dealer = primo ? SEAT[primo.trim().toUpperCase()] : undefined;
+  if (!dealer || chiamate.length === 0) return null;
+  const bids: string[] = [];
+  for (const c of chiamate) {
+    const u = c.toUpperCase();
+    if (u === "AP") bids.push("P", "P", "P");
+    else if (u === "PASS" || u === "P") bids.push("P");
+    else if (u === "X" || u === "XX") bids.push(u);
+    else if (/^[1-7](NT|SA|[SHDC])$/.test(u)) bids.push(u.replace("SA", "NT"));
+    else return null;
+  }
+  return { dealer, bids };
+}
+
 // ─── Main entry point ────────────────────────────────────────────────────
 
 /**
@@ -260,6 +317,7 @@ export function parsePbn(text: string, idPrefix = "pbn"): PbnImportResult {
       }
 
       const board = parseInt(rec.tags.get("BOARD") ?? "", 10);
+      const bidding = licitaDaPbn(rec.tags.get("AUCTION"), rec.auction);
       deals.push({
         id: `${idPrefix}-${index}`,
         lesson: 0, // custom hand: not tied to a catalog lesson
@@ -270,7 +328,8 @@ export function parsePbn(text: string, idPrefix = "pbn"): PbnImportResult {
         openingLead,
         vulnerability: parseVulnerability(rec.tags.get("VULNERABLE")),
         hands,
-        commentary: "",
+        commentary: rec.commentary.join("\n\n"),
+        ...(bidding ? { bidding } : {}),
       });
     } catch (err) {
       errors.push(`${label}: ${err instanceof Error ? err.message : "errore di parsing"}`);

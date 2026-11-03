@@ -1095,6 +1095,19 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
               </motion.div>
             )}
             <div className="hidden overflow-hidden rounded-2xl border border-border bg-card lg:block">{pannello}</div>
+            {/*
+              «GIOCA LA MANO» SOTTO L'OBIETTIVO, sullo schermo largo. Sotto il
+              tavolo bisognava scorrere per trovarlo (Trevissoi, 03/11/2026):
+              accanto al riquadro con l'obiettivo si legge quante prese servono
+              e si comincia, tutto in una schermata. Sotto lg la colonna va
+              sotto il tavolo, e il pulsante resta dov'era.
+            */}
+            {game.phase === "ready" && (
+              <Button onClick={game.startGame} className="hidden h-12 w-full text-sm font-bold lg:flex">
+                <Play className="mr-2 h-4 w-4" />
+                {t("Gioca la mano")}
+              </Button>
+            )}
             {/* Prima di cominciare, finché il pannello non è affiancato (sotto lg), la licita si legge senza aprire il foglio. */}
             {licitaVisibile && game.phase === "ready" && (
               <div className="lg:hidden">
@@ -1147,7 +1160,7 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
         {/* Actions */}
         <div className="mt-4 flex justify-center gap-3">
           {game.phase === "ready" && (
-            <Button onClick={game.startGame} className="h-12 px-8 text-sm font-bold">
+            <Button onClick={game.startGame} className="h-12 px-8 text-sm font-bold lg:hidden">
               <Play className="mr-2 h-4 w-4" />
               {t("Gioca la mano")}
             </Button>

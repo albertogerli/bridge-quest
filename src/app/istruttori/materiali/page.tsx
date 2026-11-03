@@ -7,7 +7,7 @@ import { useT } from "@/contexts/traduzioni-provider";
 import { useLingua } from "@/hooks/use-lingua";
 import Link from "@/components/link";
 import { MATERIALI_CORSO, type Esercizi, type ManiCommissione, type Materiale } from "@/lib/materiali-corso";
-import { MODULI_PROGRAMMA, PROGRAMMA_PRIMO_LIVELLO } from "@/lib/programma-corso";
+import { MODULI_PROGRAMMA, PROGRAMMA_PRIMO_LIVELLO, siglaGruppi } from "@/lib/programma-corso";
 
 /**
  * Slide da proiettare e dispense da stampare, modulo per modulo.
@@ -140,7 +140,7 @@ function GruppoMani({ mani }: { mani: ManiCommissione[] }) {
     <div className="mb-5">
       <h3 className="text-sm font-semibold text-muted-foreground mb-1">{t("Altre smazzate della Commissione")}</h3>
       <p className="text-xs text-muted-foreground mb-2">
-        {t("Le smazzate delle altre lezioni della Commissione sono già tra le mani di ogni lezione, con il commento. Queste le trovi in «Nuovo compito» di ogni classe, sotto «Mani della Commissione»: hanno il contratto, non il commento.")}
+        {t("Dal corso della Commissione del 2026, fuori dalle tabelle del programma. Le trovi in «Nuovo compito» di ogni classe, sotto «Altre smazzate della Commissione»: hanno il contratto, non il commento.")}
       </p>
       <ul className="grid gap-2 sm:grid-cols-2">
         {mani.map((m) => (
@@ -171,16 +171,15 @@ function GruppoMani({ mani }: { mani: ManiCommissione[] }) {
 
 /**
  * Il programma ufficiale, lezione per lezione, con quello che il sito ha per
- * ciascuna. Vedi `programma-corso.ts`: la corrispondenza è da confermare.
+ * ciascuna. Vedi `programma-corso.ts`.
  */
 function Programma() {
   const t = useT();
-  const titoliMani = new Map(MATERIALI_CORSO.flatMap((m) => m.mani.map((x) => [x.file, x.titolo] as const)));
   return (
     <section className="mb-10">
       <h2 className="text-lg font-bold font-display">{t("Programma del Corso di Primo Livello")}</h2>
       <p className="text-sm text-muted-foreground mb-4">
-        {t("Le venti lezioni della Commissione e, per ognuna, la lezione del sito da assegnare o le smazzate da giocare in aula. Le lezioni di gioco non hanno teoria nuova: si gioca al tavolo con il tutoraggio.")}
+        {t("Le venti lezioni della Commissione e, per ognuna, la lezione del sito e le smazzate da giocare. «E3 S1-4» vuol dire esercizio 3, smazzate da 1 a 4: si assegnano da «Nuovo compito» di ogni classe, toccando la lezione.")}
       </p>
       {([1, 2] as const).map((modulo) => (
         <div key={modulo} className="mb-5">
@@ -198,12 +197,13 @@ function Programma() {
                         {t("Lezione {n} del sito", { n: id })}
                       </Link>
                     ))}
-                    {l.mani.map((f) => (
-                      <span key={f}>{t("Mani: {titolo}", { titolo: t(titoliMani.get(f) ?? "") })}</span>
-                    ))}
-                    {l.lezioniSito.length === 0 && l.mani.length === 0 && (
-                      <span>{l.tipo === "gioco" ? t("Smazzate da scegliere in «Nuovo compito»") : t("Materiale in preparazione")}</span>
-                    )}
+                    <span>
+                      {l.smazzate === "tavolo"
+                        ? t("Smazzate mescolate al tavolo")
+                        : Array.isArray(l.smazzate)
+                          ? t("Smazzate {sigla}", { sigla: siglaGruppi(l.smazzate) })
+                          : t("Smazzate preparate da BridgeLab")}
+                    </span>
                   </p>
                 </div>
               </li>

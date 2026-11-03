@@ -1,0 +1,101 @@
+% Lezione 17 · Sviluppo delle aperture di 1 a colore — BridgeLab, mani generate per il Corso di Primo Livello
+
+[Event "Appoggio semplice"]
+[Board "1"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:T97.AKQT2.4.AJT6 AKJ32.J74.73.843 Q8.653.KQ865.Q52 654.98.AJT92.K97"]
+[Declarer "N"]
+[Contract "2H"]
+[Auction "N"]
+1H Pass 2H Pass
+Pass Pass
+{Nord, 14 punti e cinque cuori, apre 1♥. Sud ha 9 punti e tre cuori: il fit c'è, i punti per la manche no, e la risposta è l'appoggio semplice, 2♥ (6–10 punti). Nord è al minimo: in linea non ci sono i 25 punti della manche, e passa.}
+
+[Event "Appoggio a salto, invitante"]
+[Board "2"]
+[Dealer "E"]
+[Vulnerable "NS"]
+[Deal "N:985.Q2.Q854.Q875 AKQ74.973.K7.KT6 J.A654.JT93.J432 T632.KJT8.A62.A9"]
+[Declarer "E"]
+[Contract "4S"]
+[Auction "E"]
+1S Pass 3S Pass
+4S Pass Pass Pass
+{Est apre 1♠ con 15 punti e cinque picche. Ovest, 12 punti e quattro picche, salta a 3♠: è l'appoggio limite, 11–12 punti, e chiede all'apertore se è sopra il minimo. Est lo è, 15 punti: in linea ce ne sono 27, e dichiara la manche.}
+
+[Event "Ridichiarazione di 1SA e manche a senza"]
+[Board "3"]
+[Dealer "S"]
+[Vulnerable "EW"]
+[Deal "N:AK8.Q975.AQ63.85 QT942.643.984.KT J53.J8.KJ2.AQJ94 76.AKT2.T75.7632"]
+[Declarer "S"]
+[Contract "3NT"]
+[Auction "S"]
+1C Pass 1H Pass
+1NT Pass 3NT Pass
+Pass Pass
+{Sud ha 13 punti bilanciati, troppo pochi per 1SA (15–17): apre 1♣, il colore più lungo. Nord risponde 1♥, il suo colore di quattro carte. Sud non ha quattro cuori né quattro picche e ridichiara 1SA: mano bilanciata di 12–14. Nord, con 15, sa che i punti per la manche ci sono e che il fit a cuori non c'è: 3SA.}
+
+[Event "Appoggio del colore del rispondente"]
+[Board "4"]
+[Dealer "W"]
+[Vulnerable "All"]
+[Deal "N:Q84.J854.Q87.QJ2 KT95.KQT.K3.AT43 AJ.9763.T952.986 7632.A2.AJ64.K75"]
+[Declarer "W"]
+[Contract "4S"]
+[Auction "W"]
+1D Pass 1S Pass
+2S Pass 4S Pass
+Pass Pass
+{Ovest apre 1♦ con 12 punti. Est risponde 1♠ con quattro carte di picche. Ovest ne ha quattro: il fit è trovato e lo dice subito, 2♠, mano minima. Est ha 15 punti: con i 12–14 dell'apertore si arriva a 25, e chiude a 4♠.}
+
+[Event "Risposta a livello 2 e appoggio"]
+[Board "5"]
+[Dealer "N"]
+[Vulnerable "NS"]
+[Deal "N:AKQ87.K85.QT5.92 T63.T43.A9763.AT J4.AQJ76.4.KJ875 952.92.KJ82.Q643"]
+[Declarer "S"]
+[Contract "4H"]
+[Auction "N"]
+1S Pass 2H Pass
+3H Pass 4H Pass
+Pass Pass
+{Nord apre 1♠. Sud, 12 punti e cinque cuori, senza appoggio a picche, dichiara il suo colore a livello 2: 2♥ promette almeno 11 punti. Nord ha tre cuori e appoggia, 3♥. Sud ha i punti per la manche: 4♥.}
+
+[Event "Risposta di 1SA"]
+[Board "6"]
+[Dealer "E"]
+[Vulnerable "EW"]
+[Deal "N:T9852.KJT.Q7.K95 73.Q9873.AK2.AJ2 AQ4.542.JT5.QT76 KJ6.A6.98643.843"]
+[Declarer "W"]
+[Contract "1NT"]
+[Auction "E"]
+1H Pass 1NT Pass
+Pass Pass
+{Est apre 1♥ con 14 punti e una mano bilanciata. Ovest ha 8 punti, due cuori e nessun colore da dichiarare a livello 1: risponde 1SA, 6–10 punti senza appoggio. Est, al minimo e bilanciato, passa.}
+
+[Event "Ridichiarazione del proprio colore"]
+[Board "7"]
+[Dealer "S"]
+[Vulnerable "All"]
+[Deal "N:A975.3.KJ98764.2 KQ32.9865.AT2.65 J4.QJT.53.AKQT93 T86.AK742.Q.J874"]
+[Declarer "S"]
+[Contract "2C"]
+[Auction "S"]
+1C Pass 1S Pass
+2C Pass Pass Pass
+{Sud apre 1♣ con 13 punti e sei fiori. Nord risponde 1♠. Sud non ha quattro picche per appoggiare né una mano bilanciata: ridichiara le fiori, 2♣, colore lungo e mano minima. Nord, con 8 punti, non vede la manche e passa.}
+
+[Event "Salto a 2SA dell'apertore"]
+[Board "8"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "N:J98.AJT84.98.KT4 75.Q963.KJ72.J82 QT643.52.QT.9753 AK2.K7.A6543.AQ6"]
+[Declarer "W"]
+[Contract "3NT"]
+[Auction "W"]
+1D Pass 1H Pass
+2NT Pass 3NT Pass
+Pass Pass
+{Ovest ha 20 punti bilanciati: troppi per 1SA, troppo pochi per 2SA. Apre 1♦ e, dopo la risposta di 1♥, salta a 2SA: è il modo di mostrare 18–20 bilanciati. Est, con 7, completa i 25 punti e dichiara 3SA.}

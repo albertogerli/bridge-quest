@@ -1,5 +1,6 @@
 "use client";
 
+import { siglaSmazzata } from "@/lib/programma-corso";
 import { Suspense, useEffect, useMemo, useState } from "react";
 import { useSerieCasuale } from "@/hooks/use-serie-casuale";
 import Link from "@/components/link";
@@ -155,9 +156,12 @@ function Dispensa() {
         const fogli = a.smazzata_ids
           .map((id) => perId.get(id) ?? a.custom_hands?.find((h) => h.id === id))
           .filter((s): s is Smazzata => s !== undefined)
-          .map((s) => ({
+          .map((s, i) => ({
             hands: s.hands,
-            titolo: s.title,
+            // Il numero, non il titolo: otto mani «Vincenti e affrancabili» di
+            // fila non si distinguono, e l'insegnante cerca la smazzata del
+            // pacchetto, «E1 S3» (Trevissoi, 03/11/2026).
+            titolo: [`Mano ${i + 1}`, siglaSmazzata(s.lesson, s.board)].filter(Boolean).join(" · "),
             contratto: s.contract,
             dichiarante: s.declarer,
             id: s.id,

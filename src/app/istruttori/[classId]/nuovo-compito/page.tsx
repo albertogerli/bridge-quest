@@ -15,7 +15,14 @@ import {
   type EsercizioPosizione,
 } from "@/lib/esercizi-posizione";
 import { parsePbn } from "@/lib/pbn";
-import { MATERIALI_CORSO, type ManiCommissione } from "@/lib/materiali-corso";
+import { MATERIALI_CORSO } from "@/lib/materiali-corso";
+import {
+  idSmazzateGruppo,
+  lezioniConSmazzate,
+  siglaGruppi,
+  siglaSmazzata,
+  type LezioneProgramma,
+} from "@/lib/programma-corso";
 import { reportError } from "@/lib/report-error";
 import type { Smazzata } from "@/lib/catalog";
 import {
@@ -103,37 +110,85 @@ export default function NuovoCompitoPage({
   const [importErrors, setImportErrors] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  function aggiungiPbn(text: string) {
-    // Unique-per-import id prefix so two imports never collide
-    const prefix = `pbn-${Date.now().toString(36)}`;
+  /** Le mani lette da un file PBN; restano selezionate, perché sono state caricate per questo. */
+  function aggiungiPbn(text: string, prefix = `pbn-${Date.now().toString(36)}`): Smazzata[] {
     const { deals, errors } = parsePbn(text, prefix);
     setImportErrors(errors);
     if (deals.length > 0) {
       setImported((prev) => [...prev, ...deals]);
-      // Imported hands start selected: that's why the instructor loaded them
       setSelected((prev) => {
         const next = new Set(prev);
         for (const d of deals) next.add(d.id);
         return next;
       });
     }
+    return deals;
   }
 
-  // ── Le smazzate della Commissione che il catalogo non ha ───────────────
-  const [commissioneCaricate, setCommissioneCaricate] = useState<Set<string>>(new Set());
+  /**
+   * LO STESSO PULSANTE METTE E TOGLIE. Trevissoi (03/11/2026): toccato un
+   * argomento, le otto mani entravano; toccato di nuovo, non uscivano, e
+   * andavano tolte una per una. Ora un gruppo tutto scelto si toglie con lo
+   * stesso tocco che l'ha messo.
+   */
+  function gruppoScelto(ids: readonly string[]): boolean {
+    return ids.length > 0 && ids.every((id) => selected.has(id));
+  }
+
+  function alternaGruppo(ids: readonly string[]) {
+    const tutti = gruppoScelto(ids);
+    setSelected((prev) => {
+      const next = new Set(prev);
+      for (const id of ids) {
+        if (tutti) next.delete(id);
+        else next.add(id);
+      }
+      return next;
+    });
+  }
+
+  // ── Le mani che vengono da un file: Commissione 2026 e lezioni 17–18 ────
+  /** file → id delle mani caricate da quel file */
+  const [daFile, setDaFile] = useState<Map<string, string[]>>(new Map());
+  const [etichettaFile, setEtichettaFile] = useState<Map<string, string>>(new Map());
   const maniCommissione = MATERIALI_CORSO.flatMap((m) => m.mani);
 
-  async function caricaCommissione(m: ManiCommissione) {
+  async function alternaFile(file: string, etichetta: string) {
+    const caricate = daFile.get(file);
+    if (caricate) {
+      // Già caricate: il tocco le toglie dal compito, e anche dall'elenco.
+      setImported((prev) => prev.filter((s) => !caricate.includes(s.id)));
+      setSelected((prev) => {
+        const next = new Set(prev);
+        for (const id of caricate) next.delete(id);
+        return next;
+      });
+      setDaFile((prev) => {
+        const next = new Map(prev);
+        next.delete(file);
+        return next;
+      });
+      return;
+    }
     try {
-      const risposta = await fetch(m.file);
+      const risposta = await fetch(file);
       if (!risposta.ok) throw new Error(`HTTP ${risposta.status}`);
-      aggiungiPbn(await risposta.text());
-      setCommissioneCaricate((prev) => new Set(prev).add(m.file));
+      const prefisso = `pbn-${file.replace(/^.*\//, "").replace(/\.pbn$/, "")}-${Date.now().toString(36)}`;
+      const deals = aggiungiPbn(await risposta.text(), prefisso);
+      setDaFile((prev) => new Map(prev).set(file, deals.map((d) => d.id)));
+      setEtichettaFile((prev) => new Map(prev).set(file, etichetta));
     } catch (err) {
-      reportError("nuovo-compito:mani-commissione", err);
+      reportError("nuovo-compito:mani-da-file", err);
       setImportErrors([t("Non sono riuscito a caricare le mani: controlla la connessione e riprova.")]);
     }
   }
+
+  /** Da quale file viene una mano importata, per scriverlo nell'elenco. */
+  const fileDi = useMemo(() => {
+    const m = new Map<string, string>();
+    for (const [file, ids] of daFile) for (const id of ids) m.set(id, etichettaFile.get(file) ?? "");
+    return m;
+  }, [daFile, etichettaFile]);
 
   async function handlePbnFile(file: File) {
     try {
@@ -213,9 +268,9 @@ export default function NuovoCompitoPage({
 
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-8 pb-44 sm:px-6 lg:pb-28">
-      <BricioleClasse classId={classId} pagina={"Compito su misura"} />
+      <BricioleClasse classId={classId} pagina={"Nuovo compito"} />
       <h1 className="mb-2 font-display text-3xl font-bold text-foreground sm:text-4xl">
-        {t("Compito su misura")}
+        {t("Nuovo compito")}
       </h1>
       <p className="mb-6 text-sm text-muted-foreground">
         {t("Gli allievi ricevono un'email con il compito entro la sera, e un promemoria due giorni prima della scadenza.")}
@@ -318,32 +373,61 @@ export default function NuovoCompitoPage({
       </div>
 
       {/*
-        LE MANI DELLA COMMISSIONE IN EVIDENZA, prima di tutto il resto. Stavano
-        dentro il riquadro «Importa da file PBN», e Trevissoi non le ha trovate
-        (02/11/2026): chi non importa file quel riquadro lo salta.
+        LE SMAZZATE DEL PROGRAMMA IN EVIDENZA, prima di tutto il resto. Le
+        «Mani della Commissione» stavano dentro il riquadro «Importa da file
+        PBN», e Trevissoi non le ha trovate (02/11/2026); poi ha dato, per ogni
+        lezione del programma, le sue smazzate con la sigla della Commissione,
+        «E3 S1-4» (03/11/2026). Ogni lezione è un pulsante.
       */}
-      {maniCommissione.length > 0 && (
-        <div className="mb-6 rounded-2xl border border-primary/30 bg-primary/5 p-4">
-          <p className="font-display text-lg font-bold">{t("Mani della Commissione")}</p>
-          <p className="mb-3 text-sm text-muted-foreground">
-            {t("Le smazzate del corso della Commissione che non sono tra le mani delle lezioni: otto per argomento, con il contratto e senza commento. Tocca un argomento: le otto mani si aggiungono al compito, già scelte, nell'elenco qui sotto.")}
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {maniCommissione.map((m) => (
-              <Button
-                key={m.file}
-                type="button"
-                variant={commissioneCaricate.has(m.file) ? "outline" : "default"}
-                disabled={commissioneCaricate.has(m.file)}
-                onClick={() => void caricaCommissione(m)}
-              >
-                {commissioneCaricate.has(m.file) ? "✓ " : "+ "}
-                {t(m.titolo)}
-              </Button>
-            ))}
-          </div>
+      <div className="mb-6 rounded-2xl border border-primary/30 bg-primary/5 p-4">
+        <p className="font-display text-lg font-bold">{t("Smazzate del programma")}</p>
+        <p className="mb-3 text-sm text-muted-foreground">
+          {t("Le smazzate della Commissione per ogni lezione del Corso di Primo Livello. Tocca una lezione: le sue mani si aggiungono al compito, già scelte, nell'elenco qui sotto. Toccala di nuovo per toglierle.")}
+        </p>
+        <div className="grid gap-2 sm:grid-cols-2">
+          {lezioniConSmazzate().map((l) => (
+            <PulsanteLezione
+              key={l.numero}
+              lezione={l}
+              scelta={
+                Array.isArray(l.smazzate)
+                  ? gruppoScelto(l.smazzate.flatMap(idSmazzateGruppo))
+                  : l.smazzate !== "tavolo" && daFile.has(l.smazzate.file)
+              }
+              onTocca={() => {
+                if (Array.isArray(l.smazzate)) alternaGruppo(l.smazzate.flatMap(idSmazzateGruppo));
+                else if (l.smazzate !== "tavolo") void alternaFile(l.smazzate.file, t("Lezione {n}", { n: l.numero }));
+              }}
+            />
+          ))}
         </div>
-      )}
+        {maniCommissione.length > 0 && (
+          <div className="mt-4 border-t border-primary/20 pt-3">
+            <p className="text-sm font-semibold">{t("Altre smazzate della Commissione")}</p>
+            <p className="mb-2 text-xs text-muted-foreground">
+              {t("Dal corso della Commissione del 2026, fuori dalle tabelle del programma: otto per argomento, con il contratto e senza commento.")}
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {maniCommissione.map((m) => {
+                const caricata = daFile.has(m.file);
+                return (
+                  <Button
+                    key={m.file}
+                    type="button"
+                    size="sm"
+                    variant={caricata ? "default" : "outline"}
+                    aria-pressed={caricata}
+                    onClick={() => void alternaFile(m.file, t(m.titolo))}
+                  >
+                    {caricata ? "✓ " : "+ "}
+                    {t(m.titolo)}
+                  </Button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </div>
 
       {/* Gli esercizi di posizione salvati a lezione */}
       {esercizi.length > 0 && (
@@ -484,7 +568,9 @@ export default function NuovoCompitoPage({
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-medium">{s.title}</p>
                     <p className="truncate text-xs text-muted-foreground">
-                      Importata da PBN · Board {s.board}
+                      {fileDi.get(s.id)
+                        ? `${fileDi.get(s.id)} · ${t("Mano {n}", { n: s.board })}`
+                        : t("Importata da PBN · mano {n}", { n: s.board })}
                     </p>
                   </div>
                   <Badge variant="outline" className="shrink-0 font-mono">
@@ -583,6 +669,9 @@ export default function NuovoCompitoPage({
                         solo non distingue niente: numero della mano e
                         dichiarante sì (controllo esterno, 28/09/2026). */}
                     <span className="block truncate text-xs text-muted-foreground">
+                      {siglaSmazzata(s.lesson, s.board) && (
+                        <span className="font-semibold text-foreground">{siglaSmazzata(s.lesson, s.board)} · </span>
+                      )}
                       {t("Mano {n}", { n: s.board })} · {t("dichiara {posto}", { posto: t(NOME_POSTO[s.declarer]) })}
                       {" · "}
                       {meta ? `${meta.courseName} · ${meta.lessonTitle}` : `Lezione ${s.lesson}`}
@@ -658,6 +747,39 @@ export default function NuovoCompitoPage({
         </div>
       </div>
     </div>
+  );
+}
+
+/** Una lezione del programma: numero, titolo e sigla delle smazzate. */
+function PulsanteLezione({
+  lezione,
+  scelta,
+  onTocca,
+}: {
+  lezione: LezioneProgramma;
+  scelta: boolean;
+  onTocca: () => void;
+}) {
+  const t = useT();
+  const sigla = Array.isArray(lezione.smazzate) ? siglaGruppi(lezione.smazzate) : t("Preparate da BridgeLab");
+  return (
+    <button
+      type="button"
+      onClick={onTocca}
+      aria-pressed={scelta}
+      className={`flex min-h-14 items-start gap-3 rounded-xl border p-3 text-left transition-colors ${
+        scelta ? "border-primary bg-primary text-primary-foreground" : "border-border bg-card hover:bg-muted/50"
+      }`}
+    >
+      <span className="w-7 shrink-0 font-display text-lg font-bold tabular-nums">{lezione.numero}</span>
+      <span className="min-w-0 flex-1">
+        <span className="block text-sm font-semibold">{t(lezione.titolo)}</span>
+        <span className={`block text-xs ${scelta ? "text-primary-foreground/85" : "text-muted-foreground"}`}>
+          {scelta ? "✓ " : "+ "}
+          {sigla}
+        </span>
+      </span>
+    </button>
   );
 }
 

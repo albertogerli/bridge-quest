@@ -2973,5 +2973,17 @@
   "Nuovo dall'insegnante": "New from your teacher",
   "Il tuo insegnante ti ha scritto": "Your teacher wrote to you",
   "Su una mano": "On one hand",
-  "Su {n} mani": "On {n} hands"
+  "Su {n} mani": "On {n} hands",
+  "Apri sul sito": "Open on the site",
+  "Dal corso della Commissione del 2026, fuori dalle tabelle del programma. Le trovi in «Nuovo compito» di ogni classe, sotto «Altre smazzate della Commissione»: hanno il contratto, non il commento.": "From the Teaching Committee's 2026 course, outside the syllabus tables. You'll find them in each class's \"New assignment\", under \"More deals from the Teaching Committee\": they have the contract, not the commentary.",
+  "Dal corso della Commissione del 2026, fuori dalle tabelle del programma: otto per argomento, con il contratto e senza commento.": "From the Teaching Committee's 2026 course, outside the syllabus tables: eight per topic, with the contract and no commentary.",
+  "Due modi per dare da giocare alla classe. «Mani di una lezione»: un tocco e gli allievi trovano come compito tutte le smazzate di una lezione del corso. «Nuovo compito»: le smazzate del programma o le mani che scegli tu.": "Two ways to give the class something to play. \"Hands from a lesson\": one tap and students get every deal of a course lesson as an assignment. \"New assignment\": the syllabus deals, or hands you pick yourself.",
+  "Importata da PBN · mano {n}": "Imported from PBN · hand {n}",
+  "Le smazzate della Commissione per ogni lezione del Corso di Primo Livello. Tocca una lezione: le sue mani si aggiungono al compito, già scelte, nell'elenco qui sotto. Toccala di nuovo per toglierle.": "The Teaching Committee's deals for each lesson of the First Level Course. Tap a lesson: its hands are added to the assignment, already selected, in the list below. Tap it again to remove them.",
+  "Le venti lezioni della Commissione e, per ognuna, la lezione del sito e le smazzate da giocare. «E3 S1-4» vuol dire esercizio 3, smazzate da 1 a 4: si assegnano da «Nuovo compito» di ogni classe, toccando la lezione.": "The Teaching Committee's twenty lessons and, for each one, the site lesson and the deals to play. \"E3 S1-4\" means exercise 3, deals 1 to 4: assign them from each class's \"New assignment\" by tapping the lesson.",
+  "Preparate da BridgeLab": "Prepared by BridgeLab",
+  "Smazzate del programma": "Syllabus deals",
+  "Smazzate mescolate al tavolo": "Deals shuffled at the table",
+  "Smazzate preparate da BridgeLab": "Deals prepared by BridgeLab",
+  "Smazzate {sigla}": "Deals {sigla}"
 }

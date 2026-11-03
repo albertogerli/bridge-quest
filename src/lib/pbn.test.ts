@@ -104,3 +104,34 @@ describe("parsePbn — casi limite", () => {
     expect(result.deals[0].vulnerability).toBe("none"); // Vulnerable mancante
   });
 });
+
+describe("parsePbn — licita e commento", () => {
+  const testo = `[Board "1"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:AKQ2.AK2.432.432 J543.QJ3.QJ5.QJ5 T987.T987.T9.T98 6.654.AK876.AK76"]
+[Declarer "N"]
+[Contract "3NT"]
+[Auction "N"]
+1C Pass 1S Pass
+2NT Pass 3NT AP
+{Nord apre 1♣ e
+ridichiara 2SA.}
+`;
+
+  it("legge la licita come in smazzate.bidding e il commento fra graffe", () => {
+    const { deals, errors } = parsePbn(testo, "t");
+    expect(errors).toEqual([]);
+    expect(deals[0].bidding).toEqual({
+      dealer: "north",
+      bids: ["1C", "P", "1S", "P", "2NT", "P", "3NT", "P", "P", "P"],
+    });
+    expect(deals[0].commentary).toBe("Nord apre 1♣ e ridichiara 2SA.");
+  });
+
+  it("senza [Auction] la mano non ha licita", () => {
+    const { deals } = parsePbn(testo.replace(/\[Auction[\s\S]*$/, ""), "t");
+    expect(deals[0].bidding).toBeUndefined();
+    expect(deals[0].commentary).toBe("");
+  });
+});
