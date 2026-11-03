@@ -2795,26 +2795,29 @@ CREATE OR REPLACE FUNCTION public.get_class_results(p_assignment_id uuid)
  STABLE SECURITY DEFINER
  SET search_path TO 'public'
 AS $function$
-BEGIN
-  IF NOT is_instructor_of_assignment(p_assignment_id) THEN
-    RAISE EXCEPTION 'not authorized for assignment %', p_assignment_id
-      USING ERRCODE = '42501';
-  END IF;
+  begin
+    if not is_instructor_of_assignment(p_assignment_id) then
+      raise exception 'not authorized for assignment %', p_assignment_id
+        using errcode = '42501';
+    end if;
 
-  RETURN QUERY
-  SELECT DISTINCT ON (gr.user_id, gr.details->>'smazzata_id')
-    gr.user_id                      AS student_id,
-    p.display_name                  AS student_name,
-    gr.details->>'smazzata_id'      AS smazzata_id,
-    gr.score,
-    gr.details,
-    gr.created_at                   AS played_at
-  FROM game_results gr
-  LEFT JOIN profiles p ON p.id = gr.user_id
-  WHERE gr.assignment_id = p_assignment_id
-  -- ASC = the FIRST attempt wins (was DESC = latest).
-  ORDER BY gr.user_id, gr.details->>'smazzata_id', gr.created_at ASC;
-END $function$
+    return query
+    select distinct on (gr.user_id, gr.details->>'smazzata_id')
+      gr.user_id                      as student_id,
+      p.display_name                  as student_name,
+      gr.details->>'smazzata_id'      as smazzata_id,
+      gr.score,
+      gr.details,
+      gr.created_at                   as played_at
+    from game_results gr
+    left join profiles p on p.id = gr.user_id
+    where gr.assignment_id = p_assignment_id
+    order by
+      gr.user_id,
+      gr.details->>'smazzata_id',
+      (gr.details->>'licita' = 'true' and jsonb_exists(gr.details, 'gioco')) is true desc,
+      gr.created_at asc;
+  end $function$
 ;
 
 CREATE OR REPLACE FUNCTION public.get_club_leaderboard(p_asd_code text)
