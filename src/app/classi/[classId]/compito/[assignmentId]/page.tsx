@@ -31,6 +31,7 @@ import { PulsanteSegnalazione } from "@/components/pulsante-segnalazione";
 import { Cronometro, ripulisci } from "@/lib/tempi";
 import { commentiDelCompito, commentiPerMano, type CommentoCompito } from "@/lib/commenti-compito";
 import { createClient } from "@/lib/supabase/client";
+import { maniConNovita, scrittiPerAllievo, segnaVisto, vistoFinoA } from "@/lib/novita-insegnante";
 import { ConfrontoClasse } from "@/components/bridge/confronto-classe";
 import { ProvaDaQui } from "@/components/bridge/prova-da-qui";
 import { BenStatus } from "@/components/bridge/ben-status";
@@ -89,6 +90,12 @@ export default function CompitoPage({
   const [messaggi, setMessaggi] = useState<MessaggioCompito[] | null>(null);
   /** Le mani già dichiarate aperte per rivederle. */
   const [aperte, setAperte] = useState<Set<string>>(new Set());
+  /**
+   * Le mani con un commento o una risposta dell'insegnante non ancora visti.
+   * Si calcolano all'apertura e restano per tutta la visita: segnarle come
+   * viste subito non deve far sparire l'etichetta prima che la si legga.
+   */
+  const [nuove, setNuove] = useState<Set<string>>(new Set());
   useEffect(() => {
     let vivo = true;
     void Promise.all([
@@ -102,6 +109,11 @@ export default function CompitoPage({
       setStelleInsegnante(s ?? []);
       setMessaggi(m);
       setUtenteId(data.user?.id ?? null);
+      if (data.user) {
+        const scritti = scrittiPerAllievo(c ?? [], m ?? [], data.user.id);
+        setNuove(new Set(maniConNovita(scritti, vistoFinoA(assignmentId))));
+        segnaVisto(assignmentId, scritti);
+      }
     });
     return () => {
       vivo = false;
@@ -432,6 +444,12 @@ export default function CompitoPage({
                   {isDown ? <XCircle className="h-5 w-5" /> : isMade ? <CheckCircle2 className="h-5 w-5" /> : <span className="text-sm font-bold">{i + 1}</span>}
                 </div>
                 <div className="min-w-0 flex-1">
+                  {nuove.has(hand.id) && (
+                    <span className="mb-1 inline-flex items-center gap-1 rounded-full bg-primary px-2 py-0.5 text-[12px] font-bold text-primary-foreground">
+                      <MessageSquareText className="h-3 w-3" aria-hidden="true" />
+                      {t("Nuovo dall'insegnante")}
+                    </span>
+                  )}
                   <p className="truncate text-sm font-bold">
                     Mano {i + 1}: {hand.title}
                   </p>

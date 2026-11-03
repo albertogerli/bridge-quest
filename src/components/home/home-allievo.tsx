@@ -10,11 +10,13 @@ import {
   type Assignment, type ClassRoom,
 } from "@/lib/instructors";
 import { corsiAttivi, daFareAdesso, percorsoDelCorso } from "@/lib/percorso-allievo";
-import { reportError } from "@/lib/report-error";
+import { reportError, segnalaSalvoRete } from "@/lib/report-error";
+import { createClient } from "@/lib/supabase/client";
+import { novitaDeiCompiti } from "@/lib/novita-insegnante";
 import { BenvenutoCorso } from "@/components/classi/benvenuto-corso";
 import { useT } from "@/contexts/traduzioni-provider";
 import { useLingua } from "@/hooks/use-lingua";
-import { ChevronRight, FileText, Users } from "lucide-react";
+import { ChevronRight, FileText, MessageSquareText, Users } from "lucide-react";
 import { CompitoInEvidenza } from "@/components/home/compito-in-evidenza";
 
 /**
@@ -46,12 +48,15 @@ export function HomeAllievo({ nome, onVaiAllaBacheca }: { nome: string | null; o
   const { courses } = useCatalog();
   const [compiti, setCompiti] = useState<Map<string, Assignment[]>>(new Map());
   const [fatti, setFatti] = useState<Map<string, Set<string>>>(new Map());
+  /** Per compito, le mani su cui l'insegnante ha scritto qualcosa di non ancora visto. */
+  const [novita, setNovita] = useState<Map<string, string[]>>(new Map());
 
   const attivi = useMemo(() => corsiAttivi(classes), [classes]);
 
   useEffect(() => {
     let vivo = true;
     (async () => {
+      let ids: string[] = [];
       try {
         // IN PARALLELO, NON IN FILA. Le classi si chiedono tutte insieme:
         // una per volta, con due corsi sono due viaggi in sequenza — e
@@ -63,6 +68,7 @@ export function HomeAllievo({ nome, onVaiAllaBacheca }: { nome: string | null; o
           attivi.map((c, i) => [c.id, liste[i]]),
         );
         const tutti: Assignment[] = liste.flat();
+        ids = tutti.map((a) => a.id);
         const prog = await getMyAssignmentProgress(tutti.map((a) => a.id));
         if (!vivo) return;
         setCompiti(perClasse);
@@ -71,6 +77,16 @@ export function HomeAllievo({ nome, onVaiAllaBacheca }: { nome: string | null; o
         // Il percorso si vede lo stesso: meglio una home senza i compiti che
         // nessuna home.
         reportError("home-allievo:compiti", err);
+        return;
+      }
+      // Dopo i compiti, e a parte: se l'avviso non arriva, la home c'è lo stesso.
+      try {
+        const { data } = await createClient().auth.getUser();
+        if (!data.user) return;
+        const n = await novitaDeiCompiti(ids, data.user.id);
+        if (vivo) setNovita(n);
+      } catch (err) {
+        segnalaSalvoRete("home-allievo:novita", err);
       }
     })();
     return () => { vivo = false; };
@@ -153,6 +169,7 @@ export function HomeAllievo({ nome, onVaiAllaBacheca }: { nome: string | null; o
       <div className="grid items-start gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:gap-10">
         {/* ── Da fare adesso ─────────────────────────────────────────────── */}
         <div className="grid gap-4">
+          <AvvisoInsegnante compiti={compiti} novita={novita} classi={piuCorsi ? attivi : []} />
           {!primo ? (
             <section className="rounded-3xl bg-card p-6 shadow-sm">
               <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t("Da fare adesso")}</p>
@@ -298,6 +315,52 @@ export function HomeAllievo({ nome, onVaiAllaBacheca }: { nome: string | null; o
         </div>
       </div>
     </div>
+  );
+}
+
+/**
+ * «Il tuo insegnante ti ha scritto»: commenti e risposte sulle mani non ancora
+ * visti, un compito per riga. In cima, perché è l'unica cosa della home che
+ * qualcuno ha scritto apposta per questo allievo. Sparisce quando apre il compito.
+ */
+function AvvisoInsegnante({
+  compiti,
+  novita,
+  classi,
+}: {
+  compiti: Map<string, Assignment[]>;
+  novita: Map<string, string[]>;
+  /** Con più corsi, per scrivere di quale classe è il compito. */
+  classi: ClassRoom[];
+}) {
+  const t = useT();
+  const righe = [...compiti.entries()].flatMap(([classId, lista]) =>
+    lista.filter((a) => novita.has(a.id)).map((a) => ({ classId, a, mani: novita.get(a.id)!.length })),
+  );
+  if (righe.length === 0) return null;
+  return (
+    <section className="rounded-3xl border border-primary/30 bg-primary/5 p-5" aria-live="polite">
+      <p className="flex items-center gap-2 font-display text-lg font-bold">
+        <MessageSquareText className="h-5 w-5 text-primary" aria-hidden="true" />
+        {t("Il tuo insegnante ti ha scritto")}
+      </p>
+      <ul className="mt-2 divide-y divide-primary/15">
+        {righe.map(({ classId, a, mani }) => (
+          <li key={a.id}>
+            <Link href={`/classi/${classId}/compito/${a.id}`} className="flex min-h-12 items-center gap-3 py-2">
+              <span className="min-w-0 flex-1">
+                <span className="block truncate font-semibold">{a.title}</span>
+                <span className="block text-sm text-muted-foreground tabular-nums">
+                  {classi.length > 0 ? `${classi.find((c) => c.id === classId)?.name ?? ""} · ` : ""}
+                  {mani === 1 ? t("Su una mano") : t("Su {n} mani", { n: mani })}
+                </span>
+              </span>
+              <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground" aria-hidden="true" />
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }
 

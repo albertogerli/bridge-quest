@@ -2969,5 +2969,9 @@
   "Indica almeno una risposta giusta.": "Mark at least one correct answer.",
   "Una risposta giusta non è fra le opzioni.": "A correct answer is not among the options.",
   "Il testo incollato non è un JSON valido.": "The pasted text is not valid JSON.",
-  "Manca l'elenco «domande».": "The «domande» list is missing."
+  "Manca l'elenco «domande».": "The «domande» list is missing.",
+  "Nuovo dall'insegnante": "New from your teacher",
+  "Il tuo insegnante ti ha scritto": "Your teacher wrote to you",
+  "Su una mano": "On one hand",
+  "Su {n} mani": "On {n} hands"
 }
