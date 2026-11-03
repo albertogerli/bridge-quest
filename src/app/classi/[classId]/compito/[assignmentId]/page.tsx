@@ -13,7 +13,7 @@ import { useCommento } from "@/hooks/use-commento";
 import { useSmazzate, useValidatedSmazzate } from "@/store/use-smazzate-store";
 import type { BiddingData, Smazzata } from "@/lib/catalog";
 import { getLessonDisplayNumber } from "@/data/lesson-meta";
-import type { Position } from "@/lib/bridge-engine";
+import type { GameState, Position } from "@/lib/bridge-engine";
 import {
   parseContract,
   toDisplayPosition,
@@ -39,6 +39,11 @@ import { BenStatus } from "@/components/bridge/ben-status";
 // l'utente non lo apre → fuori dal first load della pagina di gioco.
 const GameTutorial = dynamic(
   () => import("@/components/bridge/game-tutorial").then((m) => m.GameTutorial),
+  { ssr: false },
+);
+// Il gioco carta per carta di una mano finita: solo quando l'allievo lo chiede.
+const HandReplay = dynamic(
+  () => import("@/components/bridge/hand-replay").then((m) => m.HandReplay),
   { ssr: false },
 );
 import { CelebrationCombo } from "@/components/celebration-effects";
@@ -96,6 +101,8 @@ export default function CompitoPage({
    * viste subito non deve far sparire l'etichetta prima che la si legga.
    */
   const [nuove, setNuove] = useState<Set<string>>(new Set());
+  /** La mano di cui l'allievo sta rivedendo il gioco, senza rigiocarla. */
+  const [rivedi, setRivedi] = useState<{ gameState: GameState; inBasso: Position } | null>(null);
   useEffect(() => {
     let vivo = true;
     void Promise.all([
@@ -295,7 +302,8 @@ export default function CompitoPage({
             // best-effort; the local state still advances so the student isn't stuck
           }
           setDoneIds((prev) => new Set(prev).add(smazzata.id));
-          setResults((prev) => new Map(prev).set(smazzata.id, { made: score >= 0, result: score }));
+          // Con il gioco registrato: «Rivedi» c'è subito, senza ricaricare.
+          setResults((prev) => new Map(prev).set(smazzata.id, { made: score >= 0, result: score, details }));
           setCurrentIndex(null);
         }}
         onBack={() => setCurrentIndex(null)}
@@ -514,17 +522,33 @@ export default function CompitoPage({
                     {aperte.has(hand.id) ? t("Chiudi") : t("Rivedi")}
                   </Button>
                 ) : (isNext || (isPlayed && !assignment.licita)) && (
-                  <Button
-                    onClick={() => setCurrentIndex(i)}
-                    size="sm"
-                    variant={isDown ? "default" : isPlayed ? "outline" : "default"}
-                    className={`shrink-0 ${isDown ? "bg-red-600 text-white hover:bg-red-700" : ""}`}
-                  >
-                    <Play className="mr-1 h-3.5 w-3.5" />
-                    {assignment.licita
-                      ? isPlayed ? t("Ridichiara") : t("Dichiara")
-                      : isPlayed ? "Rigioca" : "Gioca"}
-                  </Button>
+                  <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
+                    {!assignment.licita && isPlayed && (() => {
+                      const gioco = giocoRegistrato(r?.details, hand);
+                      if (!gioco) return null;
+                      return (
+                        <Button
+                          onClick={() => setRivedi(gioco)}
+                          size="sm"
+                          variant="outline"
+                        >
+                          <Eye className="mr-1 h-3.5 w-3.5" aria-hidden="true" />
+                          {t("Rivedi")}
+                        </Button>
+                      );
+                    })()}
+                    <Button
+                      onClick={() => setCurrentIndex(i)}
+                      size="sm"
+                      variant={isDown ? "default" : isPlayed ? "outline" : "default"}
+                      className={`shrink-0 ${isDown ? "bg-red-600 text-white hover:bg-red-700" : ""}`}
+                    >
+                      <Play className="mr-1 h-3.5 w-3.5" />
+                      {assignment.licita
+                        ? isPlayed ? t("Ridichiara") : t("Dichiara")
+                        : isPlayed ? "Rigioca" : "Gioca"}
+                    </Button>
+                  </div>
                 )}
               </div>
               <CommentiInsegnante {...commentiPerMano(commenti, hand.id, utenteId)} />
@@ -576,8 +600,41 @@ export default function CompitoPage({
           );
         })}
       </div>
+      {rivedi && (
+        <HandReplay gameState={rivedi.gameState} inBasso={rivedi.inBasso} onClose={() => setRivedi(null)} />
+      )}
     </div>
   );
+}
+
+/**
+ * Il gioco registrato di una mano finita, da rivedere carta per carta senza
+ * rigiocarla. È lo stesso che l'insegnante rivede dalla sua pagina; l'allievo
+ * vede il suo ultimo tentativo. `null` per le righe vecchie senza il gioco.
+ *
+ * Al tavolo l'allievo stava al posto del dichiarante, o a Sud quando
+ * difendeva: la mano si rivede dallo stesso posto.
+ */
+function giocoRegistrato(
+  details: Record<string, unknown> | undefined,
+  mano: Smazzata,
+): { gameState: GameState; inBasso: Position } | null {
+  const play = details?.play as { hands?: unknown; tricks?: unknown } | undefined;
+  if (!play?.hands || !Array.isArray(play.tricks)) return null;
+  const contract = typeof details?.contract === "string" ? details.contract : mano.contract;
+  const difesa = details?.difesa === true;
+  const declarer =
+    difesa && typeof details?.declarer === "string" ? (details.declarer as Position) : mano.declarer;
+  return {
+    gameState: {
+      hands: play.hands,
+      tricks: play.tricks,
+      contract,
+      declarer,
+      trumpSuit: parseContract(contract).trumpSuit,
+    } as unknown as GameState,
+    inBasso: difesa ? "south" : declarer,
+  };
 }
 
 /**
