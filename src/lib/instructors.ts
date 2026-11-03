@@ -8,6 +8,7 @@
 // Backing schema: scripts/sql/instructor_portal.sql
 // ============================================================================
 
+import { erroreNonAutenticato } from "@/lib/errore-di-rete";
 import { createClient } from "@/lib/supabase/client";
 import type { Smazzata } from "@/lib/catalog";
 import type { AccessoLibero, Gruppo } from "@/lib/permessi-allievo";
@@ -251,7 +252,7 @@ export async function createClass(input: {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) throw new Error("Non autenticato");
+  if (!user) throw erroreNonAutenticato();
 
   const { data, error } = await supabase
     .from("classes")
@@ -274,7 +275,7 @@ export async function getMyClasses(): Promise<ClassRoom[]> {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) throw new Error("Non autenticato");
+  if (!user) throw erroreNonAutenticato();
 
   const { data, error } = await supabase
     .from("classes")
@@ -689,7 +690,7 @@ export async function leaveClass(classId: string): Promise<void> {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) throw new Error("Non autenticato");
+  if (!user) throw erroreNonAutenticato();
 
   // `.neq("status", "rejected")` ripete a mano ciò che la policy RLS già
   // impone (respinto-non-si-riammette-2026-09.sql): chi è stato respinto non
@@ -715,7 +716,7 @@ export async function getMyEnrolledClasses(): Promise<ClassRoom[]> {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) throw new Error("Non autenticato");
+  if (!user) throw erroreNonAutenticato();
 
   const { data, error } = await supabase
     .from("class_members")
@@ -849,7 +850,7 @@ export async function getMyAssignmentProgress(
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) throw new Error("Non autenticato");
+  if (!user) throw erroreNonAutenticato();
 
   const { data, error } = await supabase
     .from("game_results")
@@ -918,7 +919,7 @@ export async function getMyAssignmentResults(
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) throw new Error("Non autenticato");
+  if (!user) throw erroreNonAutenticato();
 
   const { data, error } = await supabase
     .from("game_results")
@@ -1017,7 +1018,7 @@ export async function recordAssignmentResult(input: {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) throw new Error("Non autenticato");
+  if (!user) throw erroreNonAutenticato();
 
   const { error } = await supabase.from("game_results").insert({
     user_id: user.id,
@@ -1215,7 +1216,7 @@ export async function sendClassMessage(classId: string, body: string): Promise<v
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) throw new Error("Non autenticato");
+  if (!user) throw erroreNonAutenticato();
   const trimmed = body.trim();
   if (!trimmed) return;
 

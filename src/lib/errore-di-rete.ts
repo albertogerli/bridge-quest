@@ -118,7 +118,18 @@ export function eDiRete(errore: unknown): boolean {
  * Stessa famiglia della rete caduta, e per lo stesso motivo non si segnala:
  * chi lo vede non può fare niente, e il sistema si rimette da solo.
  */
-const CODICI_SESSIONE = new Set(["PGRST301", "PGRST302", "PGRST303"]);
+const CODICI_SESSIONE = new Set(["PGRST301", "PGRST302", "PGRST303", "SESSIONE_ASSENTE"]);
+
+/**
+ * Nessun utente in sessione: la stessa cosa vista dal client. Chi lascia la
+ * pagina /classi aperta finché la sessione scade (o esce da un'altra scheda)
+ * arrivava su Sentry con un «Non autenticato» senza codice, come un difetto
+ * (03/11/2026, scope classi:conta-compiti). Con il codice lo riconosce
+ * `eSessioneScaduta`; il messaggio resta quello di prima.
+ */
+export function erroreNonAutenticato(): Error {
+  return Object.assign(new Error("Non autenticato"), { code: "SESSIONE_ASSENTE" });
+}
 
 export function eSessioneScaduta(errore: unknown): boolean {
   if (!errore || typeof errore !== "object") return false;

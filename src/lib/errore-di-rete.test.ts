@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { eDiRete, eSessioneScaduta } from "./errore-di-rete";
+import { eDiRete, eSessioneScaduta, erroreNonAutenticato } from "./errore-di-rete";
 
 /**
  * Il confine fra «non c'è rete» e «c'è un difetto».
@@ -108,5 +108,12 @@ describe("eDiRete — le forme della rete che manca", () => {
     expect(eSessioneScaduta({ code: "PGRST301" })).toBe(true);
     expect(eSessioneScaduta({ code: "42501", message: "permission denied" })).toBe(false);
     expect(eSessioneScaduta(null)).toBe(false);
+  });
+
+  it("nessun utente in sessione lato client è la stessa cosa (Sentry, 03/11/2026)", () => {
+    const e = erroreNonAutenticato();
+    expect(e.message).toBe("Non autenticato");
+    expect(eSessioneScaduta(e)).toBe(true);
+    expect(eSessioneScaduta(new Error("Non autenticato"))).toBe(false);
   });
 });
