@@ -16,7 +16,7 @@
 -- Rigenerare e committare dopo OGNI modifica allo schema, insieme allo script
 -- che l'ha causata.
 --
--- Estratto il: 2026-11-03
+-- Estratto il: 2026-11-04
 -- ============================================================================
 
 SET check_function_bodies = false;
@@ -310,7 +310,8 @@ CREATE TABLE IF NOT EXISTS public.esercizi_posizione (
   class_id uuid,
   created_at timestamp with time zone NOT NULL,
   risposte_norm text[] NOT NULL,
-  opzioni text[] NOT NULL
+  opzioni text[] NOT NULL,
+  figura jsonb
 );
 
 CREATE TABLE IF NOT EXISTS public.eserciziario_exercises (
@@ -2572,38 +2573,39 @@ CREATE OR REPLACE FUNCTION public.esercizio_per_allievo(p_id uuid)
  STABLE SECURITY DEFINER
  SET search_path TO ''
 AS $function$
-  declare
-    e public.esercizi_posizione%rowtype;
-    v_morto text;
-    v_mani jsonb := '{}'::jsonb;
-  begin
-    if not public.puo_vedere_esercizio(p_id) then return null; end if;
-    select * into e from public.esercizi_posizione where id = p_id;
+declare
+  e public.esercizi_posizione%rowtype;
+  v_morto text;
+  v_mani jsonb := '{}'::jsonb;
+begin
+  if not public.puo_vedere_esercizio(p_id) then return null; end if;
+  select * into e from public.esercizi_posizione where id = p_id;
 
-    if jsonb_exists(e.hands, e.posizione) then
-      v_mani := jsonb_build_object(e.posizione, e.hands -> e.posizione);
+  if jsonb_exists(e.hands, e.posizione) then
+    v_mani := jsonb_build_object(e.posizione, e.hands -> e.posizione);
+  end if;
+
+  if jsonb_array_length(e.played) > 0 and e.declarer is not null then
+    v_morto := case e.declarer
+      when 'north' then 'south' when 'south' then 'north'
+      when 'east'  then 'west'  when 'west'  then 'east' end;
+    if v_morto is not null and v_morto <> e.posizione and jsonb_exists(e.hands, v_morto) then
+      v_mani := v_mani || jsonb_build_object(v_morto, e.hands -> v_morto);
     end if;
+  end if;
 
-    if jsonb_array_length(e.played) > 0 and e.declarer is not null then
-      v_morto := case e.declarer
-        when 'north' then 'south' when 'south' then 'north'
-        when 'east'  then 'west'  when 'west'  then 'east' end;
-      if v_morto is not null and v_morto <> e.posizione and jsonb_exists(e.hands, v_morto) then
-        v_mani := v_mani || jsonb_build_object(v_morto, e.hands -> v_morto);
-      end if;
-    end if;
-
-    return jsonb_build_object(
-      'id', e.id, 'autore_id', e.autore_id, 'titolo', e.titolo,
-      'consegna', e.consegna, 'domanda', e.domanda, 'hands', v_mani,
-      'dealer', e.dealer, 'vulnerability', e.vulnerability,
-      'bids', to_jsonb(e.bids), 'played', e.played, 'posizione', e.posizione,
-      'contract', e.contract, 'declarer', e.declarer,
-      'gruppo', e.gruppo, 'class_id', e.class_id, 'created_at', e.created_at,
-      'opzioni', to_jsonb(e.opzioni),
-      'quante_risposte', coalesce(array_length(e.risposte, 1), 0)
-    );
-  end $function$
+  return jsonb_build_object(
+    'id', e.id, 'autore_id', e.autore_id, 'titolo', e.titolo,
+    'consegna', e.consegna, 'domanda', e.domanda, 'hands', v_mani,
+    'dealer', e.dealer, 'vulnerability', e.vulnerability,
+    'bids', to_jsonb(e.bids), 'played', e.played, 'posizione', e.posizione,
+    'contract', e.contract, 'declarer', e.declarer,
+    'gruppo', e.gruppo, 'class_id', e.class_id, 'created_at', e.created_at,
+    'opzioni', to_jsonb(e.opzioni),
+    'figura', e.figura,
+    'quante_risposte', coalesce(array_length(e.risposte, 1), 0)
+  );
+end $function$
 ;
 
 CREATE OR REPLACE FUNCTION public.evento_da_codice(p_codice text)
@@ -3101,7 +3103,7 @@ AS $function$
   from (
     select * from public.esercizi_posizione
     where autore_id = (select auth.uid())
-    order by created_at desc limit 200
+    order by created_at desc limit 1000
   ) e;
 $function$
 ;
@@ -7464,6 +7466,7 @@ GRANT SELECT (gruppo) ON TABLE public.esercizi_posizione TO authenticated;
 GRANT SELECT (class_id) ON TABLE public.esercizi_posizione TO authenticated;
 GRANT SELECT (created_at) ON TABLE public.esercizi_posizione TO authenticated;
 GRANT SELECT (opzioni) ON TABLE public.esercizi_posizione TO authenticated;
+GRANT SELECT (figura) ON TABLE public.esercizi_posizione TO authenticated;
 GRANT SELECT (id) ON TABLE public.profiles TO authenticated;
 GRANT SELECT (display_name) ON TABLE public.profiles TO authenticated;
 GRANT SELECT (bbo_username) ON TABLE public.profiles TO authenticated;
@@ -7692,7 +7695,6 @@ REVOKE ALL ON FUNCTION public.handle_new_user() FROM PUBLIC, anon, authenticated
 GRANT EXECUTE ON FUNCTION public.handle_new_user() TO authenticated;
 REVOKE ALL ON FUNCTION public.i_miei_esercizi() FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.i_miei_esercizi() TO authenticated;
-GRANT EXECUTE ON FUNCTION public.i_miei_esercizi() TO service_role;
 REVOKE ALL ON FUNCTION public.imp_da_differenza(p_diff integer) FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.imp_da_differenza(p_diff integer) TO PUBLIC;
 GRANT EXECUTE ON FUNCTION public.imp_da_differenza(p_diff integer) TO anon;
