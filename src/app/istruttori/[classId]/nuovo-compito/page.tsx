@@ -31,6 +31,7 @@ import {
   DIFFICULTY_LABELS,
   type SmazzataDifficulty,
 } from "@/lib/smazzata-meta";
+import { istante } from "@/lib/novita-insegnante";
 import { useT } from "@/contexts/traduzioni-provider";
 import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 import type { Card, Position } from "@/lib/bridge-engine";
@@ -443,7 +444,12 @@ export default function NuovoCompitoPage({
             return (
               <div className="mb-3 flex flex-wrap gap-2">
                 {gruppi.map((g) => {
-                  const ids = esercizi.filter((e) => e.gruppo === g).map((e) => e.id);
+                  // In ordine di creazione: è l'ordine del test, e l'allievo le
+                  // riceve nell'ordine in cui entrano nel compito.
+                  const ids = esercizi
+                    .filter((e) => e.gruppo === g)
+                    .sort((a, b) => istante(a.created_at) - istante(b.created_at))
+                    .map((e) => e.id);
                   const tutti = ids.every((id) => eserciziScelti.has(id));
                   return (
                     <Button

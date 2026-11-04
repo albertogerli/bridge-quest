@@ -64,6 +64,12 @@ export interface EsercizioPosizione {
   created_at: string;
   /** Solo per «scelta»: le risposte fra cui scegliere, in ordine. */
   opzioni?: string[];
+  /**
+   * Solo per «scelta»: la figura del test (mano, linea, schema di un seme…).
+   * Arriva dal database così com'è: si legge con `leggiFigura`, che scarta
+   * quello che non è una figura invece di romperne il disegno.
+   */
+  figura?: unknown;
 }
 
 export type NuovoEsercizio = Omit<EsercizioPosizione, "id" | "autore_id" | "created_at">;

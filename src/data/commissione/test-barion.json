@@ -1,0 +1,4437 @@
+[
+ {
+  "numero": 1,
+  "domande": [
+   {
+    "numero": "1.1",
+    "testo": "Quand’è che un giocatore scarta?",
+    "figura": null,
+    "opzioni": [
+     "Mai",
+     "Quando non ha più carte per rispondere nel seme della presa in corso",
+     "Quando vuole"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "1.2",
+    "testo": "Quand'è che il primo di mano scarta?",
+    "figura": null,
+    "opzioni": [
+     "Mai",
+     "Quando non ha più carte per rispondere nel seme della presa in corso",
+     "Quando vuole"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "1.3",
+    "testo": "Nord ha in un seme AKQJ; quante di queste carte sono affrancabili?",
+    "figura": null,
+    "opzioni": [
+     "Nessuna",
+     "3",
+     "4"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "1.4",
+    "testo": "In una presa vengono giocati l’8, il J, la Q e l'Asso dello stesso seme. Qual è al momento, tra quelle rimaste, l'ordine delle tre carte più alte?",
+    "figura": null,
+    "opzioni": [
+     "A, K, Q",
+     "K, 10, 9",
+     "A, K, 10"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "1.5",
+    "testo": "L’attacco tocca al vostro compagno, e voi avete le seguenti carte tutte nel seme di picche: AKQJ1098765432. Quante prese farete con le vostre carte?",
+    "figura": null,
+    "opzioni": [
+     "Dipende",
+     "Zero",
+     "13"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "1.6",
+    "testo": "Nel corso di una presa, qual è il giocatore che ha più vantaggi (nell’ambito della presa stessa)?",
+    "figura": null,
+    "opzioni": [
+     "Il primo di mano",
+     "Il secondo di mano",
+     "Il terzo di mano",
+     "Il quarto di mano"
+    ],
+    "giusta": 3
+   },
+   {
+    "numero": "1.7",
+    "testo": "In questa figura di cuori, quante carte vincenti ci sono sulla linea? E quante sono le prese a disposizione, con certezza assoluta?",
+    "figura": {
+     "tipo": "colore",
+     "seme": "H",
+     "N": "A8753",
+     "S": "KQ642"
+    },
+    "opzioni": [
+     "3 vincenti e 5 prese",
+     "3 vincenti e 3 prese",
+     "3 vincenti e 2 prese"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "1.8",
+    "testo": "In questa figura di picche, quante carte vincenti ci sono sulla linea? E quante sono le prese a disposizione, con certezza assoluta?",
+    "figura": {
+     "tipo": "colore",
+     "N": "KQJ",
+     "S": "AT9"
+    },
+    "opzioni": [
+     "6 vincenti e 6 prese",
+     "6 vincenti e 3 prese",
+     "3 vincenti e 3 prese"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "1.9",
+    "testo": "In questa figura di quadri, quante carte vincenti ci sono sulla linea? E quante sono le prese a disposizione, con certezza assoluta?",
+    "figura": {
+     "tipo": "colore",
+     "N": "AQ5",
+     "S": "KJT72"
+    },
+    "opzioni": [
+     "5 vincenti e 5 prese",
+     "5 vincenti e 3 prese",
+     "4 vincenti e 5 prese"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "1.10",
+    "testo": "In questa figura di fiori, quante carte vincenti ci sono sulla linea? E quante sono le prese a disposizione, con certezza assoluta?",
+    "figura": {
+     "tipo": "colore",
+     "N": "KJ65",
+     "S": "AQ432"
+    },
+    "opzioni": [
+     "4 vincenti e 4 prese",
+     "4 vincenti e 2 prese",
+     "4 vincenti e 5 prese"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "1.11",
+    "testo": "In questa figura di picche, quante carte vincenti ci sono sulla linea? E quante sono le prese a disposizione, con certezza assoluta?",
+    "figura": {
+     "tipo": "colore",
+     "N": "AKQ6543",
+     "S": "J2"
+    },
+    "opzioni": [
+     "4 vincenti e 7 prese",
+     "3 vincenti e 4 prese",
+     "4 vincenti e 4 prese"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "1.12",
+    "testo": "Le vostre carte sono in Sud, quelle del vostro compagno in Nord. Quante prese avete immediatamente disponibili? Quante carte affrancabili sulla linea?",
+    "figura": {
+     "tipo": "smazzata",
+     "N": {
+      "S": "KQ8",
+      "H": "J6",
+      "D": "AQ4",
+      "C": "K9754"
+     },
+     "S": {
+      "S": "AJ7",
+      "H": "KQT9",
+      "D": "K53",
+      "C": "QJT8"
+     }
+    },
+    "opzioni": [
+     "8 prese e 3 carte affrancabili",
+     "10 prese 4 carte affrancabili",
+     "6 prese e 7 carte affrancabili"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "1.13",
+    "testo": "Le vostre carte sono in Sud, quelle del vostro compagno in Nord. Quante prese avete immediatamente disponibili? Quante carte affrancabili sulla linea?",
+    "figura": {
+     "tipo": "smazzata",
+     "N": {
+      "S": "QJ97",
+      "H": "K32",
+      "D": "KJ76",
+      "C": "AQ"
+     },
+     "S": {
+      "S": "AK4",
+      "H": "AQJ654",
+      "D": "Q2",
+      "C": "KJ"
+     }
+    },
+    "opzioni": [
+     "8 prese e 2 carte affrancabili",
+     "9 prese e 5 carte affrancabili",
+     "12 prese e 1 carte affrancabili"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "1.14",
+    "testo": "Le vostre carte sono in Sud, quelle del vostro compagno in Nord. Quante prese avete immediatamente disponibili? Quante carte affrancabili sulla linea?",
+    "figura": {
+     "tipo": "smazzata",
+     "N": {
+      "S": "AQ86",
+      "H": "K2",
+      "D": "J983",
+      "C": "863"
+     },
+     "S": {
+      "S": "K3",
+      "H": "AQ",
+      "D": "AKQ42",
+      "C": "AJ72"
+     }
+    },
+    "opzioni": [
+     "11 prese e 2 carte affrancabili",
+     "10 prese e 2 carte affrancabili",
+     "11 prese e 0 carte affrancabili"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "1.15",
+    "testo": "Le vostre carte sono in Sud, quelle del vostro compagno in Nord. Quante prese avete immediatamente disponibili? Quante carte affrancabili sulla linea?",
+    "figura": {
+     "tipo": "smazzata",
+     "N": {
+      "S": "762",
+      "H": "KJ4",
+      "D": "KQJT8",
+      "C": "Q6"
+     },
+     "S": {
+      "S": "KQJ",
+      "H": "AQ9",
+      "D": "9732",
+      "C": "KJ5"
+     }
+    },
+    "opzioni": [
+     "4 prese e 5 carte affrancabili",
+     "3 prese e 8 carte affrancabili",
+     "3 prese e 3 carte affrancabili"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "1.16",
+    "testo": "In Sud vedete questo Morto, e prevedete di fare tantissime prese. Sapreste dire qual è l’attacco peggiore che potreste ricevere?",
+    "figura": {
+     "tipo": "smazzata",
+     "N": {
+      "S": "543",
+      "H": "543",
+      "D": "A",
+      "C": "KQJT95"
+     },
+     "S": {
+      "S": "A762",
+      "H": "A762",
+      "D": "KQJ7",
+      "C": "A"
+     }
+    },
+    "opzioni": [
+     "K di picche",
+     "Quadri",
+     "Onore di Cuori"
+    ],
+    "giusta": 1
+   }
+  ]
+ },
+ {
+  "numero": 2,
+  "domande": [
+   {
+    "numero": "2.1",
+    "testo": "Un difensore possiede in un seme KQJ53. Che carta deve giocare se è primo di mano? E se è terzo di mano?",
+    "figura": null,
+    "opzioni": [
+     "Re – 5",
+     "Fante - 3",
+     "Re - Fante"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "2.2",
+    "testo": ". Che carta promette l'attacco di J?",
+    "figura": null,
+    "opzioni": [
+     "10",
+     "Dama",
+     "Asso"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "2.3",
+    "testo": "Quale carta esclude chi attacca con la Q?",
+    "figura": null,
+    "opzioni": [
+     "Asso",
+     "Re",
+     "Fante"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "2.4",
+    "testo": "L'attacco con il J mostra che quel giocatore non possiede di certo in mano carte più alte del fante. È esatto?",
+    "figura": null,
+    "opzioni": [
+     "Si",
+     "No",
+     "Dipende"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "2.5",
+    "testo": "Nel seguente esempio, avendo questa mano che colore e carta scegliete per l'attacco?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "AJ3",
+      "H": "KQ5",
+      "D": "72",
+      "C": "QJ983"
+     }
+    },
+    "opzioni": [
+     "Asso di picche",
+     "Dama di fiori",
+     "7 di quadri"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "2.6",
+    "testo": "Nel seguente esempio, avendo questa mano che colore e carta scegliete per l'attacco?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "KJ5",
+      "H": "AQ",
+      "D": "9764",
+      "C": "K854"
+     }
+    },
+    "opzioni": [
+     "Asso di cuori",
+     "4 di fiori",
+     "4 di quadri"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "2.7",
+    "testo": "Nel seguente esempio, avendo questa mano che colore e carta scegliete per l'attacco?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "863",
+      "H": "KQJ2",
+      "D": "AK",
+      "C": "JT54"
+     }
+    },
+    "opzioni": [
+     "Asso di quadri",
+     "2 di cuori",
+     "Re di cuori"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "2.8",
+    "testo": "Nel seguente esempio, avendo questa mano che colore e carta scegliete per l'attacco?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "87",
+      "H": "AQ",
+      "D": "QT654",
+      "C": "K853"
+     }
+    },
+    "opzioni": [
+     "Asso di CUORI",
+     "Dama di QUADRI",
+     "4 di quadri"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "2.9",
+    "testo": "Siete in Est, il vostro compagno ha attaccato con una cartina. Che carta giocate se il morto gioca piccola?",
+    "figura": {
+     "tipo": "colore",
+     "seme": "H",
+     "N": "865",
+     "W": "…2",
+     "E": "KJ4"
+    },
+    "opzioni": [
+     "Re",
+     "Fante",
+     "4"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "2.10",
+    "testo": "Siete in Est, il vostro compagno ha attaccato con una cartina. Che carta giocate se il morto gioca piccola?",
+    "figura": {
+     "tipo": "colore",
+     "seme": "C",
+     "N": "Q97",
+     "W": "…2",
+     "E": "KJT"
+    },
+    "opzioni": [
+     "10",
+     "Re",
+     "Fante"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "2.11",
+    "testo": "Siete in Est, il vostro compagno ha attaccato con una cartina. Che carta giocate se il morto gioca piccola?",
+    "figura": {
+     "tipo": "colore",
+     "seme": "D",
+     "N": "863",
+     "W": "…2",
+     "E": "QJ94"
+    },
+    "opzioni": [
+     "Dama",
+     "Fante",
+     "9",
+     "4"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "2.12",
+    "testo": "Siete in Est, il vostro compagno ha attaccato con una cartina. Che carta giocate se il morto gioca piccola?",
+    "figura": {
+     "tipo": "colore",
+     "seme": "S",
+     "N": "J65",
+     "W": "…2",
+     "E": "KQT"
+    },
+    "opzioni": [
+     "Re",
+     "10",
+     "Dama"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "2.13",
+    "testo": "Siete in Est, il vostro compagno ha attaccato con una cartina. Che carta giocate se il morto gioca piccola?",
+    "figura": {
+     "tipo": "colore",
+     "seme": "H",
+     "N": "974",
+     "W": "…2",
+     "E": "AK5"
+    },
+    "opzioni": [
+     "Asso",
+     "Re",
+     "5"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "2.14",
+    "testo": "Siete in Est, il vostro compagno ha attaccato con una cartina. Che carta giocate se il morto gioca piccola?",
+    "figura": {
+     "tipo": "colore",
+     "seme": "D",
+     "N": "QT3",
+     "W": "…2",
+     "E": "KJ9"
+    },
+    "opzioni": [
+     "Re",
+     "Fante",
+     "9"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "2.15",
+    "testo": "La giocata si è svolta: 5...3...Q...A.\nDopodiché Sud ha potuto fare una seconda presa con il J. Ha sbagliato Est o Ovest?",
+    "figura": {
+     "tipo": "colore",
+     "seme": "H",
+     "N": "J43",
+     "W": "KT965",
+     "E": "Q72",
+     "S": "A8"
+    },
+    "opzioni": [
+     "Est",
+     "Ovest"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "2.16",
+    "testo": "La presa si è svolta così: J ...4...3...Q.\nSud ha fatto una presa impossibile!\nHa sbagliato Est o Ovest?",
+    "figura": {
+     "tipo": "colore",
+     "seme": "H",
+     "N": "854",
+     "W": "AJT62",
+     "E": "K93",
+     "S": "Q7"
+    },
+    "opzioni": [
+     "Est",
+     "Ovest"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "2.17",
+    "testo": "La presa si è svolta così: 2 ...4...J...Q.\nSud ha fatto una presa impossibile, grazie all'errore di ...... ?",
+    "figura": {
+     "tipo": "colore",
+     "seme": "H",
+     "N": "754",
+     "W": "AT862",
+     "E": "KJ3",
+     "S": "Q9"
+    },
+    "opzioni": [
+     "Est",
+     "Ovest"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "2.18",
+    "testo": "(Siete in Ovest)\nAvete attaccato con il 4, Nord ha messo il 3, Est il 10 e Sud ha preso con l'asso.\nChi ha la Q? Chi ha il 9?",
+    "figura": {
+     "tipo": "colore",
+     "seme": "H",
+     "N": "J83",
+     "W": "K764",
+     "E": "…T",
+     "S": "…A"
+    },
+    "opzioni": [
+     "Q in Sud 9 in Sud",
+     "Q in Est 9 in Sud",
+     "Q in Sud 9 in EST"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "2.19",
+    "testo": "(Siete in Ovest)\nAvete attaccato con il 2, sul 4 del morto il vostro compagno ha messo il J e Sud ha preso con l'asso.\nChi ha il K? Chi ha il 10?",
+    "figura": {
+     "tipo": "colore",
+     "seme": "H",
+     "N": "754",
+     "W": "Q8632",
+     "E": "…J",
+     "S": "…A"
+    },
+    "opzioni": [
+     "K in Sud 10 in Sud",
+     "K in Est 10 in Sud",
+     "K in Sud 10 in EST"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "2.20",
+    "testo": "(Voi siete in Est)\nVedete Ovest attaccare con il J, 4 di Nord e Sud prendere con l'asso. Sapete dire, al di là della cortina fumogena che Sud ha messo in piedi per confondervi, chi ha il K? Chi ha la Dama? Chi ha il 10?",
+    "figura": {
+     "tipo": "colore",
+     "seme": "H",
+     "N": "874",
+     "W": "…J",
+     "E": "632",
+     "S": "…A"
+    },
+    "opzioni": [
+     "K in Ovest Q in Sud 10 in Sud",
+     "K in Ovest Q in Ovest 10 in Ovest",
+     "K in Sud Q in Sud 10 in Ovest"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "2.21",
+    "testo": "(Voi siete in Est).\nSapreste dire da quale figura di carte ha attaccato il vostro compagno, viste le carte della prima presa (J….6….2…Q)?",
+    "figura": {
+     "tipo": "colore",
+     "seme": "H",
+     "N": "A96",
+     "W": "…J",
+     "E": "82",
+     "S": "…Q"
+    },
+    "opzioni": [
+     "J 10 x x",
+     "K J 10 x",
+     "K J x x"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "2.22",
+    "testo": "Siete Ovest e vedete le carte del morto in Nord. Supponendo che nel colore dato tutti i valori che mancano siano in mano al giocante, quante sono come minimo le prese che vi spetta fare?",
+    "figura": {
+     "tipo": "colore",
+     "seme": "H",
+     "N": "643",
+     "W": "AQT"
+    },
+    "opzioni": [
+     "3 prese muovendo per primi con Asso",
+     "3 prese muovendo per primi con 10",
+     "3 prese non muovendoci mai per primi"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "2.23",
+    "testo": "Siete Ovest e vedete le carte del morto in Nord. Supponendo che nel colore dato tutti i valori che mancano siano in mano al giocante, quante sono come minimo le prese che vi spetta fare?",
+    "figura": {
+     "tipo": "colore",
+     "seme": "H",
+     "N": "A65",
+     "W": "QT2"
+    },
+    "opzioni": [
+     "0 prese",
+     "1 presa, se copro il J giocato da sud con il Q",
+     "2 prese se scarto il 10 sul J giocato da sud"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "2.24",
+    "testo": "Siete Ovest e vedete le carte del morto in Nord. Supponendo che nel colore dato tutti i valori che mancano siano in mano al giocante, quante sono come minimo le prese che vi spetta fare?",
+    "figura": {
+     "tipo": "colore",
+     "seme": "H",
+     "N": "JT",
+     "W": "AQ94"
+    },
+    "opzioni": [
+     "3 prese non muovendoci mai per primi",
+     "2 prese con Asso e con Q",
+     "3 prese muovendo per primi con 4"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "2.25",
+    "testo": "Siete Ovest e vedete le carte del morto in Nord. Supponendo che nel colore dato tutti i valori che mancano siano in mano al giocante, quante sono come minimo le prese che vi spetta fare?",
+    "figura": {
+     "tipo": "colore",
+     "seme": "H",
+     "N": "QJ",
+     "W": "AT62"
+    },
+    "opzioni": [
+     "2 prese con Asso e con 10",
+     "1 presa con Asso",
+     "3 prese non muovendoci mai per primi"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "2.26",
+    "testo": "Siete Ovest e vedete le carte del morto in Nord. Supponendo che nel colore dato tutti i valori che mancano siano in mano al giocante, quante sono come minimo le prese che vi spetta fare?",
+    "figura": {
+     "tipo": "colore",
+     "seme": "H",
+     "N": "AK7",
+     "W": "QJ9"
+    },
+    "opzioni": [
+     "0 prese",
+     "1 presa",
+     "2 prese"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "2.27",
+    "testo": "Siete Ovest e vedete le carte del morto in Nord. Supponendo che nel colore dato tutti i valori che mancano siano in mano al giocante, quante sono come minimo le prese che vi spetta fare?",
+    "figura": {
+     "tipo": "colore",
+     "seme": "H",
+     "N": "543",
+     "W": "AJT8"
+    },
+    "opzioni": [
+     "1 presa",
+     "2 prese",
+     "3 prese"
+    ],
+    "giusta": 2
+   }
+  ]
+ },
+ {
+  "numero": 3,
+  "domande": [
+   {
+    "numero": "3.1",
+    "testo": "Tra mano e morto avete in un colore 6 carte assegnate. Come possono essere divisi i resti nei due casi più probabili?",
+    "figura": null,
+    "opzioni": [
+     "6-1 e 4-3",
+     "5-2 e 4-3",
+     "5-2 e 6-1"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "3.2",
+    "testo": "Tra mano e morto avete in un colore 7 carte assegnate. Come possono essere divisi i resti nei due casi più probabili?",
+    "figura": null,
+    "opzioni": [
+     "3-3 e 4-2",
+     "5-1 e 4-2",
+     "3-3 e 6-0"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "3.3",
+    "testo": "Tra mano e morto avete in un colore 8 carte assegnate. Come possono essere divisi i resti nei due casi più probabili?",
+    "figura": null,
+    "opzioni": [
+     "3-2 e 5-0",
+     "5-0 e 4-1",
+     "3-2 e 4-1"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "3.4",
+    "testo": "Tra mano e morto avete in un colore 9 carte assegnate. Come possono essere divisi i resti nei due casi più probabili?",
+    "figura": null,
+    "opzioni": [
+     "3-1 e 4-0",
+     "2-2 e 4-0",
+     "2-2 e 3-1"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "3.5",
+    "testo": "In questo esempio quante prese potreste affrancare se la divisione dei resti fosse la più vantaggiosa?",
+    "figura": {
+     "tipo": "colore",
+     "N": "A9753",
+     "S": "K8642"
+    },
+    "opzioni": [
+     "TRE se il colore è diviso 2-1",
+     "TRE se il colore è diviso 3-0",
+     "DUE se il colore è diviso 2-1"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "3.6",
+    "testo": "In questo esempio quante prese potreste affrancare se la divisione dei resti fosse la più vantaggiosa?",
+    "figura": {
+     "tipo": "colore",
+     "N": "KQ42",
+     "S": "A853"
+    },
+    "opzioni": [
+     "DUE se il colore è diviso 3-2",
+     "ZERO se il colore è diviso 4-1",
+     "UNA se il colore è diviso 3-2"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "3.7",
+    "testo": "In questo esempio quante prese potreste affrancare se la divisione dei resti fosse la più vantaggiosa?",
+    "figura": {
+     "tipo": "colore",
+     "N": "AQ54",
+     "S": "K2"
+    },
+    "opzioni": [
+     "UNA se il colore è diviso 4-3",
+     "ZERO se il colore è diviso 4-3",
+     "ZERO se il colore è diviso 5-2"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "3.8",
+    "testo": "In questo esempio quante prese potreste affrancare se la divisione dei resti fosse la più vantaggiosa?",
+    "figura": {
+     "tipo": "colore",
+     "N": "KQ5",
+     "S": "A432"
+    },
+    "opzioni": [
+     "UNA se il colore è diviso 3-3",
+     "UNA se il colore è diviso 4-2",
+     "ZERO se il colore è diviso 3-3"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "3.9",
+    "testo": "In questo esempio quante prese potreste affrancare se la divisione dei resti fosse la più vantaggiosa?",
+    "figura": {
+     "tipo": "colore",
+     "N": "AK7654",
+     "S": "832"
+    },
+    "opzioni": [
+     "QUATTRO se il colore è diviso 2-2",
+     "TRE se il colore è diviso 3-1",
+     "SEI se il colore è diviso 2-2"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "3.10",
+    "testo": "Nel seguente esempio, a) quante prese potete affrancare di forza? b) quante prese potete affrancare di lunga se i resti sono divisi al meglio?",
+    "figura": {
+     "tipo": "colore",
+     "N": "K8763",
+     "S": "A542"
+    },
+    "opzioni": [
+     "A) DUE. b) QUATTRO, se i resti sono 2-2",
+     "A) NESSUNA. b) DUE, se i resti sono 3-1",
+     "A) NESSUNA. b) TRE, se i resti sono 2-2"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "3.11",
+    "testo": "Nel seguente esempio, a) quante prese potete affrancare di forza? b) quante prese potete affrancare di lunga se i resti sono divisi al meglio?",
+    "figura": {
+     "tipo": "colore",
+     "N": "KQ742",
+     "S": "J65"
+    },
+    "opzioni": [
+     "A) DUE. b) DUE, se i resti sono 3-2",
+     "A) TRE. b) DUE se i resti sono 3-2",
+     "A) NESSUNA. b) TRE, se i resti sono 4-1"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "3.12",
+    "testo": "Nel seguente esempio, a) quante prese potete affrancare di forza? b) quante prese potete affrancare di lunga se i resti sono divisi al meglio?",
+    "figura": {
+     "tipo": "colore",
+     "N": "AK873",
+     "S": "Q2"
+    },
+    "opzioni": [
+     "A) TRE. b) DUE, se i resti sono 3-3",
+     "A) NESSUNA. b) DUE se i resti sono 3-3",
+     "A) NESSUNA. b) TRE, se i resti sono 4-2"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "3.13",
+    "testo": "Nel seguente esempio, a) quante prese potete affrancare di forza? b) quante prese potete affrancare di lunga se i resti sono divisi al meglio?",
+    "figura": {
+     "tipo": "colore",
+     "N": "KQ9",
+     "S": "JT862"
+    },
+    "opzioni": [
+     "A) QUATTRO. b) ZERO, comunque siano i resti",
+     "A) UNA. b) QUATTRO se i resti sono 3-2",
+     "A) TRE. b) DUE, se i resti sono 3-2"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "3.14",
+    "testo": "Nel seguente esempio, a) quante prese potete affrancare di forza? b) quante prese potete affrancare di lunga se i resti sono divisi al meglio?",
+    "figura": {
+     "tipo": "colore",
+     "N": "QJ94",
+     "S": "T865"
+    },
+    "opzioni": [
+     "A) DUE. b) DUE, se i resti sono 3-2",
+     "A) NESSUNA. b) DUE se i resti sono 3-2",
+     "A) DUE. b) ZERO comunque siano i resti"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "3.15",
+    "testo": "Quale dei giocatori seduti in E-O ha \"tenuta\" nel colore mosso da N-S?",
+    "figura": {
+     "tipo": "colore",
+     "N": "K75",
+     "W": "9832",
+     "E": "JT",
+     "S": "AQ64"
+    },
+    "opzioni": [
+     "OVEST",
+     "EST"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "3.16",
+    "testo": "Quale dei giocatori seduti in E-O ha \"tenuta\" nel colore mosso da N-S?",
+    "figura": {
+     "tipo": "colore",
+     "N": "A72",
+     "W": "QJ",
+     "E": "T65",
+     "S": "K9843"
+    },
+    "opzioni": [
+     "OVEST",
+     "EST"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "3.17",
+    "testo": "Quale dei giocatori seduti in E-O ha \"tenuta\" nel colore mosso da N-S?",
+    "figura": {
+     "tipo": "colore",
+     "N": "K8642",
+     "W": "975",
+     "E": "QJ",
+     "S": "AT"
+    },
+    "opzioni": [
+     "OVEST",
+     "EST"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "3.18",
+    "testo": "Indicate quali sono le carte che potrebbero fornirvi una presa supplementare (Affrancabili) oltre alle Vincenti (immediate)",
+    "figura": {
+     "tipo": "colore",
+     "N": "KJ5",
+     "S": "A64"
+    },
+    "opzioni": [
+     "Nessuna",
+     "Il Fante di Nord",
+     "L’Asso di Sud"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "3.19",
+    "testo": "Indicate quali sono le carte che potrebbero fornirvi una presa supplementare (Affrancabili) oltre alle Vincenti (immediate)",
+    "figura": {
+     "tipo": "colore",
+     "N": "Q432",
+     "S": "A765"
+    },
+    "opzioni": [
+     "La Dama di Nord",
+     "Il 5 di Sud",
+     "Nessuna"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "3.20",
+    "testo": "Indicate quali sono le carte che potrebbero fornirvi una presa supplementare (Affrancabili) oltre alle Vincenti (immediate)",
+    "figura": {
+     "tipo": "colore",
+     "N": "K762",
+     "S": "43"
+    },
+    "opzioni": [
+     "Nessuna",
+     "Il Re di Nord",
+     "Il 2 di Nord"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "3.21",
+    "testo": "Indicate quali sono le carte che potrebbero fornirvi una presa supplementare (Affrancabili) oltre alle Vincenti (immediate)",
+    "figura": {
+     "tipo": "colore",
+     "N": "762",
+     "S": "AQ54"
+    },
+    "opzioni": [
+     "Nessuna",
+     "La Dama di Sud",
+     "La Dama e il 4 di Sud"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "3.22",
+    "testo": "Indicate quali sono le carte che potrebbero fornirvi una presa supplementare (Affrancabili) oltre alle Vincenti (immediate)",
+    "figura": {
+     "tipo": "colore",
+     "N": "AK5",
+     "S": "J643"
+    },
+    "opzioni": [
+     "Nessuna",
+     "Il Fante di Sud",
+     "Il 3 di Sud"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "3.23",
+    "testo": "Volendo fare il maggior numero possibile di prese in questo colore, e potendo iniziare a vostro piacimento da Sud o da Nord, come muovete il colore?",
+    "figura": {
+     "tipo": "colore",
+     "N": "AQ963",
+     "S": "7542"
+    },
+    "opzioni": [
+     "Inizio da Nord e gioco la Dama, per far scendere il Re",
+     "Inizio da Sud, gioco il 2 e provo a mettere la Dama",
+     "Nord o Sud è Indifferente: tiro l’Asso e spero che il Re cada"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "3.24",
+    "testo": "Volendo fare il maggior numero possibile di prese in questo colore, e potendo iniziare a vostro piacimento da Sud o da Nord, come muovete il colore?",
+    "figura": {
+     "tipo": "colore",
+     "N": "A9763",
+     "S": "Q8542"
+    },
+    "opzioni": [
+     "Inizio da Sud e gioco la Dama, per fare l’impasse al Re",
+     "Inizio da Nord e gioco piccola verso la Dama",
+     "Indifferente: tiro l’Asso e spero che il Re cada"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "3.25",
+    "testo": "Volendo fare il maggior numero possibile di prese in questo colore, e potendo iniziare a vostro piacimento da Sud o da Nord, come muovete il colore?",
+    "figura": {
+     "tipo": "colore",
+     "N": "J653",
+     "S": "AK42"
+    },
+    "opzioni": [
+     "Inizio da Sud e gioco piccola verso il Fante",
+     "Inizio da Nord e gioco il Fante, per fare l’impasse alla Dama",
+     "Tiro l’Asso e il Re e spero che la Dama cada"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "3.26",
+    "testo": "Per realizzare il massimo delle prese, da quale parte cominciate a muovere questi colori: da Sud o da Nord?",
+    "figura": {
+     "tipo": "colore",
+     "N": "KQ3",
+     "S": "642"
+    },
+    "opzioni": [
+     "Nord",
+     "Sud"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "3.27",
+    "testo": "Per realizzare il massimo delle prese, da quale parte cominciate a muovere questi colori: da Sud o da Nord?",
+    "figura": {
+     "tipo": "colore",
+     "N": "QJT9",
+     "S": "A765"
+    },
+    "opzioni": [
+     "Nord",
+     "Sud"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "3.28",
+    "testo": "Per realizzare il massimo delle prese, da quale parte cominciate a muovere questi colori: da Sud o da Nord?",
+    "figura": {
+     "tipo": "colore",
+     "N": "AKT2",
+     "S": "J93"
+    },
+    "opzioni": [
+     "Nord",
+     "Sud con il 3",
+     "Sud con il Fante"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "3.29",
+    "testo": "Per realizzare il massimo delle prese, da quale parte cominciate a muovere questi colori: da Sud o da Nord?",
+    "figura": {
+     "tipo": "colore",
+     "N": "KJT2",
+     "S": "954"
+    },
+    "opzioni": [
+     "Nord",
+     "Sud con il 9",
+     "Sud con il 4"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "3.30",
+    "testo": "Per realizzare il massimo delle prese, da quale parte cominciate a muovere questi colori: da Sud o da Nord?",
+    "figura": {
+     "tipo": "colore",
+     "N": "875",
+     "S": "QJ6"
+    },
+    "opzioni": [
+     "Nord",
+     "Sud"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "3.31",
+    "testo": "Vorreste che il K fosse in Est o in Ovest?",
+    "figura": {
+     "tipo": "colore",
+     "N": "AQ5",
+     "S": "642"
+    },
+    "opzioni": [
+     "EST",
+     "OVEST"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "3.32",
+    "testo": "Vorreste che il K fosse in Est o in Ovest?",
+    "figura": {
+     "tipo": "colore",
+     "N": "QJ65",
+     "S": "AT93"
+    },
+    "opzioni": [
+     "EST",
+     "OVEST"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "3.33",
+    "testo": "Vorreste che il K fosse in Est o in Ovest?",
+    "figura": {
+     "tipo": "colore",
+     "N": "Q8762",
+     "S": "A9543"
+    },
+    "opzioni": [
+     "EST",
+     "OVEST",
+     "Dovunque ma secco"
+    ],
+    "giusta": 2,
+    "nota": "Dubbio: con A9543 e Q8762 conviene tirare l'Asso (cade il Re secco ovunque) e poi muovere verso la Dama, che vince anche con Re secondo in Ovest. «Ovest» sembra più preciso di «Dovunque ma secco».",
+    "sospesa": true
+   },
+   {
+    "numero": "3.34",
+    "testo": "Vorreste che il K fosse in Est o in Ovest?",
+    "figura": {
+     "tipo": "colore",
+     "N": "A92",
+     "S": "Q54"
+    },
+    "opzioni": [
+     "EST",
+     "OVEST"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "3.35",
+    "testo": "Vorreste che il K fosse in Est o in Ovest?",
+    "figura": {
+     "tipo": "colore",
+     "N": "Q5",
+     "S": "A8763"
+    },
+    "opzioni": [
+     "EST",
+     "OVEST"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "3.36",
+    "testo": "a) Qual è l'onore che certamente dovremo perdere? b) Qual è invece l'onore che dovremmo evitare di pagare?",
+    "figura": {
+     "tipo": "colore",
+     "N": "KQ96",
+     "S": "T542"
+    },
+    "opzioni": [
+     "A) dovremo sempre perdere Asso e RE b) speriamo di non dover dare la presa al FANTE",
+     "A) dovremo sempre perdere Asso b) speriamo di non dover dare la presa al FANTE",
+     "A) dovremo sempre perdere Asso e FANTE b) speriamo di non dover dare la presa al 8"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "3.37",
+    "testo": "a) Qual è l'onore che certamente dovremo perdere? b) Qual è invece l'onore che dovremmo evitare di pagare?",
+    "figura": {
+     "tipo": "colore",
+     "N": "JT94",
+     "S": "K652"
+    },
+    "opzioni": [
+     "A) dovremo sempre perdere Asso b) speriamo di non dover dare la presa alla DAMA",
+     "A) dovremo sempre perdere Asso e Dama b) speriamo di non dover dare la presa alla Dama",
+     "A) dovremo sempre perdere Asso b) speriamo di non dover dare la presa al 8"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "3.38",
+    "testo": "a) Qual è l'onore che certamente dovremo perdere? b) Qual è invece l'onore che dovremmo evitare di pagare?",
+    "figura": {
+     "tipo": "colore",
+     "N": "Q965",
+     "S": "J43"
+    },
+    "opzioni": [
+     "A) dovremo sempre perdere Asso e RE b) speriamo di non dover dare la presa al 8",
+     "A) dovremo sempre perdere Asso b) speriamo di non dover dare la presa al RE",
+     "A) dovremo sempre perdere Asso e RE b) speriamo di non dover dare la presa al 10"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "3.39",
+    "testo": "a) Qual è l'onore che certamente dovremo perdere? b) Qual è invece l'onore che dovremmo evitare di pagare?",
+    "figura": {
+     "tipo": "colore",
+     "N": "KT65",
+     "S": "Q742"
+    },
+    "opzioni": [
+     "A) dovremo sempre perdere Asso e FANTE b) speriamo di non dover dare la presa al FANTE",
+     "A) dovremo sempre perdere Asso b) speriamo di non dover dare la presa al FANTE",
+     "A) dovremo sempre perdere Asso e FANTE b) speriamo di non dover dare la presa al 9"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "3.40",
+    "testo": "a) Qual è l'onore che certamente dovremo perdere? b) Qual è invece l'onore che dovremmo evitare di pagare?",
+    "figura": {
+     "tipo": "colore",
+     "N": "765",
+     "S": "QT92"
+    },
+    "opzioni": [
+     "A) dovremo sempre perdere Asso e RE b) speriamo di non dover dare la presa al FANTE",
+     "A) dovremo sempre perdere Asso RE DAMA b) speriamo di non dover dare la presa al FANTE",
+     "A) dovremo sempre perdere Asso RE e FANTE b) speriamo di non dover dare la presa al 8"
+    ],
+    "giusta": 0
+   }
+  ]
+ },
+ {
+  "numero": 4,
+  "domande": [
+   {
+    "numero": "4.1",
+    "testo": "Quali di queste figure presentano un blocco superabile e quali un blocco insuperabile (tale da impedire l'incasso di tutte le vincenti senza uscire dal colore)?",
+    "figura": {
+     "tipo": "colori",
+     "figure": [
+      {
+       "N": "KJT93",
+       "S": "AQ"
+      },
+      {
+       "N": "AKQ",
+       "S": "JT983"
+      },
+      {
+       "N": "KQJ",
+       "S": "AT93"
+      },
+      {
+       "N": "QT976",
+       "S": "AKJ"
+      },
+      {
+       "N": "QJT9",
+       "S": "AK"
+      }
+     ]
+    },
+    "opzioni": [
+     "Blocco superabile Nessuno Blocco insuperabile fig. 1-2-3-4-5",
+     "Blocco superabile fig. 1-2-3 Blocco insuperabile fig. 4-5",
+     "Blocco superabile fig. 1-3-4 Blocco insuperabile fig. 2-5"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "4.2",
+    "testo": "Quante volte, se necessario per manovrare altri colori, potete trasferire la presa da Sud a Nord con i seguenti esempi di carte?",
+    "figura": {
+     "tipo": "colore",
+     "N": "KJ5",
+     "S": "AQ4"
+    },
+    "opzioni": [
+     "UNA volta",
+     "DUE volte",
+     "TRE volte"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "4.3",
+    "testo": "Quante volte, se necessario per manovrare altri colori, potete trasferire la presa da Sud a Nord con i seguenti esempi di carte?",
+    "figura": {
+     "tipo": "colore",
+     "N": "QT8",
+     "S": "AKJ97"
+    },
+    "opzioni": [
+     "UNA volta",
+     "DUE volte",
+     "TRE volte"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "4.4",
+    "testo": "Quante volte, se necessario per manovrare altri colori, potete trasferire la presa da Sud a Nord con i seguenti esempi di carte?",
+    "figura": {
+     "tipo": "colore",
+     "N": "AT32",
+     "S": "KQJ4"
+    },
+    "opzioni": [
+     "UNA volta",
+     "DUE volte",
+     "TRE volte"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "4.5",
+    "testo": "Quante volte, se necessario per manovrare altri colori, potete trasferire la presa da Sud a Nord con i seguenti esempi di carte?",
+    "figura": {
+     "tipo": "colore",
+     "N": "AT8",
+     "S": "KQJ97"
+    },
+    "opzioni": [
+     "UNA volta",
+     "DUE volte",
+     "TRE volte"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "4.6",
+    "testo": "Quante volte, se necessario per manovrare altri colori, potete trasferire la presa da Sud a Nord con i seguenti esempi di carte?",
+    "figura": {
+     "tipo": "colore",
+     "N": "KQ8",
+     "S": "AJT9"
+    },
+    "opzioni": [
+     "UNA volta",
+     "DUE volte",
+     "TRE volte"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "4.7",
+    "testo": "Giocate 3NT e ricevete l’attacco J di Quadri. Quale colore rappresenta la vostra maggior sorgente di prese?",
+    "figura": {
+     "tipo": "smazzata",
+     "N": {
+      "S": "K43",
+      "H": "K86",
+      "D": "A94",
+      "C": "KJ954"
+     },
+     "S": {
+      "S": "A872",
+      "H": "A94",
+      "D": "K52",
+      "C": "QT"
+     }
+    },
+    "opzioni": [
+     "Picche",
+     "Cuori",
+     "Fiori"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "4.8",
+    "testo": "Giocate 3NT e ricevete l’attacco J di Quadri. Quale colore rappresenta la vostra maggior sorgente di prese?",
+    "figura": {
+     "tipo": "smazzata",
+     "N": {
+      "S": "QJ973",
+      "H": "AT2",
+      "D": "K87",
+      "C": "A7"
+     },
+     "S": {
+      "S": "T8",
+      "H": "K643",
+      "D": "AQ2",
+      "C": "K954"
+     }
+    },
+    "opzioni": [
+     "Picche",
+     "Cuori",
+     "Fiori"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "4.9",
+    "testo": "Giocate 3NT e ricevete l’attacco J di Quadri. Quale colore rappresenta la vostra maggior sorgente di prese?",
+    "figura": {
+     "tipo": "smazzata",
+     "N": {
+      "S": "A76",
+      "H": "K2",
+      "D": "983",
+      "C": "876543"
+     },
+     "S": {
+      "S": "JT43",
+      "H": "AQ4",
+      "D": "AQ3",
+      "C": "AK2"
+     }
+    },
+    "opzioni": [
+     "Picche",
+     "Cuori",
+     "Fiori"
+    ],
+    "giusta": 2,
+    "nota": "Errore nell'originale: il 3♦ compare sia in Nord (♦983) sia in Sud (♦AQ3). Non cambia la risposta."
+   },
+   {
+    "numero": "4.10",
+    "testo": "Giocate 3NT e ricevete l’attacco J di Quadri. Quale colore rappresenta la vostra maggior sorgente di prese?",
+    "figura": {
+     "tipo": "smazzata",
+     "N": {
+      "S": "QT9",
+      "H": "KJT85",
+      "D": "653",
+      "C": "983"
+     },
+     "S": {
+      "S": "AKJ6",
+      "H": "Q2",
+      "D": "AK",
+      "C": "JT762"
+     }
+    },
+    "opzioni": [
+     "Picche",
+     "Cuori",
+     "Fiori"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "4.11",
+    "testo": "Quale divisione dei resti vi potrebbe impedire di incassare, nei seguenti colori, tante prese quante sono le carte del lato lungo?",
+    "figura": {
+     "tipo": "colore",
+     "N": "K8752",
+     "S": "AQ4"
+    },
+    "opzioni": [
+     "La 3 - 2",
+     "La 4 – 1",
+     "Nessuna"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "4.12",
+    "testo": "Quale divisione dei resti vi potrebbe impedire di incassare, nei seguenti colori, tante prese quante sono le carte del lato lungo?",
+    "figura": {
+     "tipo": "colore",
+     "N": "QJT86",
+     "S": "AK4"
+    },
+    "opzioni": [
+     "La 3 - 2",
+     "La 4 – 1",
+     "Nessuna"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "4.13",
+    "testo": "Quale divisione dei resti vi potrebbe impedire di incassare, nei seguenti colori, tante prese quante sono le carte del lato lungo?",
+    "figura": {
+     "tipo": "colore",
+     "N": "A98752",
+     "S": "K643"
+    },
+    "opzioni": [
+     "La 3 - 0",
+     "La 1 – 2",
+     "Nessuna"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "4.14",
+    "testo": "Quale divisione dei resti vi potrebbe impedire di incassare, nei seguenti colori, tante prese quante sono le carte del lato lungo?",
+    "figura": {
+     "tipo": "colore",
+     "N": "AK32",
+     "S": "Q7654"
+    },
+    "opzioni": [
+     "La 3 - 1",
+     "La 4 – 0",
+     "Nessuna"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "4.15",
+    "testo": "Quale divisione dei resti vi potrebbe impedire di incassare, nei seguenti colori, tante prese quante sono le carte del lato lungo?",
+    "figura": {
+     "tipo": "colore",
+     "N": "KQ8765",
+     "S": "A432"
+    },
+    "opzioni": [
+     "La 3 - 0",
+     "La 1 – 2",
+     "Nessuna"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "4.16",
+    "testo": "Nelle seguenti figure avete molte prese da incassare o affrancare. Quale (o quali) sono i primi onore che giocate?",
+    "figura": {
+     "tipo": "colore",
+     "N": "KQT63",
+     "S": "AJ5"
+    },
+    "opzioni": [
+     "Re e Dama e Dieci",
+     "Asso e Fante e poi cartina verso la lunga di fronte",
+     "Asso Re e poi Dama"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "4.17",
+    "testo": "Nelle seguenti figure avete molte prese da incassare o affrancare. Quale (o quali) sono i primi onore che giocate?",
+    "figura": {
+     "tipo": "colore",
+     "N": "A3",
+     "S": "KQJT5"
+    },
+    "opzioni": [
+     "Asso, poi la cartina verso la lunga di Sud",
+     "Qualsiasi onore",
+     "Asso e poi Re"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "4.18",
+    "testo": "Nelle seguenti figure avete molte prese da incassare o affrancare. Quale (o quali) sono i primi onore che giocate?",
+    "figura": {
+     "tipo": "colore",
+     "N": "AQ754",
+     "S": "KJ2"
+    },
+    "opzioni": [
+     "Asso Re e Dama",
+     "Piccola per la Dama (impasse)",
+     "Re e Fante e poi cartina per la lunga di Nord"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "4.19",
+    "testo": "Nelle seguenti figure avete molte prese da incassare o affrancare. Quale (o quali) sono i primi onore che giocate?",
+    "figura": {
+     "tipo": "colore",
+     "N": "KQ2",
+     "S": "JT954"
+    },
+    "opzioni": [
+     "Fante e se l’avversario mette l’asso poi Re e Dama",
+     "Re e Dama di Nord e poi cartina verso la lunga di fronte",
+     "Re se l’Asso non fa presa il Fante"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "4.20",
+    "testo": "Nelle seguenti figure avete molte prese da incassare o affrancare. Quale (o quali) sono i primi onore che giocate?",
+    "figura": {
+     "tipo": "colore",
+     "N": "KJT85",
+     "S": "AQ6"
+    },
+    "opzioni": [
+     "Dama e Asso e poi la cartina verso la lunga",
+     "Subito Re e Fante e tutta la lunga di Nord",
+     "Asso Re e poi Dama"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "4.21",
+    "testo": "Quanti ingressi (o rientri) ci sono nella mano di Nord? (attacco Q di ♠)",
+    "figura": {
+     "tipo": "smazzata",
+     "N": {
+      "S": "76",
+      "H": "543",
+      "D": "J543",
+      "C": "AQT8"
+     },
+     "S": {
+      "S": "AK5",
+      "H": "AQJT",
+      "D": "QT2",
+      "C": "KJ9"
+     }
+    },
+    "opzioni": [
+     "1",
+     "2",
+     "3"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "4.22",
+    "testo": "Quanti ingressi (o rientri) ci sono nella mano di Nord? (attacco Q di ♠)",
+    "figura": {
+     "tipo": "smazzata",
+     "N": {
+      "S": "AT3",
+      "H": "J4",
+      "D": "QJ82",
+      "C": "Q765"
+     },
+     "S": {
+      "S": "K42",
+      "H": "AKQ73",
+      "D": "AK",
+      "C": "AJ4"
+     }
+    },
+    "opzioni": [
+     "1",
+     "2",
+     "3"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "4.23",
+    "testo": "Quanti ingressi (o rientri) ci sono nella mano di Nord? (attacco Q di ♠)",
+    "figura": {
+     "tipo": "smazzata",
+     "N": {
+      "S": "T6",
+      "H": "J4",
+      "D": "986542",
+      "C": "Q76"
+     },
+     "S": {
+      "S": "AK3",
+      "H": "AKQ2",
+      "D": "AKQ",
+      "C": "JT8"
+     }
+    },
+    "opzioni": [
+     "1",
+     "2",
+     "3"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "4.24",
+    "testo": "E' in presa Sud, e siamo alle ultime carte: nell'ipotesi che si vedano tutte e quattro le mani, quante prese farà Sud muovendo per primo? Che carta dovrà giocare?",
+    "figura": {
+     "tipo": "colore",
+     "N": "543",
+     "W": "KJ9",
+     "E": "876",
+     "S": "AQT"
+    },
+    "opzioni": [
+     "Asso per fare 3 prese",
+     "Dama o 10 per fare 2 prese",
+     "Dama o 10 per fare 1 presa"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "4.25",
+    "testo": "E' in presa Sud, e siamo alle ultime carte: nell'ipotesi che si vedano tutte e quattro le mani, quante prese farà Sud muovendo per primo? Che carta dovrà giocare?",
+    "figura": {
+     "tipo": "colore",
+     "N": "864",
+     "W": "KQ9",
+     "E": "753",
+     "S": "AJT"
+    },
+    "opzioni": [
+     "Asso per fare 2 prese",
+     "Fante o 10 per fare 1 presa",
+     "Fante o 10 per fare 2 prese"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "4.26",
+    "testo": "E' in presa Sud, e siamo alle ultime carte: nell'ipotesi che si vedano tutte e quattro le mani, quante prese farà Sud muovendo per primo? Che carta dovrà giocare?",
+    "figura": {
+     "tipo": "colore",
+     "N": "753",
+     "W": "J96",
+     "E": "K84",
+     "S": "AQT"
+    },
+    "opzioni": [
+     "Asso per fare 2 prese",
+     "10 per fare 2 prese",
+     "Dama per fare 1 presa"
+    ],
+    "giusta": 1
+   }
+  ]
+ },
+ {
+  "numero": 5,
+  "domande": [
+   {
+    "numero": "5.1",
+    "testo": "Qual è il colore più conveniente da scegliere come atout, per Nord Sud?",
+    "figura": {
+     "tipo": "smazzata",
+     "N": {
+      "S": "KQJ6",
+      "H": "J8742",
+      "D": "4",
+      "C": "AK7"
+     },
+     "S": {
+      "S": "AT8",
+      "H": "A653",
+      "D": "KQJT9",
+      "C": "3"
+     }
+    },
+    "opzioni": [
+     "Picche",
+     "Cuori",
+     "Quadri",
+     "Fiori"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "5.2",
+    "testo": "Qual è il colore più conveniente da scegliere come atout, per Nord Sud?",
+    "figura": {
+     "tipo": "smazzata",
+     "N": {
+      "S": "Q7",
+      "H": "KQJ8",
+      "D": "AK32",
+      "C": "A98"
+     },
+     "S": {
+      "S": "JT8543",
+      "H": "A6",
+      "D": "Q876",
+      "C": "5"
+     }
+    },
+    "opzioni": [
+     "Picche",
+     "Cuori",
+     "Quadri",
+     "Fiori"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "5.3",
+    "testo": "Qual è il colore più conveniente da scegliere come atout, per Nord Sud?",
+    "figura": {
+     "tipo": "smazzata",
+     "N": {
+      "S": "65",
+      "H": "KQ98",
+      "D": "AJ52",
+      "C": "J87"
+     },
+     "S": {
+      "S": "A85",
+      "H": "AJ76",
+      "D": "KQ76",
+      "C": "54"
+     }
+    },
+    "opzioni": [
+     "Picche",
+     "Cuori",
+     "Quadri",
+     "Fiori"
+    ],
+    "giusta": 1,
+    "nota": "Errore nell'originale: il 5♠ compare sia in Nord (♠65) sia in Sud (♠A85). Non cambia la risposta."
+   },
+   {
+    "numero": "5.4",
+    "testo": "Avete scelto atout picche; Ovest attacca con A◆ e, se vince la presa, prosegue con K◆ ecc. Quante prese siete destinati a perdere, prima di poter tagliare?",
+    "figura": {
+     "tipo": "smazzata",
+     "N": {
+      "S": "KQ43",
+      "H": "",
+      "D": "943",
+      "C": ""
+     },
+     "S": {
+      "S": "AJ72",
+      "H": "",
+      "D": "752",
+      "C": ""
+     }
+    },
+    "opzioni": [
+     "NESSUNA",
+     "UNA",
+     "DUE",
+     "TRE"
+    ],
+    "giusta": 3
+   },
+   {
+    "numero": "5.5",
+    "testo": "Avete scelto atout picche; Ovest attacca con A◆ e, se vince la presa, prosegue con K◆ ecc. Quante prese siete destinati a perdere, prima di poter tagliare?",
+    "figura": {
+     "tipo": "smazzata",
+     "N": {
+      "S": "KQ43",
+      "H": "",
+      "D": "987",
+      "C": ""
+     },
+     "S": {
+      "S": "AJ72",
+      "H": "",
+      "D": "2",
+      "C": ""
+     }
+    },
+    "opzioni": [
+     "NESSUNA",
+     "UNA",
+     "DUE",
+     "TRE"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "5.6",
+    "testo": "Avete scelto atout picche; Ovest attacca con A◆ e, se vince la presa, prosegue con K◆ ecc. Quante prese siete destinati a perdere, prima di poter tagliare?",
+    "figura": {
+     "tipo": "smazzata",
+     "N": {
+      "S": "KQ43",
+      "H": "",
+      "D": "9832",
+      "C": ""
+     },
+     "S": {
+      "S": "AJ72",
+      "H": "",
+      "D": "",
+      "C": ""
+     }
+    },
+    "opzioni": [
+     "NESSUNA",
+     "UNA",
+     "DUE",
+     "TRE"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "5.7",
+    "testo": "Avete scelto atout picche; Ovest attacca con A◆ e, se vince la presa, prosegue con K◆ ecc. Quante prese siete destinati a perdere, prima di poter tagliare?",
+    "figura": {
+     "tipo": "smazzata",
+     "N": {
+      "S": "KQ43",
+      "H": "",
+      "D": "65",
+      "C": ""
+     },
+     "S": {
+      "S": "AJ72",
+      "H": "",
+      "D": "975",
+      "C": ""
+     }
+    },
+    "opzioni": [
+     "UNA",
+     "DUE",
+     "TRE"
+    ],
+    "giusta": 1,
+    "nota": "Errore nell'originale: il 5♦ compare sia in Nord (♦65) sia in Sud (♦975). Non cambia la risposta."
+   },
+   {
+    "numero": "5.8",
+    "testo": "Atout picche; potete tagliare delle carte di cuori. È un allungamento in atout?",
+    "figura": {
+     "tipo": "smazzata",
+     "N": {
+      "S": "KQ4",
+      "H": "A43",
+      "D": "",
+      "C": ""
+     },
+     "S": {
+      "S": "AJ982",
+      "H": "2",
+      "D": "",
+      "C": ""
+     }
+    },
+    "opzioni": [
+     "SI",
+     "NO"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "5.9",
+    "testo": "Atout picche; potete tagliare delle carte di cuori. È un allungamento in atout?",
+    "figura": {
+     "tipo": "smazzata",
+     "N": {
+      "S": "K943",
+      "H": "97",
+      "D": "",
+      "C": ""
+     },
+     "S": {
+      "S": "AQJ2",
+      "H": "AK6",
+      "D": "",
+      "C": ""
+     }
+    },
+    "opzioni": [
+     "SI",
+     "NO"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "5.10",
+    "testo": "Atout picche; potete tagliare delle carte di cuori. È un allungamento in atout?",
+    "figura": {
+     "tipo": "smazzata",
+     "N": {
+      "S": "KQT3",
+      "H": "A832",
+      "D": "",
+      "C": ""
+     },
+     "S": {
+      "S": "AJ762",
+      "H": "4",
+      "D": "",
+      "C": ""
+     }
+    },
+    "opzioni": [
+     "SI",
+     "NO"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "5.11",
+    "testo": "Atout picche; potete tagliare delle carte di cuori. È un allungamento in atout?",
+    "figura": {
+     "tipo": "smazzata",
+     "N": {
+      "S": "K94",
+      "H": "AK4",
+      "D": "",
+      "C": ""
+     },
+     "S": {
+      "S": "AQJ62",
+      "H": "75",
+      "D": "",
+      "C": ""
+     }
+    },
+    "opzioni": [
+     "SI",
+     "NO"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "5.12",
+    "testo": "Atout cuori; le quadri, colore laterale, si presta ad un affrancamento di taglio. Qual è la divisione dei resti ottimale e, se si verifica, quante prese supplementari vi offrirà il colore",
+    "figura": {
+     "tipo": "smazzata",
+     "N": {
+      "S": "",
+      "H": "KQ42",
+      "D": "AK543",
+      "C": ""
+     },
+     "S": {
+      "S": "",
+      "H": "AJ98",
+      "D": "72",
+      "C": ""
+     }
+    },
+    "opzioni": [
+     "4-2, 2 prese supplementari nel seme",
+     "3-3, 2 prese supplementari nel seme",
+     "5-1, 1 presa supplementare nel seme"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "5.13",
+    "testo": "Atout cuori; le quadri, colore laterale, si presta ad un affrancamento di taglio. Qual è la divisione dei resti ottimale e, se si verifica, quante prese supplementari vi offrirà il colore",
+    "figura": {
+     "tipo": "smazzata",
+     "N": {
+      "S": "",
+      "H": "KQ42",
+      "D": "7",
+      "C": ""
+     },
+     "S": {
+      "S": "",
+      "H": "AJ98",
+      "D": "AK8562",
+      "C": ""
+     }
+    },
+    "opzioni": [
+     "3-3, 3 prese supplementari nel seme",
+     "4-2, 2 prese supplementari nel seme",
+     "3-3, 4 prese supplementari nel seme"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "5.14",
+    "testo": "Atout cuori; le quadri, colore laterale, si presta ad un affrancamento di taglio. Qual è la divisione dei resti ottimale e, se si verifica, quante prese supplementari vi offrirà il colore:",
+    "figura": {
+     "tipo": "smazzata",
+     "N": {
+      "S": "",
+      "H": "KQ42",
+      "D": "AKQ53",
+      "C": ""
+     },
+     "S": {
+      "S": "",
+      "H": "AJ98",
+      "D": "4",
+      "C": ""
+     }
+    },
+    "opzioni": [
+     "5-2, 2 prese supplementari nel seme",
+     "4-3, 1 presa supplementare nel seme",
+     "4-3, 2 prese supplementari nel seme"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "5.15",
+    "testo": "Atout cuori; le quadri, colore laterale, si presta ad un affrancamento di taglio. Qual è la divisione dei resti ottimale e, se si verifica, quante prese supplementari vi offrirà il colore",
+    "figura": {
+     "tipo": "smazzata",
+     "N": {
+      "S": "",
+      "H": "KQ42",
+      "D": "",
+      "C": ""
+     },
+     "S": {
+      "S": "",
+      "H": "AJ98",
+      "D": "AK7652",
+      "C": ""
+     }
+    },
+    "opzioni": [
+     "4-3, 2 Prese supplementari nel seme",
+     "4-3, 3 Prese supplementari nel seme",
+     "5-2, 2 Prese supplementari nel seme"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "5.16",
+    "testo": "L’avversario gioca il contratto 4♠, con quale carta attaccate?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "76",
+      "H": "KQT9",
+      "D": "J9752",
+      "C": "73"
+     }
+    },
+    "opzioni": [
+     "RE di cuori",
+     "10 di cuori",
+     "7 di picche"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "5.17",
+    "testo": "L’avversario gioca il contratto 4♥, con quale carta attaccate?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "T742",
+      "H": "K53",
+      "D": "8",
+      "C": "AQ963"
+     }
+    },
+    "opzioni": [
+     "3 di fiori",
+     "8 di quadri",
+     "3 di cuori"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "5.18",
+    "testo": "L’avversario gioca il contratto 6♠, con quale carta attaccate?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "QJ4",
+      "H": "86",
+      "D": "KQ2",
+      "C": "JT986"
+     }
+    },
+    "opzioni": [
+     "RE di quadri",
+     "8 di cuori",
+     "FANTE di fiori"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "5.19",
+    "testo": "L’avversario gioca il contratto 5♣, con quale carta attaccate?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "T92",
+      "H": "KJ",
+      "D": "AJ953",
+      "C": "Q63"
+     }
+    },
+    "opzioni": [
+     "RE di cuori",
+     "3 di quadri",
+     "10 di picche"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "5.20",
+    "testo": "Siete Giocanti nel contratto di 4♥. L’avversario attacca come indicato. Che deduzioni siete in grado di fare su lunghezze e/o onori del colore di attacco?",
+    "contesto": "Attacco: 4♣",
+    "figura": {
+     "tipo": "smazzata",
+     "N": {
+      "S": "76",
+      "H": "K765",
+      "D": "AQ87",
+      "C": "KJ5"
+     },
+     "S": {
+      "S": "A984",
+      "H": "AQJ94",
+      "D": "K2",
+      "C": "32"
+     }
+    },
+    "opzioni": [
+     "Giochiamo il 5 fiori: Asso in Ovest e speriamo Dama in Est",
+     "Giochiamo il J fiori: Asso in Ovest e speriamo Dama in Ovest",
+     "Giochiamo il K fiori: Asso in Ovest il fante lo perdo comunque"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "5.21",
+    "testo": "Siete Giocanti nel contratto di 4♥. L’avversario attacca come indicato. Che deduzioni siete in grado di fare su lunghezze e/o onori del colore di attacco?",
+    "contesto": "Attacco: J♦",
+    "figura": {
+     "tipo": "smazzata",
+     "N": {
+      "S": "QJ6",
+      "H": "A965",
+      "D": "AK62",
+      "C": "A3"
+     },
+     "S": {
+      "S": "T74",
+      "H": "KQ742",
+      "D": "QT",
+      "C": "765"
+     }
+    },
+    "opzioni": [
+     "Prendo e continuo a giocare con le vincenti di quadri",
+     "Prendo e gioco picche per affrancarle",
+     "Prendo e gioco Cuori per timore dei tagli a quadri"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "5.22",
+    "testo": "Siete Giocanti nel contratto di 4♥. L’avversario attacca come indicato. Che deduzioni siete in grado di fare su lunghezze e/o onori del colore di attacco?",
+    "contesto": "Attacco: Q♣",
+    "figura": {
+     "tipo": "smazzata",
+     "N": {
+      "S": "A873",
+      "H": "K74",
+      "D": "Q76",
+      "C": "AT3"
+     },
+     "S": {
+      "S": "42",
+      "H": "QJT932",
+      "D": "KJ2",
+      "C": "K4"
+     }
+    },
+    "opzioni": [
+     "Prendo con Asso e gioco Atout",
+     "Prendo con il RE e faccio impasse al fante",
+     "Prendo e poi gioco Asso di picche e ancora picche per procurarmi tagli successivi a picche"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "5.23",
+    "testo": "Siete Giocanti nel contratto di 4♥. L’avversario attacca come indicato. Che deduzioni siete in grado di fare su lunghezze e/o onori del colore di attacco?",
+    "contesto": "Attacco: 2♥",
+    "figura": {
+     "tipo": "smazzata",
+     "N": {
+      "S": "9843",
+      "H": "AKJ4",
+      "D": "K3",
+      "C": "A87"
+     },
+     "S": {
+      "S": "AK2",
+      "H": "T863",
+      "D": "QJ964",
+      "C": "4"
+     }
+    },
+    "opzioni": [
+     "Non faccio impasse, gioco Asso di cuori e Re di cuori e spero che la Dama cada",
+     "Giochiamo il J di cuori sperando che la Dama sia in ovest",
+     "Faccio impasse e continuo con le atout"
+    ],
+    "giusta": 0
+   }
+  ]
+ },
+ {
+  "numero": 6,
+  "domande": [
+   {
+    "numero": "6.1",
+    "testo": "Quale è il colore più conveniente da scegliere come atout, per Nord Sud?",
+    "figura": {
+     "tipo": "smazzata",
+     "N": {
+      "S": "KQJ6",
+      "H": "J8742",
+      "D": "4",
+      "C": "AK7"
+     },
+     "S": {
+      "S": "AT8",
+      "H": "A653",
+      "D": "KQJT9",
+      "C": "3"
+     }
+    },
+    "opzioni": [
+     "Picche",
+     "Cuori",
+     "Quadri"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "6.2",
+    "testo": "Quale è il colore più conveniente da scegliere come atout, per Nord Sud?",
+    "figura": {
+     "tipo": "smazzata",
+     "N": {
+      "S": "Q7",
+      "H": "KQJ8",
+      "D": "AK32",
+      "C": "A98"
+     },
+     "S": {
+      "S": "JT8543",
+      "H": "A6",
+      "D": "Q876",
+      "C": "5"
+     }
+    },
+    "opzioni": [
+     "Picche",
+     "Cuori",
+     "Quadri"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "6.3",
+    "testo": "Quale è il colore più conveniente da scegliere come atout, per Nord Sud?",
+    "figura": {
+     "tipo": "smazzata",
+     "N": {
+      "S": "65",
+      "H": "KQ98",
+      "D": "AJ52",
+      "C": "J87"
+     },
+     "S": {
+      "S": "A85",
+      "H": "AJ76",
+      "D": "KQ76",
+      "C": "54"
+     }
+    },
+    "opzioni": [
+     "Picche",
+     "Cuori",
+     "Quadri"
+    ],
+    "giusta": 1,
+    "nota": "Errore nell'originale: il 5♠ compare sia in Nord (♠65) sia in Sud (♠A85). Non cambia la risposta."
+   },
+   {
+    "numero": "6.4",
+    "testo": "Accanto alle atout hai questo colore da cui, tagliando una o più volte, potreste affrancare prese supplementari. Quanti tagli devi fare per raggiungere l’obiettivo, se i resti sono divisi al meglio?",
+    "figura": {
+     "tipo": "colore",
+     "N": "K9762",
+     "S": "A5"
+    },
+    "opzioni": [
+     "1",
+     "2",
+     "3"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "6.5",
+    "testo": "Accanto alle atout hai questo colore da cui, tagliando una o più volte, potreste affrancare prese supplementari. Quanti tagli devi fare per raggiungere l’obiettivo, se i resti sono divisi al meglio?",
+    "figura": {
+     "tipo": "colore",
+     "N": "A97653",
+     "S": "4"
+    },
+    "opzioni": [
+     "1",
+     "2",
+     "3"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "6.6",
+    "testo": "Accanto alle atout hai questo colore da cui, tagliando una o più volte, potreste affrancare prese supplementari. Quanti tagli devi fare per raggiungere l’obiettivo, se i resti sono divisi al meglio?",
+    "figura": {
+     "tipo": "colore",
+     "N": "4",
+     "S": "AK762"
+    },
+    "opzioni": [
+     "1",
+     "2",
+     "3"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "6.7",
+    "testo": "Accanto alle atout hai questo colore da cui, tagliando una o più volte, potreste affrancare prese supplementari. Quanti tagli devi fare per raggiungere l’obiettivo, se i resti sono divisi al meglio?",
+    "figura": {
+     "tipo": "colore",
+     "N": "7",
+     "S": "AKQ65"
+    },
+    "opzioni": [
+     "1",
+     "2",
+     "3"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "6.8",
+    "testo": "Accanto alle atout hai questo colore da cui, tagliando una o più volte, potreste affrancare prese supplementari. Quanti tagli devi fare per raggiungere l’obiettivo, se i resti sono divisi al meglio?",
+    "figura": {
+     "tipo": "colore",
+     "N": "AK5432",
+     "S": "6"
+    },
+    "opzioni": [
+     "1",
+     "2",
+     "3"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "6.9",
+    "testo": "Stai giocando un contratto con atout Picche. Se potessi vedere il morto prima che Ovest attacchi, quale sarebbe l’attacco che porterebbe più danno al tuo piano di gioco?",
+    "figura": {
+     "tipo": "smazzata",
+     "N": {
+      "S": "92",
+      "H": "7",
+      "D": "K654",
+      "C": "A76532"
+     },
+     "S": {
+      "S": "KQJT87",
+      "H": "A94",
+      "D": "A9",
+      "C": "84"
+     }
+    },
+    "opzioni": [
+     "Cuori",
+     "Picche",
+     "Fiori"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "6.10",
+    "testo": "Stai giocando un contratto con atout Picche. Ovest attacca con la Q Cuori, quale è il tuo piano di gioco?",
+    "figura": {
+     "tipo": "smazzata",
+     "N": {
+      "S": "92",
+      "H": "7",
+      "D": "K654",
+      "C": "A76532"
+     },
+     "S": {
+      "S": "KQJT87",
+      "H": "A94",
+      "D": "A9",
+      "C": "84"
+     }
+    },
+    "opzioni": [
+     "Prendo con A Cuori e gioco Picche fin quando non prende con l’Asso o finiscono le Picche",
+     "Prendo con A Cuori e gioco Cuori dalla mano tagliata, quadri per l’Asso e cuori tagliata",
+     "Prendo con A Cuori e gioco Fiori per l’Asso e di nuovo Fiori"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "6.11",
+    "testo": "Stai giocando un contratto con atout Cuori. Se potessi vedere il morto prima che Ovest attacchi, quale sarebbe l’attacco che porterebbe più danno al tuo piano di gioco?",
+    "figura": {
+     "tipo": "smazzata",
+     "N": {
+      "S": "532",
+      "H": "K985",
+      "D": "AQ8",
+      "C": "K62"
+     },
+     "S": {
+      "S": "J8",
+      "H": "QJT72",
+      "D": "K3",
+      "C": "AJT5"
+     }
+    },
+    "opzioni": [
+     "Cuori",
+     "Picche",
+     "Fiori"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "6.12",
+    "testo": "Stai giocando un contratto con atout Cuori. Ovest attacca con la A di Picche e K di Picche, quante prese sei sicuro di fare ora?",
+    "figura": {
+     "tipo": "smazzata",
+     "N": {
+      "S": "532",
+      "H": "K985",
+      "D": "AQ8",
+      "C": "K62"
+     },
+     "S": {
+      "S": "J8",
+      "H": "QJT72",
+      "D": "K3",
+      "C": "AJT5"
+     }
+    },
+    "opzioni": [
+     "Sempre e solo 9",
+     "8, se va bene l’impasse a Fiori 9",
+     "9, se va bene l’impasse a fiori 10"
+    ],
+    "giusta": 2
+   }
+  ]
+ },
+ {
+  "numero": 7,
+  "domande": [
+   {
+    "numero": "7.1",
+    "testo": "Nord ha aperto di 1SA, cosa dichiari in Sud con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "J92",
+      "H": "K8",
+      "D": "AQ962",
+      "C": "Q73"
+     }
+    },
+    "opzioni": [
+     "2 Quadri",
+     "2SA",
+     "3SA"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "7.2",
+    "testo": "Nord ha aperto di 1SA, cosa dichiari in Sud con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "J3",
+      "H": "QT8732",
+      "D": "3",
+      "C": "974"
+     }
+    },
+    "opzioni": [
+     "Passo",
+     "2 cuori",
+     "3 cuori"
+    ],
+    "giusta": 1,
+    "nota": "Errore nell'originale: la mano ha 12 carte (♠J3 ♥Q108732 ♦3 ♣974).",
+    "sospesa": true
+   },
+   {
+    "numero": "7.3",
+    "testo": "Nord ha aperto di 1SA, cosa dichiari in Sud con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "J93",
+      "H": "98",
+      "D": "J862",
+      "C": "8763"
+     }
+    },
+    "opzioni": [
+     "Passo",
+     "2 fiori",
+     "2 quadri"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "7.4",
+    "testo": "Nord ha aperto di 1SA, cosa dichiari in Sud con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "52",
+      "H": "KJ9632",
+      "D": "Q9",
+      "C": "A73"
+     }
+    },
+    "opzioni": [
+     "2 cuori",
+     "2 SA",
+     "4 cuori"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "7.5",
+    "testo": "Nord ha aperto di 1SA, cosa dichiari in Sud con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "92",
+      "H": "4",
+      "D": "T96532",
+      "C": "QJ53"
+     }
+    },
+    "opzioni": [
+     "Passo",
+     "2 Fiori",
+     "2 Quadri"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "7.6",
+    "testo": "Nord ha aperto di 1SA, cosa dichiari in Sud con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "J62",
+      "H": "KQ85",
+      "D": "A932",
+      "C": "97"
+     }
+    },
+    "opzioni": [
+     "Passo",
+     "2 Fiori",
+     "2 Quadri"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "7.7",
+    "testo": "Nord ha aperto di 1SA, cosa dichiari in Sud con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "AQ863",
+      "H": "K2",
+      "D": "985",
+      "C": "QJ2"
+     }
+    },
+    "opzioni": [
+     "2 Fiori",
+     "2 Picche",
+     "3 SA"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "7.8",
+    "testo": "Nord ha aperto di 1SA, cosa dichiari in Sud con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "K73",
+      "H": "54",
+      "D": "KQ9852",
+      "C": "83"
+     }
+    },
+    "opzioni": [
+     "2 Quadri",
+     "2 SA",
+     "3 Quadri"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "7.9",
+    "testo": "Hai aperto di 1SA, cosa dichiari dopo il 2 Fiori di Nord con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "Q92",
+      "H": "AQ6",
+      "D": "A2",
+      "C": "KJ973"
+     }
+    },
+    "opzioni": [
+     "2 Quadri",
+     "2 SA",
+     "3 Fiori"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "7.10",
+    "testo": "Hai aperto di 1SA, cosa dichiari dopo il 2 Fiori di Nord con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "KQ87",
+      "H": "QT82",
+      "D": "AK",
+      "C": "Q74"
+     }
+    },
+    "opzioni": [
+     "2 Cuori",
+     "2 Picche",
+     "2 SA"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "7.12",
+    "testo": "Hai aperto di 1SA, cosa dichiari dopo il 2 Fiori di Nord con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "AJ",
+      "H": "T963",
+      "D": "AKQ9",
+      "C": "K73"
+     }
+    },
+    "opzioni": [
+     "2 SA",
+     "3 SA",
+     "2 Cuori"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "7.13",
+    "testo": "Hai aperto in Sud di 1SA con le seguenti carte. Cosa dichiari, se Nord dichiara 2 Picche?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "K4",
+      "H": "AJ8",
+      "D": "KQ76",
+      "C": "AT94"
+     }
+    },
+    "opzioni": [
+     "Passo",
+     "2 SA",
+     "3 SA"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "7.14",
+    "testo": "Hai aperto in Sud di 1SA con le seguenti carte. Cosa dichiari, se Nord dichiara 3 Cuori?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "K4",
+      "H": "AJ8",
+      "D": "KQ76",
+      "C": "AT94"
+     }
+    },
+    "opzioni": [
+     "Passo",
+     "3 SA",
+     "4 cuori"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "7.15",
+    "testo": "Hai aperto in Sud di 1SA con le seguenti carte. Cosa dichiari, se Nord dichiara 2 SA?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "K4",
+      "H": "AJ8",
+      "D": "KQ76",
+      "C": "AT94"
+     }
+    },
+    "opzioni": [
+     "Passo",
+     "3 SA",
+     "3 Fiori"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "7.16",
+    "testo": "Hai aperto in Sud di 1SA con le seguenti carte. Cosa dichiari, se Nord dichiara 2 Quadri?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "K4",
+      "H": "AJ8",
+      "D": "KQ76",
+      "C": "AT94"
+     }
+    },
+    "opzioni": [
+     "Passo",
+     "3 Quadri",
+     "5 Quadri"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "7.17",
+    "testo": "Nord ha aperto di 2 SA, cosa dichiari in Sud con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "Q963",
+      "H": "A2",
+      "D": "J9732",
+      "C": "76"
+     }
+    },
+    "opzioni": [
+     "3 Fiori",
+     "3 Quadri",
+     "3 SA"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "7.18",
+    "testo": "Nord ha aperto di 2 SA, cosa dichiari in Sud con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "A5",
+      "H": "J7",
+      "D": "QT952",
+      "C": "9432"
+     }
+    },
+    "opzioni": [
+     "3 Fiori",
+     "3 Quadri",
+     "3 SA"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "7.19",
+    "testo": "Nord ha aperto di 2 SA, cosa dichiari in Sud con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "T952",
+      "H": "A862",
+      "D": "32",
+      "C": "K43"
+     }
+    },
+    "opzioni": [
+     "Passo",
+     "3 Fiori",
+     "3 SA"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "7.20",
+    "testo": "Nord ha aperto di 2 SA, cosa dichiari in Sud con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "AJ9532",
+      "H": "K2",
+      "D": "764",
+      "C": "65"
+     }
+    },
+    "opzioni": [
+     "3 Picche",
+     "3 SA",
+     "4 Picche"
+    ],
+    "giusta": 2
+   }
+  ]
+ },
+ {
+  "numero": 8,
+  "domande": [
+   {
+    "numero": "8.1",
+    "testo": "Il tuo compagno ha aperto di 1SA. E’ possibile che abbia la mano seguente?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "8",
+      "H": "AQJT",
+      "D": "AJ874",
+      "C": "A76"
+     }
+    },
+    "opzioni": [
+     "No, ha una 5-4",
+     "Si, ha 15-17 punti bilanciato o semibilanciato",
+     "No, ha un singolo"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "8.2",
+    "testo": "Il tuo compagno ha aperto di 2SA. E’ possibile che abbia la mano seguente?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "KQ8",
+      "H": "A3",
+      "D": "KQJ76",
+      "C": "AQ9"
+     }
+    },
+    "opzioni": [
+     "Si, ha 21 punti bilanciato o semibilanciato",
+     "No, è troppo sbilanciato",
+     "No, è meglio aprire 1 Quadri con quella quinta"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "8.3",
+    "testo": "Il tuo compagno ha aperto di 1 Quadri. In base alla tua mano con le seguenti carte, la manche è possibile, certa o da escludere?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "A97",
+      "H": "QJ92",
+      "D": "K4",
+      "C": "QJ73"
+     }
+    },
+    "opzioni": [
+     "Possibile",
+     "Certa",
+     "Da escludere"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "8.4",
+    "testo": "Il tuo compagno ha aperto di 1 Quadri. In base alla tua mano con le seguenti carte, è possibile trovare un fit a cuori?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "A97",
+      "H": "QJ92",
+      "D": "K4",
+      "C": "QJ73"
+     }
+    },
+    "opzioni": [
+     "No, il mio compagno non può avere mai 4 carte di cuori",
+     "Si, il mio compagno può avere 5 carte di cuori",
+     "Si, il mio compagno può avere 4 carte di cuori"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "8.5",
+    "testo": "Il tuo compagno ha aperto di 1 Quadri. In base alla tua mano con le seguenti carte, quante carte hanno a Picche gli avversari?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "A97",
+      "H": "QJ92",
+      "D": "K4",
+      "C": "QJ73"
+     }
+    },
+    "opzioni": [
+     "Almeno 8",
+     "Almeno 6",
+     "Almeno 9"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "8.6",
+    "testo": "Il tuo compagno ha aperto di 1 Fiori. In base alla tua mano con le seguenti carte, è possibile trovare un fit in un nobile? Se si, quale?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "AJ97",
+      "H": "6",
+      "D": "KQJ4",
+      "C": "A973"
+     }
+    },
+    "opzioni": [
+     "Cuori",
+     "Picche",
+     "Non è possibile un fit in un nobile"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "8.8",
+    "testo": "Se dovessi scegliere una delle seguenti due mani, quale preferisci?",
+    "figura": {
+     "tipo": "confronto",
+     "A": {
+      "S": "874",
+      "H": "KQJ5",
+      "D": "AK76",
+      "C": "92"
+     },
+     "B": {
+      "S": "KJ5",
+      "H": "Q642",
+      "D": "K984",
+      "C": "A3"
+     }
+    },
+    "opzioni": [
+     "La A, ho punti concentrati nei miei due colori lunghi",
+     "La B, ho fermi in tutti i pali"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "8.9",
+    "testo": "Se dovessi scegliere una delle seguenti due mani, quale preferisci?",
+    "figura": {
+     "tipo": "confronto",
+     "A": {
+      "S": "A",
+      "H": "KJ54",
+      "D": "AKQ",
+      "C": "J8763"
+     },
+     "B": {
+      "S": "5",
+      "H": "AKJ4",
+      "D": "A76",
+      "C": "KQJ82"
+     }
+    },
+    "opzioni": [
+     "La A, ho più vincenti immediate",
+     "La B, ho più prese affrancabili"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "8.10",
+    "testo": "Se dovessi indicare un pregio della seguente mano, quale sarebbe?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "AK97",
+      "H": "KQ82",
+      "D": "4",
+      "C": "Q973"
+     }
+    },
+    "opzioni": [
+     "Ho entrambi i nobili",
+     "Ho 14 punti",
+     "Sicuramente avrò un fit con il mio compagno"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "8.11",
+    "testo": "Se dovessi indicare un pregio della seguente mano, quale sarebbe?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "AK97",
+      "H": "KQ82",
+      "D": "4",
+      "C": "Q973"
+     }
+    },
+    "opzioni": [
+     "Ho un singolo",
+     "Ho tante carte onore",
+     "Ho affrancabili di lunga in tre colori"
+    ],
+    "giusta": 2
+   }
+  ]
+ },
+ {
+  "numero": 9,
+  "domande": [
+   {
+    "numero": "9.1",
+    "testo": "Nord ha aperto 1 Quadri, Est è passato, cosa dichiari in Sud con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "AKQ83",
+      "H": "Q976",
+      "D": "54",
+      "C": "AJ"
+     }
+    },
+    "opzioni": [
+     "1 cuori",
+     "1 picche",
+     "2 picche"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "9.2",
+    "testo": "Nord ha aperto 1 Quadri, Est è passato, cosa dichiari in Sud con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "KJ2",
+      "H": "7632",
+      "D": "Q4",
+      "C": "KJ54"
+     }
+    },
+    "opzioni": [
+     "1 cuori",
+     "1 senza",
+     "2 fiori"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "9.3",
+    "testo": "Nord ha aperto 1 Quadri, Est è passato, cosa dichiari in Sud con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "AJ86",
+      "H": "3",
+      "D": "K76",
+      "C": "AQ876"
+     }
+    },
+    "opzioni": [
+     "1 picche",
+     "1 senza",
+     "2 fiori"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "9.4",
+    "testo": "Nord ha aperto 1 Quadri, Est è passato, cosa dichiari in Sud con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "K64",
+      "H": "K874",
+      "D": "4",
+      "C": "QJ983"
+     }
+    },
+    "opzioni": [
+     "1 cuori",
+     "1 senza",
+     "2 fiori"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "9.5",
+    "testo": "Nord ha aperto 1 Quadri, Est è passato, cosa dichiari in Sud con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "A2",
+      "H": "76",
+      "D": "KJ943",
+      "C": "Q876"
+     }
+    },
+    "opzioni": [
+     "1 senza",
+     "2 quadri",
+     "3 quadri"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "9.6",
+    "testo": "Nord ha aperto 1 Quadri, Est è passato, cosa dichiari in Sud con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "QT6",
+      "H": "K65",
+      "D": "J83",
+      "C": "KQ72"
+     }
+    },
+    "opzioni": [
+     "1 senza",
+     "2 fiori",
+     "2 SA"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "9.7",
+    "testo": "Nord ha aperto 1 Quadri, Est è passato, cosa dichiari in Sud con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "62",
+      "H": "K54",
+      "D": "J6",
+      "C": "QT7642"
+     }
+    },
+    "opzioni": [
+     "1 cuori",
+     "1 SA",
+     "2 fiori"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "9.8",
+    "testo": "Nord ha aperto 1 Quadri, Est è passato, cosa dichiari in Sud con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "Q8643",
+      "H": "AKJ65",
+      "D": "6",
+      "C": "A4"
+     }
+    },
+    "opzioni": [
+     "1 cuori",
+     "1 picche",
+     "3 SA"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "9.9",
+    "testo": "Nord ha aperto 1 Picche, Est è passato, cosa dichiari in Sud con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "7",
+      "H": "Q9654",
+      "D": "KJ654",
+      "C": "43"
+     }
+    },
+    "opzioni": [
+     "1 SA",
+     "2 Quadri",
+     "2 Cuori"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "9.10",
+    "testo": "Nord ha aperto 1 Picche, Est è passato, cosa dichiari in Sud con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "J853",
+      "H": "5",
+      "D": "K9752",
+      "C": "A54"
+     }
+    },
+    "opzioni": [
+     "2 Quadri",
+     "2 Picche",
+     "3 Picche"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "9.11",
+    "testo": "Nord ha aperto 1 Picche, Est è passato, cosa dichiari in Sud con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "KQ7",
+      "H": "76",
+      "D": "Q983",
+      "C": "K653"
+     }
+    },
+    "opzioni": [
+     "2 Fiori",
+     "2 Picche",
+     "3 Picche"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "9.12",
+    "testo": "Nord ha aperto 1 Picche, Est è passato, cosa dichiari in Sud con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "AQ93",
+      "H": "A62",
+      "D": "QJ863",
+      "C": "2"
+     }
+    },
+    "opzioni": [
+     "2 Quadri",
+     "3 Picche",
+     "4 Picche"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "9.13",
+    "testo": "Nord ha aperto 1 Quadri, se in Sud dichiarassi 1 Cuori sarebbe forzante o non forzante?",
+    "figura": null,
+    "opzioni": [
+     "Forzante",
+     "Non forzante"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "9.14",
+    "testo": "Nord ha aperto 1 Quadri, se in Sud dichiarassi 3 Quadri sarebbe forzante o non forzante?",
+    "figura": null,
+    "opzioni": [
+     "Forzante",
+     "Non forzante"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "9.15",
+    "testo": "Nord ha aperto 1 Quadri, se in Sud dichiarassi 2 SA sarebbe forzante o non forzante?",
+    "figura": null,
+    "opzioni": [
+     "Forzante",
+     "Non forzante"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "9.16",
+    "testo": "Nord ha aperto 1 Quadri, se in Sud dichiarassi 2 Fiori sarebbe forzante o non forzante?",
+    "figura": null,
+    "opzioni": [
+     "Forzante",
+     "Non forzante"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "9.17",
+    "testo": "Nord ha aperto 1 Quadri, se in Sud dichiarassi 3 SA sarebbe forzante o non forzante?",
+    "figura": null,
+    "opzioni": [
+     "Forzante",
+     "Non forzante"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "9.18",
+    "testo": "Nord ha aperto 1 Quadri, se in Sud dichiarassi 1 Picche sarebbe forzante o non forzante?",
+    "figura": null,
+    "opzioni": [
+     "Forzante",
+     "Non forzante"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "9.19",
+    "testo": "Nord ha aperto 1 Quadri, su cui Sud dichiara 1 Picche. Vero o falso che Sud ha 5 o più carte di Picche?",
+    "figura": null,
+    "opzioni": [
+     "Vero",
+     "Falso"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "9.20",
+    "testo": "Nord ha aperto 1 Quadri, su cui Sud dichiara 1 Picche. Vero o falso che Sud non ha fit a Quadri, ovvero non ha più di 3 carte a Quadri?",
+    "figura": null,
+    "opzioni": [
+     "Vero",
+     "Falso"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "9.21",
+    "testo": "Nord ha aperto 1 Quadri, su cui Sud dichiara 1 Picche. Vero o falso che Sud non ha più di 11 punti, perché ha risposto a livello 1?",
+    "figura": null,
+    "opzioni": [
+     "Vero",
+     "Falso"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "9.22",
+    "testo": "Nord ha aperto 1 Quadri, su cui Sud dichiara 1 Picche. Vero o falso che Sud può avere 20 punti?",
+    "figura": null,
+    "opzioni": [
+     "Vero",
+     "Falso"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "9.23",
+    "testo": "Nord ha aperto 1 Quadri, su cui Sud dichiara 1 Picche. Vero o falso che Sud certamente ha meno di 4 Cuori?",
+    "figura": null,
+    "opzioni": [
+     "Vero",
+     "Falso"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "9.24",
+    "testo": "Nord ha aperto 1 Cuori, su cui Sud dichiara 1 SA. Vero o falso che Sud non può avere singoli o vuoti?",
+    "figura": null,
+    "opzioni": [
+     "Vero",
+     "Falso"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "9.25",
+    "testo": "Nord ha aperto 1 Cuori, su cui Sud dichiara 1 SA. Vero o falso che Sud potrebbe avere 6 carte di Quadri?",
+    "figura": null,
+    "opzioni": [
+     "Vero",
+     "Falso"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "9.26",
+    "testo": "Nord ha aperto 1 Cuori, su cui Sud dichiara 1 SA. Vero o falso che Nord-Sud non possono mai avere fit di 8 carte a Picche?",
+    "figura": null,
+    "opzioni": [
+     "Vero",
+     "Falso"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "9.27",
+    "testo": "Nord ha aperto 1 Cuori, su cui Sud dichiara 1 SA. Vero o falso che Nord-Sud non possono mai avere fit di 8 carte a Cuori?",
+    "figura": null,
+    "opzioni": [
+     "Vero",
+     "Falso"
+    ],
+    "giusta": 1
+   }
+  ]
+ },
+ {
+  "numero": 10,
+  "domande": [
+   {
+    "numero": "10.1",
+    "testo": "Hai aperto 1 Quadri in Sud, quale è la tua ridichiarazione in base alla risposta di 1 Picche di Nord?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "K75",
+      "H": "AQ98",
+      "D": "K983",
+      "C": "Q7"
+     }
+    },
+    "opzioni": [
+     "1 SA",
+     "2 cuori",
+     "2 picche"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "10.2",
+    "testo": "Hai aperto 1 Fiori in Sud, quale è la tua ridichiarazione in base alla risposta di 1 SA di Nord?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "KQ74",
+      "H": "A763",
+      "D": "K54",
+      "C": "J2"
+     }
+    },
+    "opzioni": [
+     "2 cuori",
+     "2 SA",
+     "Passo"
+    ],
+    "giusta": 2,
+    "nota": "Da verificare nell'originale: apertura di 1♣ con ♣J2 e tre quadri (in quinta nobile si aprirebbe 1♦). La risposta (Passo) non cambia."
+   },
+   {
+    "numero": "10.3",
+    "testo": "Hai aperto 1 Fiori in Sud, quale è la tua ridichiarazione in base alla risposta di 1 Picche di Nord?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "AQ",
+      "H": "KQJ5",
+      "D": "8",
+      "C": "KQJ852"
+     }
+    },
+    "opzioni": [
+     "2 Fiori",
+     "2 Cuori",
+     "3 Fiori"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "10.4",
+    "testo": "Hai aperto 1 Quadri in Sud, quale è la tua ridichiarazione in base alla risposta di 1 Cuori di Nord?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "KQ73",
+      "H": "AJ4",
+      "D": "AKJT3",
+      "C": "4"
+     }
+    },
+    "opzioni": [
+     "1 Picche",
+     "2 Picche",
+     "3 Quadri"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "10.5",
+    "testo": "Hai aperto 1 Quadri in Sud, quale è la tua ridichiarazione in base alla risposta di 1 Picche di Nord?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "A7",
+      "H": "832",
+      "D": "AQJ972",
+      "C": "KQ5"
+     }
+    },
+    "opzioni": [
+     "2 Quadri",
+     "2 SA",
+     "3 Quadri"
+    ],
+    "giusta": 2,
+    "nota": "Errore nell'originale: la mano ha 14 carte (♠A7 ♥832 ♦AQJ972 ♣KQ5).",
+    "sospesa": true
+   },
+   {
+    "numero": "10.6",
+    "testo": "Hai aperto 1 Fiori in Sud, quale è la tua ridichiarazione in base alla risposta di 1 Cuori di Nord?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "KQ65",
+      "H": "J762",
+      "D": "3",
+      "C": "AK92"
+     }
+    },
+    "opzioni": [
+     "1 Picche",
+     "1 SA",
+     "2 Cuori"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "10.7",
+    "testo": "Hai aperto 1 Fiori in Sud, quale è la tua ridichiarazione in base alla risposta di 1 Picche di Nord?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "K95",
+      "H": "KJ5",
+      "D": "AK",
+      "C": "KQ952"
+     }
+    },
+    "opzioni": [
+     "1 SA",
+     "2 SA",
+     "3 SA"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "10.8",
+    "testo": "Hai aperto 1 Cuori in Sud, quale è la tua ridichiarazione in base alla risposta di 1 Picche di Nord?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "9",
+      "H": "AQJ65",
+      "D": "AK984",
+      "C": "A7"
+     }
+    },
+    "opzioni": [
+     "2 Quadri",
+     "2 SA",
+     "3 Quadri"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "10.9",
+    "testo": "Sei il Rispondente, l’apertore ha descritto (1 Fiori apertore – 1 Cuori tu- 1 Picche apertore) e ora tocca di nuovo a te licitare con queste carte",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "Q872",
+      "H": "KJ54",
+      "D": "A3",
+      "C": "J76"
+     }
+    },
+    "opzioni": [
+     "2 Picche",
+     "2 SA",
+     "3 Picche"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "10.10",
+    "testo": "Sei il Rispondente, l’apertore ha descritto (1 Fiori apertore – 1 Quadri tu- 1 SA apertore) e ora tocca di nuovo a te licitare con queste carte",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "AK75",
+      "H": "Q72",
+      "D": "K984",
+      "C": "J8"
+     }
+    },
+    "opzioni": [
+     "Passo",
+     "2 Picche",
+     "3 SA"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "10.11",
+    "testo": "Sei il Rispondente, l’apertore ha descritto (1 Fiori apertore – 1 Cuori tu - 1 SA apertore) e ora tocca di nuovo a te licitare con queste carte",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "A732",
+      "H": "QT8532",
+      "D": "9",
+      "C": "65"
+     }
+    },
+    "opzioni": [
+     "Passo",
+     "2 Cuori",
+     "2 Picche"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "10.12",
+    "testo": "Sei il Rispondente, l’apertore ha descritto (1 Quadri apertore – 1 Picche tu- 1 SA apertore) e ora tocca di nuovo a te licitare con queste carte",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "AQ853",
+      "H": "A8",
+      "D": "874",
+      "C": "K43"
+     }
+    },
+    "opzioni": [
+     "2 Fiori",
+     "2 Picche",
+     "3 SA"
+    ],
+    "giusta": 0
+   }
+  ]
+ },
+ {
+  "numero": 11,
+  "domande": [
+   {
+    "numero": "11.1",
+    "testo": "Sud apre di 1 Quadri, cosa dichiari in Ovest (secondo di mano) con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "AQJ82",
+      "H": "93",
+      "D": "732",
+      "C": "KQ7"
+     }
+    },
+    "opzioni": [
+     "Passo",
+     "Contro",
+     "1 picche"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "11.2",
+    "testo": "Sud apre di 1 Quadri, cosa dichiari in Ovest (secondo di mano) con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "KQ95",
+      "H": "K76",
+      "D": "3",
+      "C": "AQ972"
+     }
+    },
+    "opzioni": [
+     "Passo",
+     "Contro",
+     "2 fiori"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "11.3",
+    "testo": "Sud apre di 1 Quadri, cosa dichiari in Ovest (secondo di mano) con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "9",
+      "H": "KJ64",
+      "D": "A2",
+      "C": "KQT952"
+     }
+    },
+    "opzioni": [
+     "Passo",
+     "Contro",
+     "2 fiori"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "11.4",
+    "testo": "Sud apre di 1 Quadri, cosa dichiari in Ovest (secondo di mano) con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "AQ",
+      "H": "K865",
+      "D": "KJ4",
+      "C": "AT85"
+     }
+    },
+    "opzioni": [
+     "Contro",
+     "1 cuori",
+     "1 senza atout"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "11.5",
+    "testo": "Sud apre di 1 Quadri, il tuo compagno in Ovest passa, Nord dichiara 1 Cuori. Cosa dichiari in Est (quarto di mano) con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "KQ72",
+      "H": "93",
+      "D": "732",
+      "C": "AKJ3"
+     }
+    },
+    "opzioni": [
+     "Passo",
+     "1 picche",
+     "Contro"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "11.6",
+    "testo": "Sud apre di 1 Quadri, il tuo compagno in Ovest passa, Nord dichiara 1 Cuori. Cosa dichiari in Est (quarto di mano) con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "K5",
+      "H": "AJ62",
+      "D": "KQ32",
+      "C": "T92"
+     }
+    },
+    "opzioni": [
+     "Passo",
+     "Contro",
+     "1 senza atout"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "11.7",
+    "testo": "Sud apre di 1 Quadri, il tuo compagno in Ovest passa, Nord dichiara 1 Cuori. Cosa dichiari in Est (quarto di mano) con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "A4",
+      "H": "KQT94",
+      "D": "652",
+      "C": "A62"
+     }
+    },
+    "opzioni": [
+     "Contro",
+     "2 cuori",
+     "Passo"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "11.8",
+    "testo": "Sud apre di 1 Quadri, il tuo compagno in Ovest passa, Nord dichiara 1 Cuori. Cosa dichiari in Est (quarto di mano) con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "K7",
+      "H": "KJ5",
+      "D": "KJ4",
+      "C": "AQ985"
+     }
+    },
+    "opzioni": [
+     "Contro",
+     "1 senza atout",
+     "2 fiori"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "11.9",
+    "testo": "Sud apre di 1 Fiori, il tuo compagno in Ovest dichiara Contro, Nord passa. Cosa dichiari in Est (quarto di mano) con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "KQ7652",
+      "H": "A3",
+      "D": "Q732",
+      "C": "3"
+     }
+    },
+    "opzioni": [
+     "4 picche",
+     "1 picche",
+     "3 picche"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "11.10",
+    "testo": "Sud apre di 1 Fiori, il tuo compagno in Ovest dichiara Contro, Nord passa. Cosa dichiari in Est (quarto di mano) con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "875",
+      "H": "8762",
+      "D": "K2",
+      "C": "T862"
+     }
+    },
+    "opzioni": [
+     "Pass",
+     "1 cuori",
+     "2 fiori"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "11.11",
+    "testo": "Sud apre di 1 Fiori, il tuo compagno in Ovest dichiara Contro, Nord passa. Cosa dichiari in Est (quarto di mano) con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "A4",
+      "H": "KJT94",
+      "D": "JT2",
+      "C": "952"
+     }
+    },
+    "opzioni": [
+     "2 cuori",
+     "1 cuori",
+     "4 cuori"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "11.12",
+    "testo": "Sud apre di 1 Fiori, il tuo compagno in Ovest dichiara Contro, Nord passa. Cosa dichiari in Est (quarto di mano) con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "K73",
+      "H": "J5",
+      "D": "KJ84",
+      "C": "AQ52"
+     }
+    },
+    "opzioni": [
+     "1 senza atout",
+     "2 senza atout",
+     "3 senza atout"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "11.13",
+    "testo": "Sud apre di 1 Quadri, il tuo compagno in Ovest dichiara 1 Cuori, Nord passa. Cosa dichiari in Est (quarto di mano) con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "KJ952",
+      "H": "A3",
+      "D": "72",
+      "C": "QJ32"
+     }
+    },
+    "opzioni": [
+     "1 picche",
+     "1 senza",
+     "2 fiori"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "11.14",
+    "testo": "Sud apre di 1 Quadri, il tuo compagno in Ovest dichiara 1 Cuori, Nord passa. Cosa dichiari in Est (quarto di mano) con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "K75",
+      "H": "82",
+      "D": "K63",
+      "C": "98652"
+     }
+    },
+    "opzioni": [
+     "1 senza",
+     "2 fiori",
+     "Passo"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "11.15",
+    "testo": "Sud apre di 1 Quadri, il tuo compagno in Ovest dichiara 1 Cuori, Nord passa. Cosa dichiari in Est (quarto di mano) con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "K98",
+      "H": "K4",
+      "D": "QJT2",
+      "C": "Q952"
+     }
+    },
+    "opzioni": [
+     "Passo",
+     "1 senza",
+     "2 fiori"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "11.16",
+    "testo": "Sud apre di 1 Quadri, il tuo compagno in Ovest dichiara 1 Cuori, Nord passa. Cosa dichiari in Est (quarto di mano) con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "A73",
+      "H": "KQ84",
+      "D": "4",
+      "C": "JT532"
+     }
+    },
+    "opzioni": [
+     "2 cuori",
+     "3 cuori",
+     "4 cuori"
+    ],
+    "giusta": 1
+   }
+  ]
+ },
+ {
+  "numero": 12,
+  "domande": [
+   {
+    "numero": "12.1",
+    "testo": "Il tuo compagno apre di 1 Fiori e l’avversario alla tua destra dichiara 1 Cuori. Cosa dichiari tu (terzo di mano) con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "KJ952",
+      "H": "J3",
+      "D": "K732",
+      "C": "32"
+     }
+    },
+    "opzioni": [
+     "Passo",
+     "1 picche",
+     "Contro"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "12.2",
+    "testo": "Il tuo compagno apre di 1 Fiori e l’avversario alla tua destra dichiara 1 Cuori. Cosa dichiari tu (terzo di mano) con le sequenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "AK75",
+      "H": "K95",
+      "D": "KT92",
+      "C": "62"
+     }
+    },
+    "opzioni": [
+     "Contro",
+     "1 picche",
+     "1 senza atout"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "12.3",
+    "testo": "Il tuo compagno apre di 1 Fiori e l’avversario alla tua destra dichiara 1 Cuori. Cosa dichiari tu (terzo di mano) con le sequenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "KJ4",
+      "H": "KJ4",
+      "D": "JT872",
+      "C": "95"
+     }
+    },
+    "opzioni": [
+     "1 picche",
+     "Contro",
+     "1 senza atout"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "12.4",
+    "testo": "Il tuo compagno apre di 1 Fiori e l’avversario alla tua destra dichiara 1 Cuori. Cosa dichiari tu (terzo di mano) con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "82",
+      "H": "J5",
+      "D": "KQT84",
+      "C": "AQ52"
+     }
+    },
+    "opzioni": [
+     "1 senza atout",
+     "2 fiori",
+     "2 quadri"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "12.5",
+    "testo": "In Sud apri con la dichiarazione di 1 Quadri, l’avversario alla tua sinistra dichiara 1 Picche e il tuo compagno dichiara Contro, l’avversario alla tua destra passa e tocca a te. Cosa dichiari tu con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "K2",
+      "H": "QJ93",
+      "D": "AK65",
+      "C": "832"
+     }
+    },
+    "opzioni": [
+     "1 senza atout",
+     "2 quadri",
+     "2 cuori"
+    ],
+    "giusta": 2
+   },
+   {
+    "numero": "12.6",
+    "testo": "In Sud apri con la dichiarazione di 1 Quadri, l’avversario alla tua sinistra dichiara 1 Picche e il tuo compagno dichiara Contro, l’avversario alla tua destra passa e tocca a te. Cosa dichiari tu con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "AQ5",
+      "H": "K5",
+      "D": "KJT72",
+      "C": "AQ2"
+     }
+    },
+    "opzioni": [
+     "3 senza atout",
+     "2 senza atout",
+     "3 quadri"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "12.7",
+    "testo": "In Sud apri con la dichiarazione di 1 Quadri, l’avversario alla tua sinistra dichiara 1 Picche e il tuo compagno dichiara Contro, l’avversario alla tua destra passa e tocca a te. Cosa dichiari tu con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "A4",
+      "H": "KQJ4",
+      "D": "AQJT82",
+      "C": "9"
+     }
+    },
+    "opzioni": [
+     "3 quadri",
+     "3 cuori",
+     "3 senza atout"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "12.8",
+    "testo": "In Sud apri con la dichiarazione di 1 Quadri, l’avversario alla tua sinistra dichiara 1 Picche e il tuo compagno dichiara Contro, l’avversario alla tua destra passa e tocca a te. Cosa dichiari tu con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "82",
+      "H": "96",
+      "D": "KQ942",
+      "C": "AK52"
+     }
+    },
+    "opzioni": [
+     "1 senza atout",
+     "2 fiori",
+     "2 quadri"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "12.9",
+    "testo": "In Sud apri con la dichiarazione di 1 Fiori, l’avversario alla tua sinistra passa e il tuo compagno dichiara 1 Quadri, l’avversario alla tua destra dichiara 1 Cuori e tocca a te. Cosa dichiari tu con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "K983",
+      "H": "AJ4",
+      "D": "K8",
+      "C": "Q843"
+     }
+    },
+    "opzioni": [
+     "Passo",
+     "1 picche",
+     "1 senza atout"
+    ],
+    "giusta": 0,
+    "nota": "Dubbio: con 13 punti bilanciati, 4 picche e ♥AJ4 molti insegnanti dichiarano 1♠ (o 1SA); il Passo va almeno spiegato.",
+    "sospesa": true
+   },
+   {
+    "numero": "12.10",
+    "testo": "In Sud apri con la dichiarazione di 1 Fiori, l’avversario alla tua sinistra passa e il tuo compagno dichiara 1 Quadri, l’avversario alla tua destra dichiara 1 Cuori e tocca a te. Cosa dichiari tu con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "AJ98",
+      "H": "3",
+      "D": "Q7",
+      "C": "AQT832"
+     }
+    },
+    "opzioni": [
+     "Passo",
+     "1 picche",
+     "2 fiori"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "12.11",
+    "testo": "In Sud apri con la dichiarazione di 1 Fiori, l’avversario alla tua sinistra passa e il tuo compagno dichiara 1 Quadri, l’avversario alla tua destra dichiara 1 Cuori e tocca a te. Cosa dichiari tu con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "A54",
+      "H": "87",
+      "D": "AJ6",
+      "C": "KQT964"
+     }
+    },
+    "opzioni": [
+     "Passo",
+     "1 senza atout",
+     "2 fiori"
+    ],
+    "giusta": 2,
+    "nota": "Errore nell'originale: la mano ha 14 carte (♠A54 ♥87 ♦AJ6 ♣KQ10964).",
+    "sospesa": true
+   },
+   {
+    "numero": "12.12",
+    "testo": "In Sud apri con la dichiarazione di 1 Fiori, l’avversario alla tua sinistra passa e il tuo compagno dichiara 1 Quadri, l’avversario alla tua destra dichiara 1 Cuori e tocca a te. Cosa dichiari tu con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "AQ8",
+      "H": "KQ7",
+      "D": "T9",
+      "C": "AK98"
+     }
+    },
+    "opzioni": [
+     "Contro",
+     "1 senza atout",
+     "2 senza atout"
+    ],
+    "giusta": 1,
+    "nota": "Errore nell'originale: la mano ha 12 carte (♠AQ8 ♥KQ7 ♦109 ♣AK98); inoltre con 18 punti bilanciati di solito si dichiara 2SA, non 1SA.",
+    "sospesa": true
+   },
+   {
+    "numero": "12.13",
+    "testo": "Nord ha aperto 1 Quadri ed Est è intervenuto di 1 Picche, cosa dichiari in Sud con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "75",
+      "H": "A3",
+      "D": "KQ73",
+      "C": "98642"
+     }
+    },
+    "opzioni": [
+     "2 quadri",
+     "Passo",
+     "2 fiori"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "12.14",
+    "testo": "Nord ha aperto 1 Quadri ed Est è intervenuto di 1 Picche, cosa dichiari in Sud con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "K8",
+      "H": "QJ85",
+      "D": "A4",
+      "C": "AJT82"
+     }
+    },
+    "opzioni": [
+     "Contro",
+     "2 fiori",
+     "3 senza atout"
+    ],
+    "giusta": 1
+   },
+   {
+    "numero": "12.15",
+    "testo": "Nord ha aperto 1 Quadri ed Est è intervenuto di 1 Picche, cosa dichiari in Sud con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "QT74",
+      "H": "K83",
+      "D": "J986",
+      "C": "K2"
+     }
+    },
+    "opzioni": [
+     "1 senza atout",
+     "Passo",
+     "2 quadri"
+    ],
+    "giusta": 0
+   },
+   {
+    "numero": "12.16",
+    "testo": "Nord ha aperto 1 Quadri ed Est è intervenuto di 1 Picche, cosa dichiari in Sud con le seguenti carte?",
+    "figura": {
+     "tipo": "mano",
+     "mano": {
+      "S": "K98",
+      "H": "QJ97",
+      "D": "T9",
+      "C": "AJ98"
+     }
+    },
+    "opzioni": [
+     "1 senza atout",
+     "2 fiori",
+     "Contro"
+    ],
+    "giusta": 2
+   }
+  ]
+ }
+]

@@ -19,6 +19,8 @@ import {
 } from "@/lib/esercizi-posizione";
 import { useT } from "@/contexts/traduzioni-provider";
 import { contrattoLeggibile } from "@/lib/contratto-leggibile";
+import { leggiFigura } from "@/lib/figura-domanda";
+import { FiguraDomanda } from "@/components/figura-domanda";
 
 const SEMI: Suit[] = ["spade", "heart", "diamond", "club"];
 const ORDINE = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -147,6 +149,7 @@ export default function EsercizioPage({
         ] as Position)
       : null;
   const morto = mortoPos && mortoPos !== esercizio.posizione ? esercizio.hands[mortoPos] : null;
+  const figura = leggiFigura(esercizio.figura);
 
   return (
     <div className="mx-auto w-full max-w-2xl px-4 py-8 sm:px-6">
@@ -164,7 +167,7 @@ export default function EsercizioPage({
       </p>
 
       {esercizio.domanda && (
-        <p className="mb-5 rounded-lg border border-border bg-muted/40 p-3 text-sm">
+        <p className="mb-5 whitespace-pre-line rounded-lg border border-border bg-muted/40 p-3 text-sm">
           {esercizio.domanda}
         </p>
       )}
@@ -192,6 +195,9 @@ export default function EsercizioPage({
           {esercizio.played.length} carte già giocate
         </p>
       )}
+
+      {/* La figura del test: la mano, la linea o lo schema di un seme. */}
+      {figura && <FiguraDomanda figura={figura} />}
 
       {/* Una domanda a scelta può non avere una mano: allora non si disegna. */}
       {mia.length > 0 && <ManoInChiaro carte={mia} etichetta={`La tua mano (${NOME[esercizio.posizione]})`} />}

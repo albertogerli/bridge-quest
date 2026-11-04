@@ -8,6 +8,7 @@ import { useLingua } from "@/hooks/use-lingua";
 import Link from "@/components/link";
 import { MATERIALI_CORSO, type Esercizi, type ManiCommissione, type Materiale } from "@/lib/materiali-corso";
 import { MODULI_PROGRAMMA, PROGRAMMA_PRIMO_LIVELLO, siglaGruppi } from "@/lib/programma-corso";
+import { testDellaLezione } from "@/lib/test-commissione";
 
 /**
  * Slide da proiettare e dispense da stampare, modulo per modulo.
@@ -204,6 +205,11 @@ function Programma() {
                           ? t("Smazzate {sigla}", { sigla: siglaGruppi(l.smazzate) })
                           : t("Smazzate preparate da BridgeLab")}
                     </span>
+                    {testDellaLezione(l.numero).map((x) => (
+                      <Link key={x.numero} href="/istruttori/domande" className="font-semibold text-primary hover:underline">
+                        {t("Test {n}", { n: x.numero })}
+                      </Link>
+                    ))}
                   </p>
                 </div>
               </li>

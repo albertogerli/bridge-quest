@@ -1,12 +1,15 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Plus, Trash2 } from "lucide-react";
+import { Check, Plus, Trash2 } from "lucide-react";
 import { Briciole } from "@/components/briciole";
 import { Button } from "@/components/ui/button";
 import { useT } from "@/contexts/traduzioni-provider";
 import { domandeDaTest, esercizioDaDomanda, problemiDomanda, type BozzaDomanda } from "@/lib/domande-scelta";
 import { cancellaEsercizio, elencaMieiEsercizi, salvaEsercizio, type EsercizioPosizione } from "@/lib/esercizi-posizione";
+import { descriviFigura, leggiFigura } from "@/lib/figura-domanda";
+import { istante } from "@/lib/novita-insegnante";
+import { gruppoTest, TEST_COMMISSIONE, type TestCommissione } from "@/lib/test-commissione";
 
 const VUOTA: BozzaDomanda = { titolo: "", gruppo: "", domanda: "", opzioni: ["", "", ""], giuste: [], soluzione: "" };
 
@@ -44,7 +47,8 @@ export default function DomandePage() {
       const g = e.gruppo || t("Senza gruppo");
       m.set(g, [...(m.get(g) ?? []), e]);
     }
-    return [...m.entries()];
+    // Dentro il gruppo, nell'ordine in cui sono state scritte: è l'ordine del test.
+    return [...m.entries()].map(([g, d]) => [g, [...d].sort((a, b) => istante(a.created_at) - istante(b.created_at))] as const);
   }, [mie, t]);
 
   async function salva(domande: BozzaDomanda[]): Promise<number> {
@@ -85,6 +89,33 @@ export default function DomandePage() {
     }
   }
 
+  const [aggiungendo, setAggiungendo] = useState<number | null>(null);
+  const giaAggiunti = useMemo(() => new Set((mie ?? []).map((e) => e.gruppo)), [mie]);
+
+  /** Un test della Commissione: le domande con le risposte arrivano dal server. */
+  async function aggiungiTest(test: TestCommissione) {
+    setAggiungendo(test.numero);
+    setEsito(null);
+    try {
+      const r = await fetch("/api/istruttori/test-commissione", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ numero: test.numero }),
+      });
+      const j = (await r.json().catch(() => ({}))) as { aggiunte?: number; gia?: boolean; codice?: string };
+      if (r.ok && j.gia) setEsito(t("Il test {n} c'era già fra le tue domande.", { n: test.numero }));
+      else if (r.ok) setEsito(t("Aggiunte {n} domande del test {m}. Le trovi qui sotto e in «Nuovo compito».", { n: j.aggiunte ?? 0, m: test.numero }));
+      else if (r.status === 403) setEsito(t("Solo chi insegna può aggiungere i test."));
+      else if (j.codice === "42703") setEsito(t("Non aggiunto: va eseguito lo script delle figure delle domande."));
+      else setEsito(t("Non sono riuscito ad aggiungere il test. Riprova fra un momento."));
+      if (r.ok) void ricarica();
+    } catch {
+      setEsito(t("Non sono riuscito ad aggiungere il test. Riprova fra un momento."));
+    } finally {
+      setAggiungendo(null);
+    }
+  }
+
   async function cancella(id: string) {
     if (await cancellaEsercizio(id)) void ricarica();
   }
@@ -98,6 +129,38 @@ export default function DomandePage() {
       <p className="mt-1 mb-6 text-sm text-muted-foreground">
         {t("Le domande vanno nei compiti insieme alle mani, da «Nuovo compito». L'allievo risponde con un tocco; tu vedi chi ha risposto cosa, la divisione delle risposte e la classifica della classe.")}
       </p>
+
+      <section className="mb-8 rounded-2xl border border-border bg-card p-4 sm:p-5">
+        <h2 className="mb-1 font-display text-lg font-bold">{t("I test della Commissione")}</h2>
+        <p className="mb-3 text-sm text-muted-foreground">
+          {t("I dodici test di Barion con le loro mani e le risposte giuste. Aggiungi quelli che ti servono: diventano domande tue, da mettere nei compiti.")}
+        </p>
+        <ul className="divide-y divide-border">
+          {TEST_COMMISSIONE.map((test) => {
+            const fatto = giaAggiunti.has(gruppoTest(test));
+            return (
+              <li key={test.numero} className="flex items-center gap-3 py-2.5">
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-medium">{t("Test {n}", { n: test.numero })} · {t(test.titolo)}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {t("Lezione {n} del programma", { n: test.lezioni.join(", ") })} · {t("{n} domande", { n: test.domande })}
+                  </p>
+                </div>
+                {fatto ? (
+                  <span className="flex items-center gap-1 text-xs font-medium text-muted-foreground">
+                    <Check className="h-4 w-4" aria-hidden="true" />
+                    {t("Aggiunto")}
+                  </span>
+                ) : (
+                  <Button size="sm" variant="outline" disabled={aggiungendo !== null || mie === null} onClick={() => void aggiungiTest(test)}>
+                    {aggiungendo === test.numero ? t("Aggiungo…") : t("Aggiungi")}
+                  </Button>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      </section>
 
       <section className="mb-8 rounded-2xl border border-border bg-card p-4 sm:p-5">
         <h2 className="mb-3 font-display text-lg font-bold">{t("Nuova domanda")}</h2>
@@ -194,7 +257,14 @@ export default function DomandePage() {
               {domande.map((d) => (
                 <li key={d.id} className="flex items-start gap-3 px-4 py-3">
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium">{d.domanda}</p>
+                    <p className="whitespace-pre-line text-sm font-medium">
+                      {d.titolo && /^\d+\.\d+$/.test(d.titolo) && <span className="mr-1 text-muted-foreground">{d.titolo}</span>}
+                      {d.domanda}
+                    </p>
+                    {(() => {
+                      const f = leggiFigura(d.figura);
+                      return f ? <p className="mt-0.5 text-xs">{descriviFigura(f, t)}</p> : null;
+                    })()}
                     <p className="mt-0.5 text-xs text-muted-foreground">
                       {(d.opzioni ?? []).map((o) => (d.risposte.includes(o) ? `✓ ${o}` : o)).join(" · ")}
                     </p>
