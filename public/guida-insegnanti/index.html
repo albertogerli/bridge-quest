@@ -1,0 +1,791 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BridgeLab per l'insegnante</title>
+<meta name="description" content="Guida passo passo al portale insegnanti di BridgeLab, con le schermate.">
+<style>
+/* Font in casa: la CSP del sito non carica da Google Fonts. */
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url(/guida-insegnanti/font/atkinson-italic-400.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(/guida-insegnanti/font/atkinson-normal-400.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(/guida-insegnanti/font/atkinson-normal-700.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Bricolage Grotesque';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(/guida-insegnanti/font/bricolage.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Bricolage Grotesque';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(/guida-insegnanti/font/bricolage.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* Impaginazione: una colonna di lettura larga, figure a tutta colonna, indice a schede in apertura. */
+:root {
+  --bg: #F7F5F0;
+  --carta: #FFFFFF;
+  --testo: #1A2233;
+  --tenue: #5A6478;
+  --linea: #E2DED4;
+  --figb: #003DA5;
+  --figb-tenue: #E6EDF8;
+  --segno: #E5361B;
+  --nota-bg: #FFF7E0;
+  --nota-linea: #E8C96A;
+  --nuovo-bg: #E6F4EA;
+  --nuovo-testo: #1E6B34;
+  --display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --corpo: "Atkinson Hyperlegible", "Verdana", "Segoe UI", system-ui, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #10141C; --carta: #181E29; --testo: #E8EBF2; --tenue: #A3ACBE; --linea: #2A3242;
+    --figb: #6FA2F0; --figb-tenue: #1A2740; --segno: #FF6A4D; --nota-bg: #2B2414; --nota-linea: #7A6224;
+    --nuovo-bg: #16301E; --nuovo-testo: #8FD9A4;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #10141C; --carta: #181E29; --testo: #E8EBF2; --tenue: #A3ACBE; --linea: #2A3242;
+  --figb: #6FA2F0; --figb-tenue: #1A2740; --segno: #FF6A4D; --nota-bg: #2B2414; --nota-linea: #7A6224;
+  --nuovo-bg: #16301E; --nuovo-testo: #8FD9A4;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--testo);
+  font-family: var(--corpo); font-size: 1.1875rem; line-height: 1.6;
+  margin: 0; padding-inline: 16px; padding-block: 0 64px;
+}
+.pagina { max-width: 860px; margin: 0 auto; }
+h1, h2, h3 { font-family: var(--display); line-height: 1.15; text-wrap: balance; margin: 0; }
+p { margin: 0; }
+a { color: var(--figb); }
+a:focus-visible, summary:focus-visible { outline: 3px solid var(--segno); outline-offset: 3px; border-radius: 6px; }
+img { max-width: 100%; }
+
+/* Testata */
+.testata { padding-block: 40px 28px; display: grid; gap: 14px; }
+.marchio { display: flex; align-items: center; gap: 10px; font-weight: 700; color: var(--figb); letter-spacing: .02em; }
+.marchio .semi { display: inline-grid; grid-template-columns: repeat(2, 12px); gap: 3px; padding: 7px; background: var(--figb); border-radius: 8px; }
+.marchio .semi i { width: 12px; height: 12px; border-radius: 3px; background: #fff; display: block; }
+.testata h1 { font-size: clamp(2.2rem, 6vw, 3.4rem); font-weight: 800; }
+.testata .sotto { font-size: 1.25rem; color: var(--tenue); max-width: 40em; }
+.testata .data { font-size: 1rem; color: var(--tenue); }
+
+.come-leggere {
+  display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: center;
+  background: var(--carta); border: 1px solid var(--linea); border-radius: 16px; padding: 18px 20px; margin-block: 8px 28px;
+}
+.come-leggere p { min-width: 0; }
+
+/* Il numero rosso, identico a quello delle schermate */
+.n {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 1.6em; height: 1.6em; padding: 0 .3em; border-radius: 999px;
+  background: var(--segno); color: #fff; font-weight: 700; font-size: .9em; line-height: 1;
+  vertical-align: .08em; font-variant-numeric: tabular-nums;
+}
+.n.grande { font-size: 1.4rem; }
+
+/* Etichetta per ciò che è cambiato dall'ultima versione */
+.nuovo {
+  display: inline-block; font-family: var(--corpo); font-size: .8rem; font-weight: 700; letter-spacing: .04em;
+  text-transform: uppercase; padding: 2px 8px; border-radius: 999px; background: var(--nuovo-bg); color: var(--nuovo-testo);
+  vertical-align: .25em; margin-left: 6px;
+}
+
+/* Le novità in apertura */
+.novita { background: var(--carta); border: 1px solid var(--linea); border-radius: 16px; padding: 18px 20px; margin-bottom: 28px; display: grid; gap: 10px; }
+.novita h2 { font-size: 1.3rem; }
+.novita ul { margin: 0; padding-left: 1.2em; display: grid; gap: 4px; }
+
+/* Indice */
+.indice h2 { font-size: 1.1rem; text-transform: uppercase; letter-spacing: .08em; color: var(--tenue); margin-bottom: 12px; font-family: var(--corpo); }
+.indice ol { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; counter-reset: cap; }
+.indice li { counter-increment: cap; }
+.indice a {
+  display: grid; grid-template-columns: 2.2em 1fr; gap: 8px; row-gap: 2px; align-items: start; height: 100%;
+  padding: 14px 16px; background: var(--carta); border: 1px solid var(--linea); border-radius: 14px;
+  text-decoration: none; color: var(--testo); font-weight: 700;
+}
+.indice a::before { content: counter(cap); font-family: var(--display); font-size: 1.5rem; color: var(--figb); line-height: 1; grid-row: span 2; }
+.indice a span { grid-column: 2; font-weight: 400; color: var(--tenue); font-size: 1rem; display: block; }
+.indice a:hover { border-color: var(--figb); }
+
+/* Capitoli */
+.capitolo { padding-block: 56px 8px; border-top: 1px solid var(--linea); margin-top: 48px; display: grid; gap: 22px; }
+.capitolo > header { display: grid; gap: 8px; }
+.capitolo .num { font-family: var(--display); font-weight: 800; color: var(--figb); font-size: 1rem; letter-spacing: .1em; text-transform: uppercase; }
+.capitolo h2 { font-size: clamp(1.8rem, 4.5vw, 2.4rem); font-weight: 800; }
+.capitolo h3 { font-size: 1.35rem; font-weight: 600; margin-top: 12px; }
+.capitolo .intro { font-size: 1.2rem; color: var(--tenue); }
+
+.passi { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+.passi li { display: grid; grid-template-columns: 2.1em 1fr; gap: 12px; align-items: start; }
+.passi li > div { min-width: 0; }
+.passi .n { margin-top: .15em; }
+
+figure { margin: 0; display: grid; gap: 10px; }
+figure a { display: block; border-radius: 14px; overflow: hidden; border: 1px solid var(--linea); background: #fff; box-shadow: 0 6px 24px rgba(20, 30, 50, .08); }
+figure img { display: block; width: 100%; height: auto; }
+figure.telefono { max-width: 380px; }
+figure.stretta { max-width: 560px; }
+figcaption { font-size: 1rem; color: var(--tenue); }
+
+.nota {
+  background: var(--nota-bg); border: 1px solid var(--nota-linea); border-radius: 14px; padding: 16px 18px;
+  display: grid; gap: 6px;
+}
+.nota strong { font-family: var(--display); font-size: 1.05rem; }
+
+.scelte { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.scelta { background: var(--carta); border: 1px solid var(--linea); border-radius: 14px; padding: 16px; display: grid; gap: 6px; align-content: start; }
+.scelta h4 { margin: 0; font-family: var(--display); font-size: 1.15rem; }
+.scelta p { font-size: 1.05rem; }
+
+.domande { display: grid; gap: 10px; }
+details { background: var(--carta); border: 1px solid var(--linea); border-radius: 14px; padding: 4px 18px; }
+summary { cursor: pointer; font-weight: 700; padding-block: 12px; list-style-position: outside; }
+details p { padding-bottom: 14px; }
+
+.tasti kbd {
+  font-family: var(--corpo); font-weight: 700; font-size: .95em; padding: 1px 8px; border-radius: 6px;
+  border: 1px solid var(--linea); border-bottom-width: 3px; background: var(--carta);
+}
+
+.piede { margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--linea); color: var(--tenue); font-size: 1rem; display: grid; gap: 6px; }
+
+@media (max-width: 560px) {
+  body { font-size: 1.125rem; }
+  .passi li { grid-template-columns: 1.9em 1fr; gap: 10px; }
+  .capitolo { padding-block: 40px 4px; margin-top: 32px; }
+}
+@media print {
+  body { background: #fff; color: #000; font-size: 12pt; }
+  .capitolo { break-before: page; border: 0; }
+  figure a { box-shadow: none; }
+  details { border: 0; }
+}
+</style>
+</head>
+<body>
+<div class="pagina">
+
+<header class="testata">
+  <div class="marchio"><span class="semi" aria-hidden="true"><i></i><i></i><i></i><i></i></span> BridgeLab</div>
+  <h1>Guida per l'insegnante</h1>
+  <p class="sotto">Come creare la classe, dare i compiti, vedere come sono andati gli allievi e usare BridgeLab in aula. Un passo alla volta, con le schermate.</p>
+  <p class="data">Aggiornata al 5 novembre 2026.</p>
+</header>
+
+<div class="come-leggere">
+  <span class="n grande" aria-hidden="true">1</span>
+  <p><strong>Come leggere questa guida.</strong> Nelle schermate i punti da toccare sono cerchiati in rosso e hanno un numero. Lo stesso numero lo trovi nel testo accanto, nell'ordine in cui va fatto. Tocca una schermata per vederla più grande. Le parti con l'etichetta <span class="nuovo">Nuovo</span> sono arrivate dopo il 23 ottobre.</p>
+</div>
+
+<section class="novita" aria-labelledby="novita-titolo">
+  <h2 id="novita-titolo">Cosa è cambiato dal 23 ottobre</h2>
+  <ul>
+    <li>Nel menu c'è il gruppo <strong>Insegnante</strong> con tutti gli strumenti (capitolo 1).</li>
+    <li>La pagina della classe ha una fila nuova, <strong>Prima della lezione</strong>, con la locandina e le richieste d'accesso (capitolo 4).</li>
+    <li>Nel compito trovi le <strong>smazzate del programma</strong>, lezione per lezione, e puoi dire all'allievo il contratto o solo l'obiettivo (capitolo 5).</li>
+    <li>Sui compiti di licita dai <strong>le tue stelle</strong>, scrivi un commento e rispondi alle domande degli allievi (capitolo 7).</li>
+    <li><strong>Domande a scelta</strong> e i dodici <strong>test della Commissione</strong>, da mettere nei compiti (capitolo 8).</li>
+    <li>Nei Materiali del corso c'è il <strong>programma del Corso di Primo Livello</strong>, con la Lezione 0. Il generatore di fogli si chiama ora <strong>Foglio delle mani</strong> (capitolo 10).</li>
+    <li>Dai tu il nome agli allievi in classe, e scrivi un messaggio di benvenuto (capitolo 3).</li>
+  </ul>
+</section>
+
+<nav class="indice" aria-labelledby="indice-titolo">
+  <h2 id="indice-titolo">Indice</h2>
+  <ol>
+    <li><a href="#entrare">Entrare nel portale<span>Dove si trova e come ci si arriva</span></a></li>
+    <li><a href="#classe">Creare la classe<span>Nome e descrizione</span></a></li>
+    <li><a href="#allievi">Far entrare gli allievi<span>Codice, modulo, locandina, nomi</span></a></li>
+    <li><a href="#pagina">La pagina della classe<span>Dove sta ogni cosa</span></a></li>
+    <li><a href="#compito">Dare un compito<span>Le smazzate del programma</span></a></li>
+    <li><a href="#licita">Compito di licita<span>Dichiarano, giocano o tutte e due</span></a></li>
+    <li><a href="#risultati">Vedere i risultati<span>Stelle, commenti, domande</span></a></li>
+    <li><a href="#test">Domande e test<span>I test della Commissione</span></a></li>
+    <li><a href="#aula">In aula<span>Tavoli, proiettore, lavagna</span></a></li>
+    <li><a href="#dopo">Materiali del corso<span>Programma, slide, dispense</span></a></li>
+    <li><a href="#strumenti">Altri strumenti<span>Tavolo di studio e archivio</span></a></li>
+    <li><a href="#chat">Chat e videolezione<span>Scrivere alla classe</span></a></li>
+    <li><a href="#problemi">Se qualcosa non va<span>Le domande più frequenti</span></a></li>
+  </ol>
+</nav>
+
+<!-- 1 -->
+<section class="capitolo" id="entrare">
+  <header>
+    <span class="num">Capitolo 1</span>
+    <h2>Entrare nel portale</h2>
+    <p class="intro">Il portale degli insegnanti è la parte di BridgeLab dove gestisci le tue classi.</p>
+  </header>
+  <ol class="passi">
+    <li><span class="n">1</span><div>Apri <strong>bridgelab.it</strong> ed entra con la tua email e la tua password.</div></li>
+    <li><span class="n">2</span><div>Vai su <strong>bridgelab.it/istruttori</strong>, oppure apri il menu (le tre righe in alto a sinistra) e tocca <strong>Le tue classi</strong>.</div></li>
+  </ol>
+  <div class="nota">
+    <strong>Non vedi il portale?</strong>
+    <p>Il portale si apre solo dopo che la segreteria ha approvato la tua richiesta. Se non l'hai ancora fatta, vai su <strong>bridgelab.it/diventa-istruttore</strong>, scrivi chi sei e in quale associazione insegni. Quando la richiesta è approvata, al posto del modulo trovi il collegamento al portale.</p>
+  </div>
+  <figure>
+    <a href="/guida-insegnanti/img/01-portale.webp" target="_blank" rel="noopener"><img src="/guida-insegnanti/img/01-portale.webp" width="2044" height="782" alt="La pagina Le tue classi con il pulsante Nuova classe e la scheda di una classe" loading="lazy"></a>
+    <figcaption>La prima pagina del portale: <span class="n">1</span> crea una classe nuova, <span class="n">2</span> entra in una classe che hai già.</figcaption>
+  </figure>
+
+  <h3>Il menu dell'insegnante <span class="nuovo">Nuovo</span></h3>
+  <p>Nel menu, in cima, c'è il gruppo <strong>Insegnante</strong> <span class="n">1</span>. Da qualunque pagina arrivi in un tocco alle tue classi e agli strumenti: tavolo condiviso, genera mani, tavolo di studio, lavagna, le tue mani, combinazioni, libreria, materiali del corso, domande a scelta e foglio delle mani.</p>
+  <figure class="stretta">
+    <a href="/guida-insegnanti/img/29-menu.webp" target="_blank" rel="noopener"><img src="/guida-insegnanti/img/29-menu.webp" width="1800" height="1116" alt="Il menu aperto con il gruppo Insegnante e le sue voci" loading="lazy"></a>
+  </figure>
+</section>
+
+<!-- 2 -->
+<section class="capitolo" id="classe">
+  <header>
+    <span class="num">Capitolo 2</span>
+    <h2>Creare la classe</h2>
+    <p class="intro">Una classe è il tuo corso: gli allievi iscritti, i compiti, la chat. Se insegni a due gruppi, fai due classi.</p>
+  </header>
+  <ol class="passi">
+    <li><span class="n">1</span><div>Tocca <strong>+ Nuova classe</strong> e scrivi il nome, per esempio «Corso di Primo Livello 2026».</div></li>
+    <li><span class="n">2</span><div>Se vuoi, aggiungi una descrizione: il giorno, l'ora, la sala. La vedono anche gli allievi.</div></li>
+    <li><span class="n">3</span><div>Tocca <strong>Crea classe</strong>. BridgeLab prepara subito un <strong>codice di sei lettere</strong> per far entrare gli allievi.</div></li>
+  </ol>
+  <figure>
+    <a href="/guida-insegnanti/img/02-nuova-classe.webp" target="_blank" rel="noopener"><img src="/guida-insegnanti/img/02-nuova-classe.webp" width="2200" height="1110" alt="La finestra Nuova classe con i campi Nome classe e Descrizione e il pulsante Crea classe" loading="lazy"></a>
+  </figure>
+  <p>Il nome si può cambiare quando vuoi: nella pagina della classe, accanto al titolo, c'è <strong>Rinomina</strong>.</p>
+</section>
+
+<!-- 3 -->
+<section class="capitolo" id="allievi">
+  <header>
+    <span class="num">Capitolo 3</span>
+    <h2>Far entrare gli allievi</h2>
+    <p class="intro">Agli allievi serve una cosa sola: il codice della classe. Lo trovi in fondo alla pagina della classe, sotto «Gestione classe».</p>
+  </header>
+
+  <h3>Mandare il codice</h3>
+  <ol class="passi">
+    <li><span class="n">1</span><div>Questo è il codice. Puoi dettarlo a voce o scriverlo alla lavagna. Toccandolo lo copi.</div></li>
+    <li><span class="n">2</span><div>Con <strong>Manda l'invito</strong> scegli <strong>WhatsApp</strong> (si apre con il messaggio già scritto), <strong>Email</strong>, oppure <strong>Copia il messaggio</strong> per incollarlo dove vuoi.</div></li>
+  </ol>
+  <figure>
+    <a href="/guida-insegnanti/img/04-codice.webp" target="_blank" rel="noopener"><img src="/guida-insegnanti/img/04-codice.webp" width="2000" height="724" alt="Il riquadro Codice invito con il codice e il menu Manda l'invito aperto su WhatsApp, Copia il messaggio, Email" loading="lazy"></a>
+  </figure>
+
+  <h3>Cosa fa l'allievo</h3>
+  <p>L'allievo entra in BridgeLab con il suo account, tocca <strong>Classe</strong> in basso (o «Le mie classi» nel menu), scrive il codice <span class="n">1</span> e tocca <strong>Iscriviti</strong> <span class="n">2</span>. Da quel momento lo vedi nell'elenco della tua classe.</p>
+  <figure class="telefono">
+    <a href="/guida-insegnanti/img/27-allievo-codice.webp" target="_blank" rel="noopener"><img src="/guida-insegnanti/img/27-allievo-codice.webp" width="860" height="842" alt="Sul telefono dell'allievo: la casella per il codice e il pulsante Iscriviti" loading="lazy"></a>
+    <figcaption>Come lo vede l'allievo sul telefono.</figcaption>
+  </figure>
+
+  <h3>La locandina e il modulo d'iscrizione</h3>
+  <p>Nella pagina della classe, fila <strong>Prima della lezione</strong>, tocca <strong>Locandina</strong>. Riempi i campi a sinistra <span class="n">1</span>: titolo, data e ora, indirizzo, associazione. A destra vedi subito il foglio pronto, con il codice QR. In fondo alla pagina c'è il pulsante per stamparla.</p>
+  <figure>
+    <a href="/guida-insegnanti/img/06-locandina.webp" target="_blank" rel="noopener"><img src="/guida-insegnanti/img/06-locandina.webp" width="2560" height="2300" alt="La pagina Locandina: i campi da compilare a sinistra e l'anteprima del foglio A4 con il QR a destra" loading="lazy"></a>
+  </figure>
+  <p>Chi inquadra il QR arriva a un modulo d'iscrizione: lascia nome e contatto, senza bisogno di sapere cos'è una classe. <span class="nuovo">Nuovo</span> Quando la locandina è salvata, accanto compare <strong>Manda il modulo d'iscrizione</strong>: lo stesso modulo, da mandare su WhatsApp o per email a chi non vedrà la locandina. Le richieste arrivate le trovi in <strong>Richieste d'accesso</strong>, con il numero di chi è in attesa e di chi hai già accettato.</p>
+
+  <h3>Chi può entrare</h3>
+  <p>Apri <strong>Impostazioni della classe</strong>, sotto il codice. Le scelte più utili:</p>
+  <ol class="passi">
+    <li><span class="n">1</span><div><strong>Approvo io ogni iscrizione</strong>: chi usa il codice resta in attesa finché non lo approvi tu. Serve se il codice è girato più del previsto.</div></li>
+    <li><span class="n">2</span><div><strong>Il codice scade il</strong>: dopo quella data il codice non vale più. Lascialo vuoto se non vuoi una scadenza.</div></li>
+    <li><span class="n">3</span><div><strong>Quanto portale vedono i tuoi allievi</strong>: «Solo il corso» mostra solo compiti e materiali, «Corso e pratica libera» aggiunge esercizi e mini-giochi, «Tutto aperto» apre anche tornei, sfide e classifiche.</div></li>
+  </ol>
+  <figure>
+    <a href="/guida-insegnanti/img/05-impostazioni.webp" target="_blank" rel="noopener"><img src="/guida-insegnanti/img/05-impostazioni.webp" width="2362" height="974" alt="Le impostazioni della classe: Approvo io ogni iscrizione, Il codice scade il, Quanto portale vedono i tuoi allievi" loading="lazy"></a>
+  </figure>
+  <div class="nota">
+    <strong>Chiudere le iscrizioni</strong>
+    <p>Quando il gruppo è completo tocca <strong>Chiudi iscrizioni</strong>, accanto al codice: il codice smette di funzionare, chi è già dentro resta. Con <strong>Rigenera codice</strong> ne crei uno nuovo e il vecchio non vale più.</p>
+  </div>
+
+  <h3>Il messaggio di benvenuto <span class="nuovo">Nuovo</span></h3>
+  <p>Sempre nelle impostazioni, scrivi due righe per la classe <span class="n">1</span>: il giorno, l'ora, cosa portare. Gli allievi le leggono in cima alla pagina della classe e nella loro home.</p>
+  <figure>
+    <a href="/guida-insegnanti/img/36-benvenuto.webp" target="_blank" rel="noopener"><img src="/guida-insegnanti/img/36-benvenuto.webp" width="2362" height="540" alt="Il campo Messaggio di benvenuto per gli allievi" loading="lazy"></a>
+  </figure>
+
+  <h3>Il nome degli allievi in classe <span class="nuovo">Nuovo</span></h3>
+  <p>Nella scheda <strong>Allievi</strong>, accanto a ogni nome c'è <strong>Rinomina</strong> <span class="n">1</span>. Il nome che scrivi vale solo nella tua classe: lo vedi tu e lo vede la classe, e l'allievo non lo può cambiare. Se due allievi si chiamano allo stesso modo, BridgeLab lo segnala e propone di aggiungere l'iniziale del cognome, per esempio «Giuseppe R.».</p>
+  <figure>
+    <a href="/guida-insegnanti/img/35-rinomina.webp" target="_blank" rel="noopener"><img src="/guida-insegnanti/img/35-rinomina.webp" width="2200" height="512" alt="L'elenco degli allievi con il pulsante Rinomina accanto a ogni nome" loading="lazy"></a>
+  </figure>
+</section>
+
+<!-- 4 -->
+<section class="capitolo" id="pagina">
+  <header>
+    <span class="num">Capitolo 4</span>
+    <h2>La pagina della classe</h2>
+    <p class="intro">Tutto quello che riguarda il corso parte da qui. In alto ci sono tre file di pulsanti, nell'ordine in cui servono.</p>
+  </header>
+  <ol class="passi">
+    <li><span class="n">1</span><div><strong>Prima della lezione</strong> <span class="nuovo">Nuovo</span>: la locandina, il modulo d'iscrizione da mandare e le richieste d'accesso (capitolo 3).</div></li>
+    <li><span class="n">2</span><div><strong>Dopo la lezione</strong>: <strong>1 · Dispensa</strong> apre i materiali del corso, <strong>2 · Nuovo compito</strong> prepara il compito, <strong>3 · Smazzate della lezione</strong> apre le mani di ogni lezione; <strong>Materiali dopo la lezione</strong> è quello che mandi agli allievi (capitoli 5 e 10).</div></li>
+    <li><span class="n">3</span><div><strong>In aula</strong>: aprire i tavoli, il tavolo condiviso, l'elenco di chi siede dove (capitolo 9).</div></li>
+    <li><span class="n">4</span><div>Le schede della classe: <strong>Compiti</strong>, <strong>Mani delle lezioni</strong>, <strong>Allievi</strong>, <strong>Classifica</strong> e <strong>Chat</strong>.</div></li>
+  </ol>
+  <figure>
+    <a href="/guida-insegnanti/img/03-classe.webp" target="_blank" rel="noopener"><img src="/guida-insegnanti/img/03-classe.webp" width="2412" height="816" alt="La parte alta della pagina della classe con le file Prima della lezione, Dopo la lezione, In aula e le schede" loading="lazy"></a>
+  </figure>
+  <p>Più in basso trovi «Strumenti per la lezione» (tavolo condiviso, genera mani, lavagna e gli altri) e, in fondo, «Gestione classe» con il codice e le impostazioni.</p>
+</section>
+
+<!-- 5 -->
+<section class="capitolo" id="compito">
+  <header>
+    <span class="num">Capitolo 5</span>
+    <h2>Dare un compito</h2>
+    <p class="intro">Un compito è un gruppo di mani da giocare a casa. Gli allievi ricevono un'email entro sera, e un promemoria due giorni prima della scadenza.</p>
+  </header>
+  <p>Nella pagina della classe tocca <strong>2 · Nuovo compito</strong>, nella fila «Dopo la lezione».</p>
+  <ol class="passi">
+    <li><span class="n">1</span><div>Scrivi il <strong>titolo</strong>, per esempio «Compito 4 · L'impasse». È quello che leggono gli allievi.</div></li>
+    <li><span class="n">2</span><div>La <strong>scadenza</strong> non è obbligatoria.</div></li>
+    <li><span class="n">3</span><div><strong>Minibridge</strong>: spuntalo solo per le primissime lezioni. Si gioca senza dichiarazione.</div></li>
+    <li><span class="n">4</span><div><strong>Soluzioni</strong>: decidi quando l'allievo legge il commento della mano. Di solito «dopo che l'allievo ha giocato la mano»; puoi scegliere anche «dopo la scadenza» o «subito, come aiuto».</div></li>
+    <li><span class="n">5</span><div>La <strong>nota per gli allievi</strong>: due righe di consegna, per esempio «contate le prese prima di giocare la prima carta».</div></li>
+    <li><span class="n">6</span><div><span class="nuovo">Nuovo</span> <strong>Cosa dire all'allievo</strong>: il contratto, oppure solo l'obiettivo («almeno 9 prese»). Con l'obiettivo l'allievo legge quante prese deve fare e l'esito è «obiettivo raggiunto» o «mancato». «Come la lezione della mano» dà l'obiettivo nelle lezioni sul gioco della carta e il contratto nelle altre.</div></li>
+  </ol>
+  <figure>
+    <a href="/guida-insegnanti/img/08-compito-campi.webp" target="_blank" rel="noopener"><img src="/guida-insegnanti/img/08-compito-campi.webp" width="2880" height="966" alt="I campi del compito: titolo, scadenza, minibridge, soluzioni, cosa dire all'allievo, nota per gli allievi" loading="lazy"></a>
+  </figure>
+
+  <h3>Il modo più veloce: le smazzate del programma <span class="nuovo">Nuovo</span></h3>
+  <p>Sotto i campi c'è il riquadro <strong>Smazzate del programma</strong>: un pulsante per ogni lezione del Corso di Primo Livello, con le smazzate della Commissione già collegate. La sigla «E1 S1-8» vuol dire esercizio 1, smazzate da 1 a 8.</p>
+  <ol class="passi">
+    <li><span class="n">1</span><div>Tocca la lezione: le sue mani si aggiungono al compito, già scelte. Toccala di nuovo per toglierle.</div></li>
+    <li><span class="n">2</span><div>Sotto, <strong>Altre smazzate della Commissione</strong>: le serie fuori dalle tabelle del programma, da aggiungere con un tocco.</div></li>
+  </ol>
+  <figure>
+    <a href="/guida-insegnanti/img/30-programma.webp" target="_blank" rel="noopener"><img src="/guida-insegnanti/img/30-programma.webp" width="2400" height="2046" alt="Il riquadro Smazzate del programma con le lezioni da toccare e le altre smazzate della Commissione" loading="lazy"></a>
+  </figure>
+  <p>Poi tocca <strong>Crea compito</strong> nella barra in basso. Le lezioni 17 e 18 non hanno smazzate della Commissione: per quelle BridgeLab ha preparato mani apposta («Preparate da BridgeLab»).</p>
+
+  <h3>Scegliere le mani una per una</h3>
+  <ol class="passi">
+    <li><span class="n">1</span><div>Scegli la <strong>lezione</strong> nel menu. Puoi anche filtrare per difficoltà o cercare per contratto.</div></li>
+    <li><span class="n">2</span><div><strong>Spunta</strong> le mani che vuoi dare. Con <strong>Vedi</strong> guardi le carte prima di sceglierle.</div></li>
+    <li><span class="n">3</span><div>Tocca <strong>Crea compito</strong>, nella barra in basso. Fatto: gli allievi lo trovano nella loro classe.</div></li>
+  </ol>
+  <figure>
+    <a href="/guida-insegnanti/img/08b-compito-mani.webp" target="_blank" rel="noopener"><img src="/guida-insegnanti/img/08b-compito-mani.webp" width="2460" height="2120" alt="L'elenco delle mani di una lezione con tre mani spuntate e il pulsante Crea compito" loading="lazy"></a>
+  </figure>
+  <div class="nota">
+    <strong>Hai già le tue smazzate?</strong>
+    <p>Se prepari le mani con un programma (Dealer4, BridgeComposer, BBO) salvale come file <strong>.pbn</strong> e caricale con <strong>Scegli file .pbn</strong>, nello stesso modulo. Contratto, dichiarante, licita e commenti sono quelli scritti nel file.</p>
+  </div>
+  <div class="nota">
+    <strong>Ancora più veloce</strong>
+    <p>Nella scheda <strong>Mani delle lezioni</strong> della classe, il pulsante <strong>Assegna</strong> accanto a una lezione crea subito il compito con tutte le sue smazzate.</p>
+  </div>
+</section>
+
+<!-- 6 -->
+<section class="capitolo" id="licita">
+  <header>
+    <span class="num">Capitolo 6</span>
+    <h2>Mani su misura e compito di licita</h2>
+    <p class="intro">Con <strong>Genera mani</strong> crei mani sull'argomento della lezione, per esempio «Apertura di 1SA». Sono queste le mani per far dichiarare gli allievi.</p>
+  </header>
+  <ol class="passi">
+    <li><span class="n">1</span><div>Scegli l'<strong>argomento</strong>. Sotto, se vuoi, cambi quante mani generare.</div></li>
+    <li><span class="n">2</span><div>Tocca <strong>Genera</strong>. Le mani compaiono in basso; con <strong>Altre mani</strong> ne ottieni una serie diversa.</div></li>
+  </ol>
+  <figure>
+    <a href="/guida-insegnanti/img/09-genera.webp" target="_blank" rel="noopener"><img src="/guida-insegnanti/img/09-genera.webp" width="2486" height="1060" alt="Genera mani: il menu Argomento e il pulsante Genera" loading="lazy"></a>
+  </figure>
+  <p>Ogni volta che apri la pagina parti da una serie diversa. Il numero della serie resta scritto: se ti piace, annotalo e ritrovi le stesse mani.</p>
+
+  <h3>Assegnarle alla classe</h3>
+  <p>Sotto le mani c'è il riquadro «Assegna alla classe».</p>
+  <ol class="passi">
+    <li><span class="n">1</span><div>Scegli <strong>che cosa fanno gli allievi</strong> (le tre scelte sono spiegate qui sotto).</div></li>
+    <li><span class="n">2</span><div>Scegli la <strong>classe</strong>.</div></li>
+    <li><span class="n">3</span><div>Tocca <strong>Assegna</strong>.</div></li>
+  </ol>
+  <figure>
+    <a href="/guida-insegnanti/img/09b-assegna.webp" target="_blank" rel="noopener"><img src="/guida-insegnanti/img/09b-assegna.webp" width="2740" height="1040" alt="Il riquadro Assegna alla classe con le tre scelte Giocano la carta, Dichiarano, Dichiarano e giocano, la classe e il pulsante Assegna" loading="lazy"></a>
+  </figure>
+  <div class="scelte">
+    <div class="scelta"><h4>Giocano la carta</h4><p>Ogni mano arriva con il contratto già deciso, e l'allievo la gioca.</p></div>
+    <div class="scelta"><h4>Dichiarano</h4><p>L'allievo è Sud e dichiara. Il computer dichiara per il compagno e per gli avversari. Il voto, da mezza a tre stelle, dice quanto il contratto si avvicina al migliore possibile.</p></div>
+    <div class="scelta"><h4>Dichiarano e giocano</h4><p>Come «Dichiarano», poi l'allievo gioca il contratto a cui è arrivato. Se il contratto è degli avversari, la mano finisce con la licita.</p></div>
+  </div>
+  <div class="nota">
+    <strong>Le stelle le assegno io <span class="nuovo">Nuovo</span></strong>
+    <p>Spunta questa casella se vuoi dare tu il voto. Gli allievi, invece delle stelle del programma, leggono «in attesa dell'insegnante» finché non le dai. La puoi cambiare anche dopo, dalla pagina dei risultati.</p>
+  </div>
+  <div class="nota">
+    <strong>Chi dà le carte</strong>
+    <p>Di base dà le carte chi deve dichiarare il contratto, così la mano parte come è stata pensata. Se vuoi esercitare le risposte, per esempio all'1SA di Nord, scegli Nord nel menu «Chi dà le carte».</p>
+  </div>
+</section>
+
+<!-- 7 -->
+<section class="capitolo" id="risultati">
+  <header>
+    <span class="num">Capitolo 7</span>
+    <h2>Vedere i risultati</h2>
+    <p class="intro">Dalla scheda <strong>Compiti</strong> tocca il nome di un compito. Una riga per ogni allievo, una colonna per ogni mano. La pagina si aggiorna da sola mentre gli allievi giocano.</p>
+  </header>
+
+  <h3>Compito di gioco</h3>
+  <ol class="passi">
+    <li><span class="n">1</span><div><strong>Verde</strong>: contratto mantenuto. «=» vuol dire esatto, «+1» una presa in più.</div></li>
+    <li><span class="n">2</span><div><strong>Rosso</strong>: andato sotto. «−1» vuol dire una presa in meno.</div></li>
+    <li><span class="n">3</span><div><strong>Grigio</strong>: l'allievo non l'ha ancora giocata.</div></li>
+    <li><span class="n">4</span><div>L'ultima riga dice <strong>quanti</strong> sono andati sotto su ogni mano. Se sono tanti, la mano va rivista in classe.</div></li>
+  </ol>
+  <figure>
+    <a href="/guida-insegnanti/img/10-risultati.webp" target="_blank" rel="noopener"><img src="/guida-insegnanti/img/10-risultati.webp" width="2538" height="1384" alt="La griglia dei risultati: caselle verdi, rosse e grigie per ogni allievo e ogni mano" loading="lazy"></a>
+  </figure>
+
+  <h3>Rivedere come l'ha giocata</h3>
+  <p>Tocca una casella colorata: si apre la mano come l'ha giocata l'allievo. Con <strong>Successiva</strong> <span class="n">1</span> vai avanti di una presa, con <strong>Precedente</strong> <span class="n">2</span> torni indietro. Vedi chi ha attaccato, chi ha vinto la presa e le carte rimaste a ciascuno. Anche l'allievo può rivedere le sue mani, con <strong>Rivedi</strong>.</p>
+  <figure class="telefono" style="max-width:520px">
+    <a href="/guida-insegnanti/img/11-replay.webp" target="_blank" rel="noopener"><img src="/guida-insegnanti/img/11-replay.webp" width="1520" height="1688" alt="La finestra Rivedi la mano con la presa in corso e i pulsanti Precedente e Successiva" loading="lazy"></a>
+  </figure>
+
+  <h3>Dalla griglia al tavolo condiviso <span class="nuovo">Nuovo</span></h3>
+  <p>In cima a ogni colonna ci sono due icone piccole. Il proiettore <span class="n">1</span> porta quella mano al tavolo condiviso, per rivederla con la classe: si vedono le carte, non chi ha sbagliato. Il fumetto <span class="n">2</span> apre il commento sulla mano per tutta la classe.</p>
+  <figure>
+    <a href="/guida-insegnanti/img/34-griglia-icone.webp" target="_blank" rel="noopener"><img src="/guida-insegnanti/img/34-griglia-icone.webp" width="2412" height="348" alt="L'intestazione della griglia con l'icona del proiettore e quella del commento sopra una mano" loading="lazy"></a>
+  </figure>
+
+  <h3>Compito di licita</h3>
+  <p>Nelle caselle c'è il contratto a cui è arrivato l'allievo e l'iniziale di chi l'ha giocato <span class="n">1</span>. Verde vuol dire almeno due stelle, rosso un contratto sbagliato <span class="n">2</span>. Il triangolo ▶ nella casella vuol dire che l'allievo ha anche giocato la mano.</p>
+  <figure>
+    <a href="/guida-insegnanti/img/13-licita.webp" target="_blank" rel="noopener"><img src="/guida-insegnanti/img/13-licita.webp" width="2526" height="1238" alt="La griglia di un compito di licita con i contratti nelle caselle" loading="lazy"></a>
+  </figure>
+  <p>Tocca una casella per aprire i dettagli. Con <strong>Mano precedente</strong> e <strong>Mano successiva</strong>, o con le frecce della tastiera, passi da una mano all'altra senza chiudere.</p>
+  <ol class="passi">
+    <li><span class="n">1</span><div>la <strong>licita</strong> fatta dall'allievo, dichiarazione per dichiarazione;</div></li>
+    <li><span class="n">2</span><div>quante <strong>prese</strong> ha fatto, se ha giocato il contratto;</div></li>
+    <li><span class="n">3</span><div><strong>Rivedi il gioco carta per carta</strong>, come per i compiti di gioco;</div></li>
+    <li><span class="n">4</span><div>le <strong>carte di tutti e quattro</strong>, per correggere la licita guardando le mani.</div></li>
+  </ol>
+  <figure>
+    <a href="/guida-insegnanti/img/14-licita-finestra.webp" target="_blank" rel="noopener"><img src="/guida-insegnanti/img/14-licita-finestra.webp" width="1748" height="1740" alt="La finestra di una mano dichiarata: licita, prese fatte, pulsante Rivedi il gioco e le quattro mani" loading="lazy"></a>
+  </figure>
+
+  <h3>Stelle, commenti e domande <span class="nuovo">Nuovo</span></h3>
+  <p>Più in basso, nella stessa finestra:</p>
+  <ol class="passi">
+    <li><span class="n">1</span><div><strong>Le tue stelle per questo allievo</strong>, da 0 a 3 a mezze stelle. Se le cambi, l'allievo vede le tue. Con «Torna al voto del programma» rimetti quelle automatiche.</div></li>
+    <li><span class="n">2</span><div><strong>Domande e risposte con l'allievo</strong>: sotto ogni mano l'allievo ha «Scrivi all'insegnante». La sua domanda arriva qui e tu rispondi.</div></li>
+    <li><span class="n">3</span><div><strong>Commento per questo allievo</strong>: la correzione, come la scriveresti su WhatsApp. La legge solo lui.</div></li>
+    <li><span class="n">4</span><div><strong>Commento sulla mano per tutta la classe</strong>: lo leggono tutti gli allievi su quella mano.</div></li>
+  </ol>
+  <figure>
+    <a href="/guida-insegnanti/img/33-commenti.webp" target="_blank" rel="noopener"><img src="/guida-insegnanti/img/33-commenti.webp" width="2786" height="1616" alt="La finestra della mano con le stelle dell'insegnante, le domande dell'allievo e i due commenti" loading="lazy"></a>
+  </figure>
+  <p class="tasti">Per i semi scrivi <kbd>!s</kbd> <kbd>!h</kbd> <kbd>!d</kbd> <kbd>!c</kbd>: diventano ♠ ♥ ♦ ♣.</p>
+  <div class="nota">
+    <strong>Le domande in attesa</strong>
+    <p>Quando un allievo ti ha scritto e non hai ancora risposto, nella sua casella compare un <strong>?</strong> e sopra la griglia c'è il riquadro «Domande degli allievi in attesa di risposta». L'allievo, quando rispondi o commenti, trova l'avviso «Il tuo insegnante ti ha scritto» nella sua home.</p>
+  </div>
+
+  <h3>Più in basso nella stessa pagina</h3>
+  <p><strong>Classifica di questo compito</strong>: la vedi solo tu, gli allievi no.</p>
+  <figure>
+    <a href="/guida-insegnanti/img/12c-classifica.webp" target="_blank" rel="noopener"><img src="/guida-insegnanti/img/12c-classifica.webp" width="2540" height="958" alt="La classifica del compito con gli allievi in ordine" loading="lazy"></a>
+  </figure>
+  <p><strong>Quanto ci hanno pensato</strong>: il tempo speso da ognuno. La frase in alto ti dice quale mano ha fatto pensare di più la classe: è quella da rivedere per prima.</p>
+  <figure>
+    <a href="/guida-insegnanti/img/12b-tempi.webp" target="_blank" rel="noopener"><img src="/guida-insegnanti/img/12b-tempi.webp" width="2200" height="640" alt="Quanto ci hanno pensato: la mano che ha richiesto più tempo e il tempo di ogni allievo" loading="lazy"></a>
+  </figure>
+  <p><strong>Su cosa lavorare</strong>: gli errori di gioco trovati in automatico. Se lo stesso errore torna in più allievi, diventa il «tema della classe» da ripassare alla lezione dopo.</p>
+  <figure>
+    <a href="/guida-insegnanti/img/12-lavorare.webp" target="_blank" rel="noopener"><img src="/guida-insegnanti/img/12-lavorare.webp" width="2200" height="812" alt="Su cosa lavorare: il tema della classe e gli errori ricorrenti di ogni allievo" loading="lazy"></a>
+  </figure>
+  <div class="nota">
+    <strong>Le tue note</strong>
+    <p>Sempre in questa pagina, sotto la classifica, puoi scrivere una nota su ogni mano. Resta attaccata alla mano: la ritrovi l'anno prossimo con un'altra classe e finisce nel foglio da stampare. Accanto a ogni mano c'è anche <strong>Vedi le carte</strong>.</p>
+  </div>
+</section>
+
+<!-- 8 -->
+<section class="capitolo" id="test">
+  <header>
+    <span class="num">Capitolo 8 <span class="nuovo">Nuovo</span></span>
+    <h2>Domande a scelta e test della Commissione</h2>
+    <p class="intro">Oltre alle mani, un compito può contenere domande con le risposte da scegliere. L'allievo risponde con un tocco; tu vedi chi ha risposto cosa.</p>
+  </header>
+  <p>Apri <strong>Domande a scelta</strong> dal menu Insegnante.</p>
+
+  <h3>I test della Commissione</h3>
+  <p>In cima ci sono i dodici test di Barion della Commissione Insegnamento, con le loro mani e le risposte giuste. Accanto a ognuno vedi a quale lezione del programma appartiene e quante domande ha. Tocca <strong>Aggiungi</strong> <span class="n">1</span>: le domande del test diventano tue, pronte per i compiti.</p>
+  <figure>
+    <a href="/guida-insegnanti/img/31-domande.webp" target="_blank" rel="noopener"><img src="/guida-insegnanti/img/31-domande.webp" width="2288" height="1842" alt="I test della Commissione: dodici test con la lezione, il numero di domande e il pulsante Aggiungi" loading="lazy"></a>
+  </figure>
+
+  <h3>Una domanda tua</h3>
+  <p>Più in basso, <strong>Nuova domanda</strong>: il gruppo (per esempio «Ripasso lezione 4»), la domanda e le risposte. Spunta quelle giuste <span class="n">1</span>, aggiungi se vuoi una spiegazione e tocca <strong>Salva la domanda</strong> <span class="n">2</span>. Con <strong>Incolla un test intero</strong> carichi tante domande insieme.</p>
+  <figure>
+    <a href="/guida-insegnanti/img/32-domanda-nuova.webp" target="_blank" rel="noopener"><img src="/guida-insegnanti/img/32-domanda-nuova.webp" width="2288" height="1404" alt="Il modulo Nuova domanda con le risposte da spuntare e il pulsante Salva la domanda" loading="lazy"></a>
+  </figure>
+
+  <h3>Metterle in un compito</h3>
+  <p>In <strong>Nuovo compito</strong>, nel riquadro «Le posizioni e le domande che hai salvato», c'è un pulsante per ogni gruppo, per esempio «+ Test 4 · 26»: prende il test intero, nell'ordine originale. Nei risultati, sotto ogni domanda, trovi «Cosa hanno risposto»: la risposta attesa, quanti l'hanno data giusta e la prima risposta di ognuno.</p>
+</section>
+
+<!-- 9 -->
+<section class="capitolo" id="aula">
+  <header>
+    <span class="num">Capitolo 9</span>
+    <h2>In aula</h2>
+    <p class="intro">Durante la lezione al circolo gli allievi giocano dal telefono o dal tablet, ai tavoli che apri tu.</p>
+  </header>
+
+  <h3>Chi siede dove</h3>
+  <p>Dalla pagina della classe, <strong>Allievi e tavoli</strong>.</p>
+  <ol class="passi">
+    <li><span class="n">1</span><div>Se hai l'elenco in Excel, salvalo come CSV e caricalo qui. Altrimenti gli iscritti ci sono già.</div></li>
+    <li><span class="n">2</span><div><strong>Componi i tavoli</strong> divide i presenti in tavoli da quattro.</div></li>
+    <li><span class="n">3</span><div><strong>Stampa i tagliandi</strong>: un biglietto per allievo, con il nome e un QR da inquadrare per sedersi. Il QR funziona dopo che hai generato il link d'ingresso dell'aula (lo trovi più sotto).</div></li>
+    <li><span class="n">4</span><div>Qui vedi a quale tavolo e in quale posto siede ciascuno.</div></li>
+  </ol>
+  <figure>
+    <a href="/guida-insegnanti/img/07-allievi.webp" target="_blank" rel="noopener"><img src="/guida-insegnanti/img/07-allievi.webp" width="2714" height="1048" alt="Allievi e tavoli: caricare il CSV, Componi i tavoli, Stampa i tagliandi, Tavolo 1" loading="lazy"></a>
+  </figure>
+
+  <h3>Aprire l'aula</h3>
+  <ol class="passi">
+    <li><span class="n">1</span><div>Dalla pagina della classe tocca <strong>Apri l'aula</strong> e scrivi <strong>quanti tavoli</strong> ti servono.</div></li>
+    <li><span class="n">2</span><div>Tocca <strong>Apri l'aula</strong>. Gli allievi trovano i tavoli nella loro classe, senza che tu mandi niente.</div></li>
+  </ol>
+  <figure>
+    <a href="/guida-insegnanti/img/15-aula-apri.webp" target="_blank" rel="noopener"><img src="/guida-insegnanti/img/15-aula-apri.webp" width="1520" height="336" alt="Il numero di tavoli e il pulsante Apri l'aula" loading="lazy"></a>
+  </figure>
+  <p>Con l'aula aperta:</p>
+  <ol class="passi">
+    <li><span class="n">1</span><div>Scegli l'argomento e tocca <strong>Manda a tutti i tavoli</strong>: tutti ricevono la stessa mano nello stesso momento.</div></li>
+    <li><span class="n">2</span><div><strong>Assegna i posti a caso</strong> mescola gli allievi ai tavoli.</div></li>
+    <li><span class="n">3</span><div>Ogni riquadro è un tavolo: vedi chi è seduto e a che punto è la mano.</div></li>
+    <li><span class="n">4</span><div>A fine lezione, <strong>Chiudi l'aula</strong>.</div></li>
+  </ol>
+  <figure>
+    <a href="/guida-insegnanti/img/15b-aula.webp" target="_blank" rel="noopener"><img src="/guida-insegnanti/img/15b-aula.webp" width="1638" height="1126" alt="L'aula aperta: Manda a tutti i tavoli, Assegna i posti a caso, i riquadri dei tavoli, Chiudi l'aula" loading="lazy"></a>
+  </figure>
+
+  <h3>Chi non ha un account</h3>
+  <p>In cima alla pagina dell'aula c'è <strong>Ingresso senza registrazione</strong>. Tocca <strong>Genera il link d'ingresso</strong>: compare un QR <span class="n">1</span> da proiettare o da mostrare, oppure da mandare su WhatsApp <span class="n">2</span>. Chi lo inquadra scrive solo il proprio nome ed entra, senza email e senza password. Il link vale fino a mezzanotte.</p>
+  <figure>
+    <a href="/guida-insegnanti/img/16-ingresso.webp" target="_blank" rel="noopener"><img src="/guida-insegnanti/img/16-ingresso.webp" width="2304" height="842" alt="Ingresso senza registrazione: il QR e il pulsante Manda il link" loading="lazy"></a>
+  </figure>
+
+  <h3>Il tavolo condiviso</h3>
+  <p>Per spiegare una mano a tutta la classe. Tu vedi tutte e quattro le mani, ogni allievo solo la propria. Si apre sulla mano a cui eri arrivato.</p>
+  <ol class="passi">
+    <li><span class="n">1</span><div>Scegli quale <strong>mano</strong> mostrare.</div></li>
+    <li><span class="n">2</span><div>In <strong>Chi siede dove</strong> dai a ogni allievo un posto. Chi non ha posto vede solo le carte che scopri a tutti.</div></li>
+    <li><span class="n">3</span><div>Con <strong>N, E, S, O</strong> scopri a tutta la classe una mano alla volta, quando vuoi tu.</div></li>
+  </ol>
+  <figure>
+    <a href="/guida-insegnanti/img/17-tavolo.webp" target="_blank" rel="noopener"><img src="/guida-insegnanti/img/17-tavolo.webp" width="2556" height="1066" alt="Il tavolo condiviso: la scelta della mano, chi siede dove e i pulsanti per scoprire le mani" loading="lazy"></a>
+  </figure>
+
+  <h3>Il proiettore</h3>
+  <p>Apri <strong>bridgelab.it/istruttori/proiezione</strong> in una seconda finestra e trascinala sullo schermo del proiettore. Mostra solo le carte che hai scoperto.</p>
+  <div class="nota">
+    <strong>Importante: stesso computer</strong>
+    <p>La finestra del proiettore deve stare sullo stesso computer, e nello stesso browser, da cui comandi il tavolo. Non passa da internet, così funziona anche se il wi-fi del circolo è debole. Un altro computer o un telefono non la vedono.</p>
+  </div>
+
+  <h3>La lavagna</h3>
+  <p>Da proiettare: una mano per volta, con le carte coperte finché non le scopri.</p>
+  <ol class="passi">
+    <li><span class="n">1</span><div>Le frecce passano alla mano dopo o a quella prima.</div></li>
+    <li><span class="n">2</span><div><strong>Scopri tutte</strong> mostra le quattro mani; puoi anche scoprirne una sola.</div></li>
+    <li><span class="n">3</span><div><strong>Apri vista proiezione</strong> apre la finestra pulita da mandare sul proiettore.</div></li>
+  </ol>
+  <figure>
+    <a href="/guida-insegnanti/img/19-lavagna.webp" target="_blank" rel="noopener"><img src="/guida-insegnanti/img/19-lavagna.webp" width="2534" height="1796" alt="La lavagna con la mano di Sud scoperta e le altre coperte" loading="lazy"></a>
+  </figure>
+  <p class="tasti">Dalla tastiera: <kbd>N</kbd> <kbd>E</kbd> <kbd>S</kbd> <kbd>O</kbd> scoprono un posto, <kbd>T</kbd> scopre tutto, <kbd>X</kbd> copre tutto, <kbd>C</kbd> mostra il contratto, le frecce cambiano mano.</p>
+</section>
+
+<!-- 10 -->
+<section class="capitolo" id="dopo">
+  <header>
+    <span class="num">Capitolo 10</span>
+    <h2>Materiali del corso e dopo la lezione</h2>
+    <p class="intro">Il programma, le slide, le dispense e quello che resta agli allievi quando tornano a casa.</p>
+  </header>
+
+  <h3>Il programma del Corso di Primo Livello <span class="nuovo">Nuovo</span></h3>
+  <p>Apri <strong>Materiali del corso</strong> dal menu, oppure tocca <strong>1 · Dispensa</strong> nella pagina della classe. In apertura c'è il programma <span class="n">1</span>: le venti lezioni della Commissione e, per ognuna, se è di gioco o di teoria e gioco, la lezione corrispondente del sito, le smazzate da giocare e il test.</p>
+  <figure>
+    <a href="/guida-insegnanti/img/37-programma-corso.webp" target="_blank" rel="noopener"><img src="/guida-insegnanti/img/37-programma-corso.webp" width="2460" height="1708" alt="Il programma del Corso di Primo Livello: le lezioni con il tipo, la lezione del sito, le smazzate e il test" loading="lazy"></a>
+  </figure>
+
+  <h3>Slide, dispense ed esercizi</h3>
+  <p>Sotto il programma, per ogni modulo: le <strong>slide da proiettare</strong> <span class="n">1</span>, a partire da «Lezione 0: le regole per cominciare»; le <strong>dispense</strong> da stampare o mandare; gli <strong>esercizi</strong>, da fare a schermo, da stampare, con le soluzioni.</p>
+  <figure>
+    <a href="/guida-insegnanti/img/22-materiali.webp" target="_blank" rel="noopener"><img src="/guida-insegnanti/img/22-materiali.webp" width="2800" height="688" alt="Materiali del corso: le slide da proiettare, la prima è Lezione 0" loading="lazy"></a>
+  </figure>
+
+  <h3>Materiali dopo la lezione</h3>
+  <p>Dalla pagina della classe, <strong>Materiali dopo la lezione</strong>. Con <strong>Aggiungi materiale</strong> <span class="n">1</span> prepari, per ogni lezione, il video, la dispensa e l'esercizio. La dispensa e gli esercizi della Commissione sono già proposti, da confermare. Decidi tu quando gli allievi li vedono: subito, a un'ora precisa o più avanti.</p>
+  <figure>
+    <a href="/guida-insegnanti/img/23-dopo-lezione.webp" target="_blank" rel="noopener"><img src="/guida-insegnanti/img/23-dopo-lezione.webp" width="1520" height="344" alt="Il pulsante Aggiungi materiale" loading="lazy"></a>
+  </figure>
+
+  <h3>Il foglio delle mani</h3>
+  <p>Il foglio con le mani di un argomento, da consegnare a fine lezione. Prima si chiamava «Dispensa»; ora la dispensa è quella della Commissione, e questo è il <strong>Foglio delle mani</strong>, nel menu Insegnante.</p>
+  <ol class="passi">
+    <li><span class="n">1</span><div><strong>Stampa o salva in PDF</strong>.</div></li>
+    <li><span class="n">2</span><div><strong>Formato compatto</strong> mette più mani in ogni foglio. Accanto, <strong>Mostra i punti</strong> scrive i punti di ogni mano.</div></li>
+    <li><span class="n">3</span><div><strong>Cosa stampare</strong>: il foglio per gli allievi, solo le soluzioni, oppure tutto.</div></li>
+  </ol>
+  <figure>
+    <a href="/guida-insegnanti/img/21-dispensa.webp" target="_blank" rel="noopener"><img src="/guida-insegnanti/img/21-dispensa.webp" width="2428" height="676" alt="Il foglio delle mani: Stampa o salva in PDF, Formato compatto, Cosa stampare" loading="lazy"></a>
+  </figure>
+</section>
+
+<!-- 11 -->
+<section class="capitolo" id="strumenti">
+  <header>
+    <span class="num">Capitolo 11</span>
+    <h2>Altri strumenti</h2>
+    <p class="intro">Li trovi nel menu Insegnante e in «Strumenti per la lezione», nella pagina della classe o nella prima pagina del portale.</p>
+  </header>
+
+  <h3>Tavolo di studio</h3>
+  <p>Per preparare la lezione. Giochi la mano carta per carta, puoi cambiare una carta e tornare indietro. Si usa bene anche dal telefono.</p>
+  <ol class="passi">
+    <li><span class="n">1</span><div><strong>Mostra i numeri</strong>: accanto a ogni carta compare quante prese fa la linea di chi gioca. Nascondili quando vuoi far pensare la classe.</div></li>
+    <li><span class="n">2</span><div>Quando arrivi al punto che vuoi discutere, dagli un nome e tocca <strong>Salva</strong>. La posizione finisce in «Le tue mani» e puoi metterla in un compito.</div></li>
+  </ol>
+  <figure>
+    <a href="/guida-insegnanti/img/20-studio.webp" target="_blank" rel="noopener"><img src="/guida-insegnanti/img/20-studio.webp" width="2232" height="2350" alt="Il tavolo di studio con le quattro mani, il pulsante Mostra i numeri e il riquadro Salva questa posizione" loading="lazy"></a>
+  </figure>
+
+  <h3>Le tue mani</h3>
+  <p>L'archivio delle posizioni salvate <span class="n">1</span>. Ognuna si riapre esattamente dove l'avevi lasciata, con le carte già giocate.</p>
+  <figure>
+    <a href="/guida-insegnanti/img/25-archivio.webp" target="_blank" rel="noopener"><img src="/guida-insegnanti/img/25-archivio.webp" width="2300" height="320" alt="Le tue mani: Nuovo set, Importa PBN, Tavolo di studio" loading="lazy"></a>
+  </figure>
+
+  <h3>Combinazioni</h3>
+  <p>Poche carte per posto, senza il resto della smazzata. Le classiche sono già pronte <span class="n">1</span>: l'impasse semplice, il doppio impasse, il taglio in mano, il colore lungo.</p>
+  <figure>
+    <a href="/guida-insegnanti/img/26-combinazioni.webp" target="_blank" rel="noopener"><img src="/guida-insegnanti/img/26-combinazioni.webp" width="1688" height="528" alt="Combinazioni: le classiche già pronte" loading="lazy"></a>
+  </figure>
+
+  <h3>Libreria</h3>
+  <p>Materiale preparato da altri insegnanti. Quello che importi diventa tuo: puoi cambiarlo senza toccare l'originale.</p>
+</section>
+
+<!-- 12 -->
+<section class="capitolo" id="chat">
+  <header>
+    <span class="num">Capitolo 12</span>
+    <h2>Chat e videolezione</h2>
+    <p class="intro">Per parlare con la classe senza uscire da BridgeLab.</p>
+  </header>
+  <p>Nella pagina della classe, scheda <strong>Chat</strong>: scrivi nella casella in basso <span class="n">1</span> e il messaggio arriva a tutti gli iscritti. Per una mano precisa, invece, usa i commenti del capitolo 7: restano attaccati alla mano.</p>
+  <figure>
+    <a href="/guida-insegnanti/img/24-chat.webp" target="_blank" rel="noopener"><img src="/guida-insegnanti/img/24-chat.webp" width="1848" height="1074" alt="La chat della classe con un messaggio dell'insegnante e la risposta di un'allieva" loading="lazy"></a>
+  </figure>
+  <p>Se fai lezione anche in video, apri <strong>Impostazioni della classe</strong> e incolla l'indirizzo della tua stanza <span class="n">1</span> (Zoom, Meet, Jitsi). Gli allievi trovano il pulsante per entrare nella loro pagina, senza doversi ricordare il link.</p>
+  <figure>
+    <a href="/guida-insegnanti/img/05b-video-stato.webp" target="_blank" rel="noopener"><img src="/guida-insegnanti/img/05b-video-stato.webp" width="2362" height="562" alt="Il campo Stanza di videoconferenza e il menu Stato della classe" loading="lazy"></a>
+  </figure>
+  <div class="nota">
+    <strong>A fine corso</strong>
+    <p>Nello stesso riquadro, alla voce <strong>Stato della classe</strong> <span class="n">2</span>, scegli «Archiviata». Non si cancella niente: allievi, compiti e risultati restano, e agli allievi si apre tutto il portale.</p>
+  </div>
+</section>
+
+<!-- 13 -->
+<section class="capitolo" id="problemi">
+  <header>
+    <span class="num">Capitolo 13</span>
+    <h2>Se qualcosa non va</h2>
+    <p class="intro">Le domande che arrivano più spesso. Tocca una domanda per leggere la risposta.</p>
+  </header>
+  <div class="domande">
+    <details>
+      <summary>La mia richiesta è stata accettata: da dove comincio?</summary>
+      <p>Apri <strong>bridgelab.it/istruttori</strong>. Crea la tua classe (capitolo 2), manda il codice agli allievi (capitolo 3) e dai il primo compito dalle smazzate del programma (capitolo 5). Questa guida la ritrovi sempre allo stesso indirizzo.</p>
+    </details>
+    <details>
+      <summary>Un allievo dice che il codice non funziona</summary>
+      <p>Controlla due cose nella pagina della classe: che le iscrizioni non siano chiuse (accanto al codice c'è la scritta «Iscrizioni chiuse») e che il codice non sia scaduto (Impostazioni della classe, «Il codice scade il»). Se hai attivato «Approvo io ogni iscrizione», l'allievo è dentro ma aspetta il tuo via.</p>
+    </details>
+    <details>
+      <summary>Due allievi hanno lo stesso nome</summary>
+      <p>Nella scheda Allievi tocca <strong>Rinomina</strong> accanto a uno dei due. BridgeLab ti propone già il nome con l'iniziale del cognome.</p>
+    </details>
+    <details>
+      <summary>Il proiettore non mostra niente</summary>
+      <p>La finestra del proiettore deve essere aperta sullo stesso computer e nello stesso browser da cui comandi il tavolo o la lavagna. Su un secondo computer non funziona. Mostra solo le carte che hai scoperto: se sono tutte coperte, vedi la scritta «coperta».</p>
+    </details>
+    <details>
+      <summary>In aula va tutto lento</summary>
+      <p>Quasi sempre è la rete del circolo. Se è lento per tutti insieme, e chi usa i dati del telefono va normale, è il wi-fi. Non serve riavviare niente: BridgeLab ricontrolla da solo ogni pochi secondi e la lezione continua, solo più lenta. Per la volta dopo aiuta un ripetitore wi-fi in sala. Se è lento per una sola persona, di solito è il suo telefono.</p>
+    </details>
+    <details>
+      <summary>Un allievo non trova il compito</summary>
+      <p>Deve essere iscritto alla classe giusta: lo vedi nella scheda Allievi. Il compito è nella sua pagina della classe, sotto «Da fare». Riceve anche un'email la sera in cui lo crei.</p>
+    </details>
+    <details>
+      <summary>Una mano del catalogo va sempre sotto</summary>
+      <p>Le mani del catalogo sono controllate: nessuna chiede più prese di quante le carte ne diano. Se cade, o l'allievo ha sbagliato il gioco, oppure è una mano in cui l'allievo difende e il contratto deve andare sotto. In quel caso il rosso è il risultato giusto.</p>
+    </details>
+    <details>
+      <summary>Ho bisogno di aiuto o voglio segnalare un problema</summary>
+      <p>Dentro BridgeLab c'è il pulsante per le segnalazioni: il messaggio arriva direttamente a chi mantiene la piattaforma. Scrivi cosa stavi facendo e cosa è successo; se puoi, aggiungi una foto dello schermo.</p>
+    </details>
+  </div>
+</section>
+
+<footer class="piede">
+  <p>BridgeLab · Federazione Italiana Gioco Bridge. Le schermate mostrano una classe d'esempio, con allievi e risultati inventati.</p>
+  <p>Aggiornata al 5 novembre 2026.</p>
+</footer>
+
+</div>
+</body>
+</html>

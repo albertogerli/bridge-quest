@@ -54,7 +54,9 @@ const projectRoot = path.dirname(fileURLToPath(import.meta.url));
  * ottobre 2026) pesano meno di un mega l'uno, e otto insieme facevano 4,4 MB
  * su 6,7 di precache — per materiale che apre solo chi insegna.
  */
-const CARTELLE_DI_CONTENUTO = /^(?:videos|infografiche|materiali)\//;
+// `guida-insegnanti/`: la guida con le schermate (novembre 2026), tre
+// megabyte di immagini che legge chi insegna, e una volta sola.
+const CARTELLE_DI_CONTENUTO = /^(?:videos|infografiche|materiali|guida-insegnanti)\//;
 /** Il worker stesso e i suoi satelliti: precaricarsi da soli non ha senso. */
 const NON_E_UN_ASSET = /^(?:sw\.js(?:\.map)?|swe-worker-[^/]*\.js)$/;
 /** Oltre questo, non è roba che serve prima che l'utente veda qualcosa. */
@@ -170,7 +172,14 @@ const nextConfig: NextConfig = {
    * rotte protette, così `/en/admin` è protetta quanto `/admin`.
    */
   async rewrites() {
-    return [{ source: "/en/:percorso*", destination: "/:percorso*" }];
+    return [
+      { source: "/en/:percorso*", destination: "/:percorso*" },
+      // La guida per l'insegnante è un HTML statico in `public/`: senza questa
+      // riga si aprirebbe solo come `/guida-insegnanti/index.html`. Immagini e
+      // font li chiama con percorsi assoluti, quindi l'indirizzo senza la
+      // barra finale non li rompe.
+      { source: "/guida-insegnanti", destination: "/guida-insegnanti/index.html" },
+    ];
   },
 
   async headers() {
