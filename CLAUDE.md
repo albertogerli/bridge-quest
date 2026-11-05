@@ -46,6 +46,21 @@ Piattaforma didattica bridge della FIGB, in produzione su bridgelab.it. Document
   bloccare la CI su un allineamento in corso insegnerebbe a disattivare il
   controllo.
 
+## La guida per l'insegnante segue il portale
+
+`public/guida-insegnanti/` (online su bridgelab.it/guida-insegnanti, linkata
+dal portale e dal menu «Insegnante») spiega il portale con le schermate.
+**Chi cambia quello che vede l'insegnante aggiorna la guida nello stesso
+commit**: un pulsante rinominato, una sezione spostata, una funzione nuova.
+Come per l'inglese, «dopo» vuol dire mai: la guida vecchia non rompe niente,
+manda solo l'insegnante a cercare un pulsante che non c'è più (il 05/11/2026
+diceva ancora «Compito su misura», «Dispensa», «Corso Fiori»).
+
+Le schermate si rifanno su dati finti, mai su classi vere: procedura e script
+in `.guida-tmp/` (fuori dal repository), immagini in webp. Nel testo, la data
+«Aggiornata al …» e il riquadro «Cosa è cambiato» si aggiornano a ogni giro.
+La guida è solo in italiano, per scelta: è per gli insegnanti FIGB.
+
 ## Contenuti: il DB è la fonte di verità
 
 - Lezioni/quiz live sono su Supabase e **divergono dal seed** in `src/data/`.
