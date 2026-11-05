@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "@/components/link";
 import { motion } from "motion/react";
-import { Check, Copy } from "lucide-react";
+import { BookOpen, Check, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -137,6 +137,17 @@ export default function IstruttoriPage() {
           <p className="mt-1 text-sm text-muted-foreground">
             {t("Crea classi virtuali, assegna smazzate e segui i progressi dei tuoi allievi.")}
           </p>
+          {/* Una pagina statica in `public/`, non una rotta: `<a>` e non
+              `Link`, che proverebbe a navigarci come a una pagina dell'app. */}
+          <a
+            href="/guida-insegnanti"
+            target="_blank"
+            rel="noopener"
+            className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-primary underline-offset-4 hover:underline"
+          >
+            <BookOpen className="h-4 w-4" aria-hidden="true" />
+            {t("La guida passo passo, con le schermate")}
+          </a>
         </div>
         <Button onClick={() => setDialogOpen(true)} className="shrink-0">
           + Nuova classe

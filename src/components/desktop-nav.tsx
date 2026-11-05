@@ -7,7 +7,7 @@ import { SelettoreLingua } from "@/components/selettore-lingua";
 import { usePendingFriendRequests } from "@/hooks/use-pending-friend-requests";
 import { useNascosti } from "@/hooks/use-permessi";
 import { useSharedAuth } from "@/contexts/auth-provider";
-import { GraduationCap } from "lucide-react";
+import { BookOpen, GraduationCap } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { STRUMENTI_LEZIONE } from "@/components/istruttori/strumenti-lezione";
 
@@ -226,6 +226,13 @@ export function DesktopNav({ variante = "barra" }: { variante?: "barra" | "panne
                 </Link>
               );
             })}
+            {/* La guida è una pagina statica in `public/`: `<a>`, non `Link`. */}
+            <a href="/guida-insegnanti" target="_blank" rel="noopener" aria-label={t("Guida per l'insegnante")}>
+              <div className="flex items-center gap-3 px-4 py-2 rounded-xl text-sm font-medium text-muted-foreground transition-all hover:bg-muted/50 hover:text-foreground active:scale-[0.97]">
+                <BookOpen className="h-5 w-5 shrink-0" aria-hidden="true" />
+                <span>{t("Guida per l'insegnante")}</span>
+              </div>
+            </a>
           </div>
         )}
         {primaryNav.filter((v) => !nascosti.has(v.href)).map(renderItem)}
