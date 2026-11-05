@@ -712,7 +712,7 @@ export default function ClassDetailPage({
         {/* Lezioni: assegnare in blocco */}
         <TabsContent value="lezioni" className="mt-4">
           <p className="mb-4 text-sm text-muted-foreground">
-            {t("Qui si assegnano come compito le smazzate di una lezione del corso: un tocco su «Assegna» e la classe le trova tutte da giocare. Non manda la teoria né le dispense, solo le mani. Per scegliere tu le mani una per una c'è «Compito su misura».")}
+            {t("Qui si assegnano come compito le smazzate di una lezione del corso: un tocco su «Assegna» e la classe le trova tutte da giocare. Non manda la teoria né le dispense, solo le mani. Per scegliere tu le mani una per una c'è «Nuovo compito».")}
           </p>
           <AssegnaLezioni classId={classId} onCambiato={() => void aggiornaSenzaSchermataDiCaricamento()} />
         </TabsContent>
