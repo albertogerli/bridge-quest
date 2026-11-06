@@ -95,7 +95,8 @@ export function HomeAllievo({ nome, onVaiAllaBacheca }: { nome: string | null; o
   const eFatto = useMemo(
     () => (a: Assignment) => {
       const done = fatti.get(a.id);
-      return !!done && a.smazzata_ids.every((id) => done.has(id));
+      // Mani e domande: un test di sole domande era «fatto» alla prima risposta.
+      return !!done && [...a.smazzata_ids, ...a.esercizio_ids].every((id) => done.has(id));
     },
     [fatti],
   );
@@ -144,7 +145,7 @@ export function HomeAllievo({ nome, onVaiAllaBacheca }: { nome: string | null; o
   }
 
   const [primo, ...altri] = daFare;
-  const giocateDi = (a: Assignment) => a.smazzata_ids.filter((id) => fatti.get(a.id)?.has(id)).length;
+  const giocateDi = (a: Assignment) => [...a.smazzata_ids, ...a.esercizio_ids].filter((id) => fatti.get(a.id)?.has(id)).length;
 
   /*
    * DIREZIONE «IBRIDO» (02/11/2026). Luce calda per leggere, panno appena
@@ -203,8 +204,10 @@ export function HomeAllievo({ nome, onVaiAllaBacheca }: { nome: string | null; o
                           <span className="block text-sm text-muted-foreground tabular-nums">
                             {piuCorsi ? `${classe.name} · ` : ""}
                             {giocate === 0
-                              ? `${assignment.smazzata_ids.length} ${t("mani")}`
-                              : t("Riprendi · {n} di {m}", { n: giocate, m: assignment.smazzata_ids.length })}
+                              ? assignment.smazzata_ids.length === 0
+                                ? t("{n} domande", { n: assignment.esercizio_ids.length })
+                                : `${assignment.smazzata_ids.length} ${t("mani")}`
+                              : t("Riprendi · {n} di {m}", { n: giocate, m: assignment.smazzata_ids.length + assignment.esercizio_ids.length })}
                           </span>
                         </span>
                         <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground" aria-hidden="true" />

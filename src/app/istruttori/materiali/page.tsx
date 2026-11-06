@@ -6,9 +6,9 @@ import { Briciole } from "@/components/briciole";
 import { useT } from "@/contexts/traduzioni-provider";
 import { useLingua } from "@/hooks/use-lingua";
 import Link from "@/components/link";
-import { MATERIALI_CORSO, type Esercizi, type ManiCommissione, type Materiale } from "@/lib/materiali-corso";
+import { MATERIALI_CORSO, type ManiCommissione, type Materiale } from "@/lib/materiali-corso";
 import { MODULI_PROGRAMMA, PROGRAMMA_PRIMO_LIVELLO, siglaGruppi } from "@/lib/programma-corso";
-import { testDellaLezione } from "@/lib/test-commissione";
+import { siglaTest, testDellaLezione } from "@/lib/test-commissione";
 
 /**
  * Slide da proiettare e dispense da stampare, modulo per modulo.
@@ -31,6 +31,24 @@ export default function MaterialiPage() {
           {lingua === "en" && <> {t("I PDF sono in italiano.")}</>}
         </p>
 
+        {/* Gli esercizi della Commissione stanno in «Esercizi»: si assegnano
+            online e si stampano da lì (Trevissoi, 06/11/2026: i test sono
+            gli esercizi, al posto dei fogli che c'erano qui). */}
+        <Link
+          href="/istruttori/domande"
+          className="mb-8 flex items-center gap-3 rounded-2xl border border-border bg-card p-4 transition-colors hover:bg-muted"
+        >
+          <div className="w-10 h-10 rounded-full bg-figb/10 text-figb flex items-center justify-center shrink-0">
+            <ListChecks className="w-5 h-5" aria-hidden="true" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="font-semibold text-sm">{t("Esercizi")}</p>
+            <p className="text-xs text-muted-foreground">
+              {t("Gli esercizi della Commissione, lezione per lezione: da assegnare online alla classe o da stampare.")}
+            </p>
+          </div>
+        </Link>
+
         <Programma />
 
         {MATERIALI_CORSO.map((modulo) => (
@@ -40,7 +58,6 @@ export default function MaterialiPage() {
 
             <Gruppo titolo={t("Slide da proiettare")} icona={Presentation} materiali={modulo.slide} />
             <Gruppo titolo={t("Dispense")} icona={FileText} materiali={modulo.dispense} />
-            <GruppoEsercizi esercizi={modulo.esercizi} />
             <GruppoMani mani={modulo.mani} />
           </section>
         ))}
@@ -91,46 +108,6 @@ function etichettaLezioni(lezioni: number[], t: ReturnType<typeof useT>) {
   return lezioni.length === 1
     ? t("Lezione {n}", { n: lezioni[0] })
     : t("Lezioni {da}–{a}", { da: lezioni[0], a: lezioni[lezioni.length - 1] });
-}
-
-/** Il foglio per l'allievo e, a parte, le soluzioni per l'insegnante. */
-function GruppoEsercizi({ esercizi }: { esercizi: Esercizi[] }) {
-  const t = useT();
-  if (esercizi.length === 0) return null;
-  return (
-    <div className="mb-5">
-      <h3 className="text-sm font-semibold text-muted-foreground mb-1">{t("Esercizi")}</h3>
-      <p className="text-xs text-muted-foreground mb-2">
-        {t("A schermo l'allievo risponde e poi apre la soluzione di ogni esercizio; il foglio da stampare è senza soluzioni, che trovi a parte. Per darli alla classe, pubblicali dai «Materiali dopo la lezione» della classe.")}
-      </p>
-      <ul className="grid gap-2 sm:grid-cols-2">
-        {esercizi.map((e) => (
-          <li key={e.file} className="flex items-center gap-3 rounded-2xl border border-border bg-card p-4">
-            <div className="w-10 h-10 rounded-full bg-figb/10 text-figb flex items-center justify-center shrink-0">
-              <ListChecks className="w-5 h-5" aria-hidden="true" />
-            </div>
-            <div className="min-w-0 flex-1">
-              <p className="font-semibold text-sm">{t(e.titolo)}</p>
-              <p className="text-xs text-muted-foreground">
-                {etichettaLezioni(e.lezioni, t)} · {t("{n} pagine", { n: e.pagine })}
-              </p>
-              <p className="mt-1 flex flex-wrap gap-x-3 text-xs font-semibold">
-                <Link href={e.online} className="text-primary hover:underline">
-                  {t("A schermo")}
-                </Link>
-                <a href={e.file} target="_blank" rel="noopener" className="text-primary hover:underline">
-                  {t("Da stampare")}
-                </a>
-                <a href={e.soluzioni} target="_blank" rel="noopener" className="text-primary hover:underline">
-                  {t("Soluzioni")}
-                </a>
-              </p>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
 }
 
 /** Le smazzate della Commissione che il catalogo non ha: si assegnano da «Nuovo compito». */
@@ -205,9 +182,15 @@ function Programma() {
                           ? t("Smazzate {sigla}", { sigla: siglaGruppi(l.smazzate) })
                           : t("Smazzate preparate da BridgeLab")}
                     </span>
+                    {/* Le smazzate preparate per la lezione: il file da scaricare (Trevissoi, 06/11: «dove le trovo?»). */}
+                    {typeof l.smazzate === "object" && !Array.isArray(l.smazzate) && (
+                      <a href={l.smazzate.file} download className="font-semibold text-primary hover:underline">
+                        {t("Scarica le smazzate (PBN)")}
+                      </a>
+                    )}
                     {testDellaLezione(l.numero).map((x) => (
-                      <Link key={x.numero} href="/istruttori/domande" className="font-semibold text-primary hover:underline">
-                        {t("Test {n}", { n: x.numero })}
+                      <Link key={x.numero} href={`/istruttori/domande#lezione-${siglaTest(x)}`} className="font-semibold text-primary hover:underline">
+                        {t("Esercizi: {titolo}", { titolo: t(x.titolo) })}
                       </Link>
                     ))}
                   </p>

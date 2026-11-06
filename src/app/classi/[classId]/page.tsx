@@ -141,9 +141,15 @@ export default function StudentClassPage({
     };
   }, [classId, attivo]);
 
+  /*
+   * Finito = fatte tutte le mani E tutte le domande. Contava solo le mani: un
+   * test (solo domande, nessuna mano) risultava finito alla prima risposta e
+   * passava fra i completati, cioè spariva dalla lista dei compiti da fare
+   * (Trevissoi, 06/11/2026).
+   */
   function isDone(a: Assignment): boolean {
     const done = progress.get(a.id);
-    return !!done && a.smazzata_ids.every((id) => done.has(id));
+    return !!done && [...a.smazzata_ids, ...a.esercizio_ids].every((id) => done.has(id));
   }
 
   /**
@@ -377,7 +383,7 @@ function AssignmentSection({
                         <Badge>{t("Completato ✓")}</Badge>
                       ) : (
                         <Badge variant="outline">
-                          {doneCount}/{a.smazzata_ids.length}
+                          {doneCount}/{a.smazzata_ids.length + a.esercizio_ids.length}
                         </Badge>
                       )}
                     </div>

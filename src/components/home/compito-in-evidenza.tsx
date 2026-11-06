@@ -42,7 +42,9 @@ export function CompitoInEvidenza({
 }) {
   const t = useT();
   const { lingua } = useLingua();
-  const totale = assignment.smazzata_ids.length;
+  const totale = assignment.smazzata_ids.length + assignment.esercizio_ids.length;
+  /** Un test della Commissione: solo domande, niente mani da giocare. */
+  const soloDomande = assignment.smazzata_ids.length === 0 && assignment.esercizio_ids.length > 0;
   const carte = useManoDaGiocare(assignment, prossima);
   const scadenza = assignment.due_date
     ? new Date(assignment.due_date).toLocaleDateString(lingua === "en" ? "en-US" : "it-IT", { weekday: "long", day: "numeric", month: "long" })
@@ -64,7 +66,9 @@ export function CompitoInEvidenza({
               <div className="h-full rounded-full bg-primary" style={{ width: `${Math.round((giocate / totale) * 100)}%` }} />
             </div>
             <p className="text-sm text-muted-foreground tabular-nums">
-              {t("{n} mani giocate su {m}", { n: giocate, m: totale })}
+              {soloDomande
+                ? t("{n} domande su {m}", { n: giocate, m: totale })
+                : t("{n} mani giocate su {m}", { n: giocate, m: totale })}
               {scadenza ? ` · ${t("scade {giorno}", { giorno: scadenza })}` : ""}
             </p>
           </div>
@@ -75,7 +79,11 @@ export function CompitoInEvidenza({
         >
           {totale === 0
             ? t("Apri il compito")
-            : giocate === 0
+            : soloDomande
+              ? giocate === 0
+                ? t("Comincia")
+                : t("Continua")
+              : giocate === 0
               ? t("Inizia dalla prima mano")
               : t("Gioca la mano {n}", { n: Math.min(giocate + 1, totale) })}
           <ChevronRight className="h-5 w-5" aria-hidden="true" />

@@ -2,13 +2,15 @@
 
 import { use, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { CheckCircle2, XCircle } from "lucide-react";
+import { ArrowRight, CheckCircle2, XCircle } from "lucide-react";
+import Link from "@/components/link";
 import { Button } from "@/components/ui/button";
 import { Briciole } from "@/components/briciole";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
 import { BiddingPanel } from "@/components/bridge/bidding-panel";
 import { createClient } from "@/lib/supabase/client";
 import { segnalaSalvoRete } from "@/lib/report-error";
+import { getAssignment, getMyAssignmentResults } from "@/lib/instructors";
 import type { Card, Position, Suit } from "@/lib/bridge-engine";
 import {
   ETICHETTE_CONSEGNA,
@@ -55,20 +57,48 @@ export default function EsercizioPage({
   const [dato, setDato] = useState<(EsitoEsercizio & { testo: string }) | null>(null);
   const [spiegazione, setSpiegazione] = useState(false);
   const [erroreRisposta, setErroreRisposta] = useState(false);
+  /** Le domande del compito, in ordine, e quelle a cui l'allievo ha già risposto. */
+  const [ordine, setOrdine] = useState<string[]>([]);
+  const [risposte, setRisposte] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     let vivo = true;
-    void leggiEsercizi([esercizioId])
-      .then((e) => {
-        if (vivo) setEsercizio(e[0] ?? null);
-      })
-      .finally(() => {
+    setDato(null);
+    setSpiegazione(false);
+    setRisposta("");
+    setCaricando(true);
+    (async () => {
+      try {
+        const [e, compito, mie] = await Promise.all([
+          leggiEsercizi([esercizioId]),
+          assignmentId ? getAssignment(assignmentId).catch(() => null) : null,
+          assignmentId ? getMyAssignmentResults([assignmentId]).catch(() => null) : null,
+        ]);
+        if (!vivo) return;
+        setEsercizio(e[0] ?? null);
+        setOrdine(compito?.esercizio_ids ?? []);
+        const fatte = mie?.get(assignmentId ?? "") ?? new Map();
+        setRisposte(new Set(fatte.keys()));
+        /*
+         * GIÀ RISPOSTO: si rivede la propria risposta, non si risponde di nuovo.
+         * Prima la domanda tornava vuota, e la seconda risposta finiva accanto
+         * alla prima: l'insegnante vedeva una cosa, l'allievo ne aveva fatta
+         * un'altra. Il responso si richiede al database con la risposta data,
+         * senza registrare niente.
+         */
+        const data = fatte.get(esercizioId)?.details?.risposta;
+        if (typeof data === "string") {
+          const esito = await verificaEsercizio(esercizioId, data);
+          if (vivo && esito) setDato({ ...esito, testo: data });
+        }
+      } finally {
         if (vivo) setCaricando(false);
-      });
+      }
+    })();
     return () => {
       vivo = false;
     };
-  }, [esercizioId]);
+  }, [esercizioId, assignmentId]);
 
   async function rispondi(scelta?: string) {
     if (!esercizio) return;
@@ -86,6 +116,7 @@ export default function EsercizioPage({
     setErroreRisposta(false);
     const giusta = esito.giusta;
     setDato({ ...esito, testo: risposta });
+    setRisposte((prima) => new Set(prima).add(esercizio.id));
 
     /**
      * Il risultato va nella stessa tabella delle mani giocate.
@@ -150,6 +181,18 @@ export default function EsercizioPage({
       : null;
   const morto = mortoPos && mortoPos !== esercizio.posizione ? esercizio.hands[mortoPos] : null;
   const figura = leggiFigura(esercizio.figura);
+  const posto = ordine.indexOf(esercizio.id);
+  /*
+   * LA DOMANDA DOPO. Un test sono venti domande di fila: senza un «avanti»
+   * l'allievo, dopo la prima, tornava al compito e credeva di aver finito
+   * (Trevissoi, 06/11/2026: «non procede con la domanda successiva»). Si va
+   * alla prossima senza risposta, girando dall'inizio se ne ha saltata qualcuna.
+   */
+  const prossima =
+    posto < 0
+      ? null
+      : ([...ordine.slice(posto + 1), ...ordine.slice(0, posto)].find((id) => !risposte.has(id)) ?? null);
+  const alCompito = `/classi/${classId}/compito/${assignmentId}`;
 
   return (
     <div className="mx-auto w-full max-w-2xl px-4 py-8 sm:px-6">
@@ -157,17 +200,26 @@ export default function EsercizioPage({
         percorso={[
           { etichetta: "Le mie classi", href: "/classi" },
           { etichetta: "La classe", href: `/classi/${classId}` },
+          ...(assignmentId ? [{ etichetta: t("Il compito"), href: alCompito }] : []),
           { etichetta: esercizio.titolo },
         ]}
       />
 
-      <h1 className="mb-1 font-display text-2xl font-bold sm:text-3xl">{esercizio.titolo}</h1>
-      <p className="mb-5 text-sm font-medium text-primary">
-        {ETICHETTE_CONSEGNA[esercizio.consegna]}
-      </p>
+      {posto >= 0 && (
+        <p className="mb-1 text-sm font-semibold text-muted-foreground">
+          {t("Domanda {n} di {m}", { n: posto + 1, m: ordine.length })}
+        </p>
+      )}
+      <h1 className={`font-display text-2xl font-bold sm:text-3xl ${esercizio.consegna === "scelta" ? "mb-4" : "mb-1"}`}>{esercizio.titolo}</h1>
+      {/* Nelle domande a scelta «Scegli la risposta» lo dicono già i pulsanti. */}
+      {esercizio.consegna !== "scelta" && (
+        <p className="mb-5 text-sm font-medium text-primary">
+          {t(ETICHETTE_CONSEGNA[esercizio.consegna])}
+        </p>
+      )}
 
       {esercizio.domanda && (
-        <p className="mb-5 whitespace-pre-line rounded-lg border border-border bg-muted/40 p-3 text-sm">
+        <p className={`mb-5 whitespace-pre-line rounded-lg border border-border bg-muted/40 p-3 ${esercizio.consegna === "scelta" ? "text-base font-medium" : "text-sm"}`}>
           {esercizio.domanda}
         </p>
       )}
@@ -291,6 +343,23 @@ export default function EsercizioPage({
                 {t("Perché?")}
               </Button>
             ))}
+
+          {assignmentId && (
+            prossima ? (
+              <Button asChild className="w-full">
+                <Link href={`/classi/${classId}/esercizio/${prossima}?compito=${assignmentId}`}>
+                  {t("Domanda successiva")}
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </Link>
+              </Button>
+            ) : (
+              <Button asChild variant={posto >= 0 ? "default" : "outline"} className="w-full">
+                <Link href={alCompito}>
+                  {posto >= 0 ? t("Hai risposto a tutte: vedi il risultato") : t("Torna al compito")}
+                </Link>
+              </Button>
+            )
+          )}
         </div>
       )}
     </div>

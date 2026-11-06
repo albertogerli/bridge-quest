@@ -58,7 +58,7 @@ const ExitIntentModal = dynamic(
  * rinfrescando. La pagina, per conto suo, non legge niente dal database: riceve
  * solo quello che la finestra accanto le manda.
  */
-const FULL_SCREEN_ROUTES = ["/login", "/admin", "/istruttori/lavagna", "/istruttori/proiezione", "/aula", "/evento", "/stampa-mano"];
+const FULL_SCREEN_ROUTES = ["/login", "/admin", "/istruttori/lavagna", "/istruttori/proiezione", "/aula", "/evento", "/stampa-mano", "/istruttori/domande/stampa"];
 
 /** Routes accessible without authentication */
 // /glossario è SSR pubblico per la SEO (perf 2026-07): senza di esso qui, chi

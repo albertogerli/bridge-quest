@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState, use } from "react";
 import { RisposteClasse } from "@/components/istruttori/risposte-classe";
+import { RisultatiDomande } from "@/components/istruttori/risultati-domande";
+import { LinkCompito } from "@/components/istruttori/link-compito";
 import { BricioleClasse } from "@/components/istruttori/briciole-classe";
 import dynamic from "next/dynamic";
 import { AnimatePresence } from "motion/react";
@@ -540,6 +542,8 @@ export default function AssignmentResultsPage({
     return top && top[1] >= 2 ? top : null;
   })();
 
+  const domandeIds = assignment.esercizio_ids ?? [];
+
   return (
     <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6">
       <BricioleClasse classId={classId} pagina={assignment.title} />
@@ -547,9 +551,19 @@ export default function AssignmentResultsPage({
         {assignment.title}
       </h1>
       <p className="mb-6 text-sm text-muted-foreground">
-        {members.length} {members.length === 1 ? "allievo" : "allievi"} · {smazzataIds.length}{" "}
-        {smazzataIds.length === 1 ? "mano" : "mani"}
+        {members.length} {members.length === 1 ? "allievo" : "allievi"}
+        {(smazzataIds.length > 0 || domandeIds.length === 0) && (
+          <> · {smazzataIds.length} {smazzataIds.length === 1 ? "mano" : "mani"}</>
+        )}
+        {domandeIds.length > 0 && <> · {t("{n} domande", { n: domandeIds.length })}</>}
       </p>
+
+      <LinkCompito classId={classId} assignmentId={assignmentId} titolo={assignment.title} />
+
+      {/* Un test: prima le risposte per nome, poi (sotto) la divisione domanda per domanda. */}
+      {domandeIds.length > 0 && (
+        <RisultatiDomande esercizioIds={domandeIds} righe={results} allievi={members} />
+      )}
       {assignment.licita && (
         <p className="-mt-4 mb-6 text-sm text-muted-foreground">
           {assignment.licita_gioca === false
@@ -562,6 +576,7 @@ export default function AssignmentResultsPage({
       )}
 
       {/* Legend */}
+      {smazzataIds.length > 0 && (
       <div className="mb-4 flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
         <span className="flex items-center gap-1.5">
           <span className="h-3 w-3 rounded bg-emerald-500" /> {t("Esito positivo")}
@@ -580,6 +595,7 @@ export default function AssignmentResultsPage({
           <span className="text-muted-foreground">▶ {t("Clicca una cella giocata per rivedere la mano carta per carta")}</span>
         )}
       </div>
+      )}
 
       {/* Le domande degli allievi senza risposta: chi chiede non deve aspettare la lezione dopo. */}
       {assignment.licita && domandeInAttesa(messaggi).length > 0 && (
@@ -629,7 +645,7 @@ export default function AssignmentResultsPage({
         </div>
       )}
 
-      {members.length === 0 ? (
+      {smazzataIds.length === 0 ? null : members.length === 0 ? (
         <p className="py-8 text-center text-sm text-muted-foreground">
           {t("Nessun allievo iscritto a questa classe.")}
         </p>

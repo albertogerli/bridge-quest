@@ -71,8 +71,8 @@ export const STRUMENTI_LEZIONE: Strumento[] = [
   },
   {
     href: "/istruttori/domande",
-    titolo: "Domande a scelta",
-    descrizione: "I test della Commissione nei compiti: risposte registrate e classifica",
+    titolo: "Esercizi",
+    descrizione: "Gli esercizi della Commissione per lezione: da assegnare online o stampare",
     icona: ListChecks,
   },
   {

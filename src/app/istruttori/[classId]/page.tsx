@@ -656,7 +656,9 @@ export default function ClassDetailPage({
                         {a.mode === "live" && <Badge>{t("Live")}</Badge>}
                       </div>
                       <CardDescription>
-                        {a.smazzata_ids.length} {a.smazzata_ids.length === 1 ? "mano" : "mani"}
+                        {a.smazzata_ids.length === 0 && a.esercizio_ids.length > 0
+                          ? t("{n} domande", { n: a.esercizio_ids.length })
+                          : `${a.smazzata_ids.length} ${a.smazzata_ids.length === 1 ? "mano" : "mani"}`}
                         {a.due_date && ` · scadenza ${new Date(a.due_date).toLocaleDateString("it-IT")}`}
                       </CardDescription>
                     </CardHeader>

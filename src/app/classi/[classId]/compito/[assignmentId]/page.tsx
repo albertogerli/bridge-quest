@@ -68,6 +68,7 @@ import { stelleAssegnate, stelleDelCompito, votoMano, type StelleAssegnate } fro
 import { filoDellaMano, messaggiDelCompito, type MessaggioCompito } from "@/lib/messaggi-compito";
 import { ConversazioneMano } from "@/components/classi/conversazione-mano";
 import { RivediLicita } from "@/components/classi/rivedi-licita";
+import { leggiEsercizi, type EsercizioPerAllievo } from "@/lib/esercizi-posizione";
 
 export default function CompitoPage({
   params,
@@ -83,6 +84,8 @@ export default function CompitoPage({
   const [assignment, setAssignment] = useState<Assignment | null>(null);
   const [doneIds, setDoneIds] = useState<Set<string>>(new Set());
   const [results, setResults] = useState<Map<string, HandResult>>(new Map());
+  /** Le domande del compito, per scriverne il testo nell'elenco invece di «Cosa faresti qui?». */
+  const [domande, setDomande] = useState<Map<string, EsercizioPerAllievo>>(new Map());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
@@ -147,6 +150,10 @@ export default function CompitoPage({
           setAssignment(a);
           setDoneIds(prog.get(assignmentId) ?? new Set());
           setResults(res.get(assignmentId) ?? new Map());
+        }
+        if (a.esercizio_ids.length > 0) {
+          const lette = await leggiEsercizi(a.esercizio_ids);
+          if (active) setDomande(new Map(lette.map((e) => [e.id, e])));
         }
       } catch (err) {
         if (active) setError(err instanceof Error ? err.message : "Errore nel caricamento");
@@ -336,6 +343,19 @@ export default function CompitoPage({
   const nextIndex = hands.findIndex((h) => !doneIds.has(h.id));
   const allDone = completedCount === hands.length && hands.length > 0;
 
+  /*
+   * UN COMPITO DI SOLE DOMANDE (un test della Commissione). Prima la pagina lo
+   * trattava come un compito di mani senza mani: «0/0 mani completate», «le
+   * smazzate non sono disponibili» e sedici righe uguali «Cosa faresti qui?»
+   * da aprire una a una. Ora conta le domande e porta alla prima senza
+   * risposta.
+   */
+  const ids = assignment.esercizio_ids;
+  const soloDomande = hands.length === 0 && ids.length > 0;
+  const risposte = ids.filter((id) => doneIds.has(id)).length;
+  const giuste = ids.filter((id) => results.get(id)?.made === true).length;
+  const primaSenza = ids.find((id) => !doneIds.has(id)) ?? null;
+
   // Overview
   return (
     <div className="mx-auto w-full max-w-2xl px-4 py-8 sm:px-6">
@@ -363,7 +383,30 @@ export default function CompitoPage({
         )}
       </div>
 
+      {soloDomande && (
+        <div className="mb-6 mt-4 rounded-2xl border border-border bg-card p-4">
+          <div className="h-3 overflow-hidden rounded-full bg-muted">
+            <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${(risposte / ids.length) * 100}%` }} />
+          </div>
+          <p className="mt-2 text-sm text-muted-foreground">
+            {t("{n} domande su {m}", { n: risposte, m: ids.length })}
+            {risposte > 0 && <> · {t("{g} giuste", { g: giuste })}</>}
+          </p>
+          {primaSenza ? (
+            <Button asChild size="lg" className="mt-3 w-full">
+              <Link href={`/classi/${classId}/esercizio/${primaSenza}?compito=${assignmentId}`}>
+                <Play className="h-4 w-4" aria-hidden="true" />
+                {risposte === 0 ? t("Comincia") : t("Continua dalla domanda {n}", { n: ids.indexOf(primaSenza) + 1 })}
+              </Link>
+            </Button>
+          ) : (
+            <p className="mt-2 font-semibold">{t("Hai risposto a tutte le domande. 🎉")}</p>
+          )}
+        </div>
+      )}
+
       {/* Progress */}
+      {!soloDomande && (
       <div className="mb-6 mt-4">
         <div className="h-3 overflow-hidden rounded-full bg-muted">
           <motion.div
@@ -381,8 +424,9 @@ export default function CompitoPage({
           {allDone && downCount === 0 && " — Compito completato! 🎉"}
         </p>
       </div>
+      )}
 
-      {hands.length === 0 && (
+      {hands.length === 0 && ids.length === 0 && (
         <p className="py-8 text-center text-sm text-muted-foreground">
           {t("Le smazzate di questo compito non sono al momento disponibili nel catalogo.")}
         </p>
@@ -391,24 +435,41 @@ export default function CompitoPage({
       {/* Hands list */}
       {assignment.esercizio_ids.length > 0 && (
         <div className="mb-6">
-          <p className="mb-2 text-sm font-semibold">{t("Posizioni da risolvere")}</p>
+          <p className="mb-2 text-sm font-semibold">{soloDomande ? t("Le domande") : t("Posizioni da risolvere")}</p>
           <div className="space-y-2">
-            {assignment.esercizio_ids.map((id, i) => (
-              <Link
-                key={id}
-                href={`/classi/${classId}/esercizio/${id}?compito=${assignmentId}`}
-                className={`flex items-center gap-3 rounded-xl border p-3 transition-colors hover:bg-muted/50 ${
-                  doneIds.has(id) ? "border-emerald-200 dark:border-emerald-900" : "border-border"
-                }`}
-              >
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-muted text-sm font-bold">
-                  {doneIds.has(id) ? "✓" : i + 1}
-                </span>
-                <span className="text-sm font-medium">
-                  {doneIds.has(id) ? "Risolta — rivedila" : "Cosa faresti qui?"}
-                </span>
-              </Link>
-            ))}
+            {assignment.esercizio_ids.map((id, i) => {
+              const d = domande.get(id);
+              const fatta = doneIds.has(id);
+              const giusta = results.get(id)?.made;
+              return (
+                <Link
+                  key={id}
+                  href={`/classi/${classId}/esercizio/${id}?compito=${assignmentId}`}
+                  className={`flex items-center gap-3 rounded-xl border p-3 transition-colors hover:bg-muted/50 ${
+                    !fatta ? "border-border" : giusta === false ? "border-red-200 dark:border-red-900" : "border-emerald-200 dark:border-emerald-900"
+                  }`}
+                >
+                  <span
+                    className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-sm font-bold ${
+                      !fatta ? "bg-muted" : giusta === false ? "bg-red-100 text-red-600 dark:bg-red-950/50" : "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/50"
+                    }`}
+                    aria-label={!fatta ? undefined : giusta === false ? t("Sbagliata") : t("Giusta")}
+                  >
+                    {!fatta ? i + 1 : giusta === false ? "✗" : "✓"}
+                  </span>
+                  <span className="min-w-0 flex-1 text-sm">
+                    {d?.consegna === "scelta" ? (
+                      <>
+                        <span className="font-semibold">{d.titolo}</span>
+                        {d.domanda && <span className="block truncate text-muted-foreground">{d.domanda}</span>}
+                      </>
+                    ) : (
+                      <span className="font-medium">{fatta ? t("Risolta — rivedila") : t("Cosa faresti qui?")}</span>
+                    )}
+                  </span>
+                </Link>
+              );
+            })}
           </div>
         </div>
       )}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Check, Plus, Trash2 } from "lucide-react";
+import { Plus, Printer, Send, Trash2 } from "lucide-react";
 import { Briciole } from "@/components/briciole";
 import { Button } from "@/components/ui/button";
 import { useT } from "@/contexts/traduzioni-provider";
@@ -9,17 +9,23 @@ import { domandeDaTest, esercizioDaDomanda, problemiDomanda, type BozzaDomanda }
 import { cancellaEsercizio, elencaMieiEsercizi, salvaEsercizio, type EsercizioPosizione } from "@/lib/esercizi-posizione";
 import { descriviFigura, leggiFigura } from "@/lib/figura-domanda";
 import { istante } from "@/lib/novita-insegnante";
-import { gruppoTest, TEST_COMMISSIONE, type TestCommissione } from "@/lib/test-commissione";
+import { gruppoTest, siglaTest, TEST_COMMISSIONE, type TestCommissione } from "@/lib/test-commissione";
+import { createAssignment } from "@/lib/instructors";
+import { useMyClasses } from "@/store/use-classes-store";
+import { LinkCompito } from "@/components/istruttori/link-compito";
+import Link from "@/components/link";
 
 const VUOTA: BozzaDomanda = { titolo: "", gruppo: "", domanda: "", opzioni: ["", "", ""], giuste: [], soluzione: "" };
 
 /**
- * Le domande a scelta multipla dell'insegnante.
+ * Gli esercizi: quelli della Commissione, lezione per lezione, e le domande a
+ * scelta che l'insegnante scrive da sé.
  *
- * Si mettono nei compiti insieme alle mani, da «Nuovo compito»: l'allievo
- * risponde con un tocco, la risposta si registra, l'insegnante vede chi ha
- * risposto cosa e la classe ha la sua classifica. Sono i test della
- * Commissione (Trevissoi, 02/11/2026); un test intero si incolla in una volta.
+ * UNA PAGINA SOLA, perché i test della Commissione SONO gli esercizi
+ * (Trevissoi, 06/11/2026): stesse domande dei fogli da stampare. Qui per
+ * ognuno ci sono le due cose che servono a fine lezione — assegnarlo alla
+ * classe, con il link da mandare su WhatsApp, e stamparlo. Sotto, le domande
+ * proprie, che vanno nei compiti come quelle della Commissione.
  */
 export default function DomandePage() {
   const t = useT();
@@ -89,30 +95,50 @@ export default function DomandePage() {
     }
   }
 
-  const [aggiungendo, setAggiungendo] = useState<number | null>(null);
   const giaAggiunti = useMemo(() => new Set((mie ?? []).map((e) => e.gruppo)), [mie]);
+  const { classes } = useMyClasses();
+  const [assegnando, setAssegnando] = useState<number | null>(null);
+  const [classeScelta, setClasseScelta] = useState("");
+  const [inCorso, setInCorso] = useState(false);
+  const [assegnato, setAssegnato] = useState<{ test: number; classId: string; id: string; titolo: string } | null>(null);
+  const [erroreAssegna, setErroreAssegna] = useState<string | null>(null);
 
-  /** Un test della Commissione: le domande con le risposte arrivano dal server. */
-  async function aggiungiTest(test: TestCommissione) {
-    setAggiungendo(test.numero);
-    setEsito(null);
+  /**
+   * Un test della Commissione diventa un compito della classe, in un passo.
+   * La rotta copia le domande fra quelle dell'insegnante se non c'erano (con
+   * le risposte, che dal browser non passano) e restituisce gli id in ordine;
+   * da lì è un compito come gli altri.
+   */
+  async function assegna(test: TestCommissione) {
+    if (!classeScelta) return;
+    setInCorso(true);
+    setErroreAssegna(null);
     try {
       const r = await fetch("/api/istruttori/test-commissione", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ numero: test.numero }),
       });
-      const j = (await r.json().catch(() => ({}))) as { aggiunte?: number; gia?: boolean; codice?: string };
-      if (r.ok && j.gia) setEsito(t("Il test {n} c'era già fra le tue domande.", { n: test.numero }));
-      else if (r.ok) setEsito(t("Aggiunte {n} domande del test {m}. Le trovi qui sotto e in «Nuovo compito».", { n: j.aggiunte ?? 0, m: test.numero }));
-      else if (r.status === 403) setEsito(t("Solo chi insegna può aggiungere i test."));
-      else if (j.codice === "42703") setEsito(t("Non aggiunto: va eseguito lo script delle figure delle domande."));
-      else setEsito(t("Non sono riuscito ad aggiungere il test. Riprova fra un momento."));
-      if (r.ok) void ricarica();
+      const j = (await r.json().catch(() => ({}))) as { ids?: string[]; codice?: string };
+      if (!r.ok || !j.ids?.length) {
+        setErroreAssegna(
+          r.status === 403
+            ? t("Solo chi insegna può assegnare gli esercizi.")
+            : j.codice === "42703"
+              ? t("Non assegnato: va eseguito lo script delle figure delle domande.")
+              : t("Non sono riuscito ad assegnare gli esercizi. Riprova fra un momento."),
+        );
+        return;
+      }
+      const titolo = gruppoTest(test);
+      const compito = await createAssignment({ classId: classeScelta, title: titolo, smazzataIds: [], esercizioIds: j.ids });
+      setAssegnato({ test: test.numero, classId: classeScelta, id: compito.id, titolo });
+      setAssegnando(null);
+      void ricarica();
     } catch {
-      setEsito(t("Non sono riuscito ad aggiungere il test. Riprova fra un momento."));
+      setErroreAssegna(t("Non sono riuscito ad assegnare gli esercizi. Riprova fra un momento."));
     } finally {
-      setAggiungendo(null);
+      setInCorso(false);
     }
   }
 
@@ -124,37 +150,80 @@ export default function DomandePage() {
 
   return (
     <div className="mx-auto w-full max-w-3xl px-4 pt-6 pb-24">
-      <Briciole percorso={[{ etichetta: t("Le tue classi"), href: "/istruttori" }, { etichetta: t("Domande a scelta") }]} />
-      <h1 className="font-display text-2xl font-bold sm:text-3xl">{t("Domande a scelta")}</h1>
+      <Briciole percorso={[{ etichetta: t("Le tue classi"), href: "/istruttori" }, { etichetta: t("Esercizi") }]} />
+      <h1 className="font-display text-2xl font-bold sm:text-3xl">{t("Esercizi")}</h1>
       <p className="mt-1 mb-6 text-sm text-muted-foreground">
-        {t("Le domande vanno nei compiti insieme alle mani, da «Nuovo compito». L'allievo risponde con un tocco; tu vedi chi ha risposto cosa, la divisione delle risposte e la classifica della classe.")}
+        {t("Gli esercizi della Commissione, lezione per lezione: a fine lezione li assegni alla classe e mandi il link agli allievi. Rispondono online con un tocco; tu vedi chi ha risposto cosa e quali domande rispiegare.")}
       </p>
 
-      <section className="mb-8 rounded-2xl border border-border bg-card p-4 sm:p-5">
-        <h2 className="mb-1 font-display text-lg font-bold">{t("I test della Commissione")}</h2>
+      <section className="mb-10 rounded-2xl border border-border bg-card p-4 sm:p-5">
+        <h2 className="mb-1 font-display text-lg font-bold">{t("Gli esercizi della Commissione")}</h2>
         <p className="mb-3 text-sm text-muted-foreground">
-          {t("I dodici test di Barion con le loro mani e le risposte giuste. Aggiungi quelli che ti servono: diventano domande tue, da mettere nei compiti.")}
+          {t("Numerati come le lezioni del corso. «Stampa» apre il foglio da stampare, con le soluzioni in fondo.")}
         </p>
         <ul className="divide-y divide-border">
           {TEST_COMMISSIONE.map((test) => {
-            const fatto = giaAggiunti.has(gruppoTest(test));
+            const aperto = assegnando === test.numero;
             return (
-              <li key={test.numero} className="flex items-center gap-3 py-2.5">
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm font-medium">{t("Test {n}", { n: test.numero })} · {t(test.titolo)}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {t("Lezione {n} del programma", { n: test.lezioni.join(", ") })} · {t("{n} domande", { n: test.domande })}
-                  </p>
-                </div>
-                {fatto ? (
-                  <span className="flex items-center gap-1 text-xs font-medium text-muted-foreground">
-                    <Check className="h-4 w-4" aria-hidden="true" />
-                    {t("Aggiunto")}
-                  </span>
-                ) : (
-                  <Button size="sm" variant="outline" disabled={aggiungendo !== null || mie === null} onClick={() => void aggiungiTest(test)}>
-                    {aggiungendo === test.numero ? t("Aggiungo…") : t("Aggiungi")}
+              <li key={test.numero} id={`lezione-${siglaTest(test)}`} className="scroll-mt-20 py-3">
+                <div className="flex flex-wrap items-center gap-3">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-semibold">
+                      {t("Lezione {n}", { n: siglaTest(test) })} · {t(test.titolo)}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {t("{n} domande", { n: test.domande })}
+                      {giaAggiunti.has(gruppoTest(test)) && <> · {t("fra le tue domande")}</>}
+                    </p>
+                  </div>
+                  <Button size="sm" variant="outline" asChild>
+                    <Link href={`/istruttori/domande/stampa?test=${test.numero}`} target="_blank">
+                      <Printer className="h-4 w-4" aria-hidden="true" />
+                      {t("Stampa")}
+                    </Link>
                   </Button>
+                  <Button
+                    size="sm"
+                    variant={aperto ? "default" : "outline"}
+                    onClick={() => {
+                      setAssegnando(aperto ? null : test.numero);
+                      setErroreAssegna(null);
+                      if (!classeScelta && classes.length === 1) setClasseScelta(classes[0].id);
+                    }}
+                  >
+                    <Send className="h-4 w-4" aria-hidden="true" />
+                    {t("Assegna")}
+                  </Button>
+                </div>
+
+                {aperto && (
+                  <div className="mt-3 grid gap-2 rounded-xl bg-muted/40 p-3 sm:flex sm:flex-wrap sm:items-end">
+                    <label className="grid gap-1 text-sm font-medium sm:min-w-64 sm:flex-1">
+                      {t("A quale classe?")}
+                      <select className={campo} value={classeScelta} onChange={(e) => setClasseScelta(e.target.value)}>
+                        <option value="">{t("Scegli la classe")}</option>
+                        {classes.map((c) => (
+                          <option key={c.id} value={c.id}>{c.name}</option>
+                        ))}
+                      </select>
+                    </label>
+                    <Button onClick={() => void assegna(test)} disabled={!classeScelta || inCorso}>
+                      {inCorso ? t("Assegno…") : t("Assegna adesso")}
+                    </Button>
+                    {erroreAssegna && <p className="text-sm text-destructive sm:basis-full">{erroreAssegna}</p>}
+                  </div>
+                )}
+
+                {assegnato?.test === test.numero && (
+                  <div className="mt-3">
+                    <p className="mb-2 text-sm font-semibold text-emerald-700 dark:text-emerald-300" role="status">
+                      {t("Assegnato. Gli allievi lo trovano nella pagina della classe; puoi anche mandare il link.")}{" "}
+                      <Link href={`/istruttori/${assegnato.classId}/compito/${assegnato.id}`} className="text-primary underline">
+                        {t("Vedi le risposte")}
+                      </Link>
+                    </p>
+                    <LinkCompito classId={assegnato.classId} assignmentId={assegnato.id} titolo={assegnato.titolo} />
+                  </div>
                 )}
               </li>
             );
@@ -162,13 +231,18 @@ export default function DomandePage() {
         </ul>
       </section>
 
+      <h2 className="mb-1 font-display text-xl font-bold">{t("Le tue domande a scelta")}</h2>
+      <p className="mb-4 text-sm text-muted-foreground">
+        {t("Per esercizi nuovi o in più rispetto a quelli della Commissione. Vanno nei compiti insieme alle mani, da «Nuovo compito».")}
+      </p>
+
       <section className="mb-8 rounded-2xl border border-border bg-card p-4 sm:p-5">
         <h2 className="mb-3 font-display text-lg font-bold">{t("Nuova domanda")}</h2>
         <div className="grid gap-3">
           <div className="grid gap-3 sm:grid-cols-2">
             <label className="grid gap-1 text-sm font-medium">
               {t("Gruppo")}
-              <input className={campo} value={bozza.gruppo} placeholder={t("Per esempio: Test 1 · Vincenti e affrancabili")} onChange={(e) => setBozza({ ...bozza, gruppo: e.target.value })} />
+              <input className={campo} value={bozza.gruppo} placeholder={t("Per esempio: Ripasso dell'attacco")} onChange={(e) => setBozza({ ...bozza, gruppo: e.target.value })} />
             </label>
             <label className="grid gap-1 text-sm font-medium">
               {t("Titolo (facoltativo)")}
@@ -244,7 +318,7 @@ export default function DomandePage() {
 
       {esito && <p className="mb-6 rounded-lg bg-muted px-3 py-2 text-sm" role="status">{esito}</p>}
 
-      <h2 className="mb-3 font-display text-lg font-bold">{t("Le tue domande")}</h2>
+      <h3 className="mb-3 font-display text-lg font-bold">{t("Le domande che hai")}</h3>
       {mie === null ? (
         <p className="text-sm text-muted-foreground">{t("Caricamento…")}</p>
       ) : mie.length === 0 ? (
@@ -258,7 +332,7 @@ export default function DomandePage() {
                 <li key={d.id} className="flex items-start gap-3 px-4 py-3">
                   <div className="min-w-0 flex-1">
                     <p className="whitespace-pre-line text-sm font-medium">
-                      {d.titolo && /^\d+\.\d+$/.test(d.titolo) && <span className="mr-1 text-muted-foreground">{d.titolo}</span>}
+                      {d.titolo && /^\d+[a-z]?\.\d+$/.test(d.titolo) && <span className="mr-1 text-muted-foreground">{d.titolo}</span>}
                       {d.domanda}
                     </p>
                     {(() => {

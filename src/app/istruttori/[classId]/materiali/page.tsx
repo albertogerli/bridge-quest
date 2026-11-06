@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { BricioleClasse } from "@/components/istruttori/briciole-classe";
 import { useT } from "@/contexts/traduzioni-provider";
 import { useLingua } from "@/hooks/use-lingua";
-import { dispensaDellaLezione, eserciziDellaLezione } from "@/lib/materiali-corso";
+import { dispensaDellaLezione } from "@/lib/materiali-corso";
 import { useCatalog } from "@/store/use-catalog-store";
 import { getClassAssignments } from "@/lib/instructors";
 import { getYouTubeWatchUrl } from "@/components/maestro-video";
@@ -77,7 +77,7 @@ export default function MaterialiLezionePage({ params }: { params: Promise<{ cla
   const [disponibile, setDisponibile] = useState(true);
   const [caricando, setCaricando] = useState(true);
   const [errore, setErrore] = useState<string | null>(null);
-  const [compiti, setCompiti] = useState<{ id: string; lesson_id: number | null }[]>([]);
+  const [compiti, setCompiti] = useState<{ id: string; lesson_id: number | null; title: string; soloDomande: boolean }[]>([]);
   /** null = chiuso; "nuovo" = aggiunta; altrimenti l'id del materiale che si sta modificando. */
   const [modulo, setModulo] = useState<string | null>(null);
   /** Il materiale di cui si sta scegliendo l'ora di uscita. */
@@ -105,7 +105,15 @@ export default function MaterialiLezionePage({ params }: { params: Promise<{ cla
     let vivo = true;
     getClassAssignments(classId)
       .then((c) => {
-        if (vivo) setCompiti(c.map((a) => ({ id: a.id, lesson_id: a.lesson_id })));
+        if (vivo)
+          setCompiti(
+            c.map((a) => ({
+              id: a.id,
+              lesson_id: a.lesson_id,
+              title: a.title,
+              soloDomande: a.smazzata_ids.length === 0 && a.esercizio_ids.length > 0,
+            })),
+          );
       })
       .catch((err) => segnalaSalvoRete("materiali-lezione:compiti", err));
     return () => {
@@ -136,6 +144,8 @@ export default function MaterialiLezionePage({ params }: { params: Promise<{ cla
     return out.sort((a, b) => a.lessonId - b.lessonId);
   }, [compiti, courses, t]);
 
+  /** L'ultimo esercizio della Commissione assegnato (i compiti arrivano dal più recente). */
+  const ultimoTest = compiti.find((c) => c.soloDomande) ?? null;
   const gruppi = useMemo(() => raggruppaPerLezione(materiali, "creazione"), [materiali]);
   const etichetteLibere = useMemo(
     () =>
@@ -201,6 +211,7 @@ export default function MaterialiLezionePage({ params }: { params: Promise<{ cla
             <ModuloMateriale
               classId={classId}
               lezioniAssegnate={lezioniAssegnate}
+              ultimoTest={ultimoTest}
               etichetteLibere={etichetteLibere}
               materiali={materiali}
               occupato={inCorso === "nuovo"}
@@ -239,6 +250,7 @@ export default function MaterialiLezionePage({ params }: { params: Promise<{ cla
                           <ModuloMateriale
                             classId={classId}
                             lezioniAssegnate={lezioniAssegnate}
+                            ultimoTest={ultimoTest}
                             etichetteLibere={etichetteLibere}
                             materiali={materiali}
                             iniziale={m}
@@ -414,6 +426,7 @@ function decodificaScelta(v: string): SceltaLezione {
 function ModuloMateriale({
   classId,
   lezioniAssegnate,
+  ultimoTest,
   etichetteLibere,
   materiali,
   iniziale,
@@ -423,6 +436,7 @@ function ModuloMateriale({
 }: {
   classId: string;
   lezioniAssegnate: LezioneAssegnata[];
+  ultimoTest: { id: string; title: string } | null;
   etichetteLibere: string[];
   materiali: MaterialeLezione[];
   iniziale?: MaterialeLezione;
@@ -443,6 +457,10 @@ function ModuloMateriale({
   };
 
   function suggerimento(s: SceltaLezione, tp: TipoMateriale): { titolo: string; url: string } {
+    // L'esercizio da far uscire con i materiali è l'ultimo della Commissione
+    // assegnato alla classe: i test sono gli esercizi (Trevissoi, 06/11/2026),
+    // e così escono insieme alla videolezione e alla dispensa.
+    if (tp === "esercizio" && ultimoTest) return { titolo: ultimoTest.title, url: `/classi/${classId}/compito/${ultimoTest.id}` };
     if (s.tipo !== "catalogo") return { titolo: "", url: "" };
     const l = lezioniAssegnate.find((x) => x.lessonId === s.lessonId);
     if (!l) return { titolo: "", url: "" };
@@ -457,8 +475,6 @@ function ModuloMateriale({
       if (d) return { titolo: t("La dispensa: {titolo}", { titolo: t(d.titolo) }), url: d.file };
       return { titolo: t("La dispensa"), url: `/dispense?classe=${classId}&corso=${l.corsoId}&lezione=${l.lessonId}` };
     }
-    const e = eserciziDellaLezione(l.lessonId);
-    if (e) return { titolo: t("Gli esercizi: {titolo}", { titolo: t(e.titolo) }), url: e.online };
     return { titolo: t("L'esercizio"), url: `/classi/${classId}/compito/${l.assignmentId}` };
   }
 
