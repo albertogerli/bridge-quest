@@ -1,6 +1,6 @@
 /**
  * Le domande a scelta multipla dell'insegnante: i test della Commissione
- * (Barion 1–6 e quelli che verranno), da mettere nei compiti.
+ * e quelli che scrive lui, da mettere nei compiti.
  *
  * Una domanda è un esercizio di posizione con consegna «scelta» e senza mano:
  * così eredita tutto quello che gli esercizi già fanno — correzione lato
@@ -58,8 +58,8 @@ export function esercizioDaDomanda(d: BozzaDomanda): NuovoEsercizio {
 
 /**
  * Un test incollato come JSON: `{ titolo, domande: [{ numero, testo, opzioni,
- * giuste | giusta | risposta }] }` — il formato in cui sono trascritti i test
- * di Barion. Le domande senza risposta giusta si scartano e si contano: un
+ * giuste | giusta | risposta }] }` — il formato in cui sono trascritti gli
+ * esercizi della Commissione. Le domande senza risposta giusta si scartano e si contano: un
  * test caricato senza le soluzioni direbbe «giusto» a qualunque risposta.
  */
 export function domandeDaTest(testo: string): { domande: BozzaDomanda[]; scartate: number; errore: string | null } {

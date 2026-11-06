@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import dati from "@/data/commissione/test-barion.json";
+import dati from "@/data/commissione/test-commissione.json";
 import { leggiFigura } from "./figura-domanda";
 import { problemiDomanda } from "./domande-scelta";
-import { gruppoTest, testDellaLezione, TEST_COMMISSIONE } from "./test-commissione";
+import { gruppoTest, siglaTest, testDellaLezione, titoloDomanda, TEST_COMMISSIONE } from "./test-commissione";
 
 interface Domanda {
   numero: string;
@@ -41,16 +41,25 @@ describe("i test della Commissione", () => {
     }
   });
 
-  it("le domande sospese hanno scritto perché", () => {
-    const sospese = test.flatMap((t) => t.domande).filter((d) => d.sospesa);
-    expect(sospese.map((d) => d.numero)).toEqual(["3.33", "7.2", "10.5", "12.9", "12.11", "12.12"]);
-    for (const d of sospese) expect(d.nota, d.numero).toBeTruthy();
+  it("le sei domande sospese fino al 06/11 sono tutte caricate, con la mano corretta", () => {
+    const tutte = test.flatMap((t) => t.domande);
+    expect(tutte.filter((d) => d.sospesa)).toEqual([]);
+    expect(tutte).toHaveLength(244);
   });
 
-  it("ogni test sta sotto una lezione del programma, il gruppo ha il suo nome", () => {
+  it("ogni test sta sotto una lezione del programma e si chiama come la lezione", () => {
     expect(testDellaLezione(1).map((t) => t.numero)).toEqual([1, 2]);
     expect(testDellaLezione(11).map((t) => t.numero)).toEqual([7]);
+    expect(testDellaLezione(20).map((t) => t.numero)).toEqual([12]);
     expect(testDellaLezione(3)).toEqual([]);
-    expect(gruppoTest(TEST_COMMISSIONE[6])).toBe("Test 7 · Le aperture di 1SA e 2SA");
+    expect(TEST_COMMISSIONE.map(siglaTest)).toEqual(["1a", "1b", "2", "4", "6", "7", "11", "14", "15", "17", "19", "20"]);
+    expect(gruppoTest(TEST_COMMISSIONE[6])).toBe("Esercizi lezione 11 · Le aperture di 1SA e 2SA");
+    expect(titoloDomanda(TEST_COMMISSIONE[8], "9.4")).toBe("15.4");
+    expect(titoloDomanda(TEST_COMMISSIONE[0], "1.12")).toBe("1a.12");
+  });
+
+  it("nessun testo parla di Barion, che è un'associazione e non l'autore", () => {
+    expect(JSON.stringify(test)).not.toMatch(/barion/i);
+    expect(TEST_COMMISSIONE.map((t) => t.titolo).join()).not.toMatch(/barion/i);
   });
 });

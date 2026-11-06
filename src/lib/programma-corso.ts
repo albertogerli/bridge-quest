@@ -40,7 +40,7 @@ export interface LezioneProgramma {
 
 /**
  * LA NUMERAZIONE «E». Le sigle E1…E12 della Commissione sono i numeri dei
- * dodici test di Barion, uno per lezione del vecchio Corso Fiori, e ogni
+ * dodici test della Commissione, uno per lezione del vecchio Corso Fiori, e ogni
  * lezione ha otto smazzate: sono le 96 smazzate del catalogo, lezioni 1–12.
  * Una sola differenza d'ordine: per la Commissione E7 sono le aperture di
  * 1SA e 2SA e E8 le dichiarazioni di apertura, che nel sito sono le lezioni 8

@@ -4,9 +4,9 @@ import { rateLimit } from "@/lib/ben-guard";
 import { normalizzaRisposta } from "@/lib/esercizi-posizione";
 import { leggiFigura } from "@/lib/figura-domanda";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
-import { gruppoTest, TEST_COMMISSIONE } from "@/lib/test-commissione";
+import { gruppoTest, TEST_COMMISSIONE, titoloDomanda } from "@/lib/test-commissione";
 import { reportError } from "@/lib/report-error";
-import dati from "@/data/commissione/test-barion.json";
+import dati from "@/data/commissione/test-commissione.json";
 
 interface DomandaTest {
   numero: string;
@@ -15,14 +15,18 @@ interface DomandaTest {
   figura: unknown;
   opzioni: string[];
   giusta: number;
+  /** Il perché della risposta, quando Trevissoi l'ha scritto. */
+  spiegazione?: string;
   sospesa?: boolean;
 }
 
 /**
- * POST /api/istruttori/test-commissione  { numero }
+ * POST /api/istruttori/test-commissione  { numero }  →  { gruppo, ids }
  *
  * Copia un test della Commissione fra le domande a scelta dell'insegnante,
  * come se le avesse scritte lui: da lì vanno nei compiti come tutte le altre.
+ * Se c'era già, non lo ricopia: restituisce gli id che ha, nell'ordine del
+ * test, così «Assegna» funziona con un clic sia la prima volta sia le dopo.
  *
  * PERCHÉ LATO SERVER. Il file con le domande contiene le risposte giuste. Letto
  * dal browser starebbe nel JavaScript della pagina, che scarica chiunque; qui
@@ -32,7 +36,8 @@ interface DomandaTest {
  * insegna.
  *
  * Le domande sospese non si copiano: sono quelle con un errore nell'originale
- * (una mano di 12 o 14 carte) o una risposta da confermare con Trevissoi.
+ * (una mano di 12 o 14 carte) o una risposta da confermare con Trevissoi. Dal
+ * 06/11/2026 non ce ne sono più, ma la regola resta per i test che verranno.
  */
 export async function POST(req: NextRequest) {
   const supabase = await createServerSupabaseClient();
@@ -64,12 +69,14 @@ export async function POST(req: NextRequest) {
     .select("id")
     .eq("autore_id", user.id)
     .eq("gruppo", gruppo)
-    .limit(1);
+    .order("created_at", { ascending: true });
   if (erroreLettura) {
     reportError("test-commissione:leggi", erroreLettura);
     return NextResponse.json({ error: "Errore" }, { status: 500 });
   }
-  if ((esistenti ?? []).length > 0) return NextResponse.json({ gia: true, gruppo });
+  if ((esistenti ?? []).length > 0) {
+    return NextResponse.json({ gia: true, gruppo, ids: (esistenti ?? []).map((e) => e.id as string) });
+  }
 
   // Un millisecondo di distanza fra una domanda e la successiva: inserite
   // insieme avrebbero tutte lo stesso istante, e l'ordine del test (che va
@@ -79,7 +86,7 @@ export async function POST(req: NextRequest) {
     const giusta = d.opzioni[d.giusta];
     return {
       autore_id: user.id,
-      titolo: d.numero,
+      titolo: titoloDomanda(test, d.numero),
       consegna: "scelta",
       domanda: d.contesto ? `${d.testo}\n${d.contesto}` : d.testo,
       hands: {},
@@ -92,7 +99,7 @@ export async function POST(req: NextRequest) {
       declarer: null,
       risposte: [giusta],
       risposte_norm: [normalizzaRisposta(giusta)],
-      soluzione: null,
+      soluzione: d.spiegazione ?? null,
       gruppo,
       class_id: null,
       opzioni: d.opzioni,
@@ -101,7 +108,7 @@ export async function POST(req: NextRequest) {
     };
   });
 
-  const { error } = await supabase.from("esercizi_posizione").insert(righe);
+  const { data: inserite, error } = await supabase.from("esercizi_posizione").insert(righe).select("id, created_at");
   if (error) {
     // 42501: chi non insegna non può creare esercizi (RLS). 42703: manca la
     // colonna `figura`, cioè non è ancora stato eseguito lo script.
@@ -109,5 +116,8 @@ export async function POST(req: NextRequest) {
     reportError("test-commissione:inserisci", error);
     return NextResponse.json({ error: "Errore", codice: error.code }, { status: 500 });
   }
-  return NextResponse.json({ aggiunte: righe.length, gruppo });
+  const ids = [...(inserite ?? [])]
+    .sort((a, b) => Date.parse(a.created_at as string) - Date.parse(b.created_at as string))
+    .map((e) => e.id as string);
+  return NextResponse.json({ aggiunte: righe.length, gruppo, ids });
 }

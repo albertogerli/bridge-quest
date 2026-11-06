@@ -1186,20 +1186,19 @@
    },
    {
     "numero": "3.33",
-    "testo": "Vorreste che il K fosse in Est o in Ovest?",
+    "testo": "In quale delle seguenti situazioni vorreste trovarvi?",
     "figura": {
      "tipo": "colore",
      "N": "Q8762",
      "S": "A9543"
     },
     "opzioni": [
-     "EST",
-     "OVEST",
-     "Dovunque ma secco"
+     "K posizionato in Est",
+     "K posizionato in Ovest",
+     "K secco posizionato indifferentemente in Est o in Ovest"
     ],
-    "giusta": 2,
-    "nota": "Dubbio: con A9543 e Q8762 conviene tirare l'Asso (cade il Re secco ovunque) e poi muovere verso la Dama, che vince anche con Re secondo in Ovest. «Ovest» sembra più preciso di «Dovunque ma secco».",
-    "sospesa": true
+    "giusta": 1,
+    "nota": "Risolta con Trevissoi il 06/11/2026. Il dubbio era: Dubbio: con A9543 e Q8762 conviene tirare l'Asso (cade il Re secco ovunque) e poi muovere verso la Dama, che vince anche con Re secondo in Ovest. «Ovest» sembra più preciso di «Dovunque ma secco»."
    },
    {
     "numero": "3.34",
@@ -2649,7 +2648,7 @@
       "S": "J3",
       "H": "QT8732",
       "D": "3",
-      "C": "974"
+      "C": "9742"
      }
     },
     "opzioni": [
@@ -2658,8 +2657,7 @@
      "3 cuori"
     ],
     "giusta": 1,
-    "nota": "Errore nell'originale: la mano ha 12 carte (♠J3 ♥Q108732 ♦3 ♣974).",
-    "sospesa": true
+    "nota": "Risolta con Trevissoi il 06/11/2026. Il dubbio era: Errore nell'originale: la mano ha 12 carte (♠J3 ♥Q108732 ♦3 ♣974)."
    },
    {
     "numero": "7.3",
@@ -3661,7 +3659,7 @@
      "tipo": "mano",
      "mano": {
       "S": "A7",
-      "H": "832",
+      "H": "83",
       "D": "AQJ972",
       "C": "KQ5"
      }
@@ -3672,8 +3670,7 @@
      "3 Quadri"
     ],
     "giusta": 2,
-    "nota": "Errore nell'originale: la mano ha 14 carte (♠A7 ♥832 ♦AQJ972 ♣KQ5).",
-    "sospesa": true
+    "nota": "Risolta con Trevissoi il 06/11/2026. Il dubbio era: Errore nell'originale: la mano ha 14 carte (♠A7 ♥832 ♦AQJ972 ♣KQ5)."
    },
    {
     "numero": "10.6",
@@ -4292,8 +4289,8 @@
      "1 senza atout"
     ],
     "giusta": 0,
-    "nota": "Dubbio: con 13 punti bilanciati, 4 picche e ♥AJ4 molti insegnanti dichiarano 1♠ (o 1SA); il Passo va almeno spiegato.",
-    "sospesa": true
+    "nota": "Risolta con Trevissoi il 06/11/2026. Il dubbio era: Dubbio: con 13 punti bilanciati, 4 picche e ♥AJ4 molti insegnanti dichiarano 1♠ (o 1SA); il Passo va almeno spiegato.",
+    "spiegazione": "Passo, per dire al compagno che l'apertura è limitata. Il compagno può aver risposto 1 Quadri anche con soli 5 punti: dopo l'intervento, 1 Picche (un colore nuovo) sarebbe una dichiarazione libera e prometterebbe una mano più forte."
    },
    {
     "numero": "12.10",
@@ -4320,7 +4317,7 @@
     "figura": {
      "tipo": "mano",
      "mano": {
-      "S": "A54",
+      "S": "A5",
       "H": "87",
       "D": "AJ6",
       "C": "KQT964"
@@ -4332,8 +4329,7 @@
      "2 fiori"
     ],
     "giusta": 2,
-    "nota": "Errore nell'originale: la mano ha 14 carte (♠A54 ♥87 ♦AJ6 ♣KQ10964).",
-    "sospesa": true
+    "nota": "Risolta con Trevissoi il 06/11/2026. Il dubbio era: Errore nell'originale: la mano ha 14 carte (♠A54 ♥87 ♦AJ6 ♣KQ10964)."
    },
    {
     "numero": "12.12",
@@ -4343,7 +4339,7 @@
      "mano": {
       "S": "AQ8",
       "H": "KQ7",
-      "D": "T9",
+      "D": "T92",
       "C": "AK98"
      }
     },
@@ -4353,8 +4349,8 @@
      "2 senza atout"
     ],
     "giusta": 1,
-    "nota": "Errore nell'originale: la mano ha 12 carte (♠AQ8 ♥KQ7 ♦109 ♣AK98); inoltre con 18 punti bilanciati di solito si dichiara 2SA, non 1SA.",
-    "sospesa": true
+    "nota": "Risolta con Trevissoi il 06/11/2026. Il dubbio era: Errore nell'originale: la mano ha 12 carte (♠AQ8 ♥KQ7 ♦109 ♣AK98); inoltre con 18 punti bilanciati di solito si dichiara 2SA, non 1SA.",
+    "spiegazione": "1 senza atout. Con 12-14 punti si passa, quindi una dichiarazione libera dopo l'intervento promette una mano forte: qui bilanciata, con il fermo a cuori, 18-20 punti."
    },
    {
     "numero": "12.13",
