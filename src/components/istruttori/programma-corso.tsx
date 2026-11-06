@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Check, Eye, Printer, Send } from "lucide-react";
+import { Check, Copy, Eye, Link2, Mail, MessageCircle, Printer, Send } from "lucide-react";
 import Link from "@/components/link";
 import { useT } from "@/contexts/traduzioni-provider";
 import { useMyClasses } from "@/store/use-classes-store";
@@ -17,8 +17,8 @@ import { segnalaSalvoRete } from "@/lib/report-error";
 /**
  * Il programma del Corso di Primo Livello, lezione per lezione, con le
  * quattro cose che servono a ognuna: slide, videolezione, dispensa ed
- * esercizi. Ognuna si vede, si stampa o si assegna alla classe (Trevissoi,
- * 03/11/2026).
+ * esercizi. Ognuna si vede, si stampa, si assegna alla classe o se ne manda il link
+ * (Trevissoi, 03/11 e 06/11/2026).
  *
  * In «Materiali del corso» si sceglie la classe in cima; dentro una classe
  * (`classId`) la classe è quella. Con una classe scelta, ciò che le è già
@@ -35,7 +35,8 @@ export function ProgrammaCorso({ classId: classeFissa, onCambio }: { classId?: s
   const [scelta, setScelta] = useState("");
   const classId = classeFissa ?? (scelta || (classes.length === 1 ? classes[0].id : ""));
   const [materiali, setMateriali] = useState<MaterialeLezione[]>([]);
-  const [titoliCompiti, setTitoliCompiti] = useState<Set<string>>(new Set());
+  /** I compiti della classe per titolo: il titolo dice se è assegnato, l'id dà il link. */
+  const [compiti, setCompiti] = useState<Map<string, string>>(new Map());
   const [inCorso, setInCorso] = useState<string | null>(null);
   const [errore, setErrore] = useState<string | null>(null);
 
@@ -44,7 +45,7 @@ export function ProgrammaCorso({ classId: classeFissa, onCambio }: { classId?: s
     try {
       const [m, c] = await Promise.all([materialiDellaClasse(classId), getClassAssignments(classId)]);
       setMateriali(m.materiali);
-      setTitoliCompiti(new Set(c.map((a) => a.title)));
+      setCompiti(new Map(c.map((a) => [a.title, a.id])));
     } catch (err) {
       segnalaSalvoRete("programma-corso:stato-classe", err);
     }
@@ -165,6 +166,7 @@ export function ProgrammaCorso({ classId: classeFissa, onCambio }: { classId?: s
                               titolo={t(v.etichetta)}
                               vedi={v.url}
                               stampa={v.stampabile ? v.url : null}
+                              link={assoluto(v.url)}
                               assegnato={!!classId && fatto}
                               puoAssegnare={!!classId && !fatto}
                               occupato={inCorso === `${l.numero}|${v.url}`}
@@ -174,7 +176,8 @@ export function ProgrammaCorso({ classId: classeFissa, onCambio }: { classId?: s
                         }),
                       )}
                       {m.esercizi.map((x) => {
-                        const fatto = titoliCompiti.has(gruppoTest(x));
+                        const idCompito = compiti.get(gruppoTest(x));
+                        const fatto = !!idCompito;
                         return (
                           <Riga
                             key={x.numero}
@@ -183,6 +186,7 @@ export function ProgrammaCorso({ classId: classeFissa, onCambio }: { classId?: s
                             vedi={`/istruttori/domande#lezione-${siglaTest(x)}`}
                             vediInterno
                             stampa={`/istruttori/domande/stampa?test=${x.numero}`}
+                            link={classId && idCompito ? assoluto(`/classi/${classId}/compito/${idCompito}`) : null}
                             assegnato={!!classId && fatto}
                             puoAssegnare={!!classId && !fatto}
                             occupato={inCorso === `test|${x.numero}`}
@@ -202,12 +206,23 @@ export function ProgrammaCorso({ classId: classeFissa, onCambio }: { classId?: s
   );
 }
 
+/**
+ * L'indirizzo completo da mandare: quello del sito, non della finestra, così
+ * da un'anteprima di prova non parte un link finto (come in `LinkCompito`).
+ */
+function assoluto(url: string): string {
+  if (/^https?:\/\//.test(url)) return url;
+  const base = (process.env.NEXT_PUBLIC_SITE_URL || "https://bridgelab.it").replace(/\/$/, "");
+  return `${base}${url.startsWith("/") ? "" : "/"}${url}`;
+}
+
 function Riga({
   nome,
   titolo,
   vedi,
   vediInterno = false,
   stampa,
+  link,
   assegnato,
   puoAssegnare,
   occupato,
@@ -218,15 +233,36 @@ function Riga({
   vedi: string;
   vediInterno?: boolean;
   stampa: string | null;
+  /**
+   * «Link»: l'indirizzo da rimandare a chi ha perso la lezione o dice di non
+   * averlo ricevuto, anche più volte e anche a chi non è in classe (Trevissoi,
+   * 06/11/2026). Slide, dispense e video sono pubblici; gli esercizi sono un
+   * compito della classe, e il link c'è solo dopo averli assegnati.
+   */
+  link: string | null;
   assegnato: boolean;
   puoAssegnare: boolean;
   occupato: boolean;
   onAssegna: () => void;
 }) {
   const t = useT();
+  const [apriLink, setApriLink] = useState(false);
+  const [copiato, setCopiato] = useState(false);
+  const messaggio = link ? t("«{titolo}» su BridgeLab: {url}", { titolo, url: link }) : "";
+  async function copia() {
+    if (!link) return;
+    try {
+      await navigator.clipboard.writeText(link);
+      setCopiato(true);
+      setTimeout(() => setCopiato(false), 2500);
+    } catch {
+      // Senza permesso agli appunti resta il campo da selezionare a mano.
+    }
+  }
   const azione = "inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 font-semibold text-primary hover:bg-primary/10";
   return (
-    <div className={`flex flex-wrap items-center gap-x-2 gap-y-1 rounded-lg px-2 py-1 text-xs ${assegnato ? "bg-emerald-50 dark:bg-emerald-950/30" : "bg-muted/40"}`}>
+    <div className={`rounded-lg px-2 py-1 text-xs ${assegnato ? "bg-emerald-50 dark:bg-emerald-950/30" : "bg-muted/40"}`}>
+    <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
       <span className="w-24 shrink-0 font-semibold text-muted-foreground">{nome}</span>
       <span className="min-w-0 flex-1 truncate">{titolo}</span>
       {vediInterno ? (
@@ -246,6 +282,12 @@ function Riga({
           {t("Stampa")}
         </a>
       )}
+      {link && (
+        <button type="button" onClick={() => setApriLink((x) => !x)} aria-expanded={apriLink} className={azione}>
+          <Link2 className="h-3.5 w-3.5" aria-hidden="true" />
+          {t("Link")}
+        </button>
+      )}
       {assegnato ? (
         <span className="inline-flex items-center gap-1 px-1.5 font-semibold text-emerald-700 dark:text-emerald-300">
           <Check className="h-3.5 w-3.5" aria-hidden="true" />
@@ -257,6 +299,32 @@ function Riga({
           {occupato ? t("Assegno…") : t("Assegna")}
         </button>
       ) : null}
+    </div>
+    {apriLink && link && (
+      <div className="mt-1.5 mb-1 space-y-1.5">
+        <input
+          readOnly
+          value={link}
+          onFocus={(e) => e.currentTarget.select()}
+          aria-label={t("Il link da mandare")}
+          className="w-full rounded-md border border-border bg-background px-2 py-1 font-mono text-xs"
+        />
+        <div className="flex flex-wrap gap-1">
+          <button type="button" onClick={() => void copia()} className={azione}>
+            {copiato ? <Check className="h-3.5 w-3.5" aria-hidden="true" /> : <Copy className="h-3.5 w-3.5" aria-hidden="true" />}
+            {copiato ? t("Copiato") : t("Copia il link")}
+          </button>
+          <a href={`https://wa.me/?text=${encodeURIComponent(messaggio)}`} target="_blank" rel="noopener" className={azione}>
+            <MessageCircle className="h-3.5 w-3.5" aria-hidden="true" />
+            WhatsApp
+          </a>
+          <a href={`mailto:?subject=${encodeURIComponent(titolo)}&body=${encodeURIComponent(messaggio)}`} className={azione}>
+            <Mail className="h-3.5 w-3.5" aria-hidden="true" />
+            {t("Email")}
+          </a>
+        </div>
+      </div>
+    )}
     </div>
   );
 }

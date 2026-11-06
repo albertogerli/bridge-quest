@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Briciole } from "@/components/briciole";
@@ -8,18 +8,32 @@ import { SuitSymbol } from "@/components/bridge/suit-symbol";
 import { ProvaDaQui } from "@/components/bridge/prova-da-qui";
 import { SalvaEsercizio } from "@/components/istruttori/salva-esercizio";
 import { ComandoProiezione } from "@/components/istruttori/comando-proiezione";
-import { COMBINAZIONI, problemiDi, type Combinazione } from "@/lib/combinazioni";
+import { COMBINAZIONI, problemiDi, siProietta, type Combinazione } from "@/lib/combinazioni";
+import { cancellaFigura, elencaFigure, salvaFigura, type FiguraSalvata } from "@/lib/figure-insegnante";
 import type { Card, Position, Rank, Suit } from "@/lib/bridge-engine";
 import { useT } from "@/contexts/traduzioni-provider";
 
 const SEMI: Suit[] = ["spade", "heart", "diamond", "club"];
 const RANGHI: Rank[] = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"] as Rank[];
+/** In senso orario, come si gioca: Nord, Est, Sud, Ovest. */
 const POSTI: { key: Position; nome: string }[] = [
   { key: "north", nome: "Nord" },
-  { key: "west", nome: "Ovest" },
   { key: "east", nome: "Est" },
   { key: "south", nome: "Sud" },
+  { key: "west", nome: "Ovest" },
 ];
+
+/**
+ * Le mani a croce, come nei diagrammi dei libri: Nord sopra, Sud sotto, Ovest
+ * a sinistra, Est a destra. In fila (N, O, E, S) non si vedeva chi sta dietro
+ * a chi, che in un impasse è tutto (Trevissoi, 06/11/2026).
+ */
+const CROCE: Record<Position, string> = {
+  north: "col-start-2 row-start-1",
+  west: "col-start-1 row-start-2",
+  east: "col-start-3 row-start-2",
+  south: "col-start-2 row-start-3",
+};
 
 const VUOTE: Record<Position, Card[]> = { north: [], east: [], south: [], west: [] };
 
@@ -52,7 +66,69 @@ export default function CombinazionePage() {
   const [gioca, setGioca] = useState(false);
 
   const problemi = useMemo(() => problemiDi(hands), [hands]);
+  /** Si gioca e si salva come esercizio: mani pari, niente doppioni. */
   const pronta = problemi.length === 0;
+  /** Si proietta e si salva come figura: basta che non ci siano doppioni. */
+  const proiettabile = siProietta(problemi);
+
+  const [figure, setFigure] = useState<FiguraSalvata[] | null>(null);
+  const [nomeFigura, setNomeFigura] = useState("");
+  const [salvando, setSalvando] = useState(false);
+  const [esitoFigura, setEsitoFigura] = useState<string | null>(null);
+  const ricaricaFigure = useCallback(async () => {
+    setFigure(await elencaFigure());
+  }, []);
+  // Arrivando da «Le mie figure» nei materiali (?figura=…) la figura si apre
+  // già composta. Dall'indirizzo e non da useSearchParams, che vorrebbe tutta
+  // la pagina dentro Suspense.
+  useEffect(() => {
+    let vivo = true;
+    void elencaFigure().then((elenco) => {
+      if (!vivo) return;
+      setFigure(elenco);
+      const cercata = new URLSearchParams(window.location.search).get("figura");
+      const f = cercata ? elenco?.find((x) => x.id === cercata) : undefined;
+      if (f) {
+        setHands(f.mani);
+        setAtout(f.atout);
+        setDescrizione(f.nome);
+        setNomeFigura(f.nome);
+      }
+    });
+    return () => {
+      vivo = false;
+    };
+  }, []);
+
+  function apriFigura(f: FiguraSalvata) {
+    setHands(f.mani);
+    setAtout(f.atout);
+    setDescrizione(f.nome);
+    setNomeFigura(f.nome);
+    setGioca(false);
+    setEsitoFigura(null);
+  }
+
+  async function salvaComeFigura() {
+    const nome = nomeFigura.trim();
+    if (!nome || !proiettabile) return;
+    setSalvando(true);
+    setEsitoFigura(null);
+    const id = await salvaFigura(nome, hands, atout);
+    setSalvando(false);
+    if (id) {
+      setDescrizione(nome);
+      setEsitoFigura(t("Salvata fra «Le mie figure»."));
+      await ricaricaFigure();
+    } else {
+      setEsitoFigura(t("Non salvata. Controlla la connessione e riprova."));
+    }
+  }
+
+  async function eliminaFigura(f: FiguraSalvata) {
+    if (!confirm(t("Eliminare la figura «{nome}»?", { nome: f.nome }))) return;
+    if (await cancellaFigura(f.id)) await ricaricaFigure();
+  }
 
   /** Dove sta questa carta adesso, se sta da qualche parte. */
   function dove(carta: Card): Position | null {
@@ -114,7 +190,7 @@ export default function CombinazionePage() {
         {t("Combinazioni di carte")}
       </h1>
       <p className="mb-5 text-sm text-muted-foreground">
-        {t("Componi una posizione con poche carte per posto. Serve a mostrare una combinazione senza nasconderla dentro una smazzata intera.")}
+        {t("Componi una posizione con poche carte per posto. Serve a mostrare una combinazione senza nasconderla dentro una smazzata intera. Anche un seme solo, con un numero di carte diverso per posto: quella è una figura, si proietta e si salva con un nome.")}
       </p>
 
       <div className="mb-5">
@@ -173,13 +249,13 @@ export default function CombinazionePage() {
           {/* Le quattro mani in chiaro: prima la griglia mostrava solo «carta
               presa / libera», e non si capiva a chi fosse andata una carta né
               cosa contenesse un esempio appena caricato. */}
-          <div className="mb-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
+          <div className="mb-4 grid grid-cols-3 grid-rows-3 gap-2">
             {POSTI.map((posto) => (
               <button
                 key={posto.key}
                 type="button"
                 onClick={() => setPostoAttivo(posto.key)}
-                className={`rounded-lg border p-2 text-left text-sm ${
+                className={`${CROCE[posto.key]} min-w-0 rounded-lg border p-2 text-left text-sm ${
                   postoAttivo === posto.key ? "border-primary ring-2 ring-primary/30" : "border-border"
                 }`}
               >
@@ -236,11 +312,19 @@ export default function CombinazionePage() {
 
           {problemi.length > 0 && (
             <ul className="mb-4 space-y-1">
-              {problemi.map((p, i) => (
-                <li key={i} className="text-sm text-destructive">
-                  {p.messaggio}
-                </li>
-              ))}
+              {problemi.map((p, i) =>
+                p.campo === "lunghezza" && proiettabile ? (
+                  <li key={i} className="text-sm text-muted-foreground">
+                    {t("I posti hanno un numero di carte diverso ({l}): è una figura. Si proietta e si salva, ma per giocarla servono mani pari.", {
+                      l: POSTI.map((x) => hands[x.key].length).join(", "),
+                    })}
+                  </li>
+                ) : (
+                  <li key={i} className="text-sm text-destructive">
+                    {p.messaggio}
+                  </li>
+                ),
+              )}
             </ul>
           )}
 
@@ -259,8 +343,51 @@ export default function CombinazionePage() {
                 titoloProposto={descrizione || "Combinazione"}
               />
             )}
-            {pronta && <ComandoProiezione mani={hands} titolo={descrizione || "Combinazione"} />}
+            {proiettabile && <ComandoProiezione mani={hands} titolo={descrizione || nomeFigura || "Combinazione"} />}
           </div>
+
+          {proiettabile && (
+            <div className="mb-6 rounded-xl border border-border bg-card p-3">
+              <label htmlFor="nome-figura" className="mb-1 block text-sm font-semibold">
+                {t("Salva come figura")}
+              </label>
+              <div className="flex flex-wrap gap-2">
+                <input
+                  id="nome-figura"
+                  value={nomeFigura}
+                  onChange={(e) => setNomeFigura(e.target.value)}
+                  maxLength={120}
+                  placeholder={t("Il nome, es. «Impasse al Re con 9 carte»")}
+                  className="min-w-0 flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm"
+                />
+                <Button variant="outline" disabled={!nomeFigura.trim() || salvando} onClick={() => void salvaComeFigura()}>
+                  {salvando ? t("Salvo…") : t("Salva")}
+                </Button>
+              </div>
+              {esitoFigura && <p className="mt-2 text-sm text-muted-foreground" role="status">{esitoFigura}</p>}
+            </div>
+          )}
+
+          {figure && figure.length > 0 && (
+            <div id="mie-figure" className="mb-6 scroll-mt-20">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                {t("Le mie figure")}
+              </p>
+              <ul className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
+                {figure.map((f) => (
+                  <li key={f.id} className="flex items-center gap-2 px-3 py-2 text-sm">
+                    <span className="min-w-0 flex-1 truncate font-medium">{f.nome}</span>
+                    <Button size="sm" variant="ghost" onClick={() => apriFigura(f)}>
+                      {t("Apri")}
+                    </Button>
+                    <Button size="sm" variant="ghost" onClick={() => void eliminaFigura(f)}>
+                      {t("Elimina")}
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </>
       )}
 

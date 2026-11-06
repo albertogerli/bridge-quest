@@ -8,6 +8,7 @@ import { useLingua } from "@/hooks/use-lingua";
 import Link from "@/components/link";
 import { MATERIALI_CORSO, type ManiCommissione, type Materiale } from "@/lib/materiali-corso";
 import { ProgrammaCorso } from "@/components/istruttori/programma-corso";
+import { MieFigure } from "@/components/istruttori/mie-figure";
 
 /**
  * Slide da proiettare e dispense da stampare, modulo per modulo.
@@ -47,6 +48,8 @@ export default function MaterialiPage() {
             </p>
           </div>
         </Link>
+
+        <MieFigure />
 
         <ProgrammaCorso />
 

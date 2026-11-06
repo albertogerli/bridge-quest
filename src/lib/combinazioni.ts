@@ -145,3 +145,14 @@ export function problemiDi(hands: Record<Position, Card[]>): ProblemaPosizione[]
 
   return problemi;
 }
+
+/**
+ * Si può proiettare e salvare come figura: niente doppioni e almeno una carta.
+ *
+ * Le lunghezze diverse fermano solo il gioco. Una figura di un solo seme —
+ * «AQ3 contro K105 e J987» — non ha bisogno di quattro mani pari: si guarda,
+ * non si gioca (Trevissoi, 06/11/2026).
+ */
+export function siProietta(problemi: readonly ProblemaPosizione[]): boolean {
+  return problemi.every((p) => p.campo === "lunghezza");
+}

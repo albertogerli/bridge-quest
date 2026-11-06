@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { COMBINAZIONI, lunghezze, problemiDi } from "./combinazioni";
+import { COMBINAZIONI, lunghezze, problemiDi, siProietta } from "./combinazioni";
 import { createGame, playCard, type Card, type Position } from "./bridge-engine";
 
 describe("le combinazioni classiche", () => {
@@ -80,5 +80,35 @@ describe("i controlli su una posizione composta a mano", () => {
       west: [{ suit: "spade", rank: "Q" }] as Card[],
     };
     expect(problemiDi(m).some((p) => p.campo === "doppioni")).toBe(true);
+  });
+});
+
+describe("la figura, che si proietta ma non si gioca", () => {
+  const carta = (suit: Card["suit"], rank: Card["rank"]) => ({ suit, rank }) as Card;
+
+  it("un seme solo con lunghezze diverse si proietta", () => {
+    const m: Record<Position, Card[]> = {
+      north: [carta("spade", "A"), carta("spade", "Q"), carta("spade", "3")],
+      west: [carta("spade", "K"), carta("spade", "10"), carta("spade", "5")],
+      east: [carta("spade", "J"), carta("spade", "9"), carta("spade", "8"), carta("spade", "7")],
+      south: [carta("spade", "6"), carta("spade", "4"), carta("spade", "2")],
+    };
+    const problemi = problemiDi(m);
+    expect(problemi.map((p) => p.campo)).toEqual(["lunghezza"]);
+    expect(siProietta(problemi)).toBe(true);
+  });
+
+  it("una carta in due mani non si proietta", () => {
+    const m: Record<Position, Card[]> = {
+      north: [carta("spade", "A")],
+      south: [carta("spade", "A"), carta("spade", "2")],
+      east: [],
+      west: [],
+    };
+    expect(siProietta(problemiDi(m))).toBe(false);
+  });
+
+  it("senza carte non c'è niente da proiettare", () => {
+    expect(siProietta(problemiDi({ north: [], east: [], south: [], west: [] }))).toBe(false);
   });
 });

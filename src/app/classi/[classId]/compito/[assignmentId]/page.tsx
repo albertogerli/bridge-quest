@@ -69,6 +69,7 @@ import { filoDellaMano, messaggiDelCompito, type MessaggioCompito } from "@/lib/
 import { ConversazioneMano } from "@/components/classi/conversazione-mano";
 import { RivediLicita } from "@/components/classi/rivedi-licita";
 import { leggiEsercizi, type EsercizioPerAllievo } from "@/lib/esercizi-posizione";
+import { RiepilogoDomande } from "@/components/classi/riepilogo-domande";
 
 export default function CompitoPage({
   params,
@@ -432,8 +433,12 @@ export default function CompitoPage({
         </p>
       )}
 
+      {soloDomande && !primaSenza && (
+        <RiepilogoDomande ids={ids} domande={domande} results={results} classId={classId} assignmentId={assignmentId} />
+      )}
+
       {/* Hands list */}
-      {assignment.esercizio_ids.length > 0 && (
+      {assignment.esercizio_ids.length > 0 && !(soloDomande && !primaSenza) && (
         <div className="mb-6">
           <p className="mb-2 text-sm font-semibold">{soloDomande ? t("Le domande") : t("Posizioni da risolvere")}</p>
           <div className="space-y-2">

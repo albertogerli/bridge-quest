@@ -51,6 +51,7 @@ import { StrumentiLezione } from "@/components/istruttori/strumenti-lezione";
 import { useAlRitorno } from "@/hooks/use-al-ritorno";
 import { ElencoAllieviEsporta } from "@/components/istruttori/elenco-allievi-esporta";
 import { RigaAllievo } from "@/components/istruttori/riga-allievo";
+import { ProgrammaCorso } from "@/components/istruttori/programma-corso";
 
 export default function ClassDetailPage({
   params,
@@ -558,35 +559,6 @@ export default function ClassDetailPage({
         impostazioni che si toccano una volta sola: «le attività operative
         devono avere i pulsanti in testa» (feedback di un insegnante, 28/09/2026).
       */}
-      {/*
-        IN ORDINE DI LAVORO. Dopo ogni lezione l'insegnante manda la dispensa,
-        poi l'esercizio, poi le smazzate giocate in aula con video e materiali;
-        l'aula e gli allievi sono un'altra riga (Trevissoi, ottobre 2026: il
-        menu della classe va rivisto sulla sequenza reale).
-      */}
-      <div className="mb-3">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t("Dopo la lezione")}</p>
-        <div className="flex flex-wrap gap-2">
-          {/* La dispensa vera: il fascicolo della Commissione. Prima portava al
-              generatore di fogli di mani, e Trevissoi non la trovava (02/11/2026). */}
-          <Link href="/istruttori/materiali">
-            <Button variant="outline">1 · {t("Dispensa")}</Button>
-          </Link>
-          <Link href={`/istruttori/${classId}/nuovo-compito`}>
-            <Button variant="outline">2 · {t("Nuovo compito")}</Button>
-          </Link>
-          <Button variant="outline" onClick={() => setScheda("lezioni")}>
-            3 · {t("Smazzate della lezione, video e materiali")}
-          </Button>
-          {/* Qui si decide che cosa vedono gli allievi e quando: videolezione,
-              dispensa ed esercizio, ciascuno con la sua ora di uscita
-              (Trevissoi, 14/10/2026). Le tre voci sopra preparano; questa
-              consegna. */}
-          <Link href={`/istruttori/${classId}/materiali`}>
-            <Button>{t("Materiali dopo la lezione")}</Button>
-          </Link>
-        </div>
-      </div>
       <div className="mb-6">
         <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t("In aula")}</p>
         <div className="flex flex-wrap gap-2">
@@ -601,6 +573,22 @@ export default function ClassDetailPage({
           </Link>
         </div>
       </div>
+
+      {/*
+        IL PROGRAMMA AL POSTO DI «DOPO LA LEZIONE». Le quattro voci (dispensa,
+        nuovo compito, smazzate, materiali) erano quattro strade verso le
+        stesse cose; il programma le mette sotto la lezione a cui servono, con
+        in verde quello che la classe ha già (Trevissoi, 06/11/2026). «Nuovo
+        compito» e i materiali propri restano nella scheda Compiti.
+      */}
+      <details className="mb-6 rounded-xl border border-border bg-card p-4" open>
+        <summary className="cursor-pointer font-display text-lg font-semibold">
+          {t("Dal programma del corso")}
+        </summary>
+        <div className="mt-3">
+          <ProgrammaCorso classId={classId} onCambio={() => void aggiornaSenzaSchermataDiCaricamento()} />
+        </div>
+      </details>
 
       {/* Tabs — controllate, così lo stato vuoto dei compiti può portare
           alle Lezioni con un clic invece di descriverle a parole. */}
@@ -643,10 +631,24 @@ export default function ClassDetailPage({
                 <Link href={`/istruttori/${classId}/nuovo-compito`}>
                   <Button variant="outline">{t("Nuovo compito")}</Button>
                 </Link>
+                <Link href={`/istruttori/${classId}/materiali`}>
+                  <Button variant="outline">{t("Materiali e orari di uscita")}</Button>
+                </Link>
               </div>
             </div>
           ) : (
             <div className="space-y-3">
+              <div className="flex flex-wrap gap-2">
+                <Link href={`/istruttori/${classId}/nuovo-compito`}>
+                  <Button variant="outline">{t("Nuovo compito")}</Button>
+                </Link>
+                <Button variant="outline" onClick={() => setScheda("lezioni")}>
+                  {t("Mani di una lezione")}
+                </Button>
+                <Link href={`/istruttori/${classId}/materiali`}>
+                  <Button variant="outline">{t("Materiali e orari di uscita")}</Button>
+                </Link>
+              </div>
               {assignments.map((a) => (
                 <Link key={a.id} href={`/istruttori/${classId}/compito/${a.id}`} className="block">
                   <Card className="transition-shadow hover:shadow-lg">
