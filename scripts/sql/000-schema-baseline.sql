@@ -16,7 +16,7 @@
 -- Rigenerare e committare dopo OGNI modifica allo schema, insieme allo script
 -- che l'ha causata.
 --
--- Estratto il: 2026-11-04
+-- Estratto il: 2026-11-06
 -- ============================================================================
 
 SET check_function_bodies = false;
@@ -324,6 +324,16 @@ CREATE TABLE IF NOT EXISTS public.eserciziario_exercises (
   updated_at timestamp with time zone NOT NULL,
   title_en text,
   content_en jsonb
+);
+
+CREATE TABLE IF NOT EXISTS public.figure_insegnante (
+  id uuid NOT NULL,
+  autore_id uuid NOT NULL,
+  nome text NOT NULL,
+  mani jsonb NOT NULL,
+  atout text,
+  created_at timestamp with time zone NOT NULL,
+  updated_at timestamp with time zone NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.forum_comments (
@@ -4957,6 +4967,10 @@ ALTER TABLE public.esercizi_posizione ALTER COLUMN opzioni SET DEFAULT '{}'::tex
 ALTER TABLE public.eserciziario_exercises ALTER COLUMN content SET DEFAULT '[]'::jsonb;
 ALTER TABLE public.eserciziario_exercises ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.eserciziario_exercises ALTER COLUMN updated_at SET DEFAULT now();
+ALTER TABLE public.figure_insegnante ALTER COLUMN id SET DEFAULT gen_random_uuid();
+ALTER TABLE public.figure_insegnante ALTER COLUMN autore_id SET DEFAULT auth.uid();
+ALTER TABLE public.figure_insegnante ALTER COLUMN created_at SET DEFAULT now();
+ALTER TABLE public.figure_insegnante ALTER COLUMN updated_at SET DEFAULT now();
 ALTER TABLE public.forum_comments ALTER COLUMN id SET DEFAULT nextval('forum_comments_id_seq'::regclass);
 ALTER TABLE public.forum_comments ALTER COLUMN likes_count SET DEFAULT 0;
 ALTER TABLE public.forum_comments ALTER COLUMN created_at SET DEFAULT now();
@@ -5133,6 +5147,7 @@ ALTER TABLE public.elenco_allievi ADD CONSTRAINT elenco_allievi_pkey PRIMARY KEY
 ALTER TABLE public.email_events ADD CONSTRAINT email_events_pkey PRIMARY KEY (id);
 ALTER TABLE public.esercizi_posizione ADD CONSTRAINT esercizi_posizione_pkey PRIMARY KEY (id);
 ALTER TABLE public.eserciziario_exercises ADD CONSTRAINT eserciziario_exercises_pkey PRIMARY KEY (id);
+ALTER TABLE public.figure_insegnante ADD CONSTRAINT figure_insegnante_pkey PRIMARY KEY (id);
 ALTER TABLE public.forum_comments ADD CONSTRAINT forum_comments_pkey PRIMARY KEY (id);
 ALTER TABLE public.forum_likes ADD CONSTRAINT forum_likes_pkey PRIMARY KEY (id);
 ALTER TABLE public.forum_poll_votes ADD CONSTRAINT forum_poll_votes_pkey PRIMARY KEY (id);
@@ -5228,6 +5243,9 @@ ALTER TABLE public.commenti_compito ADD CONSTRAINT commenti_compito_testo_check 
 ALTER TABLE public.courses ADD CONSTRAINT courses_level_check CHECK ((level = ANY (ARRAY['base'::text, 'intermedio'::text, 'avanzato'::text])));
 ALTER TABLE public.esercizi_posizione ADD CONSTRAINT esercizi_posizione_consegna_check CHECK ((consegna = ANY (ARRAY['dichiara'::text, 'carta'::text, 'piano'::text, 'scelta'::text])));
 ALTER TABLE public.eserciziario_exercises ADD CONSTRAINT eserciziario_exercises_content_check CHECK ((jsonb_typeof(content) = 'array'::text));
+ALTER TABLE public.figure_insegnante ADD CONSTRAINT figure_insegnante_atout_check CHECK ((atout = ANY (ARRAY['spade'::text, 'heart'::text, 'diamond'::text, 'club'::text])));
+ALTER TABLE public.figure_insegnante ADD CONSTRAINT figure_insegnante_mani_check CHECK ((jsonb_typeof(mani) = 'object'::text));
+ALTER TABLE public.figure_insegnante ADD CONSTRAINT figure_insegnante_nome_check CHECK (((char_length(btrim(nome)) >= 1) AND (char_length(btrim(nome)) <= 120)));
 ALTER TABLE public.forum_posts ADD CONSTRAINT forum_posts_category_check CHECK ((category = ANY (ARRAY['lezioni'::text, 'strategia'::text, 'tornei'::text, 'generale'::text, 'off-topic'::text])));
 ALTER TABLE public.friendships ADD CONSTRAINT friendships_status_check CHECK ((status = ANY (ARRAY['pending'::text, 'accepted'::text, 'declined'::text])));
 ALTER TABLE public.game_results ADD CONSTRAINT game_results_game_type_check CHECK ((game_type = ANY (ARRAY['compito'::text, 'conta-veloce'::text, 'cosa-apri'::text, 'dichiara'::text, 'impasse'::text, 'licita'::text, 'mano-del-giorno'::text, 'mano-guidata'::text, 'memory'::text, 'pratica-licita'::text, 'quale-contratto'::text, 'quiz-lampo'::text, 'quiz-prese'::text, 'segnali'::text, 'sfida'::text, 'sfida-link'::text, 'sfida-settimanale'::text, 'smazzata'::text, 'torneo'::text, 'trova-errore'::text])));
@@ -5312,6 +5330,7 @@ ALTER TABLE public.email_events ADD CONSTRAINT email_events_user_id_fkey FOREIGN
 ALTER TABLE public.esercizi_posizione ADD CONSTRAINT esercizi_posizione_autore_id_fkey FOREIGN KEY (autore_id) REFERENCES auth.users(id) ON DELETE SET NULL;
 ALTER TABLE public.esercizi_posizione ADD CONSTRAINT esercizi_posizione_class_id_fkey FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE SET NULL;
 ALTER TABLE public.eserciziario_exercises ADD CONSTRAINT eserciziario_exercises_lesson_id_fkey FOREIGN KEY (lesson_id) REFERENCES lessons(id) ON DELETE CASCADE;
+ALTER TABLE public.figure_insegnante ADD CONSTRAINT figure_insegnante_autore_id_fkey FOREIGN KEY (autore_id) REFERENCES auth.users(id) ON DELETE CASCADE;
 ALTER TABLE public.forum_comments ADD CONSTRAINT forum_comments_parent_id_fkey FOREIGN KEY (parent_id) REFERENCES forum_comments(id) ON DELETE CASCADE;
 ALTER TABLE public.forum_comments ADD CONSTRAINT forum_comments_post_id_fkey FOREIGN KEY (post_id) REFERENCES forum_posts(id) ON DELETE CASCADE;
 ALTER TABLE public.forum_comments ADD CONSTRAINT forum_comments_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
@@ -5404,6 +5423,7 @@ CREATE INDEX collectible_cards_rarity_idx ON public.collectible_cards USING btre
 CREATE UNIQUE INDEX commenti_compito_unico ON public.commenti_compito USING btree (assignment_id, smazzata_id, COALESCE(student_id, '00000000-0000-0000-0000-000000000000'::uuid));
 CREATE INDEX course_worlds_course_id_idx ON public.course_worlds USING btree (course_id);
 CREATE INDEX eserciziario_lesson_idx ON public.eserciziario_exercises USING btree (lesson_id);
+CREATE INDEX figure_insegnante_autore_idx ON public.figure_insegnante USING btree (autore_id, created_at DESC);
 CREATE INDEX glossary_category_idx ON public.glossary USING btree (category);
 CREATE INDEX glossary_related_terms_gin ON public.glossary USING gin (related_terms);
 CREATE INDEX idx_assignments_class ON public.assignments USING btree (class_id, created_at DESC);
@@ -5535,6 +5555,7 @@ ALTER TABLE public.elenco_allievi ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.email_events ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.esercizi_posizione ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.eserciziario_exercises ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.figure_insegnante ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.forum_comments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.forum_likes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.forum_poll_votes ENABLE ROW LEVEL SECURITY;
@@ -5634,6 +5655,7 @@ CREATE POLICY "Chi insegna crea esercizi" ON public.esercizi_posizione AS PERMIS
 CREATE POLICY "L'autore cancella i suoi esercizi" ON public.esercizi_posizione AS PERMISSIVE FOR DELETE TO authenticated USING ((autore_id = auth.uid()));
 CREATE POLICY "L'autore modifica i suoi esercizi" ON public.esercizi_posizione AS PERMISSIVE FOR UPDATE TO authenticated USING ((autore_id = auth.uid())) WITH CHECK ((autore_id = auth.uid()));
 CREATE POLICY eserciziario_public_read ON public.eserciziario_exercises AS PERMISSIVE FOR SELECT TO public USING (true);
+CREATE POLICY "L'insegnante gestisce le sue figure" ON public.figure_insegnante AS PERMISSIVE FOR ALL TO authenticated USING ((autore_id = ( SELECT auth.uid() AS uid))) WITH CHECK ((autore_id = ( SELECT auth.uid() AS uid)));
 CREATE POLICY "Comments delete own" ON public.forum_comments AS PERMISSIVE FOR DELETE TO public USING ((auth.uid() = user_id));
 CREATE POLICY "Comments insert" ON public.forum_comments AS PERMISSIVE FOR INSERT TO public WITH CHECK ((auth.uid() = user_id));
 CREATE POLICY "Comments readable" ON public.forum_comments AS PERMISSIVE FOR SELECT TO public USING (true);
@@ -5776,6 +5798,7 @@ REVOKE ALL ON TABLE public.email_events FROM PUBLIC, anon, authenticated, servic
 REVOKE ALL ON SEQUENCE public.email_events_id_seq FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.esercizi_posizione FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.eserciziario_exercises FROM PUBLIC, anon, authenticated, service_role;
+REVOKE ALL ON TABLE public.figure_insegnante FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.forum_comments FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON SEQUENCE public.forum_comments_id_seq FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.forum_likes FROM PUBLIC, anon, authenticated, service_role;
@@ -6383,6 +6406,22 @@ GRANT SELECT ON TABLE public.eserciziario_exercises TO service_role;
 GRANT TRIGGER ON TABLE public.eserciziario_exercises TO service_role;
 GRANT TRUNCATE ON TABLE public.eserciziario_exercises TO service_role;
 GRANT UPDATE ON TABLE public.eserciziario_exercises TO service_role;
+GRANT DELETE ON TABLE public.figure_insegnante TO authenticated;
+GRANT INSERT ON TABLE public.figure_insegnante TO authenticated;
+GRANT MAINTAIN ON TABLE public.figure_insegnante TO authenticated;
+GRANT REFERENCES ON TABLE public.figure_insegnante TO authenticated;
+GRANT SELECT ON TABLE public.figure_insegnante TO authenticated;
+GRANT TRIGGER ON TABLE public.figure_insegnante TO authenticated;
+GRANT TRUNCATE ON TABLE public.figure_insegnante TO authenticated;
+GRANT UPDATE ON TABLE public.figure_insegnante TO authenticated;
+GRANT DELETE ON TABLE public.figure_insegnante TO service_role;
+GRANT INSERT ON TABLE public.figure_insegnante TO service_role;
+GRANT MAINTAIN ON TABLE public.figure_insegnante TO service_role;
+GRANT REFERENCES ON TABLE public.figure_insegnante TO service_role;
+GRANT SELECT ON TABLE public.figure_insegnante TO service_role;
+GRANT TRIGGER ON TABLE public.figure_insegnante TO service_role;
+GRANT TRUNCATE ON TABLE public.figure_insegnante TO service_role;
+GRANT UPDATE ON TABLE public.figure_insegnante TO service_role;
 GRANT DELETE ON TABLE public.forum_comments TO anon;
 GRANT INSERT ON TABLE public.forum_comments TO anon;
 GRANT MAINTAIN ON TABLE public.forum_comments TO anon;
