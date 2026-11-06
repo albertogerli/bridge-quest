@@ -5,6 +5,8 @@ import { ChevronDown, ChevronRight } from "lucide-react";
 import { leggiEsercizi, type EsercizioPerAllievo } from "@/lib/esercizi-posizione";
 import type { AssignmentResultRow } from "@/lib/instructors";
 import { useT } from "@/contexts/traduzioni-provider";
+import { posizioniConPariMerito } from "@/lib/pari-merito";
+import { ProiettaStampa } from "@/components/istruttori/proietta-stampa";
 
 /**
  * Le domande di un compito, allievo per allievo: quante ne ha fatte, quante
@@ -23,7 +25,10 @@ export function RisultatiDomande({
   esercizioIds,
   righe,
   allievi,
+  titolo,
 }: {
+  /** Il titolo del compito: va in cima a quello che si proietta o si stampa. */
+  titolo: string;
   esercizioIds: string[];
   righe: AssignmentResultRow[];
   allievi: { student_id: string; display_name?: string | null }[];
@@ -48,7 +53,10 @@ export function RisultatiDomande({
       const giuste = [...sue.values()].filter((r) => r.score >= 0).length;
       return { ...a, sue, giuste };
     })
-    .sort((x, y) => y.giuste - x.giuste || y.sue.size - x.sue.size);
+    .sort((x, y) => y.giuste - x.giuste || y.sue.size - x.sue.size || (x.display_name ?? "").localeCompare(y.display_name ?? "", "it"));
+  // Pari merito a parità di risposte giuste e di domande fatte; chi non ha
+  // cominciato non ha posizione.
+  const posizioni = posizioniConPariMerito(perAllievo, (a, b) => a.giuste === b.giuste && a.sue.size === b.sue.size);
 
   // Le domande sbagliate di più, per sapere cosa rispiegare senza leggere tutto.
   const sbagliate = esercizioIds
@@ -83,21 +91,32 @@ export function RisultatiDomande({
       {allievi.length === 0 ? (
         <p className="text-sm text-muted-foreground">{t("Nessun allievo iscritto a questa classe.")}</p>
       ) : (
-        <div className="overflow-x-auto rounded-lg border border-border">
+        <ProiettaStampa titolo={titolo}>
+        <div className="overflow-x-auto rounded-lg border border-border" data-da-stampare>
           <table className="w-full border-collapse text-sm">
             <thead>
               <tr className="border-b border-border bg-muted/40 text-left">
+                <th className="px-3 py-2 font-semibold">#</th>
                 <th className="px-3 py-2 font-semibold">{t("Allievo")}</th>
                 <th className="px-3 py-2 text-right font-semibold">{t("Risposte")}</th>
                 <th className="px-3 py-2 text-right font-semibold">{t("Giuste")}</th>
               </tr>
             </thead>
             <tbody>
-              {perAllievo.map((a) => {
+              {perAllievo.map((a, i) => {
                 const su = aperto === a.student_id;
+                const pari = posizioni[i - 1] === posizioni[i] || posizioni[i + 1] === posizioni[i];
                 return (
                   <Fragment key={a.student_id}>
                     <tr className="border-b border-border last:border-0">
+                      <td className="px-3 py-2 tabular-nums text-muted-foreground">
+                        {a.sue.size > 0 && (
+                          <>
+                            {posizioni[i]}
+                            {pari && <span className="ml-1 text-xs">{t("pari merito")}</span>}
+                          </>
+                        )}
+                      </td>
                       <td className="px-3 py-2">
                         <button
                           type="button"
@@ -120,7 +139,7 @@ export function RisultatiDomande({
                     </tr>
                     {su && (
                       <tr className="border-b border-border bg-muted/20">
-                        <td colSpan={3} className="px-3 py-2">
+                        <td colSpan={4} className="px-3 py-2">
                           <ol className="space-y-1">
                             {esercizioIds.map((id, i) => {
                               const r = a.sue.get(id);
@@ -150,6 +169,7 @@ export function RisultatiDomande({
             </tbody>
           </table>
         </div>
+        </ProiettaStampa>
       )}
     </div>
   );

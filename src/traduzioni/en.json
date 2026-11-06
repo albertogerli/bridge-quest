@@ -2005,7 +2005,6 @@
   "Simultaneo di martedì": "Tuesday simultaneous",
   "Stampa tutte le mani di {nome}": "Print all deals in {nome}",
   "Togli dalle preferite": "Remove from favorites",
-  "Va bene il pacchetto delle smazzate di un simultaneo, o le mani del Corso Fiori dall'area riservata.": "A simultaneous tournament's deal package works, or the Corso Fiori deals from the members' area.",
   "contratto dal par": "contract from par",
   "{n} mani create in «{cartella}».": "{n} deals created in “{cartella}”.",
   "{n} mani importate, {e} saltate perché illeggibili.": "{n} deals imported, {e} skipped because unreadable.",
@@ -3052,5 +3051,15 @@
   "{g} giuste": "{g} correct",
   "{n} domande su {m}": "{n} of {m} questions",
   "{n} errori": "{n} wrong",
-  "1 errore": "1 wrong"
+  "1 errore": "1 wrong",
+  "Va bene il pacchetto delle smazzate di un simultaneo, o le mani del corso dall'area riservata della FIGB.": "A simultaneous tournament's deal package works, or the course deals from the members' area.",
+  "Assegnato": "Assigned",
+  "Dal programma del corso": "From the course syllabus",
+  "Le venti lezioni della Commissione. Per ognuna: le slide da proiettare, la videolezione, la dispensa e gli esercizi, da vedere, stampare o assegnare alla classe. Le smazzate si assegnano da «Nuovo compito».": "The Teaching Committee's twenty lessons. For each one: the slides to project, the video lesson, the handout and the exercises, to view, print or assign to your class. Deals are assigned from “New assignment”.",
+  "Non assegnato. Controlla la connessione e riprova.": "Not assigned. Check your connection and try again.",
+  "Per la classe": "For class",
+  "Proietta": "Project",
+  "Scegli la classe per assegnare": "Choose a class to assign to",
+  "Slide": "Slides",
+  "pari merito": "tied"
 }

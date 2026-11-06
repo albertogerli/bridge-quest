@@ -10,7 +10,7 @@ import { cancellaEsercizio, elencaMieiEsercizi, salvaEsercizio, type EsercizioPo
 import { descriviFigura, leggiFigura } from "@/lib/figura-domanda";
 import { istante } from "@/lib/novita-insegnante";
 import { gruppoTest, siglaTest, TEST_COMMISSIONE, type TestCommissione } from "@/lib/test-commissione";
-import { createAssignment } from "@/lib/instructors";
+import { assegnaTestCommissione } from "@/lib/assegna-test";
 import { useMyClasses } from "@/store/use-classes-store";
 import { LinkCompito } from "@/components/istruttori/link-compito";
 import Link from "@/components/link";
@@ -103,43 +103,25 @@ export default function DomandePage() {
   const [assegnato, setAssegnato] = useState<{ test: number; classId: string; id: string; titolo: string } | null>(null);
   const [erroreAssegna, setErroreAssegna] = useState<string | null>(null);
 
-  /**
-   * Un test della Commissione diventa un compito della classe, in un passo.
-   * La rotta copia le domande fra quelle dell'insegnante se non c'erano (con
-   * le risposte, che dal browser non passano) e restituisce gli id in ordine;
-   * da lì è un compito come gli altri.
-   */
   async function assegna(test: TestCommissione) {
     if (!classeScelta) return;
     setInCorso(true);
     setErroreAssegna(null);
-    try {
-      const r = await fetch("/api/istruttori/test-commissione", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ numero: test.numero }),
-      });
-      const j = (await r.json().catch(() => ({}))) as { ids?: string[]; codice?: string };
-      if (!r.ok || !j.ids?.length) {
-        setErroreAssegna(
-          r.status === 403
-            ? t("Solo chi insegna può assegnare gli esercizi.")
-            : j.codice === "42703"
-              ? t("Non assegnato: va eseguito lo script delle figure delle domande.")
-              : t("Non sono riuscito ad assegnare gli esercizi. Riprova fra un momento."),
-        );
-        return;
-      }
-      const titolo = gruppoTest(test);
-      const compito = await createAssignment({ classId: classeScelta, title: titolo, smazzataIds: [], esercizioIds: j.ids });
-      setAssegnato({ test: test.numero, classId: classeScelta, id: compito.id, titolo });
-      setAssegnando(null);
-      void ricarica();
-    } catch {
-      setErroreAssegna(t("Non sono riuscito ad assegnare gli esercizi. Riprova fra un momento."));
-    } finally {
-      setInCorso(false);
+    const esito = await assegnaTestCommissione(classeScelta, test);
+    setInCorso(false);
+    if (!esito.ok) {
+      setErroreAssegna(
+        esito.motivo === "solo-insegnanti"
+          ? t("Solo chi insegna può assegnare gli esercizi.")
+          : esito.motivo === "manca-script"
+            ? t("Non assegnato: va eseguito lo script delle figure delle domande.")
+            : t("Non sono riuscito ad assegnare gli esercizi. Riprova fra un momento."),
+      );
+      return;
     }
+    setAssegnato({ test: test.numero, classId: classeScelta, id: esito.compito.id, titolo: esito.titolo });
+    setAssegnando(null);
+    void ricarica();
   }
 
   async function cancella(id: string) {

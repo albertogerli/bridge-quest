@@ -452,7 +452,7 @@ function ImportaPbn({ onFatto }: { onFatto: (msg: string) => void }) {
         />
       </label>
       <p className="text-xs text-muted-foreground">
-        {t("Va bene il pacchetto delle smazzate di un simultaneo, o le mani del Corso Fiori dall'area riservata.")}
+        {t("Va bene il pacchetto delle smazzate di un simultaneo, o le mani del corso dall'area riservata della FIGB.")}
       </p>
       {errore && <p className="text-sm text-destructive">{errore}</p>}
       <Button onClick={() => void importa()} disabled={inCorso || !file}>

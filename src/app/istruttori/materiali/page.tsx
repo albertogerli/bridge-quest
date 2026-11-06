@@ -7,8 +7,7 @@ import { useT } from "@/contexts/traduzioni-provider";
 import { useLingua } from "@/hooks/use-lingua";
 import Link from "@/components/link";
 import { MATERIALI_CORSO, type ManiCommissione, type Materiale } from "@/lib/materiali-corso";
-import { MODULI_PROGRAMMA, PROGRAMMA_PRIMO_LIVELLO, siglaGruppi } from "@/lib/programma-corso";
-import { siglaTest, testDellaLezione } from "@/lib/test-commissione";
+import { ProgrammaCorso } from "@/components/istruttori/programma-corso";
 
 /**
  * Slide da proiettare e dispense da stampare, modulo per modulo.
@@ -49,7 +48,7 @@ export default function MaterialiPage() {
           </div>
         </Link>
 
-        <Programma />
+        <ProgrammaCorso />
 
         {MATERIALI_CORSO.map((modulo) => (
           <section key={modulo.titolo} className="mb-8">
@@ -144,62 +143,5 @@ function GruppoMani({ mani }: { mani: ManiCommissione[] }) {
         ))}
       </ul>
     </div>
-  );
-}
-
-/**
- * Il programma ufficiale, lezione per lezione, con quello che il sito ha per
- * ciascuna. Vedi `programma-corso.ts`.
- */
-function Programma() {
-  const t = useT();
-  return (
-    <section className="mb-10">
-      <h2 className="text-lg font-bold font-display">{t("Programma del Corso di Primo Livello")}</h2>
-      <p className="text-sm text-muted-foreground mb-4">
-        {t("Le venti lezioni della Commissione e, per ognuna, la lezione del sito e le smazzate da giocare. «E3 S1-4» vuol dire esercizio 3, smazzate da 1 a 4: si assegnano da «Nuovo compito» di ogni classe, toccando la lezione.")}
-      </p>
-      {([1, 2] as const).map((modulo) => (
-        <div key={modulo} className="mb-5">
-          <h3 className="text-sm font-semibold text-muted-foreground mb-2">{t(MODULI_PROGRAMMA[modulo])}</h3>
-          <ol className="divide-y divide-border overflow-hidden rounded-2xl border border-border bg-card">
-            {PROGRAMMA_PRIMO_LIVELLO.filter((l) => l.modulo === modulo).map((l) => (
-              <li key={l.numero} className="flex gap-3 px-4 py-3">
-                <span className="w-7 shrink-0 font-display text-lg font-bold tabular-nums text-primary">{l.numero}</span>
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm font-semibold">{t(l.titolo)}</p>
-                  <p className="mt-0.5 flex flex-wrap gap-x-3 text-xs text-muted-foreground">
-                    <span>{l.tipo === "gioco" ? t("Gioco") : t("Teoria e gioco")}</span>
-                    {l.lezioniSito.map((id) => (
-                      <Link key={id} href={`/lezioni/${id}`} className="font-semibold text-primary hover:underline">
-                        {t("Lezione {n} del sito", { n: id })}
-                      </Link>
-                    ))}
-                    <span>
-                      {l.smazzate === "tavolo"
-                        ? t("Smazzate mescolate al tavolo")
-                        : Array.isArray(l.smazzate)
-                          ? t("Smazzate {sigla}", { sigla: siglaGruppi(l.smazzate) })
-                          : t("Smazzate preparate da BridgeLab")}
-                    </span>
-                    {/* Le smazzate preparate per la lezione: il file da scaricare (Trevissoi, 06/11: «dove le trovo?»). */}
-                    {typeof l.smazzate === "object" && !Array.isArray(l.smazzate) && (
-                      <a href={l.smazzate.file} download className="font-semibold text-primary hover:underline">
-                        {t("Scarica le smazzate (PBN)")}
-                      </a>
-                    )}
-                    {testDellaLezione(l.numero).map((x) => (
-                      <Link key={x.numero} href={`/istruttori/domande#lezione-${siglaTest(x)}`} className="font-semibold text-primary hover:underline">
-                        {t("Esercizi: {titolo}", { titolo: t(x.titolo) })}
-                      </Link>
-                    ))}
-                  </p>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </div>
-      ))}
-    </section>
   );
 }

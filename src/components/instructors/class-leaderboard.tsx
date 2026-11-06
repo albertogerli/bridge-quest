@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { getClassLeaderboard, type LeaderboardRow } from "@/lib/instructors";
 import { useT } from "@/contexts/traduzioni-provider";
+import { posizioniConPariMerito } from "@/lib/pari-merito";
+import { ProiettaStampa } from "@/components/istruttori/proietta-stampa";
 
 function fmtTime(ms: number): string {
   if (!ms) return "—";
@@ -11,7 +13,8 @@ function fmtTime(ms: number): string {
   return m > 0 ? `${m}m ${s % 60}s` : `${s}s`;
 }
 
-const medal = (i: number) => (i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `${i + 1}`);
+/** La posizione (da 1), con i pari merito: due primi hanno entrambi l'oro. */
+const medal = (p: number) => (p === 1 ? "🥇" : p === 2 ? "🥈" : p === 3 ? "🥉" : `${p}`);
 
 /** Class-wide leaderboard: hands kept on the 1st attempt → tricks → speed.
  *  Pass highlightUserId to highlight the viewing student's own row. */
@@ -64,8 +67,15 @@ export function ClassLeaderboard({
     );
   }
 
-  return (
-    <div className="overflow-x-auto rounded-lg border border-border">
+  // Pari merito solo a risultati identici: stesse mani mantenute, stesse
+  // prese, stesso tempo. Il tempo resta lo spareggio, ed è scritto sotto.
+  const posizioni = posizioniConPariMerito(
+    rows,
+    (a, b) => a.hands_made === b.hands_made && a.total_tricks === b.total_tricks && a.total_ms === b.total_ms,
+  );
+
+  const tabella = (
+    <div className="overflow-x-auto rounded-lg border border-border" data-da-stampare>
       <table className="w-full border-collapse text-sm">
         <thead>
           <tr className="border-b border-border bg-muted/40 text-xs text-muted-foreground">
@@ -84,7 +94,12 @@ export function ClassLeaderboard({
                 key={r.student_id}
                 className={`border-b border-border last:border-0 ${me ? "bg-primary/5 font-semibold" : ""}`}
               >
-                <td className="px-3 py-2 text-left text-base">{medal(i)}</td>
+                <td className="px-3 py-2 text-left text-base">
+                  {medal(posizioni[i])}
+                  {(posizioni[i - 1] === posizioni[i] || posizioni[i + 1] === posizioni[i]) && (
+                    <span className="ml-1 text-xs text-muted-foreground">{t("pari merito")}</span>
+                  )}
+                </td>
                 <td className="px-3 py-2">
                   {nomi?.get(r.student_id) || r.student_name || "Allievo"}
                   {me && <span className="ml-1 text-xs text-primary">(tu)</span>}
@@ -105,4 +120,6 @@ export function ClassLeaderboard({
       </p>
     </div>
   );
+  // Proiettare e stampare servono all'insegnante; l'allievo la guarda e basta.
+  return nomi ? <ProiettaStampa titolo={t("Classifica della classe")}>{tabella}</ProiettaStampa> : tabella;
 }

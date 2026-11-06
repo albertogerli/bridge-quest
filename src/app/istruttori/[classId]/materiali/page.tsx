@@ -12,6 +12,7 @@ import { useLingua } from "@/hooks/use-lingua";
 import { dispensaDellaLezione } from "@/lib/materiali-corso";
 import { useCatalog } from "@/store/use-catalog-store";
 import { getClassAssignments } from "@/lib/instructors";
+import { ProgrammaCorso } from "@/components/istruttori/programma-corso";
 import { getYouTubeWatchUrl } from "@/components/maestro-video";
 import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import { reportError, segnalaSalvoRete } from "@/lib/report-error";
@@ -194,6 +195,19 @@ export default function MaterialiLezionePage({ params }: { params: Promise<{ cla
       <p className="mb-6 text-base text-muted-foreground">
         {t("La videolezione, la dispensa e l'esercizio di ogni lezione. Decidi tu quando gli allievi li vedono: subito, a un'ora precisa, o più avanti.")}
       </p>
+
+      {/* Il programma del corso con le quattro voci di ogni lezione e la
+          spunta su ciò che questa classe ha già avuto (Trevissoi, 03/11/2026). */}
+      {disponibile && (
+        <details className="mb-8 rounded-xl border border-border bg-card p-4" open>
+          <summary className="cursor-pointer font-display text-lg font-semibold">
+            {t("Dal programma del corso")}
+          </summary>
+          <div className="mt-3">
+            <ProgrammaCorso classId={classId} onCambio={() => void ricarica()} />
+          </div>
+        </details>
+      )}
 
       {!disponibile ? (
         <p className="rounded-lg border border-border bg-muted/40 p-4 text-base">

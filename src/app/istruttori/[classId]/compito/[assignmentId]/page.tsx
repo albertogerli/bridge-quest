@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState, use } from "react";
 import { RisposteClasse } from "@/components/istruttori/risposte-classe";
 import { RisultatiDomande } from "@/components/istruttori/risultati-domande";
 import { LinkCompito } from "@/components/istruttori/link-compito";
+import { ProiettaStampa } from "@/components/istruttori/proietta-stampa";
 import { BricioleClasse } from "@/components/istruttori/briciole-classe";
 import dynamic from "next/dynamic";
 import { AnimatePresence } from "motion/react";
@@ -40,6 +41,7 @@ import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 import { useAlRitorno } from "@/hooks/use-al-ritorno";
 import { segnalaSalvoRete } from "@/lib/report-error";
 import { classificaCompito } from "@/lib/riepiloghi-classe";
+import { eParimerito, posizioniConPariMerito } from "@/lib/pari-merito";
 import { mazziereDellaMano, mazziereRegistrato, stelleScritte } from "@/lib/compito-licita";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, MessageSquareText, Presentation } from "lucide-react";
@@ -502,6 +504,10 @@ export default function AssignmentResultsPage({
     return { score: r.score };
   });
   const qualcunoHaGiocato = classifica.some((r) => r.giocate > 0);
+  const posizioniClassifica = posizioniConPariMerito(
+    classifica,
+    (a, b) => a.mantenute === b.mantenute && a.giocate === b.giocate && a.saldo === b.saldo,
+  );
 
   // Per-hand difficulty signal: how many students went down on each hand.
   const downPerHand = smazzataIds.map(
@@ -562,7 +568,7 @@ export default function AssignmentResultsPage({
 
       {/* Un test: prima le risposte per nome, poi (sotto) la divisione domanda per domanda. */}
       {domandeIds.length > 0 && (
-        <RisultatiDomande esercizioIds={domandeIds} righe={results} allievi={members} />
+        <RisultatiDomande esercizioIds={domandeIds} righe={results} allievi={members} titolo={assignment.title} />
       )}
       {assignment.licita && (
         <p className="-mt-4 mb-6 text-sm text-muted-foreground">
@@ -763,11 +769,17 @@ export default function AssignmentResultsPage({
               ? t("La vedi solo tu: prima le mani riuscite, poi quelle dichiarate. Si aggiorna da sola mentre la classe dichiara.")
               : t("La vedi solo tu: prima i contratti mantenuti, poi le mani giocate, poi le prese in più o in meno. Si aggiorna da sola mentre la classe gioca.")}
           </p>
-          <ol className="divide-y divide-border rounded-lg border border-border">
+          <ProiettaStampa titolo={`${t("Classifica di questo compito")} · ${assignment.title}`}>
+          <ol className="divide-y divide-border rounded-lg border border-border" data-da-stampare>
             {classifica.map((r, i) => (
               <li key={r.studentId} className="flex flex-wrap items-center gap-x-4 gap-y-1 px-4 py-2 text-sm">
-                <span className="w-6 text-right font-semibold tabular-nums text-muted-foreground">{i + 1}.</span>
-                <span className="min-w-0 flex-1 font-medium">{r.nome}</span>
+                <span className="w-6 text-right font-semibold tabular-nums text-muted-foreground">{posizioniClassifica[i]}.</span>
+                <span className="min-w-0 flex-1 font-medium">
+                  {r.nome}
+                  {r.giocate > 0 && eParimerito(posizioniClassifica, i) && (
+                    <span className="ml-1 text-xs font-normal text-muted-foreground">{t("pari merito")}</span>
+                  )}
+                </span>
                 {r.giocate === 0 ? (
                   <span className="text-muted-foreground">{t("non ha ancora giocato")}</span>
                 ) : (
@@ -787,6 +799,7 @@ export default function AssignmentResultsPage({
               </li>
             ))}
           </ol>
+          </ProiettaStampa>
         </div>
       )}
 
