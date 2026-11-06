@@ -68,8 +68,8 @@ describe("rientroAllaHome", () => {
     expect(rientroAllaHome("/forum", { ...fuori, daQuestoSito: true })).toBeNull();
   });
 
-  it("chi era sul sito pochi minuti fa resta dov'è", () => {
-    expect(rientroAllaHome("/forum", { ...fuori, ultimaVisita: ora - 5 * 60 * 1000 })).toBeNull();
+  it("anche pochi minuti dopo: chi riapre da fuori sul Forum va alla home (06/11/2026)", () => {
+    expect(rientroAllaHome("/forum", { ...fuori, ultimaVisita: ora - 5 * 60 * 1000 })).toBe("/");
   });
 
   it("le altre pagine e i post precisi non si toccano", () => {

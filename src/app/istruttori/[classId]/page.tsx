@@ -697,7 +697,15 @@ export default function ClassDetailPage({
                   key={m.student_id}
                   classId={classId}
                   membro={m}
-                  doppio={doppi.has(m.student_id)}
+                  omonimi={
+                    doppi.has(m.student_id)
+                      ? members.filter(
+                          (o) =>
+                            o.student_id !== m.student_id &&
+                            (o.display_name ?? "").trim().toLocaleLowerCase("it") === (m.display_name ?? "").trim().toLocaleLowerCase("it"),
+                        )
+                      : []
+                  }
                   onRinominato={rinominato}
                 />
               ))}

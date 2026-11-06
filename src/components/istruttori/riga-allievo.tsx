@@ -22,13 +22,13 @@ import { useLingua } from "@/hooks/use-lingua";
 export function RigaAllievo({
   classId,
   membro,
-  doppio,
+  omonimi,
   onRinominato,
 }: {
   classId: string;
   membro: ClassMember;
-  /** Un altro allievo della classe si chiama nello stesso modo. */
-  doppio: boolean;
+  /** Gli altri allievi della classe che si chiamano nello stesso modo (vuoto se nessuno). */
+  omonimi: ClassMember[];
   onRinominato: (studentId: string, nome: string | null) => void;
 }) {
   const t = useT();
@@ -46,28 +46,31 @@ export function RigaAllievo({
    * profilo quando è di due parole.
    */
   const [proposta, setProposta] = useState<string | null>(null);
+  const doppio = omonimi.length > 0;
+  const idOmonimi = omonimi.map((o) => o.student_id).join(",");
+  const profiliOmonimi = omonimi.map((o) => o.nome_profilo ?? "").join("|");
   useEffect(() => {
-    if (!doppio) return;
+    if (!idOmonimi) return;
     let vivo = true;
     void (async () => {
-      let completo: string | null = null;
+      // Il nome intero di ognuno dal suo modulo d'adesione: serve anche il
+      // cognome degli altri, per sapere quante lettere bastano a distinguerli.
+      const ids = [membro.student_id, ...idOmonimi.split(",")];
+      const completi = new Map<string, string>();
       try {
-        const { data } = await createClient()
-          .from("adesioni")
-          .select("nome")
-          .eq("class_id", classId)
-          .eq("user_id", membro.student_id)
-          .limit(1)
-          .maybeSingle();
-        completo = (data?.nome as string | undefined) ?? null;
+        const { data } = await createClient().from("adesioni").select("user_id, nome").eq("class_id", classId).in("user_id", ids);
+        for (const r of (data ?? []) as { user_id: string; nome: string | null }[]) if (r.nome) completi.set(r.user_id, r.nome);
       } catch (err) {
         segnalaSalvoRete("istruttori/classe:nome-con-iniziale", err);
       }
-      const p = nomeConIniziale(completo) ?? nomeConIniziale(membro.nome_profilo);
+      const profili = profiliOmonimi.split("|");
+      const altri = idOmonimi.split(",").map((id, i) => completi.get(id) ?? profili[i] ?? null);
+      const p =
+        nomeConIniziale(completi.get(membro.student_id), altri) ?? nomeConIniziale(membro.nome_profilo, altri);
       if (vivo) setProposta(p && p !== nome ? p : null);
     })();
     return () => { vivo = false; };
-  }, [doppio, classId, membro.student_id, membro.nome_profilo, nome]);
+  }, [idOmonimi, profiliOmonimi, classId, membro.student_id, membro.nome_profilo, nome]);
 
   async function usaProposta() {
     if (!proposta) return;

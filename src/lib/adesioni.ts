@@ -137,19 +137,46 @@ export function gruppiSimili(adesioni: readonly Adesione[]): GruppoSimili[] {
   });
 }
 
+/** Nome e cognome (l'ultima parola), o `null` se la parola è una sola. */
+function nomeECognome(completo: string | null | undefined): { nome: string; cognome: string } | null {
+  const parole = (completo ?? "").trim().split(/\s+/).filter(Boolean);
+  if (parole.length < 2) return null;
+  return { nome: parole.slice(0, -1).join(" "), cognome: parole[parole.length - 1] };
+}
+
 /**
  * «Giuseppe Rossi» → «Giuseppe R.»: il nome da proporre quando in classe due
  * allievi si chiamano uguale. L'ha chiesto Trevissoi il 02/11/2026: invece di
  * inventarsi un nome diverso, l'iniziale del cognome.
  *
+ * Se anche l'iniziale coincide — Giuseppe Rossi e Giuseppe Russo — si
+ * aggiungono lettere del cognome finché i due non si distinguono: «Giuseppe
+ * Ro.» e «Giuseppe Ru.» (Trevissoi, 03/11/2026). `altri` sono i nomi completi
+ * degli omonimi; con il cognome identico si arriva al cognome intero, e lì
+ * decide l'insegnante.
+ *
  * Il cognome è l'ultima parola: «Maria Grazia De Luca» → «Maria Grazia De L.»
  * sarebbe sbagliato, ma con un nome solo non c'è niente da proporre e con due
  * parole il caso è quello comune. `null` quando la parola è una sola.
  */
-export function nomeConIniziale(nomeCompleto: string | null | undefined): string | null {
-  const parole = (nomeCompleto ?? "").trim().split(/\s+/).filter(Boolean);
-  if (parole.length < 2) return null;
-  const cognome = parole[parole.length - 1];
-  const nome = parole.slice(0, -1).join(" ");
-  return `${nome} ${cognome.charAt(0).toLocaleUpperCase("it-IT")}.`;
+export function nomeConIniziale(
+  nomeCompleto: string | null | undefined,
+  altri: readonly (string | null | undefined)[] = [],
+): string | null {
+  const mio = nomeECognome(nomeCompleto);
+  if (!mio) return null;
+  const minuscolo = (x: string) => x.toLocaleLowerCase("it-IT");
+  const rivali = altri
+    .map(nomeECognome)
+    .filter((x): x is { nome: string; cognome: string } => !!x && minuscolo(x.nome) === minuscolo(mio.nome));
+  const lettere = mio.cognome.length;
+  let k = 1;
+  while (
+    k < lettere &&
+    rivali.some((r) => minuscolo(r.cognome.slice(0, k)) === minuscolo(mio.cognome.slice(0, k)))
+  )
+    k++;
+  const pezzo = mio.cognome.slice(0, k);
+  const iniziali = pezzo.charAt(0).toLocaleUpperCase("it-IT") + pezzo.slice(1);
+  return k >= lettere ? `${mio.nome} ${iniziali}` : `${mio.nome} ${iniziali}.`;
 }

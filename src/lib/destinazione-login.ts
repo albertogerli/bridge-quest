@@ -53,9 +53,6 @@ export function destinazioneDopoLogin(grezza: string | null | undefined): string
   return sicura;
 }
 
-/** Dopo quanto tempo di assenza una pagina d'ingresso non si riapre da sola. */
-export const ASSENZA_PER_TORNARE_A_CASA_MS = 30 * 60 * 1000;
-
 /**
  * Dove mandare chi APRE il sito direttamente su una pagina d'ingresso
  * (`/forum`, `/classifica`…) dopo un'assenza: alla home. `null` = resta dov'è.
@@ -67,16 +64,22 @@ export const ASSENZA_PER_TORNARE_A_CASA_MS = 30 * 60 * 1000;
  * «bridgelab.it» con l'indirizzo più visitato. La sessione è ancora valida,
  * quindi non passa dal login e quella regola non scatta.
  *
- * Si riconosce l'arrivo «da fuori» dal referrer (vuoto o di un altro sito) e
- * dal tempo dall'ultima visita: chi passa dal Forum alla classifica dentro il
- * sito, o ricarica la pagina, resta dov'è.
+ * Si riconosce l'arrivo «da fuori» dal referrer (vuoto o di un altro sito):
+ * chi passa dal Forum alla classifica dentro il sito, o ricarica la pagina,
+ * resta dov'è.
+ *
+ * NIENTE PIÙ SOGLIA DI TEMPO (06/11/2026). Prima valeva solo dopo mezz'ora
+ * d'assenza, e Trevissoi ci è ricascato: chiusa e riaperta la finestra entro
+ * la mezz'ora, era di nuovo nel Forum, che dice di non aver mai aperto. Una
+ * pagina d'ingresso aperta da fuori porta sempre alla home; i collegamenti a
+ * un post preciso (`/forum/29`) restano dove sono. `ultimaVisita` e `ora`
+ * restano nella firma per chi le passa, ma non decidono più.
  */
 export function rientroAllaHome(
   percorso: string,
-  { ultimaVisita, ora, daQuestoSito }: { ultimaVisita: number | null; ora: number; daQuestoSito: boolean },
+  { daQuestoSito }: { ultimaVisita?: number | null; ora?: number; daQuestoSito: boolean },
 ): string | null {
   if (daQuestoSito) return null;
-  if (ultimaVisita !== null && ora - ultimaVisita < ASSENZA_PER_TORNARE_A_CASA_MS) return null;
   const casa = destinazioneDopoLogin(percorso);
   return casa !== destinazioneSicura(percorso) ? casa : null;
 }

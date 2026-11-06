@@ -16,7 +16,7 @@ import { useGameStore } from "@/store/use-game-store";
 import { useT } from "@/contexts/traduzioni-provider";
 import { useLingua } from "@/hooks/use-lingua";
 import { materialiPubblicati } from "@/lib/materiali-lezione-db";
-import { dispensaDellaLezione, eserciziDellaLezione } from "@/lib/materiali-corso";
+import { dispensaDellaLezione } from "@/lib/materiali-corso";
 
 const courseColors: Record<CourseId, { active: string; inactive: string; border: string }> = {
   fiori: { active: "bg-emerald-500 text-white", inactive: "text-emerald-700 dark:text-emerald-300", border: "border-emerald-200 dark:border-emerald-900" },
@@ -334,7 +334,6 @@ function InfographicCard({
   }, []);
   const lessonNumber = getLessonDisplayNumber(lessonId);
   const dispensa = dispensaDellaLezione(lessonId);
-  const esercizi = eserciziDellaLezione(lessonId);
 
   return (
     <div className="card-clean rounded-2xl bg-card overflow-hidden group">
@@ -432,14 +431,11 @@ function InfographicCard({
             {t("Dispensa da stampare (PDF)")}
           </a>
         )}
-        {!locked && esercizi && (
-          <Link
-            href={esercizi.online}
-            className="text-[12px] font-semibold text-figb dark:text-primary mt-1 block hover:underline"
-          >
-            {t("Esercizi della lezione")}
-          </Link>
-        )}
+        {/* Gli esercizi non stanno più qui: sono i test della Commissione, che
+            l'insegnante assegna alla classe e si fanno online, con le risposte
+            registrate (Trevissoi, 06/11/2026: «sostituiscili ai contenuti già
+            esistenti»). I vecchi fogli a schermo restano a /esercizi per chi
+            ha il link. */}
       </div>
     </div>
   );

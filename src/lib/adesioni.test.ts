@@ -146,6 +146,17 @@ describe("chi collegare a un'adesione: si suggerisce, non si decide", () => {
   });
 });
 
+describe("nomeConIniziale con altri omonimi", () => {
+  it("aggiunge lettere del cognome finché i nomi si distinguono", () => {
+    expect(nomeConIniziale("Giuseppe Rossi", ["Giuseppe Russo"])).toBe("Giuseppe Ro.");
+    expect(nomeConIniziale("Giuseppe Russo", ["Giuseppe Rossi"])).toBe("Giuseppe Ru.");
+    expect(nomeConIniziale("Giuseppe Rossi", ["Giuseppe Rossini"])).toBe("Giuseppe Rossi");
+    expect(nomeConIniziale("Giuseppe Rossi", ["Giuseppe Bianchi"])).toBe("Giuseppe R.");
+    expect(nomeConIniziale("Giuseppe Rossi", ["Mario Rossi"])).toBe("Giuseppe R.");
+    expect(nomeConIniziale("Giuseppe Rossi", [null, "Giuseppe"])).toBe("Giuseppe R.");
+  });
+});
+
 describe("nomeConIniziale", () => {
   it("tiene il nome e mette l'iniziale del cognome", () => {
     expect(nomeConIniziale("Giuseppe Rossi")).toBe("Giuseppe R.");
