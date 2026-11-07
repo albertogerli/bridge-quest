@@ -24,14 +24,14 @@ import path from "node:path";
 import { loadDds, Dds } from "../../dds.mjs";
 
 const LEZIONI = [
-  { num: "03", file: "mani-introduzione-del-morto.pbn", titolo: "Introduzione del morto",
+  { num: "03", file: "mani-introduzione-del-morto.pbn", titolo: "Affrancamenti di forza, di lunga e di posizione",
     contratti: ["3NT N", "6NT E", "3NT S", "3NT W", "3NT N", "3NT E", "3NT S", "3NT W"] },
-  { num: "06", file: "mani-piano-di-gioco-a-senza-atout-2.pbn", titolo: "Il piano di gioco a senz'atout (2)",
+  { num: "06", file: "mani-piano-di-gioco-a-senza-atout-2.pbn", titolo: "Il piano di gioco – prima serie",
     contratti: ["6NT N", "7NT E", "3NT S", "3NT W", "6NT N", "3NT E", "3NT S", "6NT W"] },
-  { num: "07", file: "mani-tutoraggio-gioco-a-senza.pbn", titolo: "Tutoraggio: il gioco a senz'atout",
+  { num: "07", file: "mani-tutoraggio-gioco-a-senza.pbn", titolo: "Il piano di gioco – seconda serie",
     contratti: ["5NT N", "3NT E", "3NT S", "3NT W", "1NT N", "1NT E", "6NT S", "1NT W"] },
   // Nei PDF i semi sono in italiano: P picche, C cuori, Q quadri, F fiori.
-  { num: "10", file: "mani-tutoraggio-senza-e-atout.pbn", titolo: "Tutoraggio: a senz'atout e ad atout",
+  { num: "10", file: "mani-tutoraggio-senza-e-atout.pbn", titolo: "Il gioco ad atout",
     contratti: ["3NT N", "3D E", "4S S", "2H W", "4S N", "4S E", "6S S", "6H W"] },
 ];
 

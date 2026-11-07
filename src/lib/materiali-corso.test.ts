@@ -29,7 +29,7 @@ describe("materiali del corso", () => {
   });
 
   it("trova dispensa ed esercizi di una lezione", () => {
-    expect(dispensaDellaLezione(1)?.titolo).toBe("Vincenti e affrancabili");
+    expect(dispensaDellaLezione(1)?.titolo).toBe("Vincenti, affrancabili e attacco – prima parte");
     expect(eserciziDellaLezione(6)?.titolo).toBe("Il gioco ad atout");
     expect(eserciziDellaLezione(9)).toBeNull();
   });

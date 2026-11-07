@@ -1,6 +1,6 @@
-% Introduzione del morto — Commissione Insegnamento FIGB, corso di Primo Livello 2026
+% Affrancamenti di forza, di lunga e di posizione — Commissione Insegnamento FIGB, corso di Primo Livello 2026
 
-[Event "Introduzione del morto"]
+[Event "Affrancamenti di forza, di lunga e di posizione"]
 [Board "1"]
 [Dealer "N"]
 [Vulnerable "None"]
@@ -8,7 +8,7 @@
 [Declarer "N"]
 [Contract "3NT"]
 
-[Event "Introduzione del morto"]
+[Event "Affrancamenti di forza, di lunga e di posizione"]
 [Board "2"]
 [Dealer "E"]
 [Vulnerable "NS"]
@@ -16,7 +16,7 @@
 [Declarer "E"]
 [Contract "6NT"]
 
-[Event "Introduzione del morto"]
+[Event "Affrancamenti di forza, di lunga e di posizione"]
 [Board "3"]
 [Dealer "S"]
 [Vulnerable "EW"]
@@ -24,7 +24,7 @@
 [Declarer "S"]
 [Contract "3NT"]
 
-[Event "Introduzione del morto"]
+[Event "Affrancamenti di forza, di lunga e di posizione"]
 [Board "4"]
 [Dealer "W"]
 [Vulnerable "All"]
@@ -32,7 +32,7 @@
 [Declarer "W"]
 [Contract "3NT"]
 
-[Event "Introduzione del morto"]
+[Event "Affrancamenti di forza, di lunga e di posizione"]
 [Board "5"]
 [Dealer "N"]
 [Vulnerable "NS"]
@@ -40,7 +40,7 @@
 [Declarer "N"]
 [Contract "3NT"]
 
-[Event "Introduzione del morto"]
+[Event "Affrancamenti di forza, di lunga e di posizione"]
 [Board "6"]
 [Dealer "E"]
 [Vulnerable "EW"]
@@ -48,7 +48,7 @@
 [Declarer "E"]
 [Contract "3NT"]
 
-[Event "Introduzione del morto"]
+[Event "Affrancamenti di forza, di lunga e di posizione"]
 [Board "7"]
 [Dealer "S"]
 [Vulnerable "All"]
@@ -56,7 +56,7 @@
 [Declarer "S"]
 [Contract "3NT"]
 
-[Event "Introduzione del morto"]
+[Event "Affrancamenti di forza, di lunga e di posizione"]
 [Board "8"]
 [Dealer "W"]
 [Vulnerable "None"]

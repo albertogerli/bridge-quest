@@ -1,6 +1,6 @@
-% Tutoraggio: il gioco a senz'atout — Commissione Insegnamento FIGB, corso di Primo Livello 2026
+% Il piano di gioco – seconda serie — Commissione Insegnamento FIGB, corso di Primo Livello 2026
 
-[Event "Tutoraggio: il gioco a senz'atout"]
+[Event "Il piano di gioco – seconda serie"]
 [Board "1"]
 [Dealer "N"]
 [Vulnerable "None"]
@@ -8,7 +8,7 @@
 [Declarer "N"]
 [Contract "5NT"]
 
-[Event "Tutoraggio: il gioco a senz'atout"]
+[Event "Il piano di gioco – seconda serie"]
 [Board "2"]
 [Dealer "E"]
 [Vulnerable "NS"]
@@ -16,7 +16,7 @@
 [Declarer "E"]
 [Contract "3NT"]
 
-[Event "Tutoraggio: il gioco a senz'atout"]
+[Event "Il piano di gioco – seconda serie"]
 [Board "3"]
 [Dealer "S"]
 [Vulnerable "EW"]
@@ -24,7 +24,7 @@
 [Declarer "S"]
 [Contract "3NT"]
 
-[Event "Tutoraggio: il gioco a senz'atout"]
+[Event "Il piano di gioco – seconda serie"]
 [Board "4"]
 [Dealer "W"]
 [Vulnerable "All"]
@@ -32,7 +32,7 @@
 [Declarer "W"]
 [Contract "3NT"]
 
-[Event "Tutoraggio: il gioco a senz'atout"]
+[Event "Il piano di gioco – seconda serie"]
 [Board "5"]
 [Dealer "N"]
 [Vulnerable "NS"]
@@ -40,7 +40,7 @@
 [Declarer "N"]
 [Contract "1NT"]
 
-[Event "Tutoraggio: il gioco a senz'atout"]
+[Event "Il piano di gioco – seconda serie"]
 [Board "6"]
 [Dealer "E"]
 [Vulnerable "EW"]
@@ -48,7 +48,7 @@
 [Declarer "E"]
 [Contract "1NT"]
 
-[Event "Tutoraggio: il gioco a senz'atout"]
+[Event "Il piano di gioco – seconda serie"]
 [Board "7"]
 [Dealer "S"]
 [Vulnerable "All"]
@@ -56,7 +56,7 @@
 [Declarer "S"]
 [Contract "6NT"]
 
-[Event "Tutoraggio: il gioco a senz'atout"]
+[Event "Il piano di gioco – seconda serie"]
 [Board "8"]
 [Dealer "W"]
 [Vulnerable "None"]

@@ -53,7 +53,7 @@ describe("i test della Commissione", () => {
     expect(testDellaLezione(20).map((t) => t.numero)).toEqual([12]);
     expect(testDellaLezione(3)).toEqual([]);
     expect(TEST_COMMISSIONE.map(siglaTest)).toEqual(["1a", "1b", "2", "4", "6", "7", "11", "14", "15", "17", "19", "20"]);
-    expect(gruppoTest(TEST_COMMISSIONE[6])).toBe("Esercizi lezione 11 · Le aperture di 1SA e 2SA");
+    expect(gruppoTest(TEST_COMMISSIONE[6])).toBe("Esercizi lezione 11 · Aperture e sviluppi delle mani bilanciate: 1SA, 2SA e 2♣ seguito da SA");
     expect(titoloDomanda(TEST_COMMISSIONE[8], "9.4")).toBe("15.4");
     expect(titoloDomanda(TEST_COMMISSIONE[0], "1.12")).toBe("1a.12");
   });

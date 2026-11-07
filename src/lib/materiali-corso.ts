@@ -10,6 +10,9 @@
  * Il testo è quello della Commissione, impaginato da capo: nessun nome
  * d'autore sulle pagine e nessun numero di lezione, perché l'ordine delle
  * lezioni può cambiare e il numero stampato no.
+ *
+ * I titoli sono quelli del programma ufficiale (`programma-corso.ts`), non
+ * quelli delle cartelle del vecchio corso (Trevissoi, 06/11/2026).
  */
 export interface Materiale {
   titolo: string;
@@ -66,29 +69,29 @@ export const MATERIALI_CORSO: ModuloMateriali[] = [
     descrizione: "Le regole della lezione 0, vincenti e affrancabili, la difesa, gli affrancamenti, il piano di gioco a senz'atout e con l'atout.",
     slide: [
       { titolo: "Lezione 0: le regole per cominciare", file: `${CARTELLA}/slide-lezione-zero.pdf`, pagine: 9, lezioni: [0] },
-      { titolo: "Vincenti e affrancabili, l'attacco e il terzo di mano", file: `${CARTELLA}/slide-vincenti-e-affrancabili.pdf`, pagine: 22, lezioni: [1, 2] },
+      { titolo: "Vincenti, affrancabili e attacco", file: `${CARTELLA}/slide-vincenti-e-affrancabili.pdf`, pagine: 22, lezioni: [1, 2] },
       { titolo: "Il piano di gioco", file: `${CARTELLA}/slide-piano-di-gioco.pdf`, pagine: 24, lezioni: [3, 4] },
       { titolo: "Il gioco ad atout", file: `${CARTELLA}/slide-gioco-ad-atout.pdf`, pagine: 14, lezioni: [5, 6] },
     ],
     dispense: [
-      { titolo: "Vincenti e affrancabili", file: `${CARTELLA}/dispensa-vincenti-e-affrancabili.pdf`, pagine: 4, lezioni: [1] },
-      { titolo: "Il punto di vista dei difensori", file: `${CARTELLA}/dispensa-punto-di-vista-dei-difensori.pdf`, pagine: 5, lezioni: [2] },
-      { titolo: "Affrancamenti di lunga e di posizione", file: `${CARTELLA}/dispensa-affrancamenti-di-lunga-e-di-posizione.pdf`, pagine: 4, lezioni: [3] },
-      { titolo: "Il piano di gioco a senz'atout", file: `${CARTELLA}/dispensa-piano-di-gioco-a-senza-atout.pdf`, pagine: 4, lezioni: [4] },
+      { titolo: "Vincenti, affrancabili e attacco – prima parte", file: `${CARTELLA}/dispensa-vincenti-e-affrancabili.pdf`, pagine: 4, lezioni: [1] },
+      { titolo: "Vincenti, affrancabili e attacco – seconda parte", file: `${CARTELLA}/dispensa-punto-di-vista-dei-difensori.pdf`, pagine: 5, lezioni: [2] },
+      { titolo: "Affrancamenti di forza, di lunga e di posizione", file: `${CARTELLA}/dispensa-affrancamenti-di-lunga-e-di-posizione.pdf`, pagine: 4, lezioni: [3] },
+      { titolo: "Il piano di gioco", file: `${CARTELLA}/dispensa-piano-di-gioco-a-senza-atout.pdf`, pagine: 4, lezioni: [4] },
       { titolo: "Il gioco ad atout", file: `${CARTELLA}/dispensa-gioco-ad-atout.pdf`, pagine: 8, lezioni: [5, 6] },
     ],
     esercizi: [
-      { titolo: "Vincenti e affrancabili", file: `${CARTELLA}/esercizi-vincenti-e-affrancabili.pdf`, soluzioni: `${CARTELLA}/soluzioni-vincenti-e-affrancabili.pdf`, online: `/esercizi/vincenti-e-affrancabili`, pagine: 2, lezioni: [1] },
-      { titolo: "Il punto di vista dei difensori", file: `${CARTELLA}/esercizi-punto-di-vista-dei-difensori.pdf`, soluzioni: `${CARTELLA}/soluzioni-punto-di-vista-dei-difensori.pdf`, online: `/esercizi/punto-di-vista-dei-difensori`, pagine: 2, lezioni: [2] },
-      { titolo: "Affrancamenti di lunga e di posizione", file: `${CARTELLA}/esercizi-affrancamenti-di-lunga-e-di-posizione.pdf`, soluzioni: `${CARTELLA}/soluzioni-affrancamenti-di-lunga-e-di-posizione.pdf`, online: `/esercizi/affrancamenti-di-lunga-e-di-posizione`, pagine: 2, lezioni: [3] },
-      { titolo: "Il piano di gioco a senz'atout", file: `${CARTELLA}/esercizi-piano-di-gioco-a-senza-atout.pdf`, soluzioni: `${CARTELLA}/soluzioni-piano-di-gioco-a-senza-atout.pdf`, online: `/esercizi/piano-di-gioco-a-senza-atout`, pagine: 2, lezioni: [4] },
+      { titolo: "Vincenti, affrancabili e attacco – prima parte", file: `${CARTELLA}/esercizi-vincenti-e-affrancabili.pdf`, soluzioni: `${CARTELLA}/soluzioni-vincenti-e-affrancabili.pdf`, online: `/esercizi/vincenti-e-affrancabili`, pagine: 2, lezioni: [1] },
+      { titolo: "Vincenti, affrancabili e attacco – seconda parte", file: `${CARTELLA}/esercizi-punto-di-vista-dei-difensori.pdf`, soluzioni: `${CARTELLA}/soluzioni-punto-di-vista-dei-difensori.pdf`, online: `/esercizi/punto-di-vista-dei-difensori`, pagine: 2, lezioni: [2] },
+      { titolo: "Affrancamenti di forza, di lunga e di posizione", file: `${CARTELLA}/esercizi-affrancamenti-di-lunga-e-di-posizione.pdf`, soluzioni: `${CARTELLA}/soluzioni-affrancamenti-di-lunga-e-di-posizione.pdf`, online: `/esercizi/affrancamenti-di-lunga-e-di-posizione`, pagine: 2, lezioni: [3] },
+      { titolo: "Il piano di gioco", file: `${CARTELLA}/esercizi-piano-di-gioco-a-senza-atout.pdf`, soluzioni: `${CARTELLA}/soluzioni-piano-di-gioco-a-senza-atout.pdf`, online: `/esercizi/piano-di-gioco-a-senza-atout`, pagine: 2, lezioni: [4] },
       { titolo: "Il gioco ad atout", file: `${CARTELLA}/esercizi-gioco-ad-atout.pdf`, soluzioni: `${CARTELLA}/soluzioni-gioco-ad-atout.pdf`, online: `/esercizi/gioco-ad-atout`, pagine: 4, lezioni: [5, 6] },
     ],
     mani: [
-      { titolo: "Introduzione del morto", file: `${CARTELLA}/mani-introduzione-del-morto.pbn`, smazzate: 8, lezioni: [3] },
-      { titolo: "Il piano di gioco a senz'atout (2)", file: `${CARTELLA}/mani-piano-di-gioco-a-senza-atout-2.pbn`, smazzate: 8, lezioni: [4] },
-      { titolo: "Tutoraggio: il gioco a senz'atout", file: `${CARTELLA}/mani-tutoraggio-gioco-a-senza.pbn`, smazzate: 8, lezioni: [4] },
-      { titolo: "Tutoraggio: a senz'atout e ad atout", file: `${CARTELLA}/mani-tutoraggio-senza-e-atout.pbn`, smazzate: 8, lezioni: [5, 6] },
+      { titolo: "Affrancamenti di forza, di lunga e di posizione", file: `${CARTELLA}/mani-introduzione-del-morto.pbn`, smazzate: 8, lezioni: [3] },
+      { titolo: "Il piano di gioco – prima serie", file: `${CARTELLA}/mani-piano-di-gioco-a-senza-atout-2.pbn`, smazzate: 8, lezioni: [4] },
+      { titolo: "Il piano di gioco – seconda serie", file: `${CARTELLA}/mani-tutoraggio-gioco-a-senza.pbn`, smazzate: 8, lezioni: [4] },
+      { titolo: "Il gioco ad atout", file: `${CARTELLA}/mani-tutoraggio-senza-e-atout.pbn`, smazzate: 8, lezioni: [5, 6] },
     ],
   },
 ];
