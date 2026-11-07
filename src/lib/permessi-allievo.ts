@@ -101,7 +101,7 @@ const LUDICI: Record<Gruppo, string[]> = {
 export const SEMPRE_VISIBILI = [
   "/trova-circolo", "/trova-compagno",
   "/profilo", "/impostazioni", "/accessibilita",
-  "/glossario", "/guida", "/classi", "/privacy", "/termini",
+  "/glossario", "/guida", "/classi", "/privacy", "/termini", "/elimina-account",
 ] as const;
 
 /** Quali gruppi apre ciascuna posizione del cursore. */

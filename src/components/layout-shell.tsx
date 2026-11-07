@@ -69,7 +69,9 @@ const FULL_SCREEN_ROUTES = ["/login", "/admin", "/istruttori/lavagna", "/istrutt
 // `/esercizi` è pubblica come i PDF da cui viene: l'insegnante manda il link
 // alla classe, e chi non ha ancora l'account deve trovare gli esercizi, non
 // il login.
-const PUBLIC_ROUTES = ["/", "/login", "/registrati", "/auth", "/reset-password", "/privacy", "/termini", "/accessibilita", "/glossario", "/esercizi", "/istruttori/proiezione", "/aula", "/evento", "/stampa-mano"];
+// `/elimina-account` è pubblica per Google Play: chi ha tolto l'app o non
+// ricorda la password deve poter leggere come chiedere la cancellazione.
+const PUBLIC_ROUTES = ["/", "/login", "/registrati", "/auth", "/reset-password", "/privacy", "/termini", "/elimina-account", "/accessibilita", "/glossario", "/esercizi", "/istruttori/proiezione", "/aula", "/evento", "/stampa-mano"];
 
 export function LayoutShell({ children }: { children: React.ReactNode }) {
   return (
