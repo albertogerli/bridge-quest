@@ -1,3 +1,5 @@
+import { PROGRAMMA_PRIMO_LIVELLO } from "@/lib/programma-corso";
+
 export type LessonCourseId = "fiori" | "quadri" | "cuori-gioco" | "cuori-licita";
 
 export const QUADRI_LESSON_ID_OFFSET = 50;
@@ -16,12 +18,25 @@ export function getCourseIdFromLessonId(
   return undefined;
 }
 
+/**
+ * Lezione del sito → lezione del programma del Corso di Primo Livello
+ * (`src/lib/programma-corso.ts`, campo `lezioniSito`). La Lezione 0 resta 0:
+ * nel programma non c'è, è l'introduzione alle regole.
+ */
+const NUMERO_PROGRAMMA: Record<number, number> = (() => {
+  const m: Record<number, number> = { 0: 0 };
+  for (const l of PROGRAMMA_PRIMO_LIVELLO) for (const id of l.lezioniSito) m[id] = l.numero;
+  return m;
+})();
+
 export function getLessonDisplayNumber(lessonId: number): number {
   switch (getCourseIdFromLessonId(lessonId)) {
     case "fiori":
-      // Numerazione allineata a FIGB: id 0 → "Lezione 0" (introduzione "Il Bridge"),
-      // id 1 → "Lezione 1", ... — gli ID smazzate ("1-N") e i video corrispondono.
-      return lessonId;
+      // Il numero del programma ufficiale della Commissione, non l'id: due
+      // lezioni del sito possono essere le due parti della stessa lezione
+      // (Trevissoi, 06/11/2026). Id, progressi, smazzate («1-N») e video non
+      // cambiano: cambia solo il numero che si legge.
+      return NUMERO_PROGRAMMA[lessonId] ?? lessonId;
     case "quadri":
       return lessonId - QUADRI_LESSON_ID_OFFSET;
     case "cuori-gioco":

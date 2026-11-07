@@ -37,6 +37,7 @@ import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 import type { Card, Position } from "@/lib/bridge-engine";
 import { handHcp } from "@/lib/deal-generator";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
+import { getLessonDisplayNumber } from "@/data/lesson-meta";
 
 type DiffFilter = "tutte" | SmazzataDifficulty;
 
@@ -70,7 +71,7 @@ export default function NuovoCompitoPage({
       id,
       label: lessonMeta.get(id)
         ? `${lessonMeta.get(id)!.courseName} · ${lessonMeta.get(id)!.lessonTitle}`
-        : `Lezione ${id}`,
+        : `Lezione ${getLessonDisplayNumber(id)}`,
     }));
   }, [smazzate, lessonMeta]);
 
@@ -680,7 +681,7 @@ export default function NuovoCompitoPage({
                       )}
                       {t("Mano {n}", { n: s.board })} · {t("dichiara {posto}", { posto: t(NOME_POSTO[s.declarer]) })}
                       {" · "}
-                      {meta ? `${meta.courseName} · ${meta.lessonTitle}` : `Lezione ${s.lesson}`}
+                      {meta ? `${meta.courseName} · ${meta.lessonTitle}` : `Lezione ${getLessonDisplayNumber(s.lesson)}`}
                     </span>
                   </span>
                   <Badge variant="outline" className="shrink-0 font-mono">

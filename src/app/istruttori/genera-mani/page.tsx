@@ -35,6 +35,7 @@ import {
 import { proponi } from "@/lib/libreria";
 import { useT } from "@/contexts/traduzioni-provider";
 import { Briciole } from "@/components/briciole";
+import { getLessonDisplayNumber } from "@/data/lesson-meta";
 
 const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
 const SEATS: { key: Position; label: string }[] = [
@@ -453,7 +454,7 @@ export default function GeneraManiPage() {
                 .filter((m) => m.ufficiale)
                 .map((m) => (
                   <option key={m.id} value={m.id}>
-                    {m.lesson_id !== null ? `Lezione ${m.lesson_id} — ` : ""}
+                    {m.lesson_id !== null ? `Lezione ${getLessonDisplayNumber(m.lesson_id)} — ` : ""}
                     {m.nome}
                   </option>
                 ))}

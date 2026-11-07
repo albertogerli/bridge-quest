@@ -8,6 +8,7 @@ import { useLingua } from "@/hooks/use-lingua";
 import Link from "@/components/link";
 import { MATERIALI_CORSO, type ManiCommissione, type Materiale } from "@/lib/materiali-corso";
 import { ProgrammaCorso } from "@/components/istruttori/programma-corso";
+import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import { MieFigure } from "@/components/istruttori/mie-figure";
 
 /**
@@ -106,10 +107,12 @@ function Gruppo({ titolo, icona: Icona, materiali }: { titolo: string; icona: Lu
   );
 }
 
+/** Con i numeri del programma: due lezioni del sito possono essere la stessa lezione. */
 function etichettaLezioni(lezioni: number[], t: ReturnType<typeof useT>) {
-  return lezioni.length === 1
-    ? t("Lezione {n}", { n: lezioni[0] })
-    : t("Lezioni {da}–{a}", { da: lezioni[0], a: lezioni[lezioni.length - 1] });
+  const numeri = [...new Set(lezioni.map(getLessonDisplayNumber))];
+  return numeri.length === 1
+    ? t("Lezione {n}", { n: numeri[0] })
+    : t("Lezioni {da} e {a}", { da: numeri[0], a: numeri[numeri.length - 1] });
 }
 
 /** Le smazzate della Commissione che il catalogo non ha: si assegnano da «Nuovo compito». */

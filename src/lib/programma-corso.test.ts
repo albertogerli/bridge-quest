@@ -8,7 +8,9 @@ import {
   lezioniConSmazzate,
   siglaGruppi,
   siglaSmazzata,
+  titoloLezioneSito,
 } from "./programma-corso";
+import { getLessonDisplayNumber } from "@/data/lesson-meta";
 
 describe("il programma del Corso di Primo Livello", () => {
   it("ha venti lezioni numerate di seguito, dieci per modulo", () => {
@@ -58,5 +60,31 @@ describe("il programma del Corso di Primo Livello", () => {
         expect(d.commentary?.length ?? 0).toBeGreaterThan(40);
       }
     }
+  });
+});
+
+describe("numero e titolo del programma sulle lezioni del sito", () => {
+  it("ogni lezione del sito prende il numero della lezione del programma", () => {
+    const numeri = Array.from({ length: 13 }, (_, id) => getLessonDisplayNumber(id));
+    expect(numeri).toEqual([0, 1, 1, 2, 4, 6, 6, 9, 11, 15, 17, 19, 19]);
+  });
+
+  it("due lezioni del sito sulla stessa lezione ne sono la prima e la seconda parte", () => {
+    expect(titoloLezioneSito(1)).toBe("Vincenti, affrancabili e attacco – prima parte");
+    expect(titoloLezioneSito(2)).toBe("Vincenti, affrancabili e attacco – seconda parte");
+    expect(titoloLezioneSito(4)).toBe("Il piano di gioco");
+    expect(titoloLezioneSito(0)).toBeNull();
+  });
+
+  it("lo script SQL scrive nel database gli stessi titoli", () => {
+    const sql = fs.readFileSync(path.join(process.cwd(), "scripts/sql/titoli-lezioni-programma-2026-11.sql"), "utf8");
+    const scritti = new Map([...sql.matchAll(/\((\d+),\s+'([^']+)'/g)].map((m) => [Number(m[1]), m[2]]));
+    expect(scritti.size).toBe(12);
+    for (const [id, titolo] of scritti) expect(titolo).toBe(titoloLezioneSito(id));
+  });
+
+  it("i corsi che non sono il Primo Livello non cambiano numero", () => {
+    expect(getLessonDisplayNumber(53)).toBe(3);
+    expect(getLessonDisplayNumber(105)).toBe(6);
   });
 });

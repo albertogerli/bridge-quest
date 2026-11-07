@@ -12,6 +12,7 @@ import { cuoriLicitaSmazzate } from "./cuori-licita-smazzate";
 import { getLessonById } from "./courses";
 import { getLessonDisplayNumber } from "./lesson-meta";
 import type { Position, Card, Suit, Rank } from "../lib/bridge-engine";
+import { titoloLezioneSito } from "@/lib/programma-corso";
 
 export type { Smazzata } from "./smazzate";
 
@@ -269,20 +270,9 @@ export function getSmazzataById(id: string): Smazzata | undefined {
 }
 
 /** Lesson titles for reference */
-export const lessonTitles: Record<number, string> = {
-  1: "Vincenti e affrancabili",
-  2: "Il punto di vista dei difensori",
-  3: "Affrancamenti di lunga e di posizione",
-  4: "Il piano di gioco a senz'atout",
-  5: "Il gioco con l'atout",
-  6: "Il piano di gioco con l'atout",
-  7: "La valutazione della mano",
-  8: "L'apertura e la risposta",
-  9: "La ridichiara dell'apertore",
-  10: "Le risposte a 1SA",
-  11: "L'intervento",
-  12: "Sviluppi dopo l'intervento",
-};
+export const lessonTitles: Record<number, string> = Object.fromEntries(
+  Array.from({ length: 12 }, (_, i) => [i + 1, titoloLezioneSito(i + 1) ?? `Lezione ${i + 1}`]),
+);
 
 export function getLessonTitle(lessonId: number): string {
   return (

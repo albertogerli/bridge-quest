@@ -22,6 +22,8 @@ import { createClient } from "@/lib/supabase/client";
 import type { Card, Position } from "@/lib/bridge-engine";
 import type { Lingua } from "@/lib/lingua";
 import { withReviewedAuction } from "@/lib/catalog-auction";
+import { titoloLezioneSito } from "@/lib/programma-corso";
+import { getLessonDisplayNumber } from "@/data/lesson-meta";
 
 // ─── Types (mirror legacy @/data/courses; small fields tweaked) ──────────
 
@@ -671,25 +673,14 @@ export async function getPlayableSmazzate(): Promise<Smazzata[]> {
  * Legacy Fiori lesson title overrides, kept as a last-resort fallback for
  * smazzate that point to a lesson_id not currently in the catalog.
  */
-export const lessonTitles: Record<number, string> = {
-  1: "Vincenti e affrancabili",
-  2: "Il punto di vista dei difensori",
-  3: "Affrancamenti di lunga e di posizione",
-  4: "Il piano di gioco a senz'atout",
-  5: "Il gioco con l'atout",
-  6: "Il piano di gioco con l'atout",
-  7: "La valutazione della mano",
-  8: "L'apertura e la risposta",
-  9: "La ridichiara dell'apertore",
-  10: "Le risposte a 1SA",
-  11: "L'intervento",
-  12: "Sviluppi dopo l'intervento",
-};
+export const lessonTitles: Record<number, string> = Object.fromEntries(
+  Array.from({ length: 12 }, (_, i) => [i + 1, titoloLezioneSito(i + 1) ?? `Lezione ${i + 1}`]),
+);
 
 /** Async title resolver: catalog → static fallback → "Lezione N". */
 export async function getLessonTitle(lessonId: number): Promise<string> {
   const lesson = await getLessonById(lessonId);
-  return lesson?.title ?? lessonTitles[lessonId] ?? `Lezione ${lessonId}`;
+  return lesson?.title ?? lessonTitles[lessonId] ?? `Lezione ${getLessonDisplayNumber(lessonId)}`;
 }
 
 // ─── Glossary (Phase 4.2) ────────────────────────────────────────────────

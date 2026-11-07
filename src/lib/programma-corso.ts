@@ -3,12 +3,17 @@
  * Insegnamento (Trevissoi, 02/11/2026: «adesso abbiamo definito tutto»): due
  * moduli da dieci lezioni, il gioco della carta e poi la dichiarazione.
  *
- * LE LEZIONI DEL SITO NON SI RINUMERANO QUI. Il sito ha tredici lezioni (0–12)
- * con progressi, compiti e smazzate legati al loro numero; il programma ne ha
- * venti, alcune di solo gioco al tavolo. Questa tabella dice, per ogni lezione
- * del programma, che cosa del sito le corrisponde: la usa l'insegnante per
- * sapere che cosa assegnare. Le smazzate di ogni lezione sono quelle delle
- * tabelle della Commissione (Trevissoi, 03/11/2026).
+ * Il sito ha tredici lezioni (0–12) con progressi, compiti e smazzate legati
+ * al loro id; il programma ne ha venti, alcune di solo gioco al tavolo. Questa
+ * tabella dice, per ogni lezione del programma, che cosa del sito le
+ * corrisponde: la usa l'insegnante per sapere che cosa assegnare. Le smazzate
+ * di ogni lezione sono quelle delle tabelle della Commissione (Trevissoi,
+ * 03/11/2026).
+ *
+ * Da qui vengono anche il NUMERO e il TITOLO che si leggono sulle lezioni del
+ * sito (Trevissoi, 06/11/2026: «i titoli devono essere coerenti con il
+ * programma ufficiale»): `getLessonDisplayNumber` e `titoloLezioneSito`. Gli
+ * id non cambiano.
  */
 export type TipoLezione = "teoria-e-gioco" | "gioco";
 
@@ -109,3 +114,17 @@ export const MODULI_PROGRAMMA: Record<1 | 2, string> = {
   1: "Modulo 1 · Il gioco della carta",
   2: "Modulo 2 · Dichiarazione e gioco",
 };
+
+/**
+ * Il titolo ufficiale di una lezione del sito: quello della lezione del
+ * programma che la contiene, con «prima parte» e «seconda parte» quando le
+ * lezioni del sito sono due. `null` per le lezioni fuori dal programma.
+ * È lo stesso testo scritto nel database da `titoli-lezioni-programma-2026-11.sql`.
+ */
+export function titoloLezioneSito(lessonId: number): string | null {
+  const l = PROGRAMMA_PRIMO_LIVELLO.find((x) => x.lezioniSito.includes(lessonId));
+  if (!l) return null;
+  if (l.lezioniSito.length < 2) return l.titolo;
+  const parte = l.lezioniSito.indexOf(lessonId) === 0 ? "prima parte" : "seconda parte";
+  return `${l.titolo} – ${parte}`;
+}

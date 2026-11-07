@@ -1,6 +1,7 @@
 "use client";
 
 import { siglaSmazzata } from "@/lib/programma-corso";
+import { getLessonDisplayNumber } from "@/data/lesson-meta";
 import { Suspense, useEffect, useMemo, useState } from "react";
 import { useSerieCasuale } from "@/hooks/use-serie-casuale";
 import Link from "@/components/link";
@@ -243,7 +244,7 @@ function Dispensa() {
                     <optgroup label={t("Corso di Primo Livello — le lezioni")}>
                       {ufficiali.map((m) => (
                         <option key={m.id} value={m.id}>
-                          {m.lesson_id !== null ? t("Lezione {n} — {nome}", { n: m.lesson_id, nome: m.nome }) : m.nome}
+                          {m.lesson_id !== null ? t("Lezione {n} — {nome}", { n: getLessonDisplayNumber(m.lesson_id), nome: m.nome }) : m.nome}
                         </option>
                       ))}
                     </optgroup>

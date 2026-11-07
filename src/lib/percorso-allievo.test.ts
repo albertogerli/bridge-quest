@@ -22,17 +22,19 @@ const compito = (over: Partial<Assignment> = {}): Assignment => ({
 
 describe("il numero della lezione non si rinumera", () => {
   it("un salto dell'insegnante lascia il buco visibile", () => {
-    // Se l'insegnante non assegna la 5, l'allievo vede 4, 6, 7. Rinumerando
-    // per posizione, la «lezione 6» della frase e la quinta riga dell'elenco
-    // sarebbero due cose diverse.
+    // Il numero è quello del programma ufficiale, fisso per ogni lezione del
+    // sito (Trevissoi, 06/11/2026): le lezioni 1 e 2 del sito sono le due
+    // parti della Lezione 1, la 7 è la Lezione 9. Rinumerando per posizione,
+    // la «lezione 6» della frase e la quinta riga dell'elenco sarebbero due
+    // cose diverse.
     const righe = percorsoDelCorso([1, 2, 3, 4, 6, 7], new Set([4]), new Set([1, 2, 3]));
-    expect(righe.map((r) => r.numero)).toEqual([1, 2, 3, 4, 6, 7]);
+    expect(righe.map((r) => r.numero)).toEqual([1, 1, 2, 4, 6, 9]);
   });
 
   it("l'ordine di assegnazione non cambia i numeri", () => {
     const fuoriOrdine = percorsoDelCorso([7, 1, 4], new Set([7]), new Set([1]));
-    expect(fuoriOrdine.map((r) => r.numero)).toEqual([1, 4, 7]);
-    expect(fuoriOrdine.find((r) => r.numero === 7)?.stato).toBe("in-corso");
+    expect(fuoriOrdine.map((r) => r.numero)).toEqual([1, 4, 9]);
+    expect(fuoriOrdine.find((r) => r.numero === 9)?.stato).toBe("in-corso");
   });
 });
 
@@ -41,7 +43,7 @@ describe("le lezioni non assegnate ci sono, grigie", () => {
     // I contenuti didattici si dichiarano. Sparire genera sospetto:
     // l'allievo che ne parla con un compagno esterno scopre che lui le vede.
     const righe = percorsoDelCorso([1, 2, 3], new Set([1]), new Set());
-    expect(righe.filter((r) => r.stato === "in-attesa").map((r) => r.numero)).toEqual([2, 3]);
+    expect(righe.filter((r) => r.stato === "in-attesa").map((r) => r.lessonId)).toEqual([2, 3]);
     expect(righe).toHaveLength(3);
   });
 });
@@ -52,7 +54,7 @@ describe("il nome del corso solo se i corsi attivi sono più d'uno", () => {
   });
 
   it("con due corsi il nome serve: «lezione 2» esiste in tutti e due", () => {
-    expect(etichettaLezione(2, "Approfondimento", 2)).toBe("lezione 2 — Approfondimento");
+    expect(etichettaLezione(3, "Approfondimento", 2)).toBe("lezione 2 — Approfondimento");
   });
 
   it("NIENTE ARTICOLO davanti al nome del corso", () => {
@@ -60,7 +62,7 @@ describe("il nome del corso solo se i corsi attivi sono più d'uno", () => {
     // da genere e lettera iniziale di un nome che scrive l'insegnante. Il
     // trattino funziona con qualunque nome.
     for (const nome of ["Approfondimento", "Martedì sera", "Iniziazione", "Principianti 2026"]) {
-      expect(etichettaLezione(3, nome, 2)).toBe(`lezione 3 — ${nome}`);
+      expect(etichettaLezione(4, nome, 2)).toBe(`lezione 4 — ${nome}`);
     }
   });
 
@@ -73,7 +75,7 @@ describe("il nome del corso solo se i corsi attivi sono più d'uno", () => {
     ];
     const attivi = corsiAttivi(classi);
     expect(attivi).toHaveLength(1);
-    expect(etichettaLezione(2, "Approfondimento", attivi.length)).toBe("lezione 2");
+    expect(etichettaLezione(3, "Approfondimento", attivi.length)).toBe("lezione 2");
   });
 
   it("una classe chiusa alle iscrizioni è ancora un corso in corso", () => {

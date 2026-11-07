@@ -137,7 +137,7 @@ function SmazzataBrowserContent() {
       const l = c.lessons.find((l) => l.id === lessonId);
       if (l) return l.title;
     }
-    return fallbackLessonTitles[lessonId] ?? `Lezione ${lessonId}`;
+    return fallbackLessonTitles[lessonId] ?? `Lezione ${getLessonDisplayNumber(lessonId)}`;
   }
 
   const lessons = courseLessonIds.map((id) => ({
@@ -370,7 +370,7 @@ function PlayingView({
       const l = c.lessons.find((l) => l.id === smazzata.lesson);
       if (l) return l.title;
     }
-    return fallbackLessonTitles[smazzata.lesson] ?? `Lezione ${smazzata.lesson}`;
+    return fallbackLessonTitles[smazzata.lesson] ?? `Lezione ${getLessonDisplayNumber(smazzata.lesson)}`;
   })();
   const [xpSaved, setXpSaved] = useState(false);
   const [showReplay, setShowReplay] = useState(false);
