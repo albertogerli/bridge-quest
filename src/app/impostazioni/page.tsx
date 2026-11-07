@@ -23,6 +23,7 @@ import { toast } from "sonner";
 import { applyTextSize, parseTextSize, TEXT_SIZE_KEY } from "@/lib/text-size";
 import { useT } from "@/contexts/traduzioni-provider";
 import { homeDi } from "@/lib/lingua";
+import { UtentiBloccati } from "@/components/moderazione/utenti-bloccati";
 
 const AI_LEVELS: AILevel[] = ["base", "intermedio", "esperto"];
 
@@ -764,6 +765,8 @@ export default function ImpostazioniPage() {
             </>
           )}
         </motion.div>
+
+        {user && <UtentiBloccati />}
 
         {/* App Version */}
         <motion.div

@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
 import Link from "@/components/link";
 import { useT } from "@/contexts/traduzioni-provider";
+import { useSharedAuth } from "@/contexts/auth-provider";
+import { useBloccati } from "@/components/moderazione/azioni-contenuto";
 
 type Category = "lezioni" | "strategia" | "tornei" | "generale" | "off-topic";
 type SortBy = "recenti" | "votati" | "commentati";
@@ -41,7 +43,11 @@ interface ForumPost {
 
 export default function ForumPage() {
   const t = useT();
-  const [posts, setPosts] = useState<ForumPost[]>([]);
+  const { user } = useSharedAuth();
+  const bloccati = useBloccati(!!user);
+  const [tuttiPosts, setPosts] = useState<ForumPost[]>([]);
+  // I post di chi l'utente ha bloccato non si vedono.
+  const posts = useMemo(() => tuttiPosts.filter((p) => !bloccati.has(p.user_id)), [tuttiPosts, bloccati]);
   const [loading, setLoading] = useState(true);
   const [category, setCategory] = useState<Category | "tutti">("tutti");
   const [sortBy, setSortBy] = useState<SortBy>("recenti");

@@ -12,6 +12,7 @@ import { useRouter } from "@/hooks/use-router-lingua";
 import { useGameStore } from "@/store/use-game-store";
 import { useT } from "@/contexts/traduzioni-provider";
 import { segnalaSalvoRete } from "@/lib/report-error";
+import { AzioniContenuto, useBloccati } from "@/components/moderazione/azioni-contenuto";
 
 interface Post {
   id: number;
@@ -48,7 +49,10 @@ export default function PostDetailPage() {
   const t = useT();
   const params = useParams();
   const router = useRouter();
-  const { user } = useSharedAuth();
+  const { user, profile } = useSharedAuth();
+  // Chi modera toglie anche i contenuti degli altri (moderazione-contenuti-2026-11.sql).
+  const moderatore = profile?.role === "admin";
+  const bloccati = useBloccati(!!user);
   const [post, setPost] = useState<Post | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
@@ -157,6 +161,7 @@ export default function PostDetailPage() {
     const replies: Record<number, Comment[]> = {};
 
     for (const c of comments) {
+      if (bloccati.has(c.user_id)) continue;
       if (c.parent_id === null || c.parent_id === undefined) {
         topLevel.push(c);
       } else {
@@ -166,7 +171,7 @@ export default function PostDetailPage() {
     }
 
     return { topLevelComments: topLevel, repliesByParent: replies };
-  }, [comments]);
+  }, [comments, bloccati]);
 
   const handleLike = async () => {
     if (!user || !post) return;
@@ -308,8 +313,8 @@ export default function PostDetailPage() {
   };
 
   const handleDeleteComment = async (comment: Comment) => {
-    if (!user || user.id !== comment.user_id) return;
-    if (!confirm("Eliminare questo commento?")) return;
+    if (!user || (user.id !== comment.user_id && !moderatore)) return;
+    if (!confirm(t("Eliminare questo commento?"))) return;
 
     // Count this comment + its replies
     const replyCount = (repliesByParent[comment.id] || []).length;
@@ -342,8 +347,8 @@ export default function PostDetailPage() {
   };
 
   const handleDelete = async () => {
-    if (!user || !post || user.id !== post.user_id) return;
-    if (!confirm("Eliminare questo post?")) return;
+    if (!user || !post || (user.id !== post.user_id && !moderatore)) return;
+    if (!confirm(t("Eliminare questo post?"))) return;
     const { error: erroreCancellazione } = await supabase.from("forum_posts").delete().eq("id", post.id);
     if (erroreCancellazione) {
       segnalaSalvoRete("forum:elimina-post", erroreCancellazione);
@@ -507,15 +512,29 @@ export default function PostDetailPage() {
               </button>
             )}
 
-            {/* Delete button */}
-            {user && user.id === comment.user_id && (
-              <button
-                onClick={() => handleDeleteComment(comment)}
-                className="ml-auto text-[12px] text-muted-foreground hover:text-red-500 transition-colors"
-              >
-                {t("Elimina")}
-              </button>
-            )}
+            {/* Segnala (gli altri) ed Elimina (chi l'ha scritto, o chi modera) */}
+            <span className="ml-auto flex items-center gap-3">
+              {user && user.id !== comment.user_id && (
+                <AzioniContenuto
+                  contenuto={{
+                    tipo: "forum_commento",
+                    id: comment.id,
+                    contenitoreId: comment.post_id,
+                    autoreId: comment.user_id,
+                    testo: comment.body,
+                  }}
+                  nomeAutore={comment.profiles?.display_name || t("questo utente")}
+                />
+              )}
+              {user && (user.id === comment.user_id || moderatore) && (
+                <button
+                  onClick={() => handleDeleteComment(comment)}
+                  className="text-[12px] text-muted-foreground hover:text-red-500 transition-colors"
+                >
+                  {t("Elimina")}
+                </button>
+              )}
+            </span>
           </div>
         </div>
 
@@ -602,6 +621,18 @@ export default function PostDetailPage() {
             <div className="h-4 w-2/3 bg-muted/50 rounded" />
           </div>
         </div>
+      </div>
+    );
+  }
+
+  if (post && bloccati.has(post.user_id)) {
+    return (
+      <div className="pt-6 px-4 sm:px-5 pb-24 text-center">
+        <p className="text-lg font-bold text-foreground">{t("Hai bloccato chi ha scritto questo post")}</p>
+        <p className="mt-1 text-sm text-muted-foreground">{t("Per sbloccare: Impostazioni.")}</p>
+        <Link href="/forum">
+          <Button variant="outline" className="mt-4">{t("Torna al forum")}</Button>
+        </Link>
       </div>
     );
   }
@@ -766,21 +797,35 @@ export default function PostDetailPage() {
               </svg>
               {post.comments_count}
             </span>
-            {user && user.id === post.user_id && (
-              <button
-                onClick={handleDelete}
-                className="ml-auto text-xs text-muted-foreground hover:text-red-500 transition-colors"
-              >
-                {t("Elimina")}
-              </button>
-            )}
+            <span className="ml-auto flex items-center gap-4">
+              {user && user.id !== post.user_id && (
+                <AzioniContenuto
+                  contenuto={{
+                    tipo: "forum_post",
+                    id: post.id,
+                    contenitoreId: post.id,
+                    autoreId: post.user_id,
+                    testo: `${post.title}\n\n${post.body}`,
+                  }}
+                  nomeAutore={post.profiles?.display_name || t("questo utente")}
+                />
+              )}
+              {user && (user.id === post.user_id || moderatore) && (
+                <button
+                  onClick={handleDelete}
+                  className="text-xs text-muted-foreground hover:text-red-500 transition-colors"
+                >
+                  {t("Elimina")}
+                </button>
+              )}
+            </span>
           </div>
         </motion.div>
 
         {/* Comments Section */}
         <div className="mt-6">
           <h2 className="text-sm font-bold text-foreground mb-3">
-            Commenti ({comments.length})
+            Commenti ({comments.filter((c) => !bloccati.has(c.user_id)).length})
           </h2>
 
           {comments.length === 0 ? (

@@ -736,7 +736,7 @@ export default function ClassDetailPage({
 
         {/* Chat */}
         <TabsContent value="chat" className="mt-4">
-          <ClassChat classId={classId} />
+          <ClassChat classId={classId} moderatore />
         </TabsContent>
       </Tabs>
 

@@ -8,15 +8,25 @@ import {
   sendClassMessage,
   subscribeClassMessages,
   resolveNames,
+  deleteClassMessage,
   type ClassMessage,
 } from "@/lib/instructors";
 import { useT } from "@/contexts/traduzioni-provider";
+import { AzioniContenuto, useBloccati } from "@/components/moderazione/azioni-contenuto";
+import { segnalaSalvoRete } from "@/lib/report-error";
 
-/** Live class chat for instructor + students. Used in both /istruttori/[id] and /classi/[id]. */
-export function ClassChat({ classId }: { classId: string }) {
+/**
+ * Live class chat for instructor + students. Used in both /istruttori/[id] and /classi/[id].
+ *
+ * `moderatore`: l'insegnante della classe toglie i messaggi di chiunque (le
+ * RLS lo permettono da class_chat.sql). Gli allievi segnalano e bloccano.
+ */
+export function ClassChat({ classId, moderatore = false }: { classId: string; moderatore?: boolean }) {
   const t = useT();
-  const { user } = useSharedAuth();
+  const { user, profile } = useSharedAuth();
   const myId = user?.id;
+  const puoModerare = moderatore || profile?.role === "admin";
+  const bloccati = useBloccati(!!user);
 
   const [messages, setMessages] = useState<ClassMessage[]>([]);
   const [loading, setLoading] = useState(true);
@@ -71,6 +81,22 @@ export function ClassChat({ classId }: { classId: string }) {
     };
   }, [classId, scrollToBottom]);
 
+  async function elimina(m: ClassMessage) {
+    if (!confirm(t("Eliminare questo messaggio?"))) return;
+    try {
+      const tolto = await deleteClassMessage(m.id);
+      if (!tolto) {
+        setError(t("Il messaggio non è stato eliminato."));
+        return;
+      }
+      seenIds.current.add(m.id);
+      setMessages((prev) => prev.filter((x) => x.id !== m.id));
+    } catch (err) {
+      segnalaSalvoRete("chat-classe:elimina", err);
+      setError(t("Il messaggio non è stato eliminato."));
+    }
+  }
+
   async function handleSend() {
     const body = input.trim();
     if (!body || sending) return;
@@ -103,7 +129,7 @@ export function ClassChat({ classId }: { classId: string }) {
             {t("Nessun messaggio. Scrivi il primo!")}
           </p>
         ) : (
-          messages.map((m) => {
+          messages.filter((m) => !bloccati.has(m.user_id)).map((m) => {
             const mine = m.user_id === myId;
             return (
               <div key={m.id} className={`flex ${mine ? "justify-end" : "justify-start"}`}>
@@ -120,8 +146,29 @@ export function ClassChat({ classId }: { classId: string }) {
                     </p>
                   )}
                   <p className="whitespace-pre-wrap break-words">{m.body}</p>
-                  <p className={`mt-0.5 text-[12px] ${mine ? "text-primary-foreground/60" : "text-muted-foreground"}`}>
+                  <p className={`mt-0.5 flex items-center gap-3 text-[12px] ${mine ? "text-primary-foreground/60" : "text-muted-foreground"}`}>
                     {new Date(m.created_at).toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" })}
+                    {!mine && user && (
+                      <AzioniContenuto
+                        contenuto={{
+                          tipo: "messaggio_classe",
+                          id: m.id,
+                          contenitoreId: classId,
+                          autoreId: m.user_id,
+                          testo: m.body,
+                        }}
+                        nomeAutore={m.display_name ?? t("questo utente")}
+                      />
+                    )}
+                    {(mine || puoModerare) && (
+                      <button
+                        type="button"
+                        onClick={() => void elimina(m)}
+                        className={`transition-colors hover:text-red-500 ${mine ? "text-primary-foreground/70" : ""}`}
+                      >
+                        {t("Elimina")}
+                      </button>
+                    )}
                   </p>
                 </div>
               </div>

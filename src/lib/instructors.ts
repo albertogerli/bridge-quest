@@ -1226,6 +1226,21 @@ export async function sendClassMessage(classId: string, body: string): Promise<v
   if (error) throw error;
 }
 
+/**
+ * Toglie un messaggio dalla chat: il proprio, oppure — per l'insegnante della
+ * classe e per chi modera — quello di chiunque. `false` se il database non ha
+ * tolto niente (le RLS rifiutano in silenzio, con zero righe).
+ */
+export async function deleteClassMessage(messageId: string): Promise<boolean> {
+  const supabase = createClient();
+  const { error, count } = await supabase
+    .from("class_messages")
+    .delete({ count: "exact" })
+    .eq("id", messageId);
+  if (error) throw error;
+  return (count ?? 0) > 0;
+}
+
 /** Resolve display names for a set of user ids (profiles are world-readable). */
 export async function resolveNames(userIds: string[]): Promise<Map<string, string | null>> {
   const map = new Map<string, string | null>();
