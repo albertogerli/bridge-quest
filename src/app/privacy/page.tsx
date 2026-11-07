@@ -63,7 +63,10 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-lg font-bold text-foreground">{t("Conservazione dei dati")}</h2>
             <p className="text-muted-foreground">
-              {t("I dati personali sono conservati per la durata dell'account. L'utente può richiedere la cancellazione in qualsiasi momento contattando il Titolare. I dati vengono eliminati entro 30 giorni dalla richiesta.")}
+              {t("I dati personali sono conservati per la durata dell'account. L'utente può eliminare l'account in qualsiasi momento dal proprio Profilo, oppure richiederne la cancellazione contattando il Titolare: in questo caso i dati vengono eliminati entro 30 giorni dalla richiesta.")}{" "}
+              <Link href="/elimina-account" className="text-figb dark:text-primary underline font-medium">
+                {t("Come eliminare l'account")}
+              </Link>
             </p>
           </section>
 
@@ -74,7 +77,12 @@ export default function PrivacyPage() {
               <li><strong>{t("Supabase Inc.")}</strong> (database e autenticazione) - server UE (Francoforte)</li>
               <li><strong>{t("Vercel Inc.")}</strong> (hosting applicazione e analytics)</li>
               <li><strong>{t("Google / YouTube")}</strong> (video didattici embedded)</li>
+              <li><strong>{t("Functional Software Inc. (Sentry)")}</strong> {t("(segnalazione automatica degli errori tecnici dell'applicazione: dati tecnici del dispositivo e del browser, senza nome, email o identificativo dell'utente)")}</li>
+              <li><strong>{t("Resend Inc.")}</strong> {t("(invio delle email del servizio: conferma dell'account, recupero della password, avvisi e, con il consenso, comunicazioni; tratta l'indirizzo email e il nome visualizzato)")}</li>
             </ul>
+            <p className="text-muted-foreground mt-2">
+              {t("Alcuni di questi fornitori hanno sede negli Stati Uniti: il trasferimento dei dati avviene con le garanzie previste dagli artt. 44 e seguenti del GDPR.")}
+            </p>
           </section>
 
           <section>
@@ -95,6 +103,9 @@ export default function PrivacyPage() {
             </ul>
             <p className="text-muted-foreground mt-2">
               {t("I cookie statistici e pubblicitari comportano un trasferimento di dati verso Google LLC e Meta Platforms Ireland Ltd. Puoi cambiare idea in qualsiasi momento cancellando i dati del sito dal tuo browser: la scelta ti verrà richiesta di nuovo alla visita successiva.")}
+            </p>
+            <p className="text-muted-foreground mt-2">
+              {t("Nelle app BridgeLab per Android e iOS i cookie statistici e pubblicitari non vengono usati: restano solo i cookie tecnici e le statistiche aggregate e anonime di Vercel Analytics.")}
             </p>
           </section>
 
@@ -127,7 +138,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-lg font-bold text-foreground">{t("Aggiornamenti")}</h2>
             <p className="text-muted-foreground">
-              {t("Questa policy può essere aggiornata periodicamente. L'ultima revisione risale a marzo 2026.")}
+              {t("Questa policy può essere aggiornata periodicamente. L'ultima revisione risale a novembre 2026.")}
             </p>
           </section>
 
