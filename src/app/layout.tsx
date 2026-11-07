@@ -248,11 +248,15 @@ export default function RootLayout({
         <ServiceWorkerRegistration />
         {/* This endpoint exists on Vercel, not on standalone/local Next builds. */}
         {process.env.VERCEL === "1" ? <Analytics /> : null}
-        {/* Google tag (gtag.js) — caricato una sola volta, serve sia GA4 che Google Ads */}
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-          strategy="afterInteractive"
-        />
+        {/*
+          Google tag (gtag.js) — caricato una sola volta, serve sia GA4 che
+          Google Ads. Lo carica lo script qui sotto, e SOLO SUL SITO: dentro
+          l'app Android e iOS (user agent «BridgeLab-Native») non parte niente,
+          come il banner dei cookie che lì non compare. Nella scheda «Sicurezza
+          dei dati» di Google Play non è dichiarato, e un tracciatore non
+          dichiarato è motivo di rifiuto (07/11/2026). Vercel Analytics resta:
+          non usa cookie né identificatori.
+        */}
         {/*
           Google Consent Mode v2. Il default è "denied" per TUTTI i segnali
           pubblicitari e statistici: gtag si carica ma non scrive cookie né
@@ -262,8 +266,14 @@ export default function RootLayout({
           La scelta si aggiorna da consent-client.ts (`gtag('consent','update')`).
         */}
         <Script id="gtag-init" strategy="afterInteractive">
-          {`window.dataLayer = window.dataLayer || [];
+          {`if (navigator.userAgent.indexOf('BridgeLab-Native') === -1) {
+            var gs = document.createElement('script');
+            gs.async = true;
+            gs.src = 'https://www.googletagmanager.com/gtag/js?id=${GA_ID}';
+            document.head.appendChild(gs);
+            window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
+            window.gtag = gtag;
             /* Vanno impostati PRIMA del consenso di default, altrimenti la
                prima richiesta parte senza. Servono a chi rifiuta:
                - ads_data_redaction: con ad_storage negato, gli identificatori
@@ -300,7 +310,8 @@ export default function RootLayout({
             } catch (e) {}
             gtag('js', new Date());
             gtag('config', '${GA_ID}');
-            gtag('config', '${GADS_ID}');`}
+            gtag('config', '${GADS_ID}');
+          }`}
         </Script>
         <MetaPixelLoader />
       </body>
