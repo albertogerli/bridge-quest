@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
-  candidatiPerAdesione, contattoNormalizzato, gruppiSimili, nomeConIniziale, nomeNormalizzato,
+  candidatiPerAdesione, contattoNormalizzato, gruppiSimili, nomePerEsteso, nomeNormalizzato,
   type Adesione,
 } from "./adesioni";
 
@@ -146,26 +146,18 @@ describe("chi collegare a un'adesione: si suggerisce, non si decide", () => {
   });
 });
 
-describe("nomeConIniziale con altri omonimi", () => {
-  it("aggiunge lettere del cognome finché i nomi si distinguono", () => {
-    expect(nomeConIniziale("Giuseppe Rossi", ["Giuseppe Russo"])).toBe("Giuseppe Ro.");
-    expect(nomeConIniziale("Giuseppe Russo", ["Giuseppe Rossi"])).toBe("Giuseppe Ru.");
-    expect(nomeConIniziale("Giuseppe Rossi", ["Giuseppe Rossini"])).toBe("Giuseppe Rossi");
-    expect(nomeConIniziale("Giuseppe Rossi", ["Giuseppe Bianchi"])).toBe("Giuseppe R.");
-    expect(nomeConIniziale("Giuseppe Rossi", ["Mario Rossi"])).toBe("Giuseppe R.");
-    expect(nomeConIniziale("Giuseppe Rossi", [null, "Giuseppe"])).toBe("Giuseppe R.");
-  });
-});
-
-describe("nomeConIniziale", () => {
-  it("tiene il nome e mette l'iniziale del cognome", () => {
-    expect(nomeConIniziale("Giuseppe Rossi")).toBe("Giuseppe R.");
-    expect(nomeConIniziale("  giuseppe   verdi ")).toBe("giuseppe V.");
-    expect(nomeConIniziale("Maria Grazia Bianchi")).toBe("Maria Grazia B.");
+describe("nomePerEsteso", () => {
+  it("propone nome e cognome interi, con gli spazi ripuliti", () => {
+    expect(nomePerEsteso("Giuseppe Rossi")).toBe("Giuseppe Rossi");
+    expect(nomePerEsteso("  Maria Grazia   Bianchi ")).toBe("Maria Grazia Bianchi");
+    expect(nomePerEsteso("Giuseppe Rossi", ["Giuseppe Russo", null, "Giuseppe"])).toBe("Giuseppe Rossi");
   });
   it("con una parola sola non propone niente", () => {
-    expect(nomeConIniziale("Giuseppe")).toBeNull();
-    expect(nomeConIniziale("")).toBeNull();
-    expect(nomeConIniziale(null)).toBeNull();
+    expect(nomePerEsteso("Giuseppe")).toBeNull();
+    expect(nomePerEsteso("")).toBeNull();
+    expect(nomePerEsteso(null)).toBeNull();
+  });
+  it("con un omonimo dallo stesso cognome lascia decidere l'insegnante", () => {
+    expect(nomePerEsteso("Giuseppe Rossi", ["giuseppe  rossi"])).toBeNull();
   });
 });

@@ -5,7 +5,7 @@ import { Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LUNGHEZZA_NOME_IN_CLASSE, rinominaAllievo, type ClassMember } from "@/lib/instructors";
 import { segnalaSalvoRete } from "@/lib/report-error";
-import { nomeConIniziale } from "@/lib/adesioni";
+import { nomePerEsteso } from "@/lib/adesioni";
 import { createClient } from "@/lib/supabase/client";
 import { useT } from "@/contexts/traduzioni-provider";
 import { useLingua } from "@/hooks/use-lingua";
@@ -40,8 +40,8 @@ export function RigaAllievo({
   const nome = membro.display_name ?? t("Allievo senza nome");
 
   /*
-   * Con due allievi dallo stesso nome si propone «Nome I.», con l'iniziale del
-   * cognome (Trevissoi, 02/11/2026). Il cognome viene dal modulo d'adesione
+   * Con due allievi dallo stesso nome si propone il nome con il cognome per
+   * esteso (Trevissoi, 06/11/2026). Il cognome viene dal modulo d'adesione
    * collegato all'allievo, che ha il nome intero; se non c'è, dal nome del
    * profilo quando è di due parole.
    */
@@ -53,20 +53,20 @@ export function RigaAllievo({
     if (!idOmonimi) return;
     let vivo = true;
     void (async () => {
-      // Il nome intero di ognuno dal suo modulo d'adesione: serve anche il
-      // cognome degli altri, per sapere quante lettere bastano a distinguerli.
+      // Il nome intero di ognuno dal suo modulo d'adesione: serve anche quello
+      // degli altri, perché con nome e cognome uguali non c'è niente da proporre.
       const ids = [membro.student_id, ...idOmonimi.split(",")];
       const completi = new Map<string, string>();
       try {
         const { data } = await createClient().from("adesioni").select("user_id, nome").eq("class_id", classId).in("user_id", ids);
         for (const r of (data ?? []) as { user_id: string; nome: string | null }[]) if (r.nome) completi.set(r.user_id, r.nome);
       } catch (err) {
-        segnalaSalvoRete("istruttori/classe:nome-con-iniziale", err);
+        segnalaSalvoRete("istruttori/classe:nome-per-esteso", err);
       }
       const profili = profiliOmonimi.split("|");
       const altri = idOmonimi.split(",").map((id, i) => completi.get(id) ?? profili[i] ?? null);
       const p =
-        nomeConIniziale(completi.get(membro.student_id), altri) ?? nomeConIniziale(membro.nome_profilo, altri);
+        nomePerEsteso(completi.get(membro.student_id), altri) ?? nomePerEsteso(membro.nome_profilo, altri);
       if (vivo) setProposta(p && p !== nome ? p : null);
     })();
     return () => { vivo = false; };
