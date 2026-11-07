@@ -64,6 +64,12 @@ export default function ScuolaPage() {
       title: "Segnalazioni",
       desc: "Cosa non ha funzionato, con pagina, mano, browser e foto dello schermo.",
     });
+    cards.push({
+      href: "/admin/moderazione",
+      emoji: "🚩",
+      title: "Contenuti segnalati",
+      desc: "Post, commenti e messaggi segnalati dagli utenti: lasciarli o toglierli.",
+    });
   }
 
   return (
