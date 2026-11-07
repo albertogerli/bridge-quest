@@ -20,7 +20,7 @@ const MAESTRO_NAMES: Record<string, string> = {
 };
 
 const PROFILE_AGE_LABELS: Record<string, string> = {
-  junior: "8-17 anni",
+  junior: "13-17 anni",
   giovane: "18-35 anni",
   adulto: "36-55 anni",
   senior: "55+ anni",

@@ -54,7 +54,7 @@ const ANIM_SPEEDS = [
 const PROFILES = [
   {
     key: "junior",
-    label: "8-17 anni",
+    label: "13-17 anni",
     description: "Super divertente! Animazioni pazze, tanti premi",
     color: "bg-pink-500",
   },

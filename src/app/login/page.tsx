@@ -508,7 +508,7 @@ function LoginContent() {
                   </label>
                   <div className="grid grid-cols-2 gap-2">
                     {([
-                      { key: "junior" as ProfileType, label: "8–17 anni", icon: <Gamepad2 className="w-6 h-6 text-pink-500" />, desc: "Stile Explorer" },
+                      { key: "junior" as ProfileType, label: "13–17 anni", icon: <Gamepad2 className="w-6 h-6 text-pink-500" />, desc: "Stile Explorer" },
                       { key: "giovane" as ProfileType, label: "18–35 anni", icon: <Zap className="w-6 h-6 text-emerald-500" />, desc: "Stile Dinamico" },
                       { key: "adulto" as ProfileType, label: "36–55 anni", icon: <Spade className="w-6 h-6 text-blue-500" />, desc: "Stile Classico" },
                       { key: "senior" as ProfileType, label: "55+ anni", icon: <Coffee className="w-6 h-6 text-amber-500" />, desc: "Stile Rilassato" },
