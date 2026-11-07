@@ -16,7 +16,7 @@
 -- Rigenerare e committare dopo OGNI modifica allo schema, insieme allo script
 -- che l'ha causata.
 --
--- Estratto il: 2026-11-06
+-- Estratto il: 2026-11-07
 -- ============================================================================
 
 SET check_function_bodies = false;
@@ -749,6 +749,21 @@ CREATE TABLE IF NOT EXISTS public.segnalazioni (
   updated_at timestamp with time zone NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS public.segnalazioni_contenuti (
+  id uuid NOT NULL,
+  segnalato_da uuid,
+  tipo text NOT NULL,
+  contenuto_id text NOT NULL,
+  contenitore_id text,
+  autore_id uuid,
+  testo text NOT NULL,
+  motivo text NOT NULL,
+  nota text,
+  stato text NOT NULL,
+  created_at timestamp with time zone NOT NULL,
+  updated_at timestamp with time zone NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS public.sessioni_aula (
   id uuid NOT NULL,
   class_id uuid NOT NULL,
@@ -874,6 +889,12 @@ CREATE TABLE IF NOT EXISTS public.trova_errore_scenarios (
   situation_en text,
   error_description_en text,
   explanation_en text
+);
+
+CREATE TABLE IF NOT EXISTS public.utenti_bloccati (
+  utente_id uuid NOT NULL,
+  bloccato_id uuid NOT NULL,
+  created_at timestamp with time zone NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.weekly_challenges (
@@ -5085,6 +5106,11 @@ ALTER TABLE public.segnalazioni ALTER COLUMN contesto SET DEFAULT '{}'::jsonb;
 ALTER TABLE public.segnalazioni ALTER COLUMN stato SET DEFAULT 'nuova'::text;
 ALTER TABLE public.segnalazioni ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.segnalazioni ALTER COLUMN updated_at SET DEFAULT now();
+ALTER TABLE public.segnalazioni_contenuti ALTER COLUMN id SET DEFAULT gen_random_uuid();
+ALTER TABLE public.segnalazioni_contenuti ALTER COLUMN segnalato_da SET DEFAULT auth.uid();
+ALTER TABLE public.segnalazioni_contenuti ALTER COLUMN stato SET DEFAULT 'nuova'::text;
+ALTER TABLE public.segnalazioni_contenuti ALTER COLUMN created_at SET DEFAULT now();
+ALTER TABLE public.segnalazioni_contenuti ALTER COLUMN updated_at SET DEFAULT now();
 ALTER TABLE public.sessioni_aula ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.sessioni_aula ALTER COLUMN stato SET DEFAULT 'aperta'::text;
 ALTER TABLE public.sessioni_aula ALTER COLUMN created_at SET DEFAULT now();
@@ -5111,6 +5137,8 @@ ALTER TABLE public.tournament_results ALTER COLUMN completed_at SET DEFAULT now(
 ALTER TABLE public.traduzioni_stato ALTER COLUMN tradotto_il SET DEFAULT now();
 ALTER TABLE public.trova_errore_scenarios ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.trova_errore_scenarios ALTER COLUMN updated_at SET DEFAULT now();
+ALTER TABLE public.utenti_bloccati ALTER COLUMN utente_id SET DEFAULT auth.uid();
+ALTER TABLE public.utenti_bloccati ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.weekly_challenges ALTER COLUMN gradient SET DEFAULT ''::text;
 ALTER TABLE public.weekly_challenges ALTER COLUMN xp_multiplier SET DEFAULT 1.0;
 ALTER TABLE public.weekly_challenges ALTER COLUMN tips SET DEFAULT '{}'::text[];
@@ -5181,6 +5209,7 @@ ALTER TABLE public.saved_hands ADD CONSTRAINT saved_hands_pkey PRIMARY KEY (id);
 ALTER TABLE public.scenari ADD CONSTRAINT scenari_pkey PRIMARY KEY (id);
 ALTER TABLE public.script_applicati ADD CONSTRAINT script_applicati_pkey PRIMARY KEY (nome);
 ALTER TABLE public.segnalazioni ADD CONSTRAINT segnalazioni_pkey PRIMARY KEY (id);
+ALTER TABLE public.segnalazioni_contenuti ADD CONSTRAINT segnalazioni_contenuti_pkey PRIMARY KEY (id);
 ALTER TABLE public.sessioni_aula ADD CONSTRAINT sessioni_aula_pkey PRIMARY KEY (id);
 ALTER TABLE public.sfida_board ADD CONSTRAINT sfida_board_pkey PRIMARY KEY (sfida_id, mano_id, coppia);
 ALTER TABLE public.sfide_coppie ADD CONSTRAINT sfide_coppie_pkey PRIMARY KEY (id);
@@ -5192,6 +5221,7 @@ ALTER TABLE public.torneo_mani ADD CONSTRAINT torneo_mani_pkey PRIMARY KEY (torn
 ALTER TABLE public.tournament_results ADD CONSTRAINT tournament_results_pkey PRIMARY KEY (id);
 ALTER TABLE public.traduzioni_stato ADD CONSTRAINT traduzioni_stato_pkey PRIMARY KEY (tabella, riga_id, campo);
 ALTER TABLE public.trova_errore_scenarios ADD CONSTRAINT trova_errore_scenarios_pkey PRIMARY KEY (id);
+ALTER TABLE public.utenti_bloccati ADD CONSTRAINT utenti_bloccati_pkey PRIMARY KEY (utente_id, bloccato_id);
 ALTER TABLE public.weekly_challenges ADD CONSTRAINT weekly_challenges_pkey PRIMARY KEY (id);
 ALTER TABLE public.asd ADD CONSTRAINT asd_name_key UNIQUE (name);
 ALTER TABLE public.badges ADD CONSTRAINT badges_user_id_badge_id_key UNIQUE (user_id, badge_id);
@@ -5286,6 +5316,10 @@ ALTER TABLE public.saved_hands ADD CONSTRAINT saved_hands_titolo_check CHECK (((
 ALTER TABLE public.scenari ADD CONSTRAINT scenari_descrizione_check CHECK ((char_length(descrizione) <= 1000));
 ALTER TABLE public.scenari ADD CONSTRAINT scenari_nome_check CHECK (((char_length(btrim(nome)) >= 1) AND (char_length(btrim(nome)) <= 120)));
 ALTER TABLE public.segnalazioni ADD CONSTRAINT segnalazioni_stato_check CHECK ((stato = ANY (ARRAY['nuova'::text, 'presa-in-carico'::text, 'risolta'::text, 'archiviata'::text])));
+ALTER TABLE public.segnalazioni_contenuti ADD CONSTRAINT segnalazioni_contenuti_lunghezze_check CHECK (((char_length(testo) <= 20000) AND (char_length(COALESCE(nota, ''::text)) <= 1000)));
+ALTER TABLE public.segnalazioni_contenuti ADD CONSTRAINT segnalazioni_contenuti_motivo_check CHECK ((motivo = ANY (ARRAY['offensivo'::text, 'spam'::text, 'inappropriato'::text, 'altro'::text])));
+ALTER TABLE public.segnalazioni_contenuti ADD CONSTRAINT segnalazioni_contenuti_stato_check CHECK ((stato = ANY (ARRAY['nuova'::text, 'rimosso'::text, 'nessuna-azione'::text])));
+ALTER TABLE public.segnalazioni_contenuti ADD CONSTRAINT segnalazioni_contenuti_tipo_check CHECK ((tipo = ANY (ARRAY['forum_post'::text, 'forum_commento'::text, 'messaggio_classe'::text])));
 ALTER TABLE public.sessioni_aula ADD CONSTRAINT sessioni_aula_stato_check CHECK ((stato = ANY (ARRAY['aperta'::text, 'chiusa'::text])));
 ALTER TABLE public.sfida_board ADD CONSTRAINT sfida_board_coppia_check CHECK ((coppia = ANY (ARRAY['A'::text, 'B'::text])));
 ALTER TABLE public.sfide_coppie ADD CONSTRAINT sfide_coppie_check CHECK (((a1 <> a2) AND (b1 <> b2) AND (a1 <> b1) AND (a1 <> b2) AND (a2 <> b1) AND (a2 <> b2)));
@@ -5299,6 +5333,7 @@ ALTER TABLE public.tornei ADD CONSTRAINT tornei_tipo_check CHECK ((tipo = ANY (A
 ALTER TABLE public.trova_errore_scenarios ADD CONSTRAINT trova_errore_scenarios_category_check CHECK ((category = ANY (ARRAY['licita'::text, 'gioco'::text, 'difesa'::text])));
 ALTER TABLE public.trova_errore_scenarios ADD CONSTRAINT trova_errore_scenarios_correct_answer_check CHECK ((correct_answer >= 0));
 ALTER TABLE public.trova_errore_scenarios ADD CONSTRAINT trova_errore_scenarios_difficulty_check CHECK ((difficulty = ANY (ARRAY['facile'::text, 'medio'::text, 'difficile'::text])));
+ALTER TABLE public.utenti_bloccati ADD CONSTRAINT utenti_bloccati_non_se_stessi CHECK ((utente_id <> bloccato_id));
 ALTER TABLE public.weekly_challenges ADD CONSTRAINT weekly_challenges_xp_multiplier_check CHECK ((xp_multiplier > (0)::double precision));
 ALTER TABLE public.adesioni ADD CONSTRAINT adesioni_class_id_fkey FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE;
 ALTER TABLE public.adesioni ADD CONSTRAINT adesioni_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE SET NULL;
@@ -5385,6 +5420,8 @@ ALTER TABLE public.risultati_torneo ADD CONSTRAINT risultati_torneo_user_id_fkey
 ALTER TABLE public.saved_hands ADD CONSTRAINT saved_hands_owner_id_fkey FOREIGN KEY (owner_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.scenari ADD CONSTRAINT scenari_autore_id_fkey FOREIGN KEY (autore_id) REFERENCES profiles(id) ON DELETE SET NULL;
 ALTER TABLE public.segnalazioni ADD CONSTRAINT segnalazioni_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE SET NULL;
+ALTER TABLE public.segnalazioni_contenuti ADD CONSTRAINT segnalazioni_contenuti_autore_id_fkey FOREIGN KEY (autore_id) REFERENCES auth.users(id) ON DELETE SET NULL;
+ALTER TABLE public.segnalazioni_contenuti ADD CONSTRAINT segnalazioni_contenuti_segnalato_da_fkey FOREIGN KEY (segnalato_da) REFERENCES auth.users(id) ON DELETE SET NULL;
 ALTER TABLE public.sessioni_aula ADD CONSTRAINT sessioni_aula_class_id_fkey FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE;
 ALTER TABLE public.sessioni_aula ADD CONSTRAINT sessioni_aula_instructor_id_fkey FOREIGN KEY (instructor_id) REFERENCES auth.users(id) ON DELETE CASCADE;
 ALTER TABLE public.sfida_board ADD CONSTRAINT sfida_board_mano_id_fkey FOREIGN KEY (mano_id) REFERENCES mani_generate(id) ON DELETE CASCADE;
@@ -5403,6 +5440,8 @@ ALTER TABLE public.stelle_compito ADD CONSTRAINT stelle_compito_student_id_fkey 
 ALTER TABLE public.torneo_mani ADD CONSTRAINT torneo_mani_mano_id_fkey FOREIGN KEY (mano_id) REFERENCES mani_generate(id) ON DELETE CASCADE;
 ALTER TABLE public.torneo_mani ADD CONSTRAINT torneo_mani_torneo_id_fkey FOREIGN KEY (torneo_id) REFERENCES tornei(id) ON DELETE CASCADE;
 ALTER TABLE public.tournament_results ADD CONSTRAINT tournament_results_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
+ALTER TABLE public.utenti_bloccati ADD CONSTRAINT utenti_bloccati_bloccato_id_fkey FOREIGN KEY (bloccato_id) REFERENCES auth.users(id) ON DELETE CASCADE;
+ALTER TABLE public.utenti_bloccati ADD CONSTRAINT utenti_bloccati_utente_id_fkey FOREIGN KEY (utente_id) REFERENCES auth.users(id) ON DELETE CASCADE;
 
 -- INDICI
 CREATE INDEX adesioni_per_classe ON public.adesioni USING btree (class_id, creata_il DESC);
@@ -5464,6 +5503,7 @@ CREATE INDEX idx_modelli_mani_lezione ON public.modelli_mani USING btree (lesson
 CREATE INDEX idx_poll_votes_post ON public.forum_poll_votes USING btree (post_id, option_index);
 CREATE INDEX idx_preferite_utente ON public.posizioni_preferite USING btree (user_id, created_at DESC);
 CREATE INDEX idx_profiles_role ON public.profiles USING btree (role) WHERE (role <> 'user'::text);
+CREATE INDEX idx_segnalazioni_contenuti_stato ON public.segnalazioni_contenuti USING btree (stato, created_at DESC);
 CREATE INDEX idx_segnalazioni_stato ON public.segnalazioni USING btree (stato, created_at DESC);
 CREATE INDEX idx_sessioni_classe ON public.sessioni_aula USING btree (class_id, created_at DESC);
 CREATE INDEX idx_sondaggi_classe ON public.sondaggi USING btree (class_id, created_at DESC);
@@ -5589,6 +5629,7 @@ ALTER TABLE public.saved_hands ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.scenari ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.script_applicati ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.segnalazioni ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.segnalazioni_contenuti ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.sessioni_aula ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.sfida_board ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.sfide_coppie ENABLE ROW LEVEL SECURITY;
@@ -5600,6 +5641,7 @@ ALTER TABLE public.torneo_mani ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.tournament_results ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.traduzioni_stato ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.trova_errore_scenarios ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.utenti_bloccati ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.weekly_challenges ENABLE ROW LEVEL SECURITY;
 
 
@@ -5623,6 +5665,7 @@ CREATE POLICY "Instructor or self can update membership" ON public.class_members
 CREATE POLICY "Members and owning instructor can view membership" ON public.class_members AS PERMISSIVE FOR SELECT TO public USING (((student_id = auth.uid()) OR is_instructor_of_class(class_id)));
 CREATE POLICY "Students can join themselves" ON public.class_members AS PERMISSIVE FOR INSERT TO public WITH CHECK ((student_id = auth.uid()));
 CREATE POLICY "Authors can delete own class messages" ON public.class_messages AS PERMISSIVE FOR DELETE TO public USING (((user_id = auth.uid()) OR is_instructor_of_class(class_id)));
+CREATE POLICY "L'amministratore modera la chat" ON public.class_messages AS PERMISSIVE FOR DELETE TO authenticated USING (is_admin());
 CREATE POLICY "Members can read class messages" ON public.class_messages AS PERMISSIVE FOR SELECT TO public USING ((is_instructor_of_class(class_id) OR is_member_of_class(class_id)));
 CREATE POLICY "Members can send class messages" ON public.class_messages AS PERMISSIVE FOR INSERT TO public WITH CHECK (((user_id = auth.uid()) AND (is_instructor_of_class(class_id) OR is_member_of_class(class_id))));
 CREATE POLICY "Instructors and members can view classes" ON public.classes AS PERMISSIVE FOR SELECT TO public USING (((instructor_id = auth.uid()) OR is_member_of_class(id) OR is_pending_of_class(id)));
@@ -5659,6 +5702,7 @@ CREATE POLICY "L'insegnante gestisce le sue figure" ON public.figure_insegnante 
 CREATE POLICY "Comments delete own" ON public.forum_comments AS PERMISSIVE FOR DELETE TO public USING ((auth.uid() = user_id));
 CREATE POLICY "Comments insert" ON public.forum_comments AS PERMISSIVE FOR INSERT TO public WITH CHECK ((auth.uid() = user_id));
 CREATE POLICY "Comments readable" ON public.forum_comments AS PERMISSIVE FOR SELECT TO public USING (true);
+CREATE POLICY "L'amministratore modera i commenti" ON public.forum_comments AS PERMISSIVE FOR DELETE TO authenticated USING (is_admin());
 CREATE POLICY "Likes delete own" ON public.forum_likes AS PERMISSIVE FOR DELETE TO public USING ((auth.uid() = user_id));
 CREATE POLICY "Likes insert" ON public.forum_likes AS PERMISSIVE FOR INSERT TO public WITH CHECK ((auth.uid() = user_id));
 CREATE POLICY "Likes readable" ON public.forum_likes AS PERMISSIVE FOR SELECT TO public USING (true);
@@ -5668,6 +5712,7 @@ CREATE POLICY "Forum posts delete own" ON public.forum_posts AS PERMISSIVE FOR D
 CREATE POLICY "Forum posts insert" ON public.forum_posts AS PERMISSIVE FOR INSERT TO public WITH CHECK ((auth.uid() = user_id));
 CREATE POLICY "Forum posts readable" ON public.forum_posts AS PERMISSIVE FOR SELECT TO public USING (true);
 CREATE POLICY "Forum posts update own" ON public.forum_posts AS PERMISSIVE FOR UPDATE TO public USING ((auth.uid() = user_id));
+CREATE POLICY "L'amministratore modera i post" ON public.forum_posts AS PERMISSIVE FOR DELETE TO authenticated USING (is_admin());
 CREATE POLICY "Either party can delete friendship" ON public.friendships AS PERMISSIVE FOR DELETE TO public USING (((auth.uid() = user_id) OR (auth.uid() = friend_id)));
 CREATE POLICY "Recipients can accept or decline" ON public.friendships AS PERMISSIVE FOR UPDATE TO public USING ((auth.uid() = friend_id));
 CREATE POLICY "Users can send friend requests" ON public.friendships AS PERMISSIVE FOR INSERT TO public WITH CHECK ((auth.uid() = user_id));
@@ -5746,6 +5791,9 @@ CREATE POLICY "Scenari leggibili" ON public.scenari AS PERMISSIVE FOR SELECT TO 
 CREATE POLICY "Amministratori e autore leggono" ON public.segnalazioni AS PERMISSIVE FOR SELECT TO authenticated USING ((is_admin() OR (user_id = auth.uid())));
 CREATE POLICY "Chiunque può segnalare" ON public.segnalazioni AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK ((user_id = auth.uid()));
 CREATE POLICY "Solo gli amministratori aggiornano" ON public.segnalazioni AS PERMISSIVE FOR UPDATE TO authenticated USING (is_admin()) WITH CHECK (is_admin());
+CREATE POLICY "Chi è iscritto segnala" ON public.segnalazioni_contenuti AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK (((segnalato_da = ( SELECT auth.uid() AS uid)) AND (stato = 'nuova'::text)));
+CREATE POLICY "L'amministratore chiude le segnalazioni" ON public.segnalazioni_contenuti AS PERMISSIVE FOR UPDATE TO authenticated USING (is_admin()) WITH CHECK (is_admin());
+CREATE POLICY "L'amministratore legge le segnalazioni" ON public.segnalazioni_contenuti AS PERMISSIVE FOR SELECT TO authenticated USING (is_admin());
 CREATE POLICY "L'insegnante gestisce la sessione" ON public.sessioni_aula AS PERMISSIVE FOR ALL TO authenticated USING (is_instructor_of_class(class_id)) WITH CHECK ((is_instructor_of_class(class_id) AND (instructor_id = auth.uid())));
 CREATE POLICY "La sessione la vede la classe" ON public.sessioni_aula AS PERMISSIVE FOR SELECT TO authenticated USING ((is_instructor_of_class(class_id) OR is_member_of_class(class_id)));
 CREATE POLICY "Le board delle mie sfide" ON public.sfida_board AS PERMISSIVE FOR SELECT TO authenticated USING ((EXISTS ( SELECT 1
@@ -5768,6 +5816,7 @@ CREATE POLICY "Users can insert own tournament result" ON public.tournament_resu
 CREATE POLICY "Users can update own tournament result" ON public.tournament_results AS PERMISSIVE FOR UPDATE TO authenticated USING ((user_id = auth.uid())) WITH CHECK ((user_id = auth.uid()));
 CREATE POLICY "Stato traduzioni visibile" ON public.traduzioni_stato AS PERMISSIVE FOR SELECT TO authenticated USING (true);
 CREATE POLICY trova_errore_public_read ON public.trova_errore_scenarios AS PERMISSIVE FOR SELECT TO public USING (true);
+CREATE POLICY "Ognuno gestisce i suoi blocchi" ON public.utenti_bloccati AS PERMISSIVE FOR ALL TO authenticated USING ((utente_id = ( SELECT auth.uid() AS uid))) WITH CHECK ((utente_id = ( SELECT auth.uid() AS uid)));
 CREATE POLICY weekly_challenges_public_read ON public.weekly_challenges AS PERMISSIVE FOR SELECT TO public USING (true);
 
 -- PERMESSI ESATTI: TABELLE, COLONNE, SEQUENZE
@@ -5839,6 +5888,7 @@ REVOKE ALL ON TABLE public.saved_hands FROM PUBLIC, anon, authenticated, service
 REVOKE ALL ON TABLE public.scenari FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.script_applicati FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.segnalazioni FROM PUBLIC, anon, authenticated, service_role;
+REVOKE ALL ON TABLE public.segnalazioni_contenuti FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.sessioni_aula FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.sfida_board FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.sfide_coppie FROM PUBLIC, anon, authenticated, service_role;
@@ -5850,6 +5900,7 @@ REVOKE ALL ON TABLE public.torneo_mani FROM PUBLIC, anon, authenticated, service
 REVOKE ALL ON TABLE public.tournament_results FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.traduzioni_stato FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.trova_errore_scenarios FROM PUBLIC, anon, authenticated, service_role;
+REVOKE ALL ON TABLE public.utenti_bloccati FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.weekly_challenges FROM PUBLIC, anon, authenticated, service_role;
 GRANT DELETE ON TABLE public.adesioni TO anon;
 GRANT INSERT ON TABLE public.adesioni TO anon;
@@ -7218,6 +7269,22 @@ GRANT SELECT ON TABLE public.segnalazioni TO service_role;
 GRANT TRIGGER ON TABLE public.segnalazioni TO service_role;
 GRANT TRUNCATE ON TABLE public.segnalazioni TO service_role;
 GRANT UPDATE ON TABLE public.segnalazioni TO service_role;
+GRANT DELETE ON TABLE public.segnalazioni_contenuti TO authenticated;
+GRANT INSERT ON TABLE public.segnalazioni_contenuti TO authenticated;
+GRANT MAINTAIN ON TABLE public.segnalazioni_contenuti TO authenticated;
+GRANT REFERENCES ON TABLE public.segnalazioni_contenuti TO authenticated;
+GRANT SELECT ON TABLE public.segnalazioni_contenuti TO authenticated;
+GRANT TRIGGER ON TABLE public.segnalazioni_contenuti TO authenticated;
+GRANT TRUNCATE ON TABLE public.segnalazioni_contenuti TO authenticated;
+GRANT UPDATE ON TABLE public.segnalazioni_contenuti TO authenticated;
+GRANT DELETE ON TABLE public.segnalazioni_contenuti TO service_role;
+GRANT INSERT ON TABLE public.segnalazioni_contenuti TO service_role;
+GRANT MAINTAIN ON TABLE public.segnalazioni_contenuti TO service_role;
+GRANT REFERENCES ON TABLE public.segnalazioni_contenuti TO service_role;
+GRANT SELECT ON TABLE public.segnalazioni_contenuti TO service_role;
+GRANT TRIGGER ON TABLE public.segnalazioni_contenuti TO service_role;
+GRANT TRUNCATE ON TABLE public.segnalazioni_contenuti TO service_role;
+GRANT UPDATE ON TABLE public.segnalazioni_contenuti TO service_role;
 GRANT DELETE ON TABLE public.sessioni_aula TO anon;
 GRANT INSERT ON TABLE public.sessioni_aula TO anon;
 GRANT MAINTAIN ON TABLE public.sessioni_aula TO anon;
@@ -7465,6 +7532,22 @@ GRANT SELECT ON TABLE public.trova_errore_scenarios TO service_role;
 GRANT TRIGGER ON TABLE public.trova_errore_scenarios TO service_role;
 GRANT TRUNCATE ON TABLE public.trova_errore_scenarios TO service_role;
 GRANT UPDATE ON TABLE public.trova_errore_scenarios TO service_role;
+GRANT DELETE ON TABLE public.utenti_bloccati TO authenticated;
+GRANT INSERT ON TABLE public.utenti_bloccati TO authenticated;
+GRANT MAINTAIN ON TABLE public.utenti_bloccati TO authenticated;
+GRANT REFERENCES ON TABLE public.utenti_bloccati TO authenticated;
+GRANT SELECT ON TABLE public.utenti_bloccati TO authenticated;
+GRANT TRIGGER ON TABLE public.utenti_bloccati TO authenticated;
+GRANT TRUNCATE ON TABLE public.utenti_bloccati TO authenticated;
+GRANT UPDATE ON TABLE public.utenti_bloccati TO authenticated;
+GRANT DELETE ON TABLE public.utenti_bloccati TO service_role;
+GRANT INSERT ON TABLE public.utenti_bloccati TO service_role;
+GRANT MAINTAIN ON TABLE public.utenti_bloccati TO service_role;
+GRANT REFERENCES ON TABLE public.utenti_bloccati TO service_role;
+GRANT SELECT ON TABLE public.utenti_bloccati TO service_role;
+GRANT TRIGGER ON TABLE public.utenti_bloccati TO service_role;
+GRANT TRUNCATE ON TABLE public.utenti_bloccati TO service_role;
+GRANT UPDATE ON TABLE public.utenti_bloccati TO service_role;
 GRANT DELETE ON TABLE public.weekly_challenges TO anon;
 GRANT INSERT ON TABLE public.weekly_challenges TO anon;
 GRANT MAINTAIN ON TABLE public.weekly_challenges TO anon;
