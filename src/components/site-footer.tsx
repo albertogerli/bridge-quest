@@ -70,7 +70,10 @@ export function SiteFooter() {
         </div>
 
         {/* Bottom line */}
-        <p className="text-center text-[12px] text-muted-foreground mt-3">
+        <p className="text-center text-[12px] font-semibold text-foreground/80 mt-3">
+          {t("Contenuti tecnici a cura della Commissione del Settore Insegnamento FIGB")}
+        </p>
+        <p className="text-center text-[12px] text-muted-foreground mt-1">
           Sviluppo: Tourbillon Tech S.r.l. · {new Date().getFullYear()} FIGB
         </p>
       </div>

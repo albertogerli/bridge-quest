@@ -178,8 +178,8 @@ export function DesktopSidebar() {
             <p className="text-[12px] font-medium text-figb dark:text-primary uppercase tracking-wider">
               {t("Un progetto della FIGB")}
             </p>
-            <p className="text-[12px] text-figb dark:text-primary mt-0.5">
-              {t("Commissione Insegnamento")}
+            <p className="text-[12px] font-semibold text-figb dark:text-primary mt-0.5">
+              {t("Contenuti tecnici a cura della Commissione del Settore Insegnamento")}
             </p>
             <p className="text-[12px] text-figb dark:text-primary mt-1">
               {t("Sviluppo: A. G. Gerli / Tourbillon Tech")}

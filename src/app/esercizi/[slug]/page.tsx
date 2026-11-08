@@ -67,7 +67,7 @@ export default function EserciziPage({ params }: { params: Promise<{ slug: strin
         ))}
 
         <p className="mt-10 text-xs text-muted-foreground">
-          {t("Testi ed esercizi: Commissione Insegnamento FIGB · Scuola Bridge FIGB.")}
+          {t("Testi ed esercizi: Commissione del Settore Insegnamento FIGB · Scuola Bridge FIGB.")}
         </p>
       </div>
     </div>

@@ -24,7 +24,7 @@ export default function EserciziIndicePage() {
         <p className="text-xs font-semibold uppercase tracking-wide text-primary">{t("Corso di Primo Livello")}</p>
         <h1 className="font-display text-2xl font-bold sm:text-3xl">{t("Esercizi")}</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          {t("Gli esercizi della Commissione Insegnamento, un argomento per pagina. Rispondi senza aiuti, poi apri la soluzione.")}
+          {t("Gli esercizi della Commissione del Settore Insegnamento, un argomento per pagina. Rispondi senza aiuti, poi apri la soluzione.")}
         </p>
         <ul className="mt-6 divide-y divide-border overflow-hidden rounded-2xl border border-border bg-card">
           {SCHEDE_ESERCIZI.map((s) => {
@@ -48,7 +48,7 @@ export default function EserciziIndicePage() {
           })}
         </ul>
         <p className="mt-10 text-xs text-muted-foreground">
-          {t("Testi ed esercizi: Commissione Insegnamento FIGB · Scuola Bridge FIGB.")}
+          {t("Testi ed esercizi: Commissione del Settore Insegnamento FIGB · Scuola Bridge FIGB.")}
         </p>
       </div>
     </div>

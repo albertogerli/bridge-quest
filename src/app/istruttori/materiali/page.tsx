@@ -66,7 +66,7 @@ export default function MaterialiPage() {
         ))}
 
         <p className="text-xs text-muted-foreground">
-          {t("Testi, esercizi e smazzate: Commissione Insegnamento FIGB · Scuola Bridge FIGB. Impaginazione BridgeLab.")}
+          {t("Testi, esercizi e smazzate: Commissione del Settore Insegnamento FIGB · Scuola Bridge FIGB. Impaginazione BridgeLab.")}
         </p>
       </div>
     </div>

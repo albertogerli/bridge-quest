@@ -127,6 +127,9 @@ export default function LezioniPage() {
                 «2/91» accanto a «2/199» sembrava un errore (28/09/2026). */}
             {t("{fatti}/{totale} moduli completati in {corso}", { fatti: totalCompleted, totale: totalModules, corso: currentCourse.name })}
           </p>
+          <p className="text-xs font-semibold text-figb dark:text-primary mt-1">
+            {t("Contenuti tecnici a cura della Commissione del Settore Insegnamento FIGB")}
+          </p>
         </motion.div>
 
         {/*

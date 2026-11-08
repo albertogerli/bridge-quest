@@ -92,6 +92,12 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
           >
             {t("Il corso ufficiale della Federazione Italiana Gioco Bridge, con un tavolo sempre pronto per fare pratica. Gratis.")}
           </motion.p>
+          {/* Chi ha scritto le lezioni si legge subito, non in fondo alla
+              pagina: i contenuti tecnici sono della Commissione, BridgeLab
+              li porta sullo schermo (richiesta del 08/11/2026). */}
+          <p className="mt-4 inline-block rounded-2xl bg-white/15 border border-white/20 px-4 py-1.5 text-xs sm:text-sm font-semibold text-white">
+            {t("Contenuti tecnici a cura della Commissione del Settore Insegnamento FIGB")}
+          </p>
 
           {/* CTA buttons */}
           <motion.div
@@ -206,8 +212,8 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
             <p className="text-lg font-bold text-figb dark:text-primary">
               {t("Federazione Italiana Gioco Bridge")}
             </p>
-            <p className="mt-1 text-xs text-figb/60 dark:text-primary/60">
-              {t("Commissione Insegnamento")}
+            <p className="mt-2 text-sm font-semibold text-figb dark:text-primary">
+              {t("Contenuti tecnici a cura della Commissione del Settore Insegnamento")}
             </p>
           </motion.div>
         </div>
@@ -247,6 +253,9 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
 
       {/* Footer */}
       <footer className="px-5 pb-8 text-center space-y-1">
+        <p className="text-[12px] font-semibold text-foreground/80">
+          {t("Contenuti tecnici a cura della Commissione del Settore Insegnamento FIGB")}
+        </p>
         <p className="text-[12px] text-muted-foreground">
           {t("Sviluppo e hosting: Alberto Giovanni Gerli / Tourbillon Tech S.r.l.")}
         </p>

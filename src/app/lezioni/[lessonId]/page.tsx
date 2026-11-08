@@ -119,6 +119,9 @@ export default function LessonDetailPage({
             </div>
             <h1 className="font-display text-2xl font-bold text-white">{lesson.title}</h1>
             <p className="text-sm text-white/70 mt-1">{lesson.subtitle}</p>
+            <p className="text-xs font-semibold text-white/85 mt-2">
+              {t("Contenuti tecnici a cura della Commissione del Settore Insegnamento FIGB")}
+            </p>
 
             <div className="mt-4 flex items-center gap-3">
               <div className="flex-1 h-2 rounded-full bg-white/15 overflow-hidden">

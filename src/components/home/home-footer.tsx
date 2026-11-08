@@ -22,8 +22,8 @@ export function HomeFooter() {
           <p className="text-lg font-bold text-figb dark:text-primary">
             {t("Federazione Italiana Gioco Bridge")}
           </p>
-          <p className="mt-2 text-xs text-figb/60 dark:text-primary/60">
-            {t("Commissione Insegnamento · Corsi Fiori, Quadri, Cuori")}
+          <p className="mt-2 text-sm font-semibold text-figb dark:text-primary">
+            {t("Contenuti tecnici a cura della Commissione del Settore Insegnamento")}
           </p>
           <p className="mt-2 text-[12px] text-figb dark:text-primary">
             {t("Sviluppo e hosting: Alberto Giovanni Gerli / Tourbillon Tech S.r.l.")}

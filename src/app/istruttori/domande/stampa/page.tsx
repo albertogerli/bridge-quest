@@ -45,7 +45,7 @@ export default async function StampaEserciziPage({ searchParams }: { searchParam
 
         <header className="mb-6 border-b border-[#0f1219]/20 pb-4">
           <p className="text-xs font-semibold uppercase tracking-wider text-[#0f1219]/60">
-            {t("Scuola Bridge FIGB · Commissione Insegnamento")}
+            {t("Scuola Bridge FIGB · Commissione del Settore Insegnamento")}
           </p>
           <h1 className="mt-1 font-display text-2xl font-bold">{gruppoTest(test)}</h1>
           <p className="mt-3 text-sm">{t("Nome e cognome")}: ______________________________</p>
