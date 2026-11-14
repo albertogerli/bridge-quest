@@ -118,6 +118,8 @@ export function CopiaCompitoInClasse({ compito }: { compito: Assignment }) {
             <div className="space-y-3 py-2 text-sm">
               {esito.esito === "copiato" ? (
                 <p>{t("Fatto: «{titolo}» è ora anche in «{classe}».", { titolo: compito.title, classe: nomeArrivo })}</p>
+              ) : esito.esito === "gia-presente" ? (
+                <p>{t("In «{classe}» questo compito c'è già: non l'ho copiato una seconda volta.", { classe: nomeArrivo })}</p>
               ) : (
                 <p>
                   {t("In «{classe}» questa lezione è già assegnata: ogni lezione ha un solo compito per classe, e quello c'è già.", {

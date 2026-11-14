@@ -138,7 +138,9 @@ export function chiaveMateriale(m: Pick<MaterialeLezione, "lezione" | "tipo" | "
 export type EsitoCopiaCompito =
   | { esito: "copiato"; id: string }
   /** Nella classe di arrivo quella lezione ha già il suo compito. */
-  | { esito: "lezione-gia-assegnata"; id: string | null };
+  | { esito: "lezione-gia-assegnata"; id: string | null }
+  /** Nella classe di arrivo c'è già lo stesso compito (vedi `chiaveCompito`). */
+  | { esito: "gia-presente"; id: string };
 
 function eDoppione(error: { code?: string; message?: string } | null): boolean {
   return error?.code === "23505";
@@ -151,6 +153,18 @@ export async function copiaCompito(
   scadenza: string | null,
 ): Promise<EsitoCopiaCompito> {
   const supabase = createClient();
+  // Lo stesso compito già nella classe di arrivo — copiato prima, o con la
+  // copia di tutta la classe — non si raddoppia: si dice dov'è.
+  const { data: esistenti, error: errEsistenti } = await supabase
+    .from("assignments")
+    .select("id, title, smazzata_ids, esercizio_ids")
+    .eq("class_id", classeArrivo);
+  if (errEsistenti) throw errEsistenti;
+  const chiave = chiaveCompito(a);
+  const doppio = ((esistenti ?? []) as Pick<Assignment, "id" | "title" | "smazzata_ids" | "esercizio_ids">[]).find(
+    (e) => chiaveCompito(e) === chiave,
+  );
+  if (doppio) return { esito: "gia-presente", id: doppio.id };
   const riga = rigaCopiaCompito(a, classeArrivo, scadenza);
   let { data, error } = await supabase.from("assignments").insert(riga).select("id").single();
   // Come in `createAssignment`: senza lo script della colonna, il compito si
@@ -221,6 +235,7 @@ export async function copiaClasse(
         riepilogo.compitiCopiati++;
         mappa.set(a.id.toLowerCase(), esito.id);
       } else {
+        // Non succede (i doppioni sono già saltati sopra), ma vale lo stesso.
         riepilogo.compitiSaltati.push(a.title);
         if (esito.id) mappa.set(a.id.toLowerCase(), esito.id);
       }

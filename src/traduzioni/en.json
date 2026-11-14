@@ -3205,5 +3205,6 @@
   "Turno: {turno}": "Time slot: {turno}",
   "Tutti ({n})": "All ({n})",
   "Vai a «{classe}»": "Go to “{classe}”",
-  "{nome} (archiviata)": "{nome} (archived)"
+  "{nome} (archiviata)": "{nome} (archived)",
+  "In «{classe}» questo compito c'è già: non l'ho copiato una seconda volta.": "This assignment is already in “{classe}”: I didn't copy it a second time."
 }
