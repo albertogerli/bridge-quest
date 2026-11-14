@@ -19,6 +19,7 @@ import { useAlRitorno } from "@/hooks/use-al-ritorno";
 import { segnalaSalvoRete } from "@/lib/report-error";
 import { useT } from "@/contexts/traduzioni-provider";
 import { useLingua } from "@/hooks/use-lingua";
+import { BookOpen } from "lucide-react";
 
 export default function ClassiPage() {
   return (
@@ -152,6 +153,17 @@ function ClassiContent() {
         <p className="mt-1 text-sm text-muted-foreground">
           {t("Iscriviti con il codice del tuo insegnante e gioca le smazzate assegnate.")}
         </p>
+        {/* Una pagina statica in `public/`, non una rotta: `<a>` e non
+            `Link`, come per la guida dell'insegnante. */}
+        <a
+          href="/guida-allievi"
+          target="_blank"
+          rel="noopener"
+          className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-primary underline-offset-4 hover:underline"
+        >
+          <BookOpen className="h-4 w-4" aria-hidden="true" />
+          {t("Come funziona: la guida passo passo, con le schermate")}
+        </a>
       </div>
 
       {/* Join box */}

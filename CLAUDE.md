@@ -61,6 +61,13 @@ in `.guida-tmp/` (fuori dal repository), immagini in webp. Nel testo, la data
 «Aggiornata al …» e il riquadro «Cosa è cambiato» si aggiornano a ogni giro.
 La guida è solo in italiano, per scelta: è per gli insegnanti FIGB.
 
+Lo stesso vale per `public/guida-allievi/` (bridgelab.it/guida-allievi,
+linkata da `/classi` e dalla guida insegnanti), che spiega il lato allievo con
+le schermate del telefono: chi cambia quello che vede l'allievo in classe —
+iscrizione, compiti, esercizi, materiali, aula, chat — la aggiorna nello
+stesso commit. Le schermate dell'allievo si fanno da un account d'allievo
+finto, quelle del primo ingresso da un account che non ha niente.
+
 ## Contenuti: il DB è la fonte di verità
 
 - Lezioni/quiz live sono su Supabase e **divergono dal seed** in `src/data/`.

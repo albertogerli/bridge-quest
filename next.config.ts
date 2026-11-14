@@ -56,7 +56,9 @@ const projectRoot = path.dirname(fileURLToPath(import.meta.url));
  */
 // `guida-insegnanti/`: la guida con le schermate (novembre 2026), tre
 // megabyte di immagini che legge chi insegna, e una volta sola.
-const CARTELLE_DI_CONTENUTO = /^(?:videos|infografiche|materiali|guida-insegnanti)\//;
+// `guida-allievi/`: la stessa cosa per gli allievi, quasi due megabyte di
+// schermate del telefono, letti una volta all'inizio del corso.
+const CARTELLE_DI_CONTENUTO = /^(?:videos|infografiche|materiali|guida-insegnanti|guida-allievi)\//;
 /** Il worker stesso e i suoi satelliti: precaricarsi da soli non ha senso. */
 const NON_E_UN_ASSET = /^(?:sw\.js(?:\.map)?|swe-worker-[^/]*\.js)$/;
 /** Oltre questo, non è roba che serve prima che l'utente veda qualcosa. */
@@ -179,6 +181,7 @@ const nextConfig: NextConfig = {
       // font li chiama con percorsi assoluti, quindi l'indirizzo senza la
       // barra finale non li rompe.
       { source: "/guida-insegnanti", destination: "/guida-insegnanti/index.html" },
+      { source: "/guida-allievi", destination: "/guida-allievi/index.html" },
     ];
   },
 
