@@ -51,6 +51,8 @@ import { StrumentiLezione } from "@/components/istruttori/strumenti-lezione";
 import { useAlRitorno } from "@/hooks/use-al-ritorno";
 import { ElencoAllieviEsporta } from "@/components/istruttori/elenco-allievi-esporta";
 import { RigaAllievo } from "@/components/istruttori/riga-allievo";
+import { CopiaClasseIn } from "@/components/istruttori/copia-in-classe";
+import { nelTurno, proposteTurno, turniDellaClasse } from "@/lib/turni";
 import { ProgrammaCorso } from "@/components/istruttori/programma-corso";
 
 export default function ClassDetailPage({
@@ -124,6 +126,8 @@ export default function ClassDetailPage({
     }
   }
 
+  /** Il filtro dell'elenco allievi per turno: `null` = tutti, `""` = senza turno. */
+  const [filtroTurno, setFiltroTurno] = useState<string | null>(null);
   /**
    * Eliminare una classe chiede DUE conferme, in una finestra vera e non in un
    * popup del browser: prima l'avviso grande e rosso con cosa si perde, poi il
@@ -339,6 +343,12 @@ export default function ClassDetailPage({
       },
     );
   }
+  /** Il turno nuovo vale subito, come il nome. */
+  function turnoCambiato(studentId: string, turno: string | null) {
+    setDetail((d) => d && { ...d, members: d.members.map((m) => (m.student_id === studentId ? { ...m, turno } : m)) });
+  }
+  const turni = turniDellaClasse(members);
+  const membriVisti = members.filter((m) => nelTurno(m.turno, filtroTurno));
   const scadenza = classRoom.invite_expires_at
     ? new Date(classRoom.invite_expires_at)
     : null;
@@ -648,6 +658,7 @@ export default function ClassDetailPage({
                 <Link href={`/istruttori/${classId}/materiali`}>
                   <Button variant="outline">{t("Materiali e orari di uscita")}</Button>
                 </Link>
+                <CopiaClasseIn classId={classId} />
               </div>
               {assignments.map((a) => (
                 <Link key={a.id} href={`/istruttori/${classId}/compito/${a.id}`} className="block">
@@ -682,6 +693,7 @@ export default function ClassDetailPage({
                   classe: classRoom.name,
                   stato: m.status === "pending" ? t("in attesa") : t("iscritto"),
                   iscrittoIl: new Date(m.joined_at).toLocaleDateString("it-IT"),
+                  note: m.turno ? t("Turno: {turno}", { turno: m.turno }) : undefined,
                   compitiSvolti: svolti.get(m.student_id) ?? 0,
                   compitiAssegnati: assignments.length,
                 }))}
@@ -693,8 +705,29 @@ export default function ClassDetailPage({
               {t("Nessun allievo iscritto. Condividi il codice invito per farli entrare.")}
             </p>
           ) : (
+            <>
+            {/* Lo stesso corso al pomeriggio e alla sera: chi aspettarsi in ciascun turno. */}
+            {turni.length > 0 && (
+              <div className="mb-3 flex flex-wrap gap-2" role="group" aria-label={t("Turni")}>
+                {[
+                  { filtro: null as string | null, etichetta: t("Tutti ({n})", { n: members.length }) },
+                  ...turni.map((c) => ({ filtro: c.turno as string | null, etichetta: `${c.turno} (${c.allievi})` })),
+                  { filtro: "", etichetta: t("Senza turno ({n})", { n: members.filter((m) => nelTurno(m.turno, "")).length }) },
+                ].map((f) => (
+                  <Button
+                    key={f.filtro ?? "tutti"}
+                    size="sm"
+                    variant={filtroTurno === f.filtro ? "default" : "outline"}
+                    aria-pressed={filtroTurno === f.filtro}
+                    onClick={() => setFiltroTurno(f.filtro)}
+                  >
+                    {f.etichetta}
+                  </Button>
+                ))}
+              </div>
+            )}
             <div className="divide-y divide-border rounded-lg border border-border">
-              {members.map((m) => (
+              {membriVisti.map((m) => (
                 <RigaAllievo
                   key={m.student_id}
                   classId={classId}
@@ -709,9 +742,12 @@ export default function ClassDetailPage({
                       : []
                   }
                   onRinominato={rinominato}
+                  proposteTurno={proposteTurno(members)}
+                  onTurno={turnoCambiato}
                 />
               ))}
             </div>
+            </>
           )}
         </TabsContent>
 

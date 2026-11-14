@@ -16,7 +16,7 @@
 -- Rigenerare e committare dopo OGNI modifica allo schema, insieme allo script
 -- che l'ha causata.
 --
--- Estratto il: 2026-11-07
+-- Estratto il: 2026-11-14
 -- ============================================================================
 
 SET check_function_bodies = false;
@@ -154,7 +154,8 @@ CREATE TABLE IF NOT EXISTS public.class_members (
   status text NOT NULL,
   joined_at timestamp with time zone NOT NULL,
   uscito_il timestamp with time zone,
-  nome_in_classe text
+  nome_in_classe text,
+  turno text
 );
 
 CREATE TABLE IF NOT EXISTS public.class_messages (
@@ -2358,6 +2359,29 @@ AS $function$
     return new;
   end;
   $function$
+;
+
+CREATE OR REPLACE FUNCTION public.custodisci_turno()
+ RETURNS trigger
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+begin
+  if auth.uid() is null then
+    return new;
+  end if;
+  if tg_op = 'INSERT' then
+    if new.turno is not null and not is_instructor_of_class(new.class_id) then
+      new.turno := null;
+    end if;
+  elsif new.turno is distinct from old.turno
+        and not is_instructor_of_class(new.class_id) then
+    new.turno := old.turno;
+  end if;
+  return new;
+end;
+$function$
 ;
 
 CREATE OR REPLACE FUNCTION public.distribuzione_sondaggio(p_id uuid)
@@ -4839,6 +4863,34 @@ AS $function$
   $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.turno_allievo(p_class_id uuid, p_student_id uuid, p_turno text)
+ RETURNS text
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+declare
+  v_turno text := nullif(regexp_replace(btrim(coalesce(p_turno, '')), '\s+', ' ', 'g'), '');
+begin
+  if not is_instructor_of_class(p_class_id) then
+    raise exception 'solo l''insegnante della classe può assegnare il turno' using errcode = '42501';
+  end if;
+  if v_turno is not null and char_length(v_turno) > 30 then
+    raise exception 'turno troppo lungo' using errcode = '22023';
+  end if;
+
+  update class_members
+     set turno = v_turno
+   where class_id = p_class_id and student_id = p_student_id;
+  if not found then
+    raise exception 'l''allievo non è della classe' using errcode = '22023';
+  end if;
+
+  return v_turno;
+end;
+$function$
+;
+
 CREATE OR REPLACE FUNCTION public.ultimo_torneo_con_aste(p_tipo text)
  RETURNS jsonb
  LANGUAGE sql
@@ -5257,6 +5309,7 @@ ALTER TABLE public.challenges ADD CONSTRAINT challenges_board_count_check CHECK 
 ALTER TABLE public.challenges ADD CONSTRAINT challenges_status_check CHECK ((status = ANY (ARRAY['pending'::text, 'accepted'::text, 'playing'::text, 'completed'::text, 'declined'::text, 'expired'::text])));
 ALTER TABLE public.class_members ADD CONSTRAINT class_members_nome_in_classe_check CHECK (((nome_in_classe IS NULL) OR ((char_length(nome_in_classe) >= 1) AND (char_length(nome_in_classe) <= 60))));
 ALTER TABLE public.class_members ADD CONSTRAINT class_members_status_check CHECK ((status = ANY (ARRAY['active'::text, 'removed'::text, 'pending'::text, 'rejected'::text])));
+ALTER TABLE public.class_members ADD CONSTRAINT class_members_turno_check CHECK (((turno IS NULL) OR ((char_length(turno) >= 1) AND (char_length(turno) <= 30))));
 ALTER TABLE public.classes ADD CONSTRAINT classes_accesso_libero_valido CHECK ((accesso_libero = ANY (ARRAY['solo-il-corso'::text, 'con-pratica-libera'::text, 'tutto-aperto'::text, 'personalizzato'::text])));
 ALTER TABLE public.classes ADD CONSTRAINT classes_livello_breve CHECK (((livello IS NULL) OR (char_length(livello) <= 60)));
 ALTER TABLE public.classes ADD CONSTRAINT classes_periodo_coerente CHECK (((fine_corso IS NULL) OR (inizio_corso IS NULL) OR (fine_corso >= inizio_corso)));
@@ -5555,6 +5608,7 @@ CREATE TRIGGER asd_clubs_touch BEFORE UPDATE ON public.asd_clubs FOR EACH ROW EX
 CREATE TRIGGER bidding_sessions_last_bid BEFORE UPDATE ON public.bidding_sessions FOR EACH ROW EXECUTE FUNCTION tocca_bidding_session();
 CREATE TRIGGER class_members_nome_custodito BEFORE INSERT OR UPDATE ON public.class_members FOR EACH ROW EXECUTE FUNCTION custodisci_nome_in_classe();
 CREATE TRIGGER class_members_segna_uscita BEFORE UPDATE ON public.class_members FOR EACH ROW EXECUTE FUNCTION segna_uscita_da_classe();
+CREATE TRIGGER class_members_turno_custodito BEFORE INSERT OR UPDATE ON public.class_members FOR EACH ROW EXECUTE FUNCTION custodisci_turno();
 CREATE TRIGGER collectible_cards_touch BEFORE UPDATE ON public.collectible_cards FOR EACH ROW EXECUTE FUNCTION touch_updated_at();
 CREATE TRIGGER commenti_compito_updated_at BEFORE UPDATE ON public.commenti_compito FOR EACH ROW EXECUTE FUNCTION touch_updated_at();
 CREATE TRIGGER course_worlds_touch BEFORE UPDATE ON public.course_worlds FOR EACH ROW EXECUTE FUNCTION touch_updated_at();
@@ -7754,6 +7808,8 @@ GRANT EXECUTE ON FUNCTION public.confronto_mano(p_assignment_id uuid, p_smazzata
 GRANT EXECUTE ON FUNCTION public.confronto_mano(p_assignment_id uuid, p_smazzata_id text) TO service_role;
 REVOKE ALL ON FUNCTION public.custodisci_nome_in_classe() FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.custodisci_nome_in_classe() TO service_role;
+REVOKE ALL ON FUNCTION public.custodisci_turno() FROM PUBLIC, anon, authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.custodisci_turno() TO service_role;
 REVOKE ALL ON FUNCTION public.distribuzione_sondaggio(p_id uuid) FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.distribuzione_sondaggio(p_id uuid) TO anon;
 GRANT EXECUTE ON FUNCTION public.distribuzione_sondaggio(p_id uuid) TO authenticated;
@@ -7997,6 +8053,9 @@ GRANT EXECUTE ON FUNCTION public.touch_updated_at() TO PUBLIC;
 GRANT EXECUTE ON FUNCTION public.touch_updated_at() TO anon;
 GRANT EXECUTE ON FUNCTION public.touch_updated_at() TO authenticated;
 GRANT EXECUTE ON FUNCTION public.touch_updated_at() TO service_role;
+REVOKE ALL ON FUNCTION public.turno_allievo(p_class_id uuid, p_student_id uuid, p_turno text) FROM PUBLIC, anon, authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.turno_allievo(p_class_id uuid, p_student_id uuid, p_turno text) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.turno_allievo(p_class_id uuid, p_student_id uuid, p_turno text) TO service_role;
 REVOKE ALL ON FUNCTION public.ultimo_torneo_con_aste(p_tipo text) FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.ultimo_torneo_con_aste(p_tipo text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.ultimo_torneo_con_aste(p_tipo text) TO service_role;

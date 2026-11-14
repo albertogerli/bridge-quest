@@ -134,6 +134,12 @@ export interface ClassMember {
    * si voleva prendere i meriti dell'altro (regia di un corso, 29/10/2026).
    */
   nome_in_classe?: string | null;
+  /**
+   * Il turno in cui l'allievo viene di solito (pomeriggio, sera…), scelto
+   * dall'insegnante. Solo un'etichetta: non chiude niente. Senza
+   * `turno-allievo-2026-11.sql` non arriva, e non c'è.
+   */
+  turno?: string | null;
   /** Il nome che l'allievo ha scelto nel profilo. */
   nome_profilo?: string | null;
   avatar_url?: string | null;
@@ -314,17 +320,19 @@ export async function getClassDetail(classId: string): Promise<ClassDetail> {
   // FK to auth.users (not profiles), so the `profiles(...)` embed has no
   // discoverable relationship and errors. We fetch members, then their profiles
   // in a second query keyed by student_id (= profiles.id).
-  const [classRes, membersRes, assignmentsRes] = await Promise.all([
-    supabase.from("classes").select("*").eq("id", classId).maybeSingle(),
+  // `active` e `pending` insieme, in una query sola: chi è in attesa va
+  // mostrato all'insegnante, e sono le stesse righe con lo stesso profilo
+  // da risolvere: separarle vorrebbe dire due query e due giri di nomi.
+  const membri = (colonne: string) =>
     supabase
       .from("class_members")
-      .select("class_id, student_id, status, joined_at, nome_in_classe")
+      .select(colonne)
       .eq("class_id", classId)
-      // `active` e `pending` insieme, in una query sola: chi è in attesa va
-      // mostrato all'insegnante, e sono le stesse righe con lo stesso profilo
-      // da risolvere: separarle vorrebbe dire due query e due giri di nomi.
       .in("status", ["active", "pending"])
-      .order("joined_at", { ascending: true }),
+      .order("joined_at", { ascending: true });
+  const [classRes, membersPrimo, assignmentsRes] = await Promise.all([
+    supabase.from("classes").select("*").eq("id", classId).maybeSingle(),
+    membri("class_id, student_id, status, joined_at, nome_in_classe, turno"),
     supabase
       .from("assignments")
       .select("*")
@@ -334,15 +342,22 @@ export async function getClassDetail(classId: string): Promise<ClassDetail> {
 
   if (classRes.error) throw classRes.error;
   if (!classRes.data) throw new ClasseNonTrovata();
+  // Il turno arriva con `turno-allievo-2026-11.sql`, da eseguire a mano:
+  // finché la colonna non c'è (42703) l'elenco si legge senza, come prima.
+  const membersRes =
+    membersPrimo.error?.code === "42703"
+      ? await membri("class_id, student_id, status, joined_at, nome_in_classe")
+      : membersPrimo;
   if (membersRes.error) throw membersRes.error;
   if (assignmentsRes.error) throw assignmentsRes.error;
 
-  const rawMembers = (membersRes.data ?? []) as {
+  const rawMembers = (membersRes.data ?? []) as unknown as {
     class_id: string;
     student_id: string;
     status: MemberStatus;
     joined_at: string;
     nome_in_classe: string | null;
+    turno?: string | null;
   }[];
 
   // Resolve display names in one batched query.
@@ -367,6 +382,7 @@ export async function getClassDetail(classId: string): Promise<ClassDetail> {
     joined_at: m.joined_at,
     display_name: m.nome_in_classe || profileMap.get(m.student_id)?.display_name || null,
     nome_in_classe: m.nome_in_classe,
+    turno: m.turno ?? null,
     nome_profilo: profileMap.get(m.student_id)?.display_name ?? null,
     avatar_url: profileMap.get(m.student_id)?.avatar_url ?? null,
   }));
@@ -545,6 +561,24 @@ export async function rinominaAllievo(classId: string, studentId: string, nome: 
     p_class_id: classId,
     p_student_id: studentId,
     p_nome: nome.trim().slice(0, LUNGHEZZA_NOME_IN_CLASSE),
+  });
+  if (error) throw error;
+  return (data as string | null) ?? null;
+}
+
+/** Quanto può essere lungo un turno: lo stesso limite del database. */
+export const LUNGHEZZA_TURNO = 30;
+
+/**
+ * Assegna (o toglie, con testo vuoto) il turno di un allievo. Restituisce il
+ * turno salvato, già ripulito dagli spazi. Da `scripts/sql/turno-allievo-2026-11.sql`.
+ */
+export async function assegnaTurno(classId: string, studentId: string, turno: string): Promise<string | null> {
+  const supabase = createClient();
+  const { data, error } = await supabase.rpc("turno_allievo", {
+    p_class_id: classId,
+    p_student_id: studentId,
+    p_turno: turno.trim().slice(0, LUNGHEZZA_TURNO),
   });
   if (error) throw error;
   return (data as string | null) ?? null;

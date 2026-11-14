@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Pencil } from "lucide-react";
+import { Clock, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { LUNGHEZZA_NOME_IN_CLASSE, rinominaAllievo, type ClassMember } from "@/lib/instructors";
+import { LUNGHEZZA_NOME_IN_CLASSE, LUNGHEZZA_TURNO, assegnaTurno, rinominaAllievo, type ClassMember } from "@/lib/instructors";
 import { segnalaSalvoRete } from "@/lib/report-error";
 import { nomePerEsteso } from "@/lib/adesioni";
 import { createClient } from "@/lib/supabase/client";
@@ -24,12 +24,18 @@ export function RigaAllievo({
   membro,
   omonimi,
   onRinominato,
+  proposteTurno = [],
+  onTurno,
 }: {
   classId: string;
   membro: ClassMember;
   /** Gli altri allievi della classe che si chiamano nello stesso modo (vuoto se nessuno). */
   omonimi: ClassMember[];
   onRinominato: (studentId: string, nome: string | null) => void;
+  /** I turni da proporre: quelli già usati nella classe e i soliti. */
+  proposteTurno?: string[];
+  /** Senza, il turno non si mostra né si cambia. */
+  onTurno?: (studentId: string, turno: string | null) => void;
 }) {
   const t = useT();
   const locale = useLingua().lingua === "en" ? "en-US" : "it-IT";
@@ -38,6 +44,30 @@ export function RigaAllievo({
   const [stato, setStato] = useState<"fermo" | "in-corso" | "errore" | "non-tuo">("fermo");
 
   const nome = membro.display_name ?? t("Allievo senza nome");
+
+  /*
+   * Il turno (pomeriggio, sera…): solo un'etichetta per l'insegnante. Il campo
+   * compare solo se la colonna c'è: `turno` è `undefined` finché
+   * `turno-allievo-2026-11.sql` non è eseguito, `null` quando c'è ed è vuoto.
+   */
+  const turnoDisponibile = !!onTurno && membro.turno !== undefined;
+  const [modTurno, setModTurno] = useState(false);
+  const [testoTurno, setTestoTurno] = useState("");
+  const [statoTurno, setStatoTurno] = useState<"fermo" | "in-corso" | "errore">("fermo");
+  const idLista = `turni-${membro.student_id}`;
+
+  async function salvaTurno(valore: string) {
+    setStatoTurno("in-corso");
+    try {
+      const salvato = await assegnaTurno(classId, membro.student_id, valore);
+      onTurno?.(membro.student_id, salvato);
+      setModTurno(false);
+      setStatoTurno("fermo");
+    } catch (err) {
+      segnalaSalvoRete("istruttori/classe:turno-allievo", err);
+      setStatoTurno("errore");
+    }
+  }
 
   /*
    * Con due allievi dallo stesso nome si propone il nome con il cognome per
@@ -115,7 +145,49 @@ export function RigaAllievo({
       <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-semibold uppercase">
         {nome.charAt(0)}
       </div>
-      {modifica ? (
+      {modTurno ? (
+        <form
+          className="flex min-w-0 flex-1 flex-wrap items-center gap-2"
+          onSubmit={(e) => {
+            e.preventDefault();
+            void salvaTurno(testoTurno);
+          }}
+        >
+          <span className="text-sm font-medium">{nome}</span>
+          <input
+            value={testoTurno}
+            onChange={(e) => setTestoTurno(e.target.value)}
+            maxLength={LUNGHEZZA_TURNO}
+            list={idLista}
+            autoFocus
+            aria-label={t("Turno dell'allievo")}
+            placeholder={t("Per esempio: Sera")}
+            className="h-9 min-w-0 flex-1 rounded-md border border-border bg-background px-2 text-sm"
+          />
+          <datalist id={idLista}>
+            {proposteTurno.map((p) => (
+              <option key={p} value={p} />
+            ))}
+          </datalist>
+          <Button size="sm" type="submit" disabled={statoTurno === "in-corso"}>
+            {t("Salva")}
+          </Button>
+          {membro.turno && (
+            <Button size="sm" type="button" variant="outline" disabled={statoTurno === "in-corso"} onClick={() => void salvaTurno("")}>
+              {t("Togli il turno")}
+            </Button>
+          )}
+          <Button size="sm" type="button" variant="ghost" onClick={() => setModTurno(false)}>
+            {t("Annulla")}
+          </Button>
+          <p className="w-full text-xs text-muted-foreground">
+            {t("Serve a te, per sapere chi aspettarti. Non chiude niente: l'allievo può venire anche nell'altro turno.")}
+          </p>
+          {statoTurno === "errore" && (
+            <p className="w-full text-xs text-destructive">{t("Non salvato. Controlla la connessione e riprova.")}</p>
+          )}
+        </form>
+      ) : modifica ? (
         <form
           className="flex min-w-0 flex-1 flex-wrap items-center gap-2"
           onSubmit={(e) => {
@@ -181,10 +253,30 @@ export function RigaAllievo({
               <p className="text-xs text-destructive">{t("Non salvato. Controlla la connessione e riprova.")}</p>
             )}
           </div>
-          <Button size="sm" variant="ghost" onClick={apri} className="ml-auto">
-            <Pencil className="mr-1 h-3.5 w-3.5" aria-hidden="true" />
-            {t("Rinomina")}
-          </Button>
+          {turnoDisponibile && membro.turno && (
+            <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-semibold">{membro.turno}</span>
+          )}
+          <span className="ml-auto flex flex-wrap items-center gap-1">
+            {turnoDisponibile && (
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => {
+                  setTestoTurno(membro.turno ?? "");
+                  setStatoTurno("fermo");
+                  setModifica(false);
+                  setModTurno(true);
+                }}
+              >
+                <Clock className="mr-1 h-3.5 w-3.5" aria-hidden="true" />
+                {t("Turno")}
+              </Button>
+            )}
+            <Button size="sm" variant="ghost" onClick={apri}>
+              <Pencil className="mr-1 h-3.5 w-3.5" aria-hidden="true" />
+              {t("Rinomina")}
+            </Button>
+          </span>
           <span className="text-xs text-muted-foreground">
             {t("iscritto il {data}", { data: new Date(membro.joined_at).toLocaleDateString(locale) })}
           </span>
