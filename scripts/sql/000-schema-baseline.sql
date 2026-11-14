@@ -450,7 +450,8 @@ CREATE TABLE IF NOT EXISTS public.inviti_aula (
   scade_il timestamp with time zone NOT NULL,
   revocato boolean NOT NULL,
   max_ospiti integer NOT NULL,
-  created_at timestamp with time zone NOT NULL
+  created_at timestamp with time zone NOT NULL,
+  codice text
 );
 
 CREATE TABLE IF NOT EXISTS public.lesson_modules (
@@ -3452,7 +3453,11 @@ AS $function$
         and greatest(t.created_at, coalesce(t.updated_at, t.created_at)) > now() - interval '8 hours'
       )
     )
-  order by t.created_at desc
+  order by
+    coalesce(t.seat_of, '{}'::jsonb) ? auth.uid()::text desc,
+    (select count(*) from jsonb_object_keys(coalesce(t.seat_of, '{}'::jsonb))) < 4 desc,
+    t.created_at desc,
+    t.numero nulls last
   limit 1;
 $function$
 ;
@@ -5341,6 +5346,7 @@ ALTER TABLE public.guided_hands ADD CONSTRAINT guided_hands_hints_check CHECK ((
 ALTER TABLE public.guided_hands ADD CONSTRAINT guided_hands_opening_lead_check CHECK (((opening_lead ? 'suit'::text) AND (opening_lead ? 'rank'::text)));
 ALTER TABLE public.guided_hands ADD CONSTRAINT guided_hands_tricks_needed_check CHECK (((tricks_needed >= 1) AND (tricks_needed <= 13)));
 ALTER TABLE public.instructor_requests ADD CONSTRAINT instructor_requests_status_check CHECK ((status = ANY (ARRAY['pending'::text, 'approved'::text, 'rejected'::text])));
+ALTER TABLE public.inviti_aula ADD CONSTRAINT inviti_aula_codice_sei_cifre CHECK (((codice IS NULL) OR (codice ~ '^[0-9]{6}$'::text)));
 ALTER TABLE public.lesson_modules ADD CONSTRAINT lesson_modules_content_check CHECK ((jsonb_typeof(content) = 'array'::text));
 ALTER TABLE public.lesson_modules ADD CONSTRAINT lesson_modules_duration_minutes_check CHECK (((duration_minutes IS NULL) OR (duration_minutes >= 0)));
 ALTER TABLE public.lesson_modules ADD CONSTRAINT lesson_modules_module_type_check CHECK ((module_type = ANY (ARRAY['theory'::text, 'exercise'::text, 'quiz'::text, 'practice'::text])));
@@ -5562,6 +5568,7 @@ CREATE INDEX idx_sessioni_classe ON public.sessioni_aula USING btree (class_id, 
 CREATE INDEX idx_sondaggi_classe ON public.sondaggi USING btree (class_id, created_at DESC);
 CREATE INDEX idx_sondaggi_riusabili ON public.sondaggi USING btree (autore_id) WHERE riusabile;
 CREATE INDEX idx_tournament_results_week ON public.tournament_results USING btree (week_num, total_tricks DESC);
+CREATE INDEX inviti_aula_codice_idx ON public.inviti_aula USING btree (codice) WHERE ((revocato = false) AND (codice IS NOT NULL));
 CREATE INDEX lesson_modules_content_gin ON public.lesson_modules USING gin (content jsonb_path_ops);
 CREATE INDEX lesson_modules_lesson_id_idx ON public.lesson_modules USING btree (lesson_id);
 CREATE INDEX lessons_world_id_idx ON public.lessons USING btree (world_id);
