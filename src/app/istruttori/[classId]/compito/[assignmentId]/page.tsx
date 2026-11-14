@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState, use } from "react";
 import { RisposteClasse } from "@/components/istruttori/risposte-classe";
 import { RisultatiDomande } from "@/components/istruttori/risultati-domande";
 import { LinkCompito } from "@/components/istruttori/link-compito";
+import { CopiaCompitoInClasse } from "@/components/istruttori/copia-in-classe";
 import { ProiettaStampa } from "@/components/istruttori/proietta-stampa";
 import { BricioleClasse } from "@/components/istruttori/briciole-classe";
 import dynamic from "next/dynamic";
@@ -565,6 +566,10 @@ export default function AssignmentResultsPage({
       </p>
 
       <LinkCompito classId={classId} assignmentId={assignmentId} titolo={assignment.title} />
+      {/* Lo stesso compito in un'altra classe dell'insegnante: pomeriggio e sera, o il corso dell'anno dopo. */}
+      <div className="-mt-3 mb-6">
+        <CopiaCompitoInClasse compito={assignment} />
+      </div>
 
       {/* Un test: prima le risposte per nome, poi (sotto) la divisione domanda per domanda. */}
       {domandeIds.length > 0 && (

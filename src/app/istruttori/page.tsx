@@ -23,7 +23,10 @@ import {
 import { useMyClasses } from "@/store/use-classes-store";
 import { dettagliClasse } from "@/lib/etichetta-classe";
 import { ETICHETTE_STATO } from "@/lib/instructors";
-import { createClass } from "@/lib/instructors";
+import { aggiornaImpostazioniClasse, createClass } from "@/lib/instructors";
+import { copiaClasse, impostazioniDaCopiare, type MaterialiUsciti } from "@/lib/copia-classe";
+import { OpzioniCopia } from "@/components/istruttori/copia-in-classe";
+import { useRouter } from "@/hooks/use-router-lingua";
 import { useSharedAuth } from "@/contexts/auth-provider";
 import { StrumentiLezione } from "@/components/istruttori/strumenti-lezione";
 import { ElencoAllieviTutte } from "@/components/istruttori/elenco-allievi-tutte";
@@ -93,21 +96,46 @@ export default function IstruttoriPage() {
   const [description, setDescription] = useState("");
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const router = useRouter();
+  /**
+   * Partire da una classe che c'è già: il corso dell'anno scorso, o la classe
+   * del pomeriggio per quella della sera. Si portano le impostazioni, i compiti
+   * e i materiali; gli allievi no (vedi `copia-classe.ts`). Di base i
+   * materiali già usciti tornano nascosti, perché il corso nuovo ricomincia.
+   */
+  const [partenza, setPartenza] = useState("");
+  const [opzioniCopia, setOpzioniCopia] = useState<{ compiti: boolean; materiali: boolean; usciti: MaterialiUsciti }>({
+    compiti: true,
+    materiali: true,
+    usciti: "nascosti",
+  });
 
   async function handleCreate() {
     if (!name.trim()) return;
     setSaving(true);
     setSaveError(null);
     try {
-      await createClass({
+      const nuova = await createClass({
         name: name.trim(),
         description: description.trim() || null,
         asdCode: profile?.asd_code ?? null,
       });
+      const origine = partenza ? classes.find((c) => c.id === partenza) : undefined;
+      if (origine) {
+        // La classe è già creata: se la copia si ferma, l'insegnante la trova
+        // e può ripetere la copia dalla classe di partenza senza doppioni.
+        await aggiornaImpostazioniClasse(
+          nuova.id,
+          impostazioniDaCopiare(origine as unknown as Record<string, unknown>) as Parameters<typeof aggiornaImpostazioniClasse>[1],
+        );
+        await copiaClasse(origine.id, nuova.id, opzioniCopia);
+      }
       setName("");
       setDescription("");
+      setPartenza("");
       setDialogOpen(false);
       await refresh();
+      if (origine) router.push(`/istruttori/${nuova.id}`);
     } catch (err) {
       setSaveError(err instanceof Error ? err.message : "Errore nella creazione della classe");
     } finally {
@@ -313,7 +341,7 @@ export default function IstruttoriPage() {
 
       {/* Create dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent>
+        <DialogContent className="max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="font-display text-2xl">{t("Nuova classe")}</DialogTitle>
             <DialogDescription>
@@ -351,6 +379,38 @@ export default function IstruttoriPage() {
                 className="w-full resize-none rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
               />
             </div>
+            {classes.length > 0 && (
+              <div className="space-y-1.5">
+                <label htmlFor="class-from" className="text-sm font-medium">
+                  {t("Parti da una classe che hai già")} <span className="text-muted-foreground">{t("(facoltativo)")}</span>
+                </label>
+                <select
+                  id="class-from"
+                  value={partenza}
+                  onChange={(e) => setPartenza(e.target.value)}
+                  className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                >
+                  <option value="">{t("No, classe vuota")}</option>
+                  {classes.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.stato === "archiviata" ? t("{nome} (archiviata)", { nome: c.name }) : c.name}
+                    </option>
+                  ))}
+                </select>
+                {partenza ? (
+                  <div className="pt-1">
+                    <p className="mb-2 text-xs text-muted-foreground">
+                      {t("Si portano anche le impostazioni (iscrizioni, soluzioni, tavolo). Gli allievi no: entrano con il codice nuovo.")}
+                    </p>
+                    <OpzioniCopia {...opzioniCopia} onCambia={setOpzioniCopia} />
+                  </div>
+                ) : (
+                  <p className="text-xs text-muted-foreground">
+                    {t("Per lo stesso corso dell'anno scorso, o per una seconda classe dello stesso corso.")}
+                  </p>
+                )}
+              </div>
+            )}
             {saveError && <p className="text-sm text-destructive">{saveError}</p>}
           </div>
 
