@@ -199,14 +199,51 @@ details p { padding-bottom: 14px; }
   .passi li { grid-template-columns: 1.9em 1fr; gap: 10px; }
   .capitolo { padding-block: 40px 4px; margin-top: 32px; }
 }
+/* Telefono o computer: le stesse schermate nelle due versioni. Senza JavaScript, il telefono. */
+.vista { display: none; }
+html.js .vista {
+  position: sticky; top: 0; z-index: 10; display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+  margin: 0 -16px 24px; padding: 10px 16px; background: var(--bg); border-bottom: 1px solid var(--linea);
+}
+.vista-t { font-weight: 700; margin-right: 4px; }
+/* Con la barra fissa in alto, un collegamento dell'indice non deve finire sotto la barra. */
+html.js .capitolo, html.js .capitolo h3 { scroll-margin-top: 84px; }
+.vista button {
+  font: inherit; font-weight: 700; min-height: 48px; padding: 8px 20px; border-radius: 999px; cursor: pointer;
+  border: 2px solid var(--figb); background: var(--carta); color: var(--figb);
+}
+.vista button[aria-pressed="true"] { background: var(--figb); color: #fff; }
+.vista button:focus-visible { outline: 3px solid var(--segno); outline-offset: 3px; }
+.v-pc, .solo-pc, .solo-pc-i { display: none; }
+html.vista-pc .solo-pc-i { display: inline; }
+html.vista-pc .v-pc { display: block; }
+html.vista-pc p.solo-pc { display: block; }
+html.vista-pc .v-tel, html.vista-pc .solo-tel { display: none; }
+html.vista-pc .tel { display: block; }
+html.vista-pc .tel figure { max-width: none; }
+html.vista-pc .tel figure:not(:has(.v-pc)) { max-width: 300px; }
+html.vista-pc .tel figure + figure { margin-top: 18px; }
+html.vista-pc .tel figure a.v-pc { border-radius: 12px; }
+
 @media print {
   body { background: #fff; color: #000; font-size: 12pt; }
   .capitolo { break-before: page; border: 0; }
   figure a { box-shadow: none; }
   details { border: 0; }
+  .vista { display: none !important; }
 }
 </style>
 
+<script>
+/* La vista scelta: telefono o computer. Prima di disegnare la pagina, così non lampeggia. */
+(function () {
+  var d = document.documentElement, v = null;
+  d.classList.add("js");
+  try { v = localStorage.getItem("guida-allievi-vista"); } catch (e) {}
+  if (v !== "pc" && v !== "tel") v = window.innerWidth >= 900 ? "pc" : "tel";
+  if (v === "pc") d.classList.add("vista-pc");
+})();
+</script>
 </head>
 <body>
 <div class="pagina">
@@ -214,13 +251,19 @@ details p { padding-bottom: 14px; }
 <header class="testata">
   <div class="marchio"><span class="semi" aria-hidden="true"><i></i><i></i><i></i><i></i></span> BridgeLab</div>
   <h1>Guida per l'allievo</h1>
-  <p class="sotto">Come registrarti, entrare nella classe del tuo insegnante, giocare i compiti e trovare i materiali del corso. Un passo alla volta, con le schermate del telefono.</p>
+  <p class="sotto">Come registrarti, entrare nella classe del tuo insegnante, giocare i compiti e trovare i materiali del corso. Un passo alla volta, con le schermate del telefono e del computer.</p>
   <p class="data">Aggiornata al 15 novembre 2026.</p>
 </header>
 
+<div class="vista" role="group" aria-label="Le schermate da telefono o da computer">
+  <span class="vista-t">Uso BridgeLab dal:</span>
+  <button type="button" data-vista="tel">Telefono</button>
+  <button type="button" data-vista="pc">Computer</button>
+</div>
+
 <div class="come-leggere">
   <span class="n grande" aria-hidden="true">1</span>
-  <p><strong>Come leggere questa guida.</strong> Nelle schermate i punti da toccare sono cerchiati in rosso e hanno un numero. Lo stesso numero lo trovi nel testo, nell'ordine in cui va fatto. Tocca una schermata per vederla più grande. Le schermate mostrano una classe d'esempio.</p>
+  <p><strong>Come leggere questa guida.</strong> Nelle schermate i punti da toccare sono cerchiati in rosso e hanno un numero. Lo stesso numero lo trovi nel testo, nell'ordine in cui va fatto. Tocca una schermata per vederla più grande. Le schermate mostrano una classe d'esempio.<span class="solo-pc-i"> Dal computer, dove la guida dice «tocca», fai clic con il mouse.</span></p>
 </div>
 
 <nav class="indice" aria-labelledby="indice-titolo">
@@ -259,10 +302,12 @@ details p { padding-bottom: 14px; }
   </ol>
   <div class="tel">
   <figure>
-    <a href="/guida-allievi/img/01-registrati.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/01-registrati.webp" width="780" height="1688" alt="Il modulo Registrati: la scelta Imparare e giocare, email e password" loading="lazy"></a>
+    <a class="v-tel" href="/guida-allievi/img/01-registrati.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/01-registrati.webp" width="780" height="1688" alt="Il modulo Registrati: la scelta Imparare e giocare, email e password (telefono)" loading="lazy"></a>
+    <a class="v-pc" href="/guida-allievi/img/01-registrati-pc.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/01-registrati-pc.webp" width="1300" height="1720" alt="Il modulo Registrati: la scelta Imparare e giocare, email e password (computer)" loading="lazy"></a>
   </figure>
   <figure>
-    <a href="/guida-allievi/img/01b-registrati.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/01b-registrati.webp" width="780" height="1688" alt="Il seguito del modulo: nome, codice della classe e il pulsante Crea account" loading="lazy"></a>
+    <a class="v-tel" href="/guida-allievi/img/01b-registrati.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/01b-registrati.webp" width="780" height="1688" alt="Il seguito del modulo: nome, codice della classe e il pulsante Crea account (telefono)" loading="lazy"></a>
+    <a class="v-pc" href="/guida-allievi/img/01b-registrati-pc.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/01b-registrati-pc.webp" width="1600" height="1075" alt="Il seguito del modulo: nome, codice della classe e il pulsante Crea account (computer)" loading="lazy"></a>
   </figure>
   </div>
   <p>Le altre caselle si possono lasciare come sono. Il <strong>profilo</strong> con l'età cambia solo l'aspetto del sito; l'username BBO, l'associazione e la foto sono facoltativi.</p>
@@ -284,10 +329,12 @@ details p { padding-bottom: 14px; }
   <p>Alla prima entrata può comparire la domanda «Resta aggiornato sul mondo del Bridge»: rispondi come preferisci, non cambia niente per il corso.</p>
   <div class="tel">
   <figure>
-    <a href="/guida-allievi/img/02h-home.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/02h-home.webp" width="780" height="1688" alt="La prima pagina con il riquadro Segui un corso? Hai un codice" loading="lazy"></a>
+    <a class="v-tel" href="/guida-allievi/img/02h-home.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/02h-home.webp" width="780" height="1688" alt="La prima pagina con il riquadro Segui un corso? Hai un codice (telefono)" loading="lazy"></a>
+    <a class="v-pc" href="/guida-allievi/img/02h-home-pc.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/02h-home-pc.webp" width="1390" height="1720" alt="La prima pagina con il riquadro Segui un corso? Hai un codice (computer)" loading="lazy"></a>
   </figure>
   <figure>
-    <a href="/guida-allievi/img/02-codice.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/02-codice.webp" width="780" height="1688" alt="La pagina Corsi e compiti con la casella del codice e il pulsante Iscriviti" loading="lazy"></a>
+    <a class="v-tel" href="/guida-allievi/img/02-codice.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/02-codice.webp" width="780" height="1688" alt="La pagina Corsi e compiti con la casella del codice e il pulsante Iscriviti (telefono)" loading="lazy"></a>
+    <a class="v-pc" href="/guida-allievi/img/02-codice-pc.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/02-codice-pc.webp" width="1600" height="1574" alt="La pagina Corsi e compiti con la casella del codice e il pulsante Iscriviti (computer)" loading="lazy"></a>
   </figure>
   </div>
   <ol class="passi">
@@ -311,10 +358,12 @@ Se non hai ancora un account lo crei lì in un minuto.</p>
   <p>Alcuni insegnanti vogliono approvare ogni iscrizione. In quel caso vedi <strong>In attesa dell'insegnante</strong> <span class="n">1</span>. Non devi rimandare il codice: quando l'insegnante ti approva, la classe compare da sola.</p>
   <div class="tel">
   <figure>
-    <a href="/guida-allievi/img/03-attesa.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/03-attesa.webp" width="780" height="1688" alt="Il riquadro In attesa dell'insegnante con il nome della classe" loading="lazy"></a>
+    <a class="v-tel" href="/guida-allievi/img/03-attesa.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/03-attesa.webp" width="780" height="1688" alt="Il riquadro In attesa dell'insegnante con il nome della classe (telefono)" loading="lazy"></a>
+    <a class="v-pc" href="/guida-allievi/img/03-attesa-pc.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/03-attesa-pc.webp" width="1600" height="1574" alt="Il riquadro In attesa dell'insegnante con il nome della classe (computer)" loading="lazy"></a>
   </figure>
   </div>
-  <p>Quando sei dentro, in basso compare la scheda <strong>Classe</strong>: da lì torni alla tua classe da qualunque pagina.</p>
+  <p class="solo-tel">Quando sei dentro, in basso compare la scheda <strong>Classe</strong>: da lì torni alla tua classe da qualunque pagina.</p>
+  <p class="solo-pc">Quando sei dentro, dal computer alla tua classe arrivi dalla prima pagina: <strong>La tua classe</strong>, nella colonna a destra (capitolo 3). Sul computer le schede in basso non ci sono.</p>
 </section>
 <!-- 3 -->
 <section class="capitolo" id="pagina">
@@ -327,11 +376,12 @@ Se non hai ancora un account lo crei lì in un minuto.</p>
   <ol class="passi">
     <li><span class="n">1</span><div><strong>Il tuo insegnante ti ha scritto</strong>: un commento o una risposta a una tua domanda. Toccalo per leggerlo.</div></li>
     <li><span class="n">2</span><div><strong>Da fare adesso</strong>: il prossimo compito, con quante mani hai giocato e la scadenza. Tocca <strong>Inizia dalla prima mano</strong> e sei già al tavolo.</div></li>
-    <li><span class="n">3</span><div><strong>Classe</strong>, in basso: la pagina della tua classe.</div></li>
+    <li><span class="n">3</span><div><span class="solo-tel"><strong>Classe</strong>, in basso: la pagina della tua classe.</span><span class="solo-pc-i"><strong>La tua classe</strong>, nella colonna a destra: la pagina della tua classe.</span></div></li>
   </ol>
   <div class="tel">
   <figure>
-    <a href="/guida-allievi/img/04-home.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/04-home.webp" width="780" height="1688" alt="La prima pagina dell'allievo: il messaggio dell'insegnante, Da fare adesso e la scheda Classe" loading="lazy"></a>
+    <a class="v-tel" href="/guida-allievi/img/04-home.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/04-home.webp" width="780" height="1688" alt="La prima pagina dell'allievo: il messaggio dell'insegnante, Da fare adesso e la scheda Classe (telefono)" loading="lazy"></a>
+    <a class="v-pc" href="/guida-allievi/img/04-home-pc.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/04-home-pc.webp" width="1600" height="1288" alt="La prima pagina dell'allievo: il messaggio dell'insegnante, Da fare adesso e la scheda Classe (computer)" loading="lazy"></a>
   </figure>
   </div>
   <h3>La pagina della classe</h3>
@@ -342,16 +392,19 @@ Se non hai ancora un account lo crei lì in un minuto.</p>
   </ol>
   <div class="tel">
   <figure>
-    <a href="/guida-allievi/img/05-classe.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/05-classe.webp" width="780" height="1688" alt="La parte alta della pagina della classe: benvenuto, videoconferenza, tavolo aperto" loading="lazy"></a>
+    <a class="v-tel" href="/guida-allievi/img/05-classe.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/05-classe.webp" width="780" height="1688" alt="La parte alta della pagina della classe: benvenuto, videoconferenza, tavolo aperto (telefono)" loading="lazy"></a>
+    <a class="v-pc" href="/guida-allievi/img/05-classe-pc.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/05-classe-pc.webp" width="1600" height="1674" alt="La parte alta della pagina della classe: benvenuto, videoconferenza, tavolo aperto (computer)" loading="lazy"></a>
   </figure>
   </div>
   <p>Più sotto trovi, nell'ordine: i <strong>materiali delle lezioni</strong> (capitolo 7), i compiti <strong>Da fare</strong> <span class="n">1</span> e quelli <strong>Completati</strong>, la <strong>classifica della classe</strong> se l'insegnante la mostra, e la <strong>chat</strong> (capitolo 9). Accanto a ogni compito, per esempio «0/6», vedi quante mani o domande hai già fatto.</p>
   <div class="tel">
   <figure>
-    <a href="/guida-allievi/img/06-da-fare.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/06-da-fare.webp" width="780" height="1688" alt="L'elenco dei compiti Da fare, con il numero di mani o domande fatte" loading="lazy"></a>
+    <a class="v-tel" href="/guida-allievi/img/06-da-fare.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/06-da-fare.webp" width="780" height="1688" alt="L'elenco dei compiti Da fare, con il numero di mani o domande fatte (telefono)" loading="lazy"></a>
+    <a class="v-pc" href="/guida-allievi/img/06-da-fare-pc.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/06-da-fare-pc.webp" width="1600" height="1646" alt="L'elenco dei compiti Da fare, con il numero di mani o domande fatte (computer)" loading="lazy"></a>
   </figure>
   <figure>
-    <a href="/guida-allievi/img/07-classifica.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/07-classifica.webp" width="780" height="1688" alt="La classifica della classe con la tua riga evidenziata" loading="lazy"></a>
+    <a class="v-tel" href="/guida-allievi/img/07-classifica.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/07-classifica.webp" width="780" height="1688" alt="La classifica della classe con la tua riga evidenziata (telefono)" loading="lazy"></a>
+    <a class="v-pc" href="/guida-allievi/img/07-classifica-pc.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/07-classifica-pc.webp" width="1600" height="1686" alt="La classifica della classe con la tua riga evidenziata (computer)" loading="lazy"></a>
   </figure>
   </div>
   <p>Nella classifica la tua riga <span class="n">1</span> è evidenziata. Conta le mani mantenute al primo tentativo, poi le prese, poi la velocità.</p>
@@ -375,7 +428,8 @@ Se non hai ancora un account lo crei lì in un minuto.</p>
   </ol>
   <div class="tel">
   <figure>
-    <a href="/guida-allievi/img/08-compito.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/08-compito.webp" width="780" height="1688" alt="Il compito: la nota dell'insegnante, il conteggio delle mani e il pulsante Gioca" loading="lazy"></a>
+    <a class="v-tel" href="/guida-allievi/img/08-compito.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/08-compito.webp" width="780" height="1688" alt="Il compito: la nota dell'insegnante, il conteggio delle mani e il pulsante Gioca (telefono)" loading="lazy"></a>
+    <a class="v-pc" href="/guida-allievi/img/08-compito-pc.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/08-compito-pc.webp" width="1476" height="1720" alt="Il compito: la nota dell'insegnante, il conteggio delle mani e il pulsante Gioca (computer)" loading="lazy"></a>
   </figure>
   </div>
   <h3>Al tavolo</h3>
@@ -383,10 +437,12 @@ Se non hai ancora un account lo crei lì in un minuto.</p>
   <p>La prima volta una piccola guida ti mostra il tavolo: tocca <strong>Avanti</strong> per seguirla, o <strong>Salta tutorial</strong>.</p>
   <div class="tel">
   <figure>
-    <a href="/guida-allievi/img/09-prima.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/09-prima.webp" width="780" height="1688" alt="Il tavolo prima di cominciare: il pulsante Gioca la mano e l'obiettivo in alto" loading="lazy"></a>
+    <a class="v-tel" href="/guida-allievi/img/09-prima.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/09-prima.webp" width="780" height="1688" alt="Il tavolo prima di cominciare: il pulsante Gioca la mano e l'obiettivo in alto (telefono)" loading="lazy"></a>
+    <a class="v-pc" href="/guida-allievi/img/09-prima-pc.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/09-prima-pc.webp" width="1600" height="1105" alt="Il tavolo prima di cominciare: il pulsante Gioca la mano e l'obiettivo in alto (computer)" loading="lazy"></a>
   </figure>
   <figure>
-    <a href="/guida-allievi/img/09-tutorial.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/09-tutorial.webp" width="780" height="1688" alt="La prima volta: la guida Le tue carte con il pulsante Avanti" loading="lazy"></a>
+    <a class="v-tel" href="/guida-allievi/img/09-tutorial.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/09-tutorial.webp" width="780" height="1688" alt="La prima volta: la guida Le tue carte con il pulsante Avanti (telefono)" loading="lazy"></a>
+    <a class="v-pc" href="/guida-allievi/img/09-tutorial-pc.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/09-tutorial-pc.webp" width="1600" height="1132" alt="La prima volta: la guida Le tue carte con il pulsante Avanti (computer)" loading="lazy"></a>
   </figure>
   </div>
   <p>Di solito sei il dichiarante, a Sud, e giochi anche le carte del morto, a Nord. Il computer gioca per gli avversari. In alcune mani invece difendi: allora l'obiettivo è far andare sotto il contratto.</p>
@@ -396,17 +452,20 @@ Se non hai ancora un account lo crei lì in un minuto.</p>
   </ol>
   <div class="tel">
   <figure>
-    <a href="/guida-allievi/img/09-gioco.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/09-gioco.webp" width="780" height="1688" alt="Il tavolo durante il gioco: le carte del morto evidenziate e il pulsante Come si gioca" loading="lazy"></a>
+    <a class="v-tel" href="/guida-allievi/img/09-gioco.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/09-gioco.webp" width="780" height="1688" alt="Il tavolo durante il gioco: le carte del morto evidenziate e il pulsante Come si gioca (telefono)" loading="lazy"></a>
+    <a class="v-pc" href="/guida-allievi/img/09-gioco-pc.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/09-gioco-pc.webp" width="1600" height="1145" alt="Il tavolo durante il gioco: le carte del morto evidenziate e il pulsante Come si gioca (computer)" loading="lazy"></a>
   </figure>
   </div>
   <h3>A mano finita</h3>
   <p>Quando la mano finisce torni da solo all'elenco. Sulla mano giocata <span class="n">1</span> trovi com'è andata: in verde se hai raggiunto l'obiettivo, in rosso se no. Con <strong>Rivedi</strong> la riguardi presa per presa; con <strong>Rigioca</strong> la giochi di nuovo.</p>
   <div class="tel">
   <figure>
-    <a href="/guida-allievi/img/10-dopo.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/10-dopo.webp" width="780" height="1688" alt="La mano appena giocata con l'esito e i pulsanti Rivedi e Rigioca" loading="lazy"></a>
+    <a class="v-tel" href="/guida-allievi/img/10-dopo.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/10-dopo.webp" width="780" height="1688" alt="La mano appena giocata con l'esito e i pulsanti Rivedi e Rigioca (telefono)" loading="lazy"></a>
+    <a class="v-pc" href="/guida-allievi/img/10-dopo-pc.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/10-dopo-pc.webp" width="1420" height="1720" alt="La mano appena giocata con l'esito e i pulsanti Rivedi e Rigioca (computer)" loading="lazy"></a>
   </figure>
   <figure>
-    <a href="/guida-allievi/img/10b-altri.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/10b-altri.webp" width="780" height="1688" alt="Come è andata agli altri, Riprova questa mano e Vedi la soluzione" loading="lazy"></a>
+    <a class="v-tel" href="/guida-allievi/img/10b-altri.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/10b-altri.webp" width="780" height="1688" alt="Come è andata agli altri, Riprova questa mano e Vedi la soluzione (telefono)" loading="lazy"></a>
+    <a class="v-pc" href="/guida-allievi/img/10b-altri-pc.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/10b-altri-pc.webp" width="1416" height="1720" alt="Come è andata agli altri, Riprova questa mano e Vedi la soluzione (computer)" loading="lazy"></a>
   </figure>
   </div>
   <ol class="passi">
@@ -417,10 +476,12 @@ Se non hai ancora un account lo crei lì in un minuto.</p>
   <p>In <strong>Rivedi la mano</strong> usa <strong>Precedente</strong> <span class="n">1</span> e <strong>Successiva</strong> <span class="n">2</span> per andare avanti e indietro di una presa. Vedi chi ha vinto ogni presa e le carte rimaste a tutti. <strong>Chiudi</strong> per tornare all'elenco.</p>
   <div class="tel">
   <figure>
-    <a href="/guida-allievi/img/11-rivedi.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/11-rivedi.webp" width="780" height="1688" alt="La finestra Rivedi la mano con i pulsanti Precedente e Successiva" loading="lazy"></a>
+    <a class="v-tel" href="/guida-allievi/img/11-rivedi.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/11-rivedi.webp" width="780" height="1688" alt="La finestra Rivedi la mano con i pulsanti Precedente e Successiva (telefono)" loading="lazy"></a>
+    <a class="v-pc" href="/guida-allievi/img/11-rivedi-pc.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/11-rivedi-pc.webp" width="1392" height="1720" alt="La finestra Rivedi la mano con i pulsanti Precedente e Successiva (computer)" loading="lazy"></a>
   </figure>
   <figure>
-    <a href="/guida-allievi/img/12-soluzione.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/12-soluzione.webp" width="780" height="1688" alt="Il commento della mano aperto con Vedi la soluzione" loading="lazy"></a>
+    <a class="v-tel" href="/guida-allievi/img/12-soluzione.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/12-soluzione.webp" width="780" height="1688" alt="Il commento della mano aperto con Vedi la soluzione (telefono)" loading="lazy"></a>
+    <a class="v-pc" href="/guida-allievi/img/12-soluzione-pc.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/12-soluzione-pc.webp" width="1412" height="1720" alt="Il commento della mano aperto con Vedi la soluzione (computer)" loading="lazy"></a>
   </figure>
   </div>
   <h3>Compito di licita</h3>
@@ -432,17 +493,20 @@ Se non hai ancora un account lo crei lì in un minuto.</p>
   </ol>
   <div class="tel">
   <figure>
-    <a href="/guida-allievi/img/13a-dichiara.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/13a-dichiara.webp" width="780" height="1688" alt="L'elenco delle mani di licita con il pulsante Dichiara" loading="lazy"></a>
+    <a class="v-tel" href="/guida-allievi/img/13a-dichiara.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/13a-dichiara.webp" width="780" height="1688" alt="L'elenco delle mani di licita con il pulsante Dichiara (telefono)" loading="lazy"></a>
+    <a class="v-pc" href="/guida-allievi/img/13a-dichiara-pc.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/13a-dichiara-pc.webp" width="1600" height="1574" alt="L'elenco delle mani di licita con il pulsante Dichiara (computer)" loading="lazy"></a>
   </figure>
   <figure>
-    <a href="/guida-allievi/img/13-licita.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/13-licita.webp" width="780" height="1688" alt="La licita: le carte di Sud, la tabella delle dichiarazioni e i pulsanti" loading="lazy"></a>
+    <a class="v-tel" href="/guida-allievi/img/13-licita.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/13-licita.webp" width="780" height="1688" alt="La licita: le carte di Sud, la tabella delle dichiarazioni e i pulsanti (telefono)" loading="lazy"></a>
+    <a class="v-pc" href="/guida-allievi/img/13-licita-pc.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/13-licita-pc.webp" width="1300" height="1720" alt="La licita: le carte di Sud, la tabella delle dichiarazioni e i pulsanti (computer)" loading="lazy"></a>
   </figure>
   </div>
   <p>Il computer dichiara per il tuo compagno e per gli avversari: a volte sceglie diversamente da come avete fatto a lezione. Se il compito lo prevede, dopo la licita giochi anche il contratto.</p>
   <p>Per ogni mano ricevi da mezza a <strong>tre stelle</strong> <span class="n">1</span>, secondo quanto il tuo contratto si avvicina al migliore. Se c'è scritto «le ha date l'insegnante», le stelle sono sue. Sotto trovi <strong>Il commento dell'insegnante</strong> <span class="n">2</span>: «Per te» lo legge solo chi l'ha ricevuto, «Per tutta la classe» lo leggono tutti. L'etichetta <strong>Nuovo dall'insegnante</strong> ti dice dove c'è qualcosa da leggere.</p>
   <div class="tel">
   <figure>
-    <a href="/guida-allievi/img/14-esito.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/14-esito.webp" width="780" height="1688" alt="Una mano dichiarata con le stelle dell'insegnante e il suo commento" loading="lazy"></a>
+    <a class="v-tel" href="/guida-allievi/img/14-esito.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/14-esito.webp" width="780" height="1688" alt="Una mano dichiarata con le stelle dell'insegnante e il suo commento (telefono)" loading="lazy"></a>
+    <a class="v-pc" href="/guida-allievi/img/14-esito-pc.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/14-esito-pc.webp" width="1420" height="1720" alt="Una mano dichiarata con le stelle dell'insegnante e il suo commento (computer)" loading="lazy"></a>
   </figure>
   </div>
 </section>
@@ -456,13 +520,16 @@ Se non hai ancora un account lo crei lì in un minuto.</p>
   <p>Nella pagina della classe tocca il compito «Esercizi lezione…». Con l'elenco delle domande <span class="n">2</span> vedi cosa ti aspetta; tocca <strong>Comincia</strong> <span class="n">1</span>.</p>
   <div class="tel">
   <figure>
-    <a href="/guida-allievi/img/15-esercizi.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/15-esercizi.webp" width="780" height="1688" alt="Gli esercizi: il pulsante Comincia e l'elenco delle domande" loading="lazy"></a>
+    <a class="v-tel" href="/guida-allievi/img/15-esercizi.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/15-esercizi.webp" width="780" height="1688" alt="Gli esercizi: il pulsante Comincia e l'elenco delle domande (telefono)" loading="lazy"></a>
+    <a class="v-pc" href="/guida-allievi/img/15-esercizi-pc.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/15-esercizi-pc.webp" width="1560" height="1720" alt="Gli esercizi: il pulsante Comincia e l'elenco delle domande (computer)" loading="lazy"></a>
   </figure>
   <figure>
-    <a href="/guida-allievi/img/16-domanda.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/16-domanda.webp" width="780" height="1688" alt="Una domanda con le risposte da toccare" loading="lazy"></a>
+    <a class="v-tel" href="/guida-allievi/img/16-domanda.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/16-domanda.webp" width="780" height="1688" alt="Una domanda con le risposte da toccare (telefono)" loading="lazy"></a>
+    <a class="v-pc" href="/guida-allievi/img/16-domanda-pc.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/16-domanda-pc.webp" width="1600" height="1574" alt="Una domanda con le risposte da toccare (computer)" loading="lazy"></a>
   </figure>
   <figure>
-    <a href="/guida-allievi/img/17-risposta.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/17-risposta.webp" width="780" height="1688" alt="Dopo la risposta: Giusto e il pulsante Domanda successiva" loading="lazy"></a>
+    <a class="v-tel" href="/guida-allievi/img/17-risposta.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/17-risposta.webp" width="780" height="1688" alt="Dopo la risposta: Giusto e il pulsante Domanda successiva (telefono)" loading="lazy"></a>
+    <a class="v-pc" href="/guida-allievi/img/17-risposta-pc.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/17-risposta-pc.webp" width="1600" height="1574" alt="Dopo la risposta: Giusto e il pulsante Domanda successiva (computer)" loading="lazy"></a>
   </figure>
   </div>
   <ol class="passi">
@@ -476,10 +543,12 @@ Se non hai ancora un account lo crei lì in un minuto.</p>
   <p>All'ultima domanda tocca <strong>Hai risposto a tutte: vedi il risultato</strong>. Trovi quante domande hai fatto e quante giuste <span class="n">1</span>, e sotto <strong>Rivedi le tue risposte</strong> <span class="n">2</span>: per ogni domanda la tua risposta, quella giusta e il perché. Se qualcosa non ti torna, chiedilo al tuo insegnante.</p>
   <div class="tel">
   <figure>
-    <a href="/guida-allievi/img/18-risultato.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/18-risultato.webp" width="780" height="1688" alt="Il risultato degli esercizi e Rivedi le tue risposte" loading="lazy"></a>
+    <a class="v-tel" href="/guida-allievi/img/18-risultato.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/18-risultato.webp" width="780" height="1688" alt="Il risultato degli esercizi e Rivedi le tue risposte (telefono)" loading="lazy"></a>
+    <a class="v-pc" href="/guida-allievi/img/18-risultato-pc.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/18-risultato-pc.webp" width="1564" height="1720" alt="Il risultato degli esercizi e Rivedi le tue risposte (computer)" loading="lazy"></a>
   </figure>
   <figure>
-    <a href="/guida-allievi/img/18b-rivedi.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/18b-rivedi.webp" width="780" height="1688" alt="Le risposte riviste: la tua, quella giusta, Riapri la domanda" loading="lazy"></a>
+    <a class="v-tel" href="/guida-allievi/img/18b-rivedi.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/18b-rivedi.webp" width="780" height="1688" alt="Le risposte riviste: la tua, quella giusta, Riapri la domanda (telefono)" loading="lazy"></a>
+    <a class="v-pc" href="/guida-allievi/img/18b-rivedi-pc.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/18b-rivedi-pc.webp" width="1404" height="1720" alt="Le risposte riviste: la tua, quella giusta, Riapri la domanda (computer)" loading="lazy"></a>
   </figure>
   </div>
 </section>
@@ -497,10 +566,12 @@ Se non hai ancora un account lo crei lì in un minuto.</p>
   </ol>
   <div class="tel">
   <figure>
-    <a href="/guida-allievi/img/19-scrivi.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/19-scrivi.webp" width="780" height="1688" alt="La casella Hai un dubbio? con una domanda scritta e il pulsante Manda" loading="lazy"></a>
+    <a class="v-tel" href="/guida-allievi/img/19-scrivi.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/19-scrivi.webp" width="780" height="1688" alt="La casella Hai un dubbio? con una domanda scritta e il pulsante Manda (telefono)" loading="lazy"></a>
+    <a class="v-pc" href="/guida-allievi/img/19-scrivi-pc.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/19-scrivi-pc.webp" width="1412" height="1720" alt="La casella Hai un dubbio? con una domanda scritta e il pulsante Manda (computer)" loading="lazy"></a>
   </figure>
   <figure>
-    <a href="/guida-allievi/img/14b-risposta.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/14b-risposta.webp" width="780" height="1688" alt="La domanda dell'allievo e la risposta dell'insegnante sotto la mano" loading="lazy"></a>
+    <a class="v-tel" href="/guida-allievi/img/14b-risposta.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/14b-risposta.webp" width="780" height="1688" alt="La domanda dell'allievo e la risposta dell'insegnante sotto la mano (telefono)" loading="lazy"></a>
+    <a class="v-pc" href="/guida-allievi/img/14b-risposta-pc.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/14b-risposta-pc.webp" width="1420" height="1720" alt="La domanda dell'allievo e la risposta dell'insegnante sotto la mano (computer)" loading="lazy"></a>
   </figure>
   </div>
   <p>La risposta arriva nello stesso posto, sotto la tua domanda <span class="n">1</span>, con la scritta «L'insegnante». Quando l'insegnante ti risponde, nella prima pagina trovi l'avviso <strong>Il tuo insegnante ti ha scritto</strong>. La domanda la vedete solo tu e l'insegnante.</p>
@@ -520,10 +591,12 @@ Se non hai ancora un account lo crei lì in un minuto.</p>
   </ol>
   <div class="tel">
   <figure>
-    <a href="/guida-allievi/img/20-materiali.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/20-materiali.webp" width="780" height="1688" alt="Materiali delle lezioni: la videolezione, le slide e la dispensa" loading="lazy"></a>
+    <a class="v-tel" href="/guida-allievi/img/20-materiali.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/20-materiali.webp" width="780" height="1688" alt="Materiali delle lezioni: la videolezione, le slide e la dispensa (telefono)" loading="lazy"></a>
+    <a class="v-pc" href="/guida-allievi/img/20-materiali-pc.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/20-materiali-pc.webp" width="1600" height="1711" alt="Materiali delle lezioni: la videolezione, le slide e la dispensa (computer)" loading="lazy"></a>
   </figure>
   <figure>
-    <a href="/guida-allievi/img/21-dispense.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/21-dispense.webp" width="780" height="1688" alt="La pagina Dispense del corso con le dispense delle lezioni" loading="lazy"></a>
+    <a class="v-tel" href="/guida-allievi/img/21-dispense.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/21-dispense.webp" width="780" height="1688" alt="La pagina Dispense del corso con le dispense delle lezioni (telefono)" loading="lazy"></a>
+    <a class="v-pc" href="/guida-allievi/img/21-dispense-pc.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/21-dispense-pc.webp" width="1600" height="1119" alt="La pagina Dispense del corso con le dispense delle lezioni (computer)" loading="lazy"></a>
   </figure>
   </div>
   <p>Dalla prima pagina, <strong>Dispense del corso</strong> apre tutte le dispense che l'insegnante ti ha dato. Se un materiale non c'è ancora, è normale: l'insegnante può decidere di farlo uscire dopo la lezione.</p>
@@ -543,10 +616,12 @@ Se non hai ancora un account lo crei lì in un minuto.</p>
   </ol>
   <div class="tel">
   <figure>
-    <a href="/guida-allievi/img/24-tavolo.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/24-tavolo.webp" width="780" height="1688" alt="Il tavolo in aula: il tuo posto, i compagni e la tua mano" loading="lazy"></a>
+    <a class="v-tel" href="/guida-allievi/img/24-tavolo.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/24-tavolo.webp" width="780" height="1688" alt="Il tavolo in aula: il tuo posto, i compagni e la tua mano (telefono)" loading="lazy"></a>
+    <a class="v-pc" href="/guida-allievi/img/24-tavolo-pc.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/24-tavolo-pc.webp" width="1596" height="1720" alt="Il tavolo in aula: il tuo posto, i compagni e la tua mano (computer)" loading="lazy"></a>
   </figure>
   <figure>
-    <a href="/guida-allievi/img/25-sondaggio.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/25-sondaggio.webp" width="780" height="1688" alt="La domanda dell'insegnante con i pulsanti Sì, No, Non so" loading="lazy"></a>
+    <a class="v-tel" href="/guida-allievi/img/25-sondaggio.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/25-sondaggio.webp" width="780" height="1688" alt="La domanda dell'insegnante con i pulsanti Sì, No, Non so (telefono)" loading="lazy"></a>
+    <a class="v-pc" href="/guida-allievi/img/25-sondaggio-pc.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/25-sondaggio-pc.webp" width="1600" height="1646" alt="La domanda dell'insegnante con i pulsanti Sì, No, Non so (computer)" loading="lazy"></a>
   </figure>
   </div>
   <p>La pagina si aggiorna da sola quando l'insegnante cambia mano: lasciala aperta. Se non hai ancora un posto, aspetta che te lo dia l'insegnante.</p>
@@ -556,10 +631,12 @@ Se non hai ancora un account lo crei lì in un minuto.</p>
   <p>Se non riesci a inquadrare il QR, apri <span class="indirizzo">bridgelab.it/aula</span> e scrivi il codice di sei cifre che l'insegnante scrive alla lavagna.</p>
   <div class="tel">
   <figure>
-    <a href="/guida-allievi/img/26-ospite.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/26-ospite.webp" width="780" height="1688" alt="Benvenuto in aula: la casella del nome e il pulsante Entra" loading="lazy"></a>
+    <a class="v-tel" href="/guida-allievi/img/26-ospite.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/26-ospite.webp" width="780" height="1688" alt="Benvenuto in aula: la casella del nome e il pulsante Entra (telefono)" loading="lazy"></a>
+    <a class="v-pc" href="/guida-allievi/img/26-ospite-pc.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/26-ospite-pc.webp" width="1300" height="1720" alt="Benvenuto in aula: la casella del nome e il pulsante Entra (computer)" loading="lazy"></a>
   </figure>
   <figure>
-    <a href="/guida-allievi/img/27-codice.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/27-codice.webp" width="780" height="1688" alt="Entra in aula: la casella del codice di sei cifre e il pulsante Entra" loading="lazy"></a>
+    <a class="v-tel" href="/guida-allievi/img/27-codice.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/27-codice.webp" width="780" height="1688" alt="Entra in aula: la casella del codice di sei cifre e il pulsante Entra (telefono)" loading="lazy"></a>
+    <a class="v-pc" href="/guida-allievi/img/27-codice-pc.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/27-codice-pc.webp" width="1300" height="1720" alt="Entra in aula: la casella del codice di sei cifre e il pulsante Entra (computer)" loading="lazy"></a>
   </figure>
   </div>
   <p>A fine lezione puoi tenere quello che hai fatto creando un account, se vuoi.</p>
@@ -578,7 +655,8 @@ Se non hai ancora un account lo crei lì in un minuto.</p>
   </ol>
   <div class="tel">
   <figure>
-    <a href="/guida-allievi/img/28-chat.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/28-chat.webp" width="780" height="1688" alt="La chat della classe con la casella per scrivere e il pulsante Segnala" loading="lazy"></a>
+    <a class="v-tel" href="/guida-allievi/img/28-chat.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/28-chat.webp" width="780" height="1688" alt="La chat della classe con la casella per scrivere e il pulsante Segnala (telefono)" loading="lazy"></a>
+    <a class="v-pc" href="/guida-allievi/img/28-chat-pc.webp" target="_blank" rel="noopener"><img src="/guida-allievi/img/28-chat-pc.webp" width="1600" height="1574" alt="La chat della classe con la casella per scrivere e il pulsante Segnala (computer)" loading="lazy"></a>
   </figure>
   </div>
   <p>Sotto i tuoi messaggi c'è <strong>Elimina</strong>, per toglierli. Per una domanda su una mano precisa usa invece la casella sotto la mano (capitolo 6): resta attaccata alla mano.</p>
@@ -660,5 +738,22 @@ Se non hai ancora un account lo crei lì in un minuto.</p>
 </footer>
 
 </div>
+<script>
+(function () {
+  var d = document.documentElement;
+  var bottoni = document.querySelectorAll(".vista button");
+  function segna() {
+    var pc = d.classList.contains("vista-pc");
+    for (var i = 0; i < bottoni.length; i++) bottoni[i].setAttribute("aria-pressed", String((bottoni[i].getAttribute("data-vista") === "pc") === pc));
+  }
+  for (var i = 0; i < bottoni.length; i++) bottoni[i].addEventListener("click", function () {
+    var v = this.getAttribute("data-vista");
+    d.classList.toggle("vista-pc", v === "pc");
+    try { localStorage.setItem("guida-allievi-vista", v); } catch (e) {}
+    segna();
+  });
+  segna();
+})();
+</script>
 </body>
 </html>
