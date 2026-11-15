@@ -144,17 +144,17 @@ function LoginContent() {
         }
       } else {
         if (!displayName.trim()) {
-          setError("Inserisci il tuo nome");
+          setError(t("Inserisci il tuo nome"));
           setLoading(false);
           return;
         }
         if (password.length < 6) {
-          setError("La password deve avere almeno 6 caratteri");
+          setError(t("La password deve avere almeno 6 caratteri"));
           setLoading(false);
           return;
         }
         if (password !== confermaPassword) {
-          setError("Le due password non coincidono.");
+          setError(t("Le due password non coincidono."));
           setLoading(false);
           return;
         }
@@ -225,7 +225,7 @@ function LoginContent() {
         }
       }
     } catch {
-      setError("Errore di connessione. Riprova.");
+      setError(t("Errore di connessione. Riprova."));
     }
 
     setLoading(false);
@@ -427,7 +427,7 @@ function LoginContent() {
                 type="button"
                 onClick={async () => {
                   if (!email.trim()) {
-                    setError("Inserisci la tua email prima di richiedere il reset");
+                    setError(t("Scrivi prima la tua email qui sopra: ti mandiamo il link per scegliere una password nuova."));
                     return;
                   }
                   setError("");
@@ -437,7 +437,7 @@ function LoginContent() {
                   if (err) {
                     setError(authErrorMessage(err.message));
                   } else {
-                    setSuccess("Email di reset inviata! Controlla la tua casella di posta.");
+                    setSuccess(t("Ti abbiamo mandato un'email con il link per scegliere una password nuova. Guarda nella posta, anche tra lo spam."));
                   }
                 }}
                 className="text-xs font-semibold text-primary hover:text-primary/80 transition-colors"
@@ -614,7 +614,7 @@ function LoginContent() {
                     </div>
                     <label className="cursor-pointer">
                       <span className="text-sm font-semibold text-primary hover:text-primary/80 transition-colors">
-                        {avatarPreview ? "Cambia foto" : "Carica foto"}
+                        {avatarPreview ? t("Cambia foto") : t("Carica foto")}
                       </span>
                       <input
                         type="file"
@@ -658,7 +658,7 @@ function LoginContent() {
                         if (err) {
                           setError(authErrorMessage(err.message));
                         } else {
-                          setSuccess("Email di reset inviata! Controlla la tua casella di posta.");
+                          setSuccess(t("Ti abbiamo mandato un'email con il link per scegliere una password nuova. Guarda nella posta, anche tra lo spam."));
                         }
                       }}
                       className="text-xs font-bold text-primary hover:underline"

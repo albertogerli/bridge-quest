@@ -4,7 +4,7 @@ import { dealsToSmazzate, licitaVersoIlContratto } from "./deals-to-smazzate";
 import type { Card, Position, Rank, Suit } from "./bridge-engine";
 
 const { deals } = generateDeals({}, { count: 4, seed: 2026 });
-const base = { idPrefix: "gen-1", contract: "3NT", declarer: "south" as const, title: "Apertura di 1NT" };
+const base = { idPrefix: "gen-1", contract: "3NT", declarer: "south" as const, title: "Apertura di 1SA" };
 
 describe("dealsToSmazzate", () => {
   const smazzate = dealsToSmazzate(deals, base);
@@ -16,7 +16,7 @@ describe("dealsToSmazzate", () => {
 
   it("numera i board da 1 e li rispecchia nel titolo", () => {
     expect(smazzate.map((s) => s.board)).toEqual([1, 2, 3, 4]);
-    expect(smazzate[2].title).toBe("Apertura di 1NT — mano 3");
+    expect(smazzate[2].title).toBe("Apertura di 1SA — mano 3");
   });
 
   it("conserva le carte senza toccarle", () => {

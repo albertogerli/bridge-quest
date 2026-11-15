@@ -6,9 +6,10 @@ import { Bell } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useT } from "@/contexts/traduzioni-provider";
 import { segnalaSalvoRete } from "@/lib/report-error";
+import { chiediConsensoOra } from "@/lib/consenso-marketing";
 
 interface MarketingConsentBannerProps {
-  user: { id: string } | null;
+  user: { id: string; created_at?: string } | null;
   marketingConsent: boolean | null;
 }
 
@@ -21,8 +22,9 @@ export function MarketingConsentBanner({
   const [exiting, setExiting] = useState(false);
 
   useEffect(() => {
-    // Show only when user is logged in and has never been asked
-    if (!user || marketingConsent !== null) return;
+    // Show only when user is logged in and has never been asked — and not in
+    // the first days: see `chiediConsensoOra`.
+    if (!user || marketingConsent !== null || !chiediConsensoOra(user.created_at)) return;
 
     const timer = setTimeout(() => {
       setShow(true);

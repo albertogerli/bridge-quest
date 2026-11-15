@@ -107,7 +107,7 @@ function Dispensa() {
    * L'argomento scelto: `null` finché l'insegnante non ne tocca uno, e allora
    * vale il primo modello ufficiale del Corso Fiori.
    *
-   * Prima c'erano solo i sette temi di LICITA, con «Apertura di 1NT» come
+   * Prima c'erano solo i sette temi di LICITA, con «Apertura di 1SA» come
    * partenza: un insegnante del modulo sul gioco della carta stampava mani di
    * apertura e le trovava «fuori tema» (Trevissoi, feedback 5). Le lezioni
    * del Corso Fiori ora vengono prima; i temi di licita restano in fondo.

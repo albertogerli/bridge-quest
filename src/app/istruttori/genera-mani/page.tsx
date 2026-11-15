@@ -154,7 +154,7 @@ export default function GeneraManiPage() {
   useEffect(() => {
     void elencaModelli().then((lista) => {
       setModelli(lista);
-      // Si parte da una lezione del Corso Fiori, non da «Apertura di 1NT»: chi
+      // Si parte da una lezione del Corso Fiori, non da «Apertura di 1SA»: chi
       // insegna il gioco della carta trovava mani di licita «fuori tema»
       // (Trevissoi, feedback 5). Solo se l'insegnante non ha già scelto.
       const primo = lista.find((m) => m.ufficiale);

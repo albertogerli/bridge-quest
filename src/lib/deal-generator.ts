@@ -351,7 +351,7 @@ export function generateDeals(
 export const DEAL_TEMPLATES: { id: string; label: string; description: string; constraints: DealConstraints }[] = [
   {
     id: "apertura-1nt",
-    label: "Apertura di 1NT",
+    label: "Apertura di 1SA",
     description: "Sud bilanciato con 15-17 punti onori",
     constraints: { south: { hcp: { min: 15, max: 17 }, balanced: true } },
   },

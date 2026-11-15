@@ -46,7 +46,7 @@ export const biddingScenarios: BiddingScenario[] = [
     correctBid: "2♥",
     wrongBids: ["2♠", "3NT", "Passo"],
     explanation:
-      "Con 5 picche e 9 HCP, usa la Texas transfer: 2♥ chiede al compagno di dire 2♠. Poi invita a manche con 2NT: non passare automaticamente.",
+      "Con 5 picche e 9 HCP, usa la Texas transfer: 2♥ chiede al compagno di dire 2♠. Poi invita a manche con 2SA: non passare automaticamente.",
     difficulty: 1,
     topic: "Texas Transfer",
   },
@@ -66,7 +66,7 @@ export const biddingScenarios: BiddingScenario[] = [
     correctBid: "2♣",
     wrongBids: ["3NT", "2♠", "2♥"],
     explanation:
-      "Con 4 picche e 4 cuori, usa Stayman (2♣) per cercare il fit 4-4 in un nobile. Se il compagno risponde 2♦ (nessun nobile), dici 3NT.",
+      "Con 4 picche e 4 cuori, usa Stayman (2♣) per cercare il fit 4-4 in un nobile. Se il compagno risponde 2♦ (nessun nobile), dici 3SA.",
     difficulty: 1,
     topic: "Stayman",
   },
@@ -166,7 +166,7 @@ export const biddingScenarios: BiddingScenario[] = [
     correctBid: "3NT",
     wrongBids: ["2NT", "2♣", "4NT"],
     explanation:
-      "Con 14 HCP e distribuzione bilanciata 3-3-4-3 senza quarte nobili, vai diretto a 3NT. Punti combinati: 29-31, sufficienti per la manche.",
+      "Con 14 HCP e distribuzione bilanciata 3-3-4-3 senza quarte nobili, vai diretto a 3SA. Punti combinati: 29-31, sufficienti per la manche.",
     difficulty: 1,
     topic: "Risposte a 1NT",
   },
@@ -262,7 +262,7 @@ export const biddingScenarios: BiddingScenario[] = [
     correctBid: "3♣",
     wrongBids: ["Passo", "3NT", "3♠"],
     explanation:
-      "Dopo 2NT (21-23 HCP, Fiori 2022), con 6 HCP cerchi la manche. Con 4-4 nei nobili, usa Stayman (3♣) per cercare il fit.",
+      "Dopo 2SA (21-23 HCP, Fiori 2022), con 6 HCP cerchi la manche. Con 4-4 nei nobili, usa Stayman (3♣) per cercare il fit.",
     difficulty: 2,
     topic: "Stayman",
   },
@@ -387,7 +387,7 @@ export const biddingScenarios: BiddingScenario[] = [
     correctBid: "2♥",
     wrongBids: ["3♠", "4NT", "3NT"],
     explanation:
-      "Con 17 HCP e 5 picche, inizia con la Texas (2♥ → 2♠). La linea ha 32-34 punti: valuta lo slam. Senza un fit concordato, il successivo 4NT è quantitativo, non una richiesta d'assi Blackwood.",
+      "Con 17 HCP e 5 picche, inizia con la Texas (2♥ → 2♠). La linea ha 32-34 punti: valuta lo slam. Senza un fit concordato, il successivo 4SA è quantitativo, non una richiesta d'assi Blackwood.",
     difficulty: 3,
     topic: "Texas Transfer",
   },

@@ -267,7 +267,7 @@ function LayoutShellInner({ children }: { children: React.ReactNode }) {
         funzione con i suoi test (`navigazione-indietro.ts`).
       */}
       {ritorno && (
-        <div className="mx-auto w-full max-w-6xl px-4 pt-3">
+        <div data-torna-cornice className="mx-auto w-full max-w-6xl px-4 pt-3">
           <TornaIndietro href={ritorno.href} etichetta={t(ritorno.etichetta)} />
         </div>
       )}

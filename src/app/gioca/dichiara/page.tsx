@@ -176,8 +176,8 @@ export default function DichiaraPage() {
               <p className="text-xs text-muted-foreground mb-2">{t("Riferimento: FIGB Fiori 2022, quinta maggiore e quadri quarto. 2SA 21–23; 2♣ bilanciata da 24.")}</p>
               <ul className="text-xs text-muted-foreground space-y-1.5">
                 <li>{t("12+ HCP: puoi aprire")}</li>
-                <li>{t("15-17 HCP bilanciata: apri 1NT")}</li>
-                <li>{t("21-23 punti, bilanciata: 2NT (Fiori 2022)")}</li>
+                <li>{t("15-17 HCP bilanciata: apri 1SA")}</li>
+                <li>{t("21-23 punti, bilanciata: 2SA (Fiori 2022)")}</li>
                 <li>{t("24+ punti, bilanciata: 2♣ (Fiori 2022)")}</li>
                 <li>{t("Con 5+ carte in un seme: apri a quel colore")}</li>
               </ul>

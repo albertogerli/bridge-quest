@@ -612,7 +612,7 @@ export default function CompitoPage({
                       <Play className="mr-1 h-3.5 w-3.5" />
                       {assignment.licita
                         ? isPlayed ? t("Ridichiara") : t("Dichiara")
-                        : isPlayed ? "Rigioca" : "Gioca"}
+                        : isPlayed ? t("Rigioca") : t("Gioca")}
                     </Button>
                   </div>
                 )}
@@ -793,7 +793,7 @@ function SoluzioneMano({
             className="flex items-center gap-2 text-xs font-semibold text-primary hover:underline"
           >
             <RotateCcw className="h-3.5 w-3.5" />
-            {t("Riprova questa mano — non conta")}
+            {t("Studiala a carte scoperte — non conta")}
           </button>
         )
       )}
@@ -812,6 +812,7 @@ function SpiegazioneMano({
   aperta: boolean;
   onApri: (v: boolean) => void;
 }) {
+  const t = useT();
   const setAperta = onApri;
   return (
     <div>
@@ -820,7 +821,7 @@ function SpiegazioneMano({
         className="flex items-center gap-2 text-xs font-semibold text-primary hover:underline"
       >
         <Lightbulb className="h-3.5 w-3.5" />
-        {aperta ? "Nascondi la soluzione" : "Vedi la soluzione"}
+        {aperta ? t("Nascondi la soluzione") : t("Vedi la soluzione")}
       </button>
       <AnimatePresence>
         {aperta && (

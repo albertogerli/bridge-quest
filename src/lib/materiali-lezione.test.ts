@@ -3,6 +3,7 @@ import {
   aDatetimeLocale,
   daDatetimeLocale,
   eInterno,
+  nomeMateriale,
   ordinaMateriali,
   raggruppaPerLezione,
   statoMateriale,
@@ -120,5 +121,16 @@ describe("datetime-local", () => {
   it("un valore vuoto o storto non diventa una data", () => {
     expect(daDatetimeLocale("")).toBeNull();
     expect(daDatetimeLocale("domani")).toBeNull();
+  });
+});
+
+describe("nomeMateriale", () => {
+  it("le slide del programma si chiamano slide, anche se il tipo è dispensa", () => {
+    expect(nomeMateriale(m({ tipo: "dispensa", titolo: "Le slide: Il piano di gioco", url: "/materiali/x.pdf" }))).toBe("slide");
+    expect(nomeMateriale(m({ tipo: "dispensa", titolo: "Ripasso", url: "/materiali/corso/slide-piano-di-gioco.pdf" }))).toBe("slide");
+  });
+  it("il resto resta com'è", () => {
+    expect(nomeMateriale(m({ tipo: "dispensa", titolo: "La dispensa: Il piano di gioco", url: "/materiali/dispensa.pdf" }))).toBe("dispensa");
+    expect(nomeMateriale(m({ tipo: "video", titolo: "Le slide spiegate", url: "https://youtu.be/x" }))).toBe("video");
   });
 });

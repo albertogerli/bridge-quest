@@ -39,25 +39,25 @@ export const openingScenarios: HandScenario[] = [
   {
     hand: "♠ KJ5  ♥ AQ83  ♦ K72  ♣ Q94",
     hcp: 15, distribution: "3-4-3-3",
-    correctBid: "1NT", explanation: "15 HCP, bilanciata 3-4-3-3: apri 1NT (15-17)",
+    correctBid: "1NT", explanation: "15 HCP, bilanciata 3-4-3-3: apri 1SA (15-17)",
     options: ["1♥", "1NT", "1♦", "Passo"],
   },
   {
     hand: "♠ AJ62  ♥ KQ3  ♦ A84  ♣ Q75",
     hcp: 16, distribution: "4-3-3-3",
-    correctBid: "1NT", explanation: "16 HCP, bilanciata 4-3-3-3: apri 1NT. La quarta di picche non conta, 1NT ha la precedenza!",
+    correctBid: "1NT", explanation: "16 HCP, bilanciata 4-3-3-3: apri 1SA. La quarta di picche non conta, 1SA ha la precedenza!",
     options: ["1♠", "1NT", "1♣", "1♦"],
   },
   {
     hand: "♠ A94  ♥ KJ85  ♦ AQ3  ♣ J72",
     hcp: 15, distribution: "3-4-3-3",
-    correctBid: "1NT", explanation: "15 HCP, bilanciata: con 15-17 e distribuzione bilanciata si apre sempre 1NT",
+    correctBid: "1NT", explanation: "15 HCP, bilanciata: con 15-17 e distribuzione bilanciata si apre sempre 1SA",
     options: ["1♥", "1NT", "1♦", "1♣"],
   },
   {
     hand: "♠ KQ84  ♥ A73  ♦ KJ5  ♣ Q92",
     hcp: 15, distribution: "4-3-3-3",
-    correctBid: "1NT", explanation: "15 HCP, bilanciata 4-3-3-3: 1NT prevale sull'apertura a colore",
+    correctBid: "1NT", explanation: "15 HCP, bilanciata 4-3-3-3: 1SA prevale sull'apertura a colore",
     options: ["1♠", "1NT", "1♣", "Passo"],
   },
   // === 1♠ (3 scenarios, 12-21 HCP, 5+ spades) ===
@@ -76,7 +76,7 @@ export const openingScenarios: HandScenario[] = [
   {
     hand: "♠ KQ9742  ♥ A5  ♦ AJ3  ♣ 84",
     hcp: 14, distribution: "6-2-3-2",
-    correctBid: "1♠", explanation: "14 HCP, 6 picche: apri 1♠. Con 6 carte non bilanciata, niente 1NT",
+    correctBid: "1♠", explanation: "14 HCP, 6 picche: apri 1♠. Con 6 carte non bilanciata, niente 1SA",
     options: ["1♠", "2♠", "1NT", "Passo"],
   },
   // === Major opening or short clubs with neither five-card major ===
@@ -121,7 +121,7 @@ export const openingScenarios: HandScenario[] = [
   {
     hand: "♠ QJ5  ♥ K84  ♦ A73  ♣ KJ62",
     hcp: 14, distribution: "3-3-3-4",
-    correctBid: "1♣", explanation: "14 HCP, bilanciata 3-3-3-4: non 15-17 per 1NT, apri nel seme più lungo 1♣",
+    correctBid: "1♣", explanation: "14 HCP, bilanciata 3-3-3-4: non 15-17 per 1SA, apri nel seme più lungo 1♣",
     options: ["1♣", "1NT", "1♦", "Passo"],
   },
   {
@@ -140,13 +140,13 @@ export const openingScenarios: HandScenario[] = [
   {
     hand: "♠ AKQ5  ♥ A3  ♦ AJ84  ♣ K72",
     hcp: 21, distribution: "4-2-4-3",
-    correctBid: "2NT", explanation: "21 HCP, bilanciata: apri 2NT (21-23, Fiori 2022)",
+    correctBid: "2NT", explanation: "21 HCP, bilanciata: apri 2SA (21-23, Fiori 2022)",
     options: ["1♠", "2NT", "1NT", "2♣"],
   },
   {
     hand: "♠ AJ3  ♥ KQ84  ♦ AK5  ♣ KJ7",
     hcp: 21, distribution: "3-4-3-3",
-    correctBid: "2NT", explanation: "21 HCP, bilanciata 3-4-3-3: apri 2NT (21-23, Fiori 2022)",
+    correctBid: "2NT", explanation: "21 HCP, bilanciata 3-4-3-3: apri 2SA (21-23, Fiori 2022)",
     options: ["1♥", "2NT", "2♣", "1NT"],
   },
   // === 2♣ (FIGB Fiori 2022: 24+ HCP balanced) ===

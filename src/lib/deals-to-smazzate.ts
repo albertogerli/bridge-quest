@@ -53,7 +53,7 @@ export interface ToSmazzateOptions {
   /** Contratto applicato a tutte le mani, es. "3NT" o "4♠". */
   contract: string;
   declarer: Position;
-  /** Compare come titolo di ogni mano ("Apertura di 1NT — mano 3"). */
+  /** Compare come titolo di ogni mano ("Apertura di 1SA — mano 3"). */
   title: string;
   /** Nota didattica ripetuta su ogni mano; di norma la descrizione del modello. */
   commentary?: string;

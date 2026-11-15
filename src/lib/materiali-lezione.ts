@@ -30,6 +30,20 @@ export interface MaterialeLezione {
   created_at: string;
 }
 
+/**
+ * Come chiamare il materiale davanti all'allievo. Le slide del programma si
+ * salvano con tipo `dispensa` (sono PDF da sfogliare e stampare, e il tipo
+ * decide icona e ordine), ma chiamarle «Dispensa» sotto «Le slide: …» faceva
+ * pensare a un errore (guida allievi, 14/11/2026). Si riconoscono dal titolo
+ * che dà loro il programma, o dal nome del file.
+ */
+export type NomeMateriale = TipoMateriale | "slide";
+
+export function nomeMateriale(m: Pick<MaterialeLezione, "tipo" | "titolo" | "url">): NomeMateriale {
+  if (m.tipo === "dispensa" && (/^le slide\b/i.test(m.titolo.trim()) || /\/slide-[^/]*$/i.test(m.url))) return "slide";
+  return m.tipo;
+}
+
 export type StatoMateriale = "nascosto" | "programmato" | "pubblicato";
 
 /**

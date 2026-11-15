@@ -187,10 +187,11 @@ function Dispense() {
                 <span className="text-lg">{course.icon}</span>
                 <div className="text-left">
                   <div className="text-[13px] font-semibold leading-tight">
-                    {course.name.replace("Corso ", "")}
+                    {/* «Corso di Primo Livello» diventava «di Primo Livello». */}
+                    {course.name.replace(/^Corso (di )?/, "")}
                   </div>
                   <div className={`text-[12px] leading-tight ${isActive ? "text-white/70" : "text-muted-foreground"}`}>
-                    {course.lessonCount} lezioni
+                    {t("{n} lezioni", { n: course.lessonCount })}
                   </div>
                 </div>
               </button>

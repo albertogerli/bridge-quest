@@ -132,7 +132,7 @@ function genConto(tr: Traduttore): DrillRound {
   return {
     kind: "conto",
     scenario: [
-      tr("Difendi contro 3NT."),
+      tr("Difendi contro 3SA."),
       tr("Il dichiarante gioca {sym} dal morto: tocca a te, non puoi vincere la presa.", { sym }),
     ],
     question: tr("Quale carta giochi per dare il conto al compagno?"),

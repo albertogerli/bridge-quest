@@ -10,6 +10,7 @@ import { useSharedAuth } from "@/contexts/auth-provider";
 import { BookOpen, GraduationCap } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { STRUMENTI_LEZIONE } from "@/components/istruttori/strumenti-lezione";
+import { useEnrolledClasses } from "@/store/use-classes-store";
 
 /**
  * L'area dell'insegnante, in cima al menù quando chi è collegato insegna.
@@ -35,6 +36,14 @@ const primaryNav = [
   { href: "/profilo", icon: "user", label: "Profilo" },
 ];
 
+/**
+ * «Classe», come nella barra del telefono e solo per chi è iscritto a una
+ * classe (vedi bottom-nav.tsx: a chi non ne ha una non si chiede un codice).
+ * Dal computer l'allievo arrivava alla sua classe solo dalla prima pagina
+ * (guida allievi, 15/11/2026).
+ */
+const CLASSE = { href: "/classi", icon: "classe", label: "Classe" };
+
 const moreNav = [
   // Sul portatile c'è spazio e restano in vista: è il telefono che non ne
   // aveva, e lì queste vivono dentro Gioca, Percorso e Profilo.
@@ -47,6 +56,12 @@ const moreNav = [
 ];
 
 const icons: Record<string, (active: boolean) => React.ReactNode> = {
+  classe: (a) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={a ? 2.4 : 2} strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+      <path d="M22 10 12 5 2 10l10 5 10-5Z" />
+      <path d="M6 12v5c0 1 2.7 2.5 6 2.5s6-1.5 6-2.5v-5" />
+    </svg>
+  ),
   home: (a) => (
     <svg viewBox="0 0 24 24" fill={a ? "currentColor" : "none"} stroke="currentColor" strokeWidth={a ? 0 : 2} className="h-5 w-5">
       <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
@@ -144,7 +159,9 @@ export function DesktopNav({ variante = "barra" }: { variante?: "barra" | "panne
   const pathname = usePercorso();
   const t = useT();
   const pendingFriends = usePendingFriendRequests();
-  const { profile } = useSharedAuth();
+  const { profile, user, loading: authLoading } = useSharedAuth();
+  const { classes: iscrizioni } = useEnrolledClasses(!authLoading && !!user);
+  const vociPrincipali = iscrizioni.length > 0 ? [...primaryNav.slice(0, 3), CLASSE, primaryNav[3]] : primaryNav;
   const insegna = profile?.role === "instructor" || profile?.role === "admin";
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -235,7 +252,7 @@ export function DesktopNav({ variante = "barra" }: { variante?: "barra" | "panne
             </a>
           </div>
         )}
-        {primaryNav.filter((v) => !nascosti.has(v.href)).map(renderItem)}
+        {vociPrincipali.filter((v) => !nascosti.has(v.href)).map(renderItem)}
 
         {/* Secondary "Altro" group */}
         <div className="pt-4">

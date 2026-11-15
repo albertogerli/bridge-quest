@@ -5,7 +5,7 @@ import { DEAL_TEMPLATES, generateDeals, satisfiesDeal, handHcp } from "@/lib/dea
  * Ogni argomento deve produrre mani che rispettano il proprio vincolo.
  *
  * PERCHÉ ESISTE QUESTO FILE. Il 26/09/2026, in una prova dal vivo, il Tavolo
- * condiviso ha mostrato «Apertura di 1NT» con Sud a nove punti. Il generatore
+ * condiviso ha mostrato «Apertura di 1SA» con Sud a nove punti. Il generatore
  * non c'entrava — la mano veniva dallo stato del tavolo aperto, rimasto lì da
  * un argomento precedente — ma la diagnosi iniziale è stata «il generatore usa
  * un seme diverso», e ci è voluto mezz'ora per escluderlo.
@@ -34,7 +34,7 @@ describe("i modelli didattici producono quello che promettono", () => {
 });
 
 describe("il caso visto in lezione", () => {
-  it("«Apertura di 1NT» dà sempre a Sud una mano da 15-17 bilanciata", () => {
+  it("«Apertura di 1SA» dà sempre a Sud una mano da 15-17 bilanciata", () => {
     // È la mano che era sbagliata sullo schermo: Sud con nove punti.
     const modello = DEAL_TEMPLATES.find((t) => t.id === "apertura-1nt");
     expect(modello, "il modello «apertura-1nt» non esiste più").toBeDefined();

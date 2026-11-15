@@ -533,3 +533,16 @@
 .skip-link:focus {
   top: 16px;
 }
+
+/*
+ * Un solo ritorno per pagina: sullo schermo largo, dove la scia di
+ * navigazione (`Briciole`) è intera, il «← Torna …» della cornice è un
+ * doppione e si nasconde. Sul telefono resta, e la scia non ripete il passo
+ * indietro (vedi briciole.tsx). Un browser senza `:has()` li mostra tutti e
+ * due, come prima: niente si perde.
+ */
+@media (min-width: 640px) {
+  body:has(nav[data-briciole]) [data-torna-cornice] {
+    display: none;
+  }
+}

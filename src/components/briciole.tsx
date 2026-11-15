@@ -3,6 +3,8 @@
 import Link from "@/components/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useT } from "@/contexts/traduzioni-provider";
+import { usePercorso } from "@/hooks/use-lingua";
+import { destinazioneIndietro } from "@/lib/navigazione-indietro";
 
 /**
  * La scia di navigazione delle pagine annidate.
@@ -28,6 +30,15 @@ export function Briciole({ percorso }: { percorso: Briciola[] }) {
   const t = useT();
   const navigabili = percorso.filter((b) => b.href);
   const ultimoLink = navigabili[navigabili.length - 1];
+  /*
+   * UN SOLO RITORNO PER PAGINA. La cornice mette già «← Torna alla classe» in
+   * cima alle pagine delle classi (`TornaIndietro`): con la scia sotto, sul
+   * telefono c'erano due link indietro uno sopra l'altro, «Torna alle mie
+   * classi» e «‹ Le mie classi» (guida allievi, 14/11/2026). Sul telefono
+   * vince quello della cornice; sullo schermo largo vince la scia, che dice
+   * di più, e la cornice si nasconde da sé (`[data-briciole]` in globals.css).
+   */
+  const ritornoInCornice = destinazioneIndietro(usePercorso()) != null;
 
   // «Percorso di navigazione» e non «Percorso»: dal 27/09/2026 «Percorso» è
   // anche una delle quattro schede della barra, e il dizionario ha UNA CHIAVE
@@ -37,9 +48,9 @@ export function Briciole({ percorso }: { percorso: Briciola[] }) {
   // L'etichetta è comunque migliore così: a un lettore di schermo «Percorso»
   // da solo non dice di che percorso si tratta.
   return (
-    <nav aria-label={t("Percorso di navigazione")} className="mb-3 text-sm text-muted-foreground">
-      {/* Telefono: solo il passo indietro. */}
-      {ultimoLink && (
+    <nav data-briciole aria-label={t("Percorso di navigazione")} className="mb-3 text-sm text-muted-foreground">
+      {/* Telefono: solo il passo indietro, se la cornice non lo dà già. */}
+      {ultimoLink && !ritornoInCornice && (
         <Link
           href={ultimoLink.href!}
           className="inline-flex items-center gap-1 hover:text-foreground hover:underline sm:hidden"

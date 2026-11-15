@@ -287,11 +287,14 @@ export function BridgeTable({
           {/* Compass */}
           <div className="absolute inset-0 flex items-center justify-center">
             <div
-              className={`${isCompact ? "w-14 h-14" : "w-20 h-20"} rounded-xl bg-black/30 backdrop-blur-sm flex items-center justify-center`}
+              className={`${isCompact ? "w-20 h-16" : "w-24 h-20"} rounded-xl bg-black/30 backdrop-blur-sm flex items-center justify-center`}
               role="img"
               aria-label={`Prese: dichiarante ${trickCount.ns}, difesa ${trickCount.ew}`}
             >
-              <div className={`grid grid-cols-3 grid-rows-3 gap-0 text-white/80 ${isCompact ? "text-[12px]" : "text-[12px]"} font-bold`} aria-hidden="true">
+              {/* La colonna di mezzo prende lo spazio che resta: con tre colonne
+                  uguali «dich-dif» andava a capo in «dich- / dif» (guida
+                  allievi, 14/11/2026), sul telefono e sul computer. */}
+              <div className={`grid grid-cols-[auto_1fr_auto] grid-rows-3 gap-x-1 text-white/80 ${isCompact ? "text-[12px]" : "text-[12px]"} font-bold`} aria-hidden="true">
                 <div />
                 <div className={`flex items-center justify-center ${isActive("north") ? "text-amber" : ""}`}>{inizialeVera("north")}</div>
                 <div />
@@ -299,7 +302,7 @@ export function BridgeTable({
                 <div className="flex flex-col items-center justify-center leading-tight">
                   <span className="text-amber text-xs font-black">{trickCount.ns}-{trickCount.ew}</span>
                   {(trickCount.ns > 0 || trickCount.ew > 0) && (
-                    <span className="text-[12px] text-white/50 font-medium">dich-dif</span>
+                    <span className="whitespace-nowrap text-[12px] text-white/60 font-medium">dich-dif</span>
                   )}
                 </div>
                 <div className={`flex items-center justify-center ${isActive("east") ? "text-amber" : ""}`}>{inizialeVera("east")}</div>

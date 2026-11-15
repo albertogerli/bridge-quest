@@ -31,7 +31,7 @@ import { useAlRitorno } from "@/hooks/use-al-ritorno";
 import { statoClasseAllievo, type StatoClasseAllievo } from "@/lib/classe-allievo";
 import { segnalaSalvoRete } from "@/lib/report-error";
 import { materialiPubblicati } from "@/lib/materiali-lezione-db";
-import { raggruppaPerLezione, type MaterialeLezione, type TipoMateriale } from "@/lib/materiali-lezione";
+import { nomeMateriale, raggruppaPerLezione, type MaterialeLezione, type NomeMateriale, type TipoMateriale } from "@/lib/materiali-lezione";
 import { CollegamentoMateriale } from "@/components/collegamento-materiale";
 import { ClipboardList, FileText } from "lucide-react";
 
@@ -420,10 +420,11 @@ const ICONE_MATERIALE: Record<TipoMateriale, typeof Video> = {
 function MaterialiDelleLezioni({ materiali }: { materiali: MaterialeLezione[] }) {
   const t = useT();
   const gruppi = raggruppaPerLezione(materiali, "pubblicazione");
-  const nomeTipo: Record<TipoMateriale, string> = {
+  const nomeTipo: Record<NomeMateriale, string> = {
     video: t("Videolezione"),
     dispensa: t("Dispensa"),
     esercizio: t("Esercizio"),
+    slide: t("Slide"),
   };
   return (
     <section className="mb-8">
@@ -446,7 +447,7 @@ function MaterialiDelleLezioni({ materiali }: { materiali: MaterialeLezione[] })
                       <Icona className="h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
                       <span className="min-w-0">
                         <span className="block text-sm font-semibold text-foreground">{m.titolo}</span>
-                        <span className="block text-xs text-muted-foreground">{nomeTipo[m.tipo]}</span>
+                        <span className="block text-xs text-muted-foreground">{nomeTipo[nomeMateriale(m)]}</span>
                       </span>
                       <span className="ml-auto shrink-0 text-sm font-semibold text-primary" aria-hidden="true">
                         →

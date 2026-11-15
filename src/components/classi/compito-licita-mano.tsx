@@ -390,7 +390,7 @@ export function CompitoLicitaMano({
       )}
 
       <p className="mt-5 text-xs text-muted-foreground">
-        {t("Il compagno e gli avversari sono BEN: le loro scelte possono differire dagli accordi del corso. Il voto valuta il contratto raggiunto, non l'aderenza al sistema.")}
+        {t("Il compagno e gli avversari li fa il computer, e a volte dichiarano in modo diverso da come avete imparato al corso. Il voto guarda il contratto a cui arrivi, non se hai seguito il sistema alla lettera.")}
       </p>
     </div>
   );
