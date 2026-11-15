@@ -341,7 +341,7 @@ describe("positionLabelIt / formatContractItalian", () => {
   });
 
   it("accosta contratto e dichiarante", () => {
-    expect(formatContractItalian("3NT", "south")).toBe("3NT Sud");
+    expect(formatContractItalian("3NT", "south")).toBe("3SA Sud");
     expect(formatContractItalian("4♠", "west")).toBe("4♠ Ovest");
   });
 });

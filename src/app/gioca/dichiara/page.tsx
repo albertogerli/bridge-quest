@@ -12,6 +12,7 @@ import { useGameResults } from "@/hooks/use-game-results";
 import { useT } from "@/contexts/traduzioni-provider";
 
 import { openingScenarios as scenarios, type HandScenario } from "@/data/opening-scenarios";
+import { useTestoSA } from "@/hooks/use-testo-sa";
 
 const TOTAL_ROUNDS = 10;
 
@@ -23,6 +24,7 @@ const dichiaraDiffConfig = {
 };
 
 export default function DichiaraPage() {
+  const sa = useTestoSA();
   const t = useT();
   const profileConfig = useProfile();
   const { saveGameResult } = useGameResults();
@@ -289,7 +291,7 @@ export default function DichiaraPage() {
                               </p>
                               {!answer.correct && (
                                 <p className="text-[12px] text-emerald-700 dark:text-emerald-300 font-medium mt-0.5">
-                                  {t("Risposta corretta:")} {t(s.correctBid)} — {t(s.explanation)}
+                                  {t("Risposta corretta:")} {sa(t(s.correctBid))} — {sa(t(s.explanation))}
                                 </p>
                               )}
                             </div>
@@ -410,7 +412,7 @@ export default function DichiaraPage() {
                     <p className={`font-bold ${profile === "senior" ? "text-2xl" : "text-xl"} ${
                       bid === "Passo" ? "text-muted-foreground" : "text-figb dark:text-primary"
                     }`}>
-                      {t(bid)}
+                      {sa(t(bid))}
                     </p>
                   </button>
                 );
@@ -428,7 +430,7 @@ export default function DichiaraPage() {
                   <p className={`text-sm font-bold ${lastCorrect ? "text-emerald-700 dark:text-emerald-300" : "text-red-600 dark:text-red-400"}`}>
                     {lastCorrect ? "Corretto!" : "Sbagliato!"}
                   </p>
-                  <p className="text-xs text-muted-foreground mt-1">{t(scenario.explanation)}</p>
+                  <p className="text-xs text-muted-foreground mt-1">{sa(t(scenario.explanation))}</p>
                 </motion.div>
               )}
             </AnimatePresence>

@@ -10,6 +10,7 @@
 
 import type { Position } from "@/lib/bridge-engine";
 import type { Smazzata, Vulnerability } from "@/lib/catalog";
+import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 
 /** Bonus XP riconosciuto una sola volta al giorno sulla mano di oggi. */
 export const DAILY_BONUS_XP = 50;
@@ -170,12 +171,12 @@ export function positionLabelIt(position: Position): string {
   return POSITION_LABELS_IT[position];
 }
 
-/** Contratto con dichiarante in italiano ("3NT Sud"). */
+/** Contratto con dichiarante in italiano ("3SA Sud"). */
 export function formatContractItalian(
   contract: string,
   declarer: Position
 ): string {
-  return `${contract} ${POSITION_LABELS_IT[declarer]}`;
+  return `${contrattoLeggibile(contract)} ${POSITION_LABELS_IT[declarer]}`;
 }
 
 /** Vulnerabilità in italiano ("Nessuna", "N-S", "E-O", "Tutti"). */

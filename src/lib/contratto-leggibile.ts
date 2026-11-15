@@ -22,3 +22,19 @@ export function contrattoLeggibile(contratto: string | null | undefined): string
   const contro = m[3] ? (m[3].length === 2 ? "XX" : "X") : "";
   return `${m[1]}${seme}${contro}`;
 }
+
+/**
+ * Lo stesso, dentro un testo: «apri 1NT con 15-17» → «apri 1SA con 15-17».
+ *
+ * Per i testi italiani che arrivano dai dati scritti nel codice (quiz,
+ * scenari, commenti) e che citano le dichiarazioni con la sigla inglese.
+ * Si usa SOLO per mostrare: i confronti con la risposta giusta restano sui
+ * valori originali. «NT» da solo, senza il livello davanti, non si tocca:
+ * può essere una parola di un testo inglese.
+ */
+export function testoConSA(testo: string): string;
+export function testoConSA(testo: string | null | undefined): string | null | undefined;
+export function testoConSA(testo: string | null | undefined): string | null | undefined {
+  if (!testo) return testo;
+  return testo.replace(/\b([1-7])NT\b/g, "$1SA");
+}

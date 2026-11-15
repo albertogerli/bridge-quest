@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { comprehensionData } from "@/data/comprensione-data";
 import { useT } from "@/contexts/traduzioni-provider";
+import { useTestoSA } from "@/hooks/use-testo-sa";
 
 interface ComprehensionQuizProps {
   lessonId: number;
@@ -13,6 +14,7 @@ interface ComprehensionQuizProps {
 }
 
 export function ComprehensionQuiz({ lessonId, onComplete, onSkip }: ComprehensionQuizProps) {
+  const sa = useTestoSA();
   const t = useT();
   const data = comprehensionData.find((d) => d.lessonId === lessonId);
   const [currentIdx, setCurrentIdx] = useState(0);
@@ -154,7 +156,7 @@ export function ComprehensionQuiz({ lessonId, onComplete, onSkip }: Comprehensio
           exit={{ opacity: 0, x: -20 }}
         >
           <p className="text-sm font-bold text-foreground mb-4">
-            {question.question}
+            {sa(question.question)}
           </p>
 
           {/* Options (shuffled) */}
@@ -190,7 +192,7 @@ export function ComprehensionQuiz({ lessonId, onComplete, onSkip }: Comprehensio
                     <span className="flex h-6 w-6 items-center justify-center rounded-full bg-card text-xs font-bold border border-border flex-shrink-0">
                       {String.fromCharCode(65 + displayIdx)}
                     </span>
-                    {opt}
+                    {sa(opt)}
                   </span>
                 </motion.button>
               );
@@ -216,7 +218,7 @@ export function ComprehensionQuiz({ lessonId, onComplete, onSkip }: Comprehensio
                   <span className="font-bold">
                     {isCorrect ? "Corretto! " : "Non proprio. "}
                   </span>
-                  {question.explanation}
+                  {sa(question.explanation)}
                 </div>
                 <Button
                   onClick={handleNext}

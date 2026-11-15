@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { contrattoLeggibile } from "./contratto-leggibile";
+import { contrattoLeggibile, testoConSA } from "./contratto-leggibile";
 
 describe("contratto leggibile", () => {
   it("una notazione sola, qualunque sia la fonte", () => {
@@ -21,5 +21,17 @@ describe("contratto leggibile", () => {
     expect(contrattoLeggibile("Passo")).toBe("Passo");
     expect(contrattoLeggibile("")).toBe("");
     expect(contrattoLeggibile(null)).toBe("");
+  });
+});
+
+describe("testoConSA", () => {
+  it("le dichiarazioni a senza atout dentro un testo si scrivono SA", () => {
+    expect(testoConSA("Con 15-17 bilanciata apri 1NT; con 21-23, 2NT. Poi 3NT.")).toBe("Con 15-17 bilanciata apri 1SA; con 21-23, 2SA. Poi 3SA.");
+    expect(testoConSA("1NT")).toBe("1SA");
+  });
+  it("non tocca il resto", () => {
+    expect(testoConSA("NT da solo, 10NT, 1NTX")).toBe("NT da solo, 10NT, 1NTX");
+    expect(testoConSA("4♠ e 3SA")).toBe("4♠ e 3SA");
+    expect(testoConSA(null)).toBeNull();
   });
 });

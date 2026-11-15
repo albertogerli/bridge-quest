@@ -14,6 +14,7 @@ import {
   type BiddingScenario,
 } from "@/data/bidding-practice-data";
 import { useT } from "@/contexts/traduzioni-provider";
+import { useTestoSA } from "@/hooks/use-testo-sa";
 
 // Suit styling for bid buttons
 const bidSuitColor = (bid: string): string => {
@@ -68,6 +69,7 @@ const diffConfig = {
 const TOTAL_ROUNDS = 10;
 
 export default function PraticaLicitaPage() {
+  const sa = useTestoSA();
   const t = useT();
   const profileConfig = useProfile();
   const { saveGameResult } = useGameResults();
@@ -285,7 +287,7 @@ export default function PraticaLicitaPage() {
                 {[
                   "Texas Transfer",
                   "Stayman",
-                  "Risposte a 1NT",
+                  "Risposte a 1SA",
                   "Interventi",
                   "2♣ Forte",
                   "Aperture deboli",
@@ -494,7 +496,7 @@ export default function PraticaLicitaPage() {
             </p>
             <div className="flex items-center gap-2 mb-3">
               <Badge className="bg-figb/10 text-figb dark:bg-primary/15 dark:text-primary text-[12px] font-bold border-0">
-                {scenario.topic}
+                {sa(scenario.topic)}
               </Badge>
               <Badge
                 variant="outline"
@@ -526,7 +528,7 @@ export default function PraticaLicitaPage() {
                       <span
                         className={`text-sm font-bold ${bidSuitColor(entry.bid)}`}
                       >
-                        {entry.bid}
+                        {sa(entry.bid)}
                       </span>
                       {i < scenario.biddingHistory.length - 1 && (
                         <span className="text-muted-foreground/50 mx-0.5">→</span>
@@ -620,7 +622,7 @@ export default function PraticaLicitaPage() {
                     <p
                       className={`font-bold ${profile === "senior" ? "text-2xl" : "text-xl"} ${bidSuitColor(bid)}`}
                     >
-                      {bid}
+                      {sa(bid)}
                     </p>
                   </button>
                 );
@@ -649,13 +651,13 @@ export default function PraticaLicitaPage() {
                       <span className="text-xs font-bold text-muted-foreground">
                         Era:{" "}
                         <span className="text-figb dark:text-primary font-bold">
-                          {scenario.correctBid}
+                          {sa(scenario.correctBid)}
                         </span>
                       </span>
                     )}
                   </div>
                   <p className="text-xs text-muted-foreground leading-relaxed">
-                    {t(scenario.explanation)}
+                    {sa(t(scenario.explanation))}
                   </p>
                   <button
                     onClick={() => {

@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { useT } from "@/contexts/traduzioni-provider";
+import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 
 interface ShareResultProps {
   contract: string;
@@ -123,7 +124,7 @@ export function ShareResult(props: ShareResultProps) {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-[12px] font-bold text-gray-400 uppercase tracking-wider">{t("Contratto")}</p>
-              <p className="text-xl font-black text-gray-900">{contract}</p>
+              <p className="text-xl font-black text-gray-900">{contrattoLeggibile(contract)}</p>
             </div>
             <div className="text-right">
               <p className="text-[12px] font-bold text-gray-400 uppercase tracking-wider">{t("Prese")}</p>

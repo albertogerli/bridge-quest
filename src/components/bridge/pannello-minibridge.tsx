@@ -10,6 +10,7 @@ import {
   suggestStrain,
   type Strain,
 } from "@/lib/minibridge";
+import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 
 const NOME: Record<Position, string> = {
   north: "Nord",
@@ -104,7 +105,7 @@ export function PannelloMinibridge({
                         : "border-border hover:bg-muted/50"
                   }`}
                 >
-                  <p className="font-display text-lg font-bold">{contratto}</p>
+                  <p className="font-display text-lg font-bold">{contrattoLeggibile(contratto)}</p>
                   <p className="text-[12px] opacity-70">{STRAIN_LABEL[strain]}</p>
                 </button>
               );

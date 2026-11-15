@@ -36,6 +36,8 @@ import { awardPracticeXp } from "@/lib/xp-utils";
 import { useGameResults } from "@/hooks/use-game-results";
 import { ArrowLeft, Play, Trophy } from "lucide-react";
 import { useT } from "@/contexts/traduzioni-provider";
+import { contrattoLeggibile } from "@/lib/contratto-leggibile";
+import { useTestoSA } from "@/hooks/use-testo-sa";
 
 type Role = "declare" | "defend";
 type Step = "reveal" | "decide" | "play";
@@ -261,7 +263,7 @@ function DecideStep({
                     isSuggested ? "border-primary bg-primary/5 ring-1 ring-primary" : "border-border hover:bg-muted/50"
                   }`}
                 >
-                  <p className="font-display text-xl font-bold">{contract}</p>
+                  <p className="font-display text-xl font-bold">{contrattoLeggibile(contract)}</p>
                   <p className="text-[12px] text-muted-foreground">{STRAIN_LABEL[strain]}</p>
                   {isSuggested && <p className="mt-0.5 text-[12px] font-semibold text-primary">consigliato</p>}
                 </button>
@@ -294,6 +296,7 @@ function PlayStep({
 }: {
   prepared: Prepared; contract: string; strain: Strain; review: string; onNext: () => void;
 }) {
+  const sa = useTestoSA();
   const t = useT();
   const { deal, declarer } = prepared;
   const anchor: Position = "south"; // human is always South -> bottom of the table
@@ -389,7 +392,7 @@ function PlayStep({
       <div className="mb-3 flex items-center justify-center gap-5 rounded-xl border border-border bg-card px-4 py-2 text-sm">
         <div className="text-center">
           <p className="text-[12px] font-bold uppercase tracking-wider text-muted-foreground">{t("Contratto")}</p>
-          <p className="text-lg font-bold text-primary">{contract}</p>
+          <p className="text-lg font-bold text-primary">{contrattoLeggibile(contract)}</p>
         </div>
         <div className="h-8 w-px bg-border" />
         <div className="text-center">
@@ -454,7 +457,7 @@ function PlayStep({
             </button>
             {showReview && review && (
               <div className="rounded-2xl border border-border bg-card p-5 text-left">
-                <p className="text-sm leading-relaxed text-muted-foreground">{review}</p>
+                <p className="text-sm leading-relaxed text-muted-foreground">{sa(review)}</p>
               </div>
             )}
           </div>

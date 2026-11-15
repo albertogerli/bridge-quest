@@ -18,6 +18,7 @@ import { ProvaDaQui } from "@/components/bridge/prova-da-qui";
 import { apriStampaMano } from "@/lib/stampa-mano";
 import { segnalaSalvoRete } from "@/lib/report-error";
 import { useT } from "@/contexts/traduzioni-provider";
+import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 
 const COLONNE: { p: Position; l: string }[] = [
   { p: "west", l: "Ovest" }, { p: "north", l: "Nord" }, { p: "east", l: "Est" }, { p: "south", l: "Sud" },
@@ -218,7 +219,7 @@ export function GiornaleMano({
             <div />
             {mano_("north", "Nord")}
             <div className="text-right text-sm">
-              <p className="font-display text-xl font-bold">{contratto}</p>
+              <p className="font-display text-xl font-bold">{contrattoLeggibile(contratto)}</p>
               <p className="text-xs text-muted-foreground">{t("dichiara")} {t(COLONNE.find((c) => c.p === dichiarante)?.l ?? "")}</p>
               {risultato && <p className="text-xs font-semibold">{risultato}</p>}
             </div>

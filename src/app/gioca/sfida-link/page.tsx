@@ -348,7 +348,7 @@ function SfidaLinkContent() {
                   {mode === "create" ? "La tua mano" : "Sfida"}
                 </h2>
                 <p className="text-sm text-white/70">
-                  {t("Contratto:")} <span className="font-bold text-white">{contract}</span>
+                  {t("Contratto:")} <span className="font-bold text-white">{contrattoLeggibile(contract)}</span>
                   <span className="mx-2">{"\u00B7"}</span>
                   {t("Obiettivo:")} <span className="font-bold text-white">9 prese</span>
                 </p>
