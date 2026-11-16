@@ -52,6 +52,8 @@ import { useAlRitorno } from "@/hooks/use-al-ritorno";
 import { ElencoAllieviEsporta } from "@/components/istruttori/elenco-allievi-esporta";
 import { RigaAllievo } from "@/components/istruttori/riga-allievo";
 import { CopiaClasseIn } from "@/components/istruttori/copia-in-classe";
+import { InsegnantiClasse } from "@/components/istruttori/insegnanti-classe";
+import { useClassesStore } from "@/store/use-classes-store";
 import { nelTurno, proposteTurno, turniDellaClasse } from "@/lib/turni";
 import { ProgrammaCorso } from "@/components/istruttori/programma-corso";
 
@@ -134,6 +136,11 @@ export default function ClassDetailPage({
    * nome della classe scritto per intero (richiesta di Trevissoi, ottobre 2026).
    */
   const [eliminazione, setEliminazione] = useState<null | "avviso" | "nome">(null);
+  /**
+   * Chi guarda ha creato la classe? Un collega aggiunto come insegnante
+   * (16/11/2026) fa tutto tranne eliminarla. `null` finché non si sa.
+   */
+  const [titolare, setTitolare] = useState<boolean | null>(null);
   const [nomeScritto, setNomeScritto] = useState("");
   /**
    * Il corso nasce dalla Lezione Zero con i suoi dati (ASD, descrizione,
@@ -836,6 +843,16 @@ export default function ClassDetailPage({
         </CardFooter>
       </Card>
 
+      {/* Chi insegna: il corso tenuto da più istruttori */}
+      <InsegnantiClasse
+        classId={classId}
+        onRuolo={setTitolare}
+        onUscito={() => {
+          void useClassesStore.getState().refreshMyClasses();
+          router.replace("/istruttori");
+        }}
+      />
+
       {/* Chi entra, e quando */}
       <details className="group mb-6 rounded-xl border border-border bg-card">
         <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-2 px-6 py-4 font-semibold">
@@ -1108,7 +1125,8 @@ export default function ClassDetailPage({
         <IngressoAula classId={classId} />
       </div>
 
-      {/* Eliminare è l'ultima cosa della pagina, e chiede il nome per esteso. */}
+      {/* Eliminare è l'ultima cosa della pagina, e chiede il nome per esteso. Solo a chi l'ha creata. */}
+      {titolare && (
       <div className="mb-6 rounded-xl border border-destructive/30 p-6">
         <p className="font-semibold">{t("Elimina la classe")}</p>
         <p className="mt-1 text-sm text-muted-foreground">
@@ -1126,6 +1144,7 @@ export default function ClassDetailPage({
           {t("Elimina la classe")}
         </Button>
       </div>
+      )}
 
       <Dialog open={eliminazione !== null} onOpenChange={(aperta) => !aperta && setEliminazione(null)}>
         <DialogContent>

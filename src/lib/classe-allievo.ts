@@ -30,13 +30,10 @@ export async function statoClasseAllievo(classId: string): Promise<StatoClasseAl
   const stato = await statoMiaIscrizione(classId);
   const supabase = createClient();
   if (stato === null) {
-    // La policy di `classes` la riga la mostra all'insegnante che la tiene.
-    const [{ data: utente }, { data: classe }] = await Promise.all([
-      supabase.auth.getUser(),
-      supabase.from("classes").select("instructor_id").eq("id", classId).maybeSingle(),
-    ]);
-    const insegnante = !!utente.user && classe?.instructor_id === utente.user.id;
-    return { stato, nome: null, insegnante };
+    // Titolare o collega aggiunto: lo sa dire solo il database
+    // (`is_instructor_of_class`), la riga di `classes` conosce solo il titolare.
+    const { data: insegna } = await supabase.rpc("is_instructor_of_class", { p_class_id: classId });
+    return { stato, nome: null, insegnante: insegna === true };
   }
   const { data, error } = await supabase.from("classes").select("name").eq("id", classId).maybeSingle();
   if (error) throw error;

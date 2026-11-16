@@ -16,7 +16,7 @@
 -- Rigenerare e committare dopo OGNI modifica allo schema, insieme allo script
 -- che l'ha causata.
 --
--- Estratto il: 2026-11-14
+-- Estratto il: 2026-11-16
 -- ============================================================================
 
 SET check_function_bodies = false;
@@ -163,6 +163,13 @@ CREATE TABLE IF NOT EXISTS public.class_messages (
   class_id uuid NOT NULL,
   user_id uuid NOT NULL,
   body text NOT NULL,
+  created_at timestamp with time zone NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS public.classe_insegnanti (
+  class_id uuid NOT NULL,
+  insegnante_id uuid NOT NULL,
+  aggiunto_da uuid,
   created_at timestamp with time zone NOT NULL
 );
 
@@ -1208,6 +1215,43 @@ BEGIN
     'bestTeacher', best_teacher
   );
 END $function$
+;
+
+CREATE OR REPLACE FUNCTION public.aggiungi_insegnante_classe(p_class_id uuid, p_email text)
+ RETURNS uuid
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+declare
+  v_id uuid;
+  v_titolare uuid;
+begin
+  select instructor_id into v_titolare from classes where id = p_class_id;
+  if v_titolare is null or (v_titolare <> auth.uid() and not is_admin()) then
+    raise exception 'solo chi ha creato la classe può aggiungere insegnanti' using errcode = '42501';
+  end if;
+
+  -- 22023/PTxxx, mai 40001: PostgREST ritenterebbe all'infinito.
+  select u.id into v_id
+    from auth.users u
+    join profiles p on p.id = u.id
+   where lower(u.email) = lower(btrim(coalesce(p_email, '')))
+     and p.role in ('instructor', 'admin');
+  if v_id is null then
+    raise exception 'nessun insegnante approvato con questa email' using errcode = 'PT404';
+  end if;
+  if v_id = v_titolare then
+    raise exception 'è già l''insegnante della classe' using errcode = 'PT409';
+  end if;
+
+  insert into classe_insegnanti (class_id, insegnante_id, aggiunto_da)
+  values (p_class_id, v_id, auth.uid())
+  on conflict do nothing;
+
+  return v_id;
+end;
+$function$
 ;
 
 CREATE OR REPLACE FUNCTION public.aggiungi_mani_al_compito(p_class_id uuid, p_lesson_id integer, p_titolo text, p_smazzate text[], p_soluzioni text DEFAULT NULL::text)
@@ -2362,6 +2406,24 @@ AS $function$
   $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.custodisci_titolare_classe()
+ RETURNS trigger
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+begin
+  if auth.uid() is null or is_admin() then
+    return new;  -- service_role / SQL Editor / amministratore
+  end if;
+  if new.instructor_id is distinct from old.instructor_id then
+    raise exception 'il titolare della classe non si cambia da qui' using errcode = '42501';
+  end if;
+  return new;
+end;
+$function$
+;
+
 CREATE OR REPLACE FUNCTION public.custodisci_turno()
  RETURNS trigger
  LANGUAGE plpgsql
@@ -3205,6 +3267,27 @@ AS $function$
 $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.insegnanti_della_classe(p_class_id uuid)
+ RETURNS TABLE(insegnante_id uuid, nome text, email text, titolare boolean)
+ LANGUAGE sql
+ STABLE SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+  select c.instructor_id, p.display_name, u.email::text, true
+    from classes c
+    join profiles p on p.id = c.instructor_id
+    join auth.users u on u.id = c.instructor_id
+   where c.id = p_class_id and is_instructor_of_class(p_class_id)
+  union all
+  select ci.insegnante_id, p.display_name, u.email::text, false
+    from classe_insegnanti ci
+    join profiles p on p.id = ci.insegnante_id
+    join auth.users u on u.id = ci.insegnante_id
+   where ci.class_id = p_class_id and is_instructor_of_class(p_class_id)
+  order by 4 desc, 2;
+$function$
+;
+
 CREATE OR REPLACE FUNCTION public.is_admin()
  RETURNS boolean
  LANGUAGE sql
@@ -3256,10 +3339,8 @@ CREATE OR REPLACE FUNCTION public.is_instructor_of_assignment(p_assignment_id uu
  SET search_path TO 'public'
 AS $function$
   SELECT EXISTS (
-    SELECT 1
-    FROM assignments a
-    JOIN classes c ON c.id = a.class_id
-    WHERE a.id = p_assignment_id AND c.instructor_id = auth.uid()
+    SELECT 1 FROM assignments a
+    WHERE a.id = p_assignment_id AND is_instructor_of_class(a.class_id)
   );
 $function$
 ;
@@ -3273,6 +3354,9 @@ AS $function$
   SELECT EXISTS (
     SELECT 1 FROM classes c
     WHERE c.id = p_class_id AND c.instructor_id = auth.uid()
+  ) OR EXISTS (
+    SELECT 1 FROM classe_insegnanti ci
+    WHERE ci.class_id = p_class_id AND ci.insegnante_id = auth.uid()
   );
 $function$
 ;
@@ -3288,6 +3372,19 @@ AS $function$
     WHERE m.class_id = p_class_id
       AND m.student_id = auth.uid()
       AND m.status = 'active'
+  );
+$function$
+;
+
+CREATE OR REPLACE FUNCTION public.is_owner_of_class(p_class_id uuid)
+ RETURNS boolean
+ LANGUAGE sql
+ STABLE SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+  SELECT EXISTS (
+    SELECT 1 FROM classes c
+    WHERE c.id = p_class_id AND c.instructor_id = auth.uid()
   );
 $function$
 ;
@@ -3444,7 +3541,7 @@ AS $function$
   where t.class_id = p_class_id
     and t.closed_at is null
     and (
-      t.instructor_id = auth.uid()
+      public.is_instructor_of_class(t.class_id)
       or (
         exists (select 1 from public.class_members m
                  where m.class_id = t.class_id
@@ -3484,7 +3581,7 @@ begin
     return jsonb_build_object('ok', false, 'errore', 'tavolo non disponibile');
   end if;
 
-  v_is_owner := (t.instructor_id = auth.uid());
+  v_is_owner := public.is_instructor_of_class(t.class_id);
   v_my_seat  := t.seat_of ->> auth.uid()::text;
   v_seat := case when v_is_owner then coalesce(p_seat, v_my_seat) else v_my_seat end;
 
@@ -3598,8 +3695,8 @@ AS $function$
 declare
   proprietario uuid;
 begin
-  select instructor_id into proprietario from live_tables where id = p_id;
-  if proprietario is null or proprietario <> auth.uid() then
+  select class_id into proprietario from live_tables where id = p_id;
+  if proprietario is null or NOT public.is_instructor_of_class(proprietario) then
     raise exception 'not authorized for table %', p_id using errcode = '42501';
   end if;
 
@@ -3626,7 +3723,7 @@ AS $function$
 DECLARE t public.live_tables%ROWTYPE;
 BEGIN
   SELECT * INTO t FROM public.live_tables WHERE id = p_table_id FOR UPDATE;
-  IF NOT FOUND OR t.instructor_id <> auth.uid() THEN RETURN false; END IF;
+  IF NOT FOUND OR NOT public.is_instructor_of_class(t.class_id) THEN RETURN false; END IF;
   UPDATE public.live_tables
   SET played = CASE WHEN jsonb_array_length(played) = 0 THEN played
                     ELSE played - (jsonb_array_length(played) - 1) END,
@@ -3651,7 +3748,7 @@ BEGIN
   SELECT * INTO t FROM public.live_tables WHERE id = p_table_id;
   IF NOT FOUND THEN RETURN NULL; END IF;
 
-  v_is_owner := (t.instructor_id = auth.uid());
+  v_is_owner := public.is_instructor_of_class(t.class_id);
   SELECT EXISTS (
     SELECT 1 FROM public.class_members m
     WHERE m.class_id = t.class_id AND m.student_id = auth.uid()
@@ -4746,6 +4843,22 @@ BEGIN
 END $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.togli_insegnante_classe(p_class_id uuid, p_insegnante_id uuid)
+ RETURNS void
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+begin
+  if not (is_owner_of_class(p_class_id) or p_insegnante_id = auth.uid() or is_admin()) then
+    raise exception 'solo chi ha creato la classe può togliere un insegnante' using errcode = '42501';
+  end if;
+  delete from classe_insegnanti
+   where class_id = p_class_id and insegnante_id = p_insegnante_id;
+end;
+$function$
+;
+
 CREATE OR REPLACE FUNCTION public.torneo_corrente(p_tipo text)
  RETURNS jsonb
  LANGUAGE plpgsql
@@ -4998,6 +5111,7 @@ ALTER TABLE public.class_members ALTER COLUMN status SET DEFAULT 'active'::text;
 ALTER TABLE public.class_members ALTER COLUMN joined_at SET DEFAULT now();
 ALTER TABLE public.class_messages ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.class_messages ALTER COLUMN created_at SET DEFAULT now();
+ALTER TABLE public.classe_insegnanti ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.classes ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE public.classes ALTER COLUMN invite_code SET DEFAULT generate_invite_code();
 ALTER TABLE public.classes ALTER COLUMN invite_active SET DEFAULT true;
@@ -5220,6 +5334,7 @@ ALTER TABLE public.bidding_sessions ADD CONSTRAINT bidding_sessions_pkey PRIMARY
 ALTER TABLE public.challenges ADD CONSTRAINT challenges_pkey PRIMARY KEY (id);
 ALTER TABLE public.class_members ADD CONSTRAINT class_members_pkey PRIMARY KEY (class_id, student_id);
 ALTER TABLE public.class_messages ADD CONSTRAINT class_messages_pkey PRIMARY KEY (id);
+ALTER TABLE public.classe_insegnanti ADD CONSTRAINT classe_insegnanti_pkey PRIMARY KEY (class_id, insegnante_id);
 ALTER TABLE public.classes ADD CONSTRAINT classes_pkey PRIMARY KEY (id);
 ALTER TABLE public.club_posts ADD CONSTRAINT club_posts_pkey PRIMARY KEY (id);
 ALTER TABLE public.coda_sfide_coppie ADD CONSTRAINT coda_sfide_coppie_pkey PRIMARY KEY (id);
@@ -5411,6 +5526,9 @@ ALTER TABLE public.class_members ADD CONSTRAINT class_members_class_id_fkey FORE
 ALTER TABLE public.class_members ADD CONSTRAINT class_members_student_id_fkey FOREIGN KEY (student_id) REFERENCES auth.users(id) ON DELETE CASCADE;
 ALTER TABLE public.class_messages ADD CONSTRAINT class_messages_class_id_fkey FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE;
 ALTER TABLE public.class_messages ADD CONSTRAINT class_messages_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE;
+ALTER TABLE public.classe_insegnanti ADD CONSTRAINT classe_insegnanti_aggiunto_da_fkey FOREIGN KEY (aggiunto_da) REFERENCES auth.users(id) ON DELETE SET NULL;
+ALTER TABLE public.classe_insegnanti ADD CONSTRAINT classe_insegnanti_class_id_fkey FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE;
+ALTER TABLE public.classe_insegnanti ADD CONSTRAINT classe_insegnanti_insegnante_id_fkey FOREIGN KEY (insegnante_id) REFERENCES auth.users(id) ON DELETE CASCADE;
 ALTER TABLE public.classes ADD CONSTRAINT classes_instructor_id_fkey FOREIGN KEY (instructor_id) REFERENCES auth.users(id) ON DELETE CASCADE;
 ALTER TABLE public.club_posts ADD CONSTRAINT club_posts_author_id_fkey FOREIGN KEY (author_id) REFERENCES profiles(id) ON DELETE CASCADE;
 ALTER TABLE public.coda_sfide_coppie ADD CONSTRAINT coda_sfide_coppie_a1_fkey FOREIGN KEY (a1) REFERENCES profiles(id) ON DELETE CASCADE;
@@ -5512,6 +5630,7 @@ CREATE UNIQUE INDEX assignments_una_lezione_per_classe ON public.assignments USI
 CREATE INDEX bidding_sessions_north_idx ON public.bidding_sessions USING btree (north_id, created_at DESC);
 CREATE INDEX bidding_sessions_players_idx ON public.bidding_sessions USING btree (south_id, created_at DESC);
 CREATE INDEX bidding_sessions_serie_idx ON public.bidding_sessions USING btree (serie, numero);
+CREATE INDEX classe_insegnanti_insegnante_idx ON public.classe_insegnanti USING btree (insegnante_id);
 CREATE INDEX club_posts_asd_idx ON public.club_posts USING btree (asd_code, created_at DESC);
 CREATE UNIQUE INDEX coda_sfide_coppie_a1_unico ON public.coda_sfide_coppie USING btree (a1);
 CREATE UNIQUE INDEX coda_sfide_coppie_a2_unico ON public.coda_sfide_coppie USING btree (a2);
@@ -5616,6 +5735,7 @@ CREATE TRIGGER bidding_sessions_last_bid BEFORE UPDATE ON public.bidding_session
 CREATE TRIGGER class_members_nome_custodito BEFORE INSERT OR UPDATE ON public.class_members FOR EACH ROW EXECUTE FUNCTION custodisci_nome_in_classe();
 CREATE TRIGGER class_members_segna_uscita BEFORE UPDATE ON public.class_members FOR EACH ROW EXECUTE FUNCTION segna_uscita_da_classe();
 CREATE TRIGGER class_members_turno_custodito BEFORE INSERT OR UPDATE ON public.class_members FOR EACH ROW EXECUTE FUNCTION custodisci_turno();
+CREATE TRIGGER classes_titolare_custodito BEFORE UPDATE ON public.classes FOR EACH ROW EXECUTE FUNCTION custodisci_titolare_classe();
 CREATE TRIGGER collectible_cards_touch BEFORE UPDATE ON public.collectible_cards FOR EACH ROW EXECUTE FUNCTION touch_updated_at();
 CREATE TRIGGER commenti_compito_updated_at BEFORE UPDATE ON public.commenti_compito FOR EACH ROW EXECUTE FUNCTION touch_updated_at();
 CREATE TRIGGER course_worlds_touch BEFORE UPDATE ON public.course_worlds FOR EACH ROW EXECUTE FUNCTION touch_updated_at();
@@ -5644,6 +5764,7 @@ ALTER TABLE public.bidding_sessions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.challenges ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.class_members ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.class_messages ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.classe_insegnanti ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.classes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.club_posts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.coda_sfide_coppie ENABLE ROW LEVEL SECURITY;
@@ -5729,12 +5850,15 @@ CREATE POLICY "Authors can delete own class messages" ON public.class_messages A
 CREATE POLICY "L'amministratore modera la chat" ON public.class_messages AS PERMISSIVE FOR DELETE TO authenticated USING (is_admin());
 CREATE POLICY "Members can read class messages" ON public.class_messages AS PERMISSIVE FOR SELECT TO public USING ((is_instructor_of_class(class_id) OR is_member_of_class(class_id)));
 CREATE POLICY "Members can send class messages" ON public.class_messages AS PERMISSIVE FOR INSERT TO public WITH CHECK (((user_id = auth.uid()) AND (is_instructor_of_class(class_id) OR is_member_of_class(class_id))));
-CREATE POLICY "Instructors and members can view classes" ON public.classes AS PERMISSIVE FOR SELECT TO public USING (((instructor_id = auth.uid()) OR is_member_of_class(id) OR is_pending_of_class(id)));
+CREATE POLICY "Gli insegnanti della classe vedono i colleghi" ON public.classe_insegnanti AS PERMISSIVE FOR SELECT TO authenticated USING (((insegnante_id = auth.uid()) OR (EXISTS ( SELECT 1
+   FROM classes c
+  WHERE ((c.id = classe_insegnanti.class_id) AND (c.instructor_id = auth.uid()))))));
+CREATE POLICY "Instructors and members can view classes" ON public.classes AS PERMISSIVE FOR SELECT TO public USING (((instructor_id = auth.uid()) OR is_instructor_of_class(id) OR is_member_of_class(id) OR is_pending_of_class(id)));
 CREATE POLICY "Instructors can create classes" ON public.classes AS PERMISSIVE FOR INSERT TO public WITH CHECK (((instructor_id = auth.uid()) AND (EXISTS ( SELECT 1
    FROM profiles p
   WHERE ((p.id = auth.uid()) AND (p.role = ANY (ARRAY['instructor'::text, 'admin'::text])))))));
 CREATE POLICY "Instructors can delete own classes" ON public.classes AS PERMISSIVE FOR DELETE TO public USING ((instructor_id = auth.uid()));
-CREATE POLICY "Instructors can update own classes" ON public.classes AS PERMISSIVE FOR UPDATE TO public USING ((instructor_id = auth.uid()));
+CREATE POLICY "Instructors can update own classes" ON public.classes AS PERMISSIVE FOR UPDATE TO public USING (is_instructor_of_class(id)) WITH CHECK (is_instructor_of_class(id));
 CREATE POLICY "Author or admin deletes" ON public.club_posts AS PERMISSIVE FOR DELETE TO authenticated USING (((author_id = auth.uid()) OR is_admin()));
 CREATE POLICY "Instructors write for own club" ON public.club_posts AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK (((author_id = auth.uid()) AND can_post_for_asd(asd_code)));
 CREATE POLICY "Members read own club posts" ON public.club_posts AS PERMISSIVE FOR SELECT TO authenticated USING (((asd_code = my_asd_code()) OR can_post_for_asd(asd_code)));
@@ -5798,11 +5922,7 @@ CREATE POLICY "L'autore ritira la propria proposta" ON public.libreria AS PERMIS
 CREATE POLICY "La libreria approvata la vede chi insegna" ON public.libreria AS PERMISSIVE FOR SELECT TO authenticated USING (((autore_id = auth.uid()) OR is_curatore() OR ((stato = 'approvato'::text) AND (EXISTS ( SELECT 1
    FROM profiles p
   WHERE ((p.id = auth.uid()) AND (p.role = ANY (ARRAY['instructor'::text, 'admin'::text, 'curatore'::text]))))))));
-CREATE POLICY "Instructor manages own live tables" ON public.live_tables AS PERMISSIVE FOR ALL TO authenticated USING (((instructor_id = auth.uid()) AND (EXISTS ( SELECT 1
-   FROM classes c
-  WHERE ((c.id = live_tables.class_id) AND (c.instructor_id = auth.uid())))))) WITH CHECK (((instructor_id = auth.uid()) AND (EXISTS ( SELECT 1
-   FROM classes c
-  WHERE ((c.id = live_tables.class_id) AND (c.instructor_id = auth.uid()))))));
+CREATE POLICY "Instructor manages own live tables" ON public.live_tables AS PERMISSIVE FOR ALL TO authenticated USING (is_instructor_of_class(class_id)) WITH CHECK (is_instructor_of_class(class_id));
 CREATE POLICY "Authenticated can insert own login history" ON public.login_history AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK ((user_id = auth.uid()));
 CREATE POLICY "Users can read own login history" ON public.login_history AS PERMISSIVE FOR SELECT TO authenticated USING ((user_id = auth.uid()));
 CREATE POLICY "Istruttori generano mani" ON public.mani_generate AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK ((EXISTS ( SELECT 1
@@ -5855,7 +5975,7 @@ CREATE POLICY "Solo gli amministratori aggiornano" ON public.segnalazioni AS PER
 CREATE POLICY "Chi è iscritto segnala" ON public.segnalazioni_contenuti AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK (((segnalato_da = ( SELECT auth.uid() AS uid)) AND (stato = 'nuova'::text)));
 CREATE POLICY "L'amministratore chiude le segnalazioni" ON public.segnalazioni_contenuti AS PERMISSIVE FOR UPDATE TO authenticated USING (is_admin()) WITH CHECK (is_admin());
 CREATE POLICY "L'amministratore legge le segnalazioni" ON public.segnalazioni_contenuti AS PERMISSIVE FOR SELECT TO authenticated USING (is_admin());
-CREATE POLICY "L'insegnante gestisce la sessione" ON public.sessioni_aula AS PERMISSIVE FOR ALL TO authenticated USING (is_instructor_of_class(class_id)) WITH CHECK ((is_instructor_of_class(class_id) AND (instructor_id = auth.uid())));
+CREATE POLICY "L'insegnante gestisce la sessione" ON public.sessioni_aula AS PERMISSIVE FOR ALL TO authenticated USING (is_instructor_of_class(class_id)) WITH CHECK (is_instructor_of_class(class_id));
 CREATE POLICY "La sessione la vede la classe" ON public.sessioni_aula AS PERMISSIVE FOR SELECT TO authenticated USING ((is_instructor_of_class(class_id) OR is_member_of_class(class_id)));
 CREATE POLICY "Le board delle mie sfide" ON public.sfida_board AS PERMISSIVE FOR SELECT TO authenticated USING ((EXISTS ( SELECT 1
    FROM sfide_coppie s
@@ -5894,6 +6014,7 @@ REVOKE ALL ON TABLE public.bidding_sessions FROM PUBLIC, anon, authenticated, se
 REVOKE ALL ON TABLE public.challenges FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.class_members FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.class_messages FROM PUBLIC, anon, authenticated, service_role;
+REVOKE ALL ON TABLE public.classe_insegnanti FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.classes FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.club_posts FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.coda_sfide_coppie FROM PUBLIC, anon, authenticated, service_role;
@@ -6229,6 +6350,19 @@ GRANT SELECT ON TABLE public.class_messages TO service_role;
 GRANT TRIGGER ON TABLE public.class_messages TO service_role;
 GRANT TRUNCATE ON TABLE public.class_messages TO service_role;
 GRANT UPDATE ON TABLE public.class_messages TO service_role;
+GRANT MAINTAIN ON TABLE public.classe_insegnanti TO authenticated;
+GRANT REFERENCES ON TABLE public.classe_insegnanti TO authenticated;
+GRANT SELECT ON TABLE public.classe_insegnanti TO authenticated;
+GRANT TRIGGER ON TABLE public.classe_insegnanti TO authenticated;
+GRANT TRUNCATE ON TABLE public.classe_insegnanti TO authenticated;
+GRANT DELETE ON TABLE public.classe_insegnanti TO service_role;
+GRANT INSERT ON TABLE public.classe_insegnanti TO service_role;
+GRANT MAINTAIN ON TABLE public.classe_insegnanti TO service_role;
+GRANT REFERENCES ON TABLE public.classe_insegnanti TO service_role;
+GRANT SELECT ON TABLE public.classe_insegnanti TO service_role;
+GRANT TRIGGER ON TABLE public.classe_insegnanti TO service_role;
+GRANT TRUNCATE ON TABLE public.classe_insegnanti TO service_role;
+GRANT UPDATE ON TABLE public.classe_insegnanti TO service_role;
 GRANT DELETE ON TABLE public.classes TO anon;
 GRANT INSERT ON TABLE public.classes TO anon;
 GRANT MAINTAIN ON TABLE public.classes TO anon;
@@ -7711,6 +7845,9 @@ GRANT EXECUTE ON FUNCTION public.admin_login_history(p_days integer) TO service_
 REVOKE ALL ON FUNCTION public.admin_school_stats() FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.admin_school_stats() TO authenticated;
 GRANT EXECUTE ON FUNCTION public.admin_school_stats() TO service_role;
+REVOKE ALL ON FUNCTION public.aggiungi_insegnante_classe(p_class_id uuid, p_email text) FROM PUBLIC, anon, authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.aggiungi_insegnante_classe(p_class_id uuid, p_email text) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.aggiungi_insegnante_classe(p_class_id uuid, p_email text) TO service_role;
 REVOKE ALL ON FUNCTION public.aggiungi_mani_al_compito(p_class_id uuid, p_lesson_id integer, p_titolo text, p_smazzate text[], p_soluzioni text) FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.aggiungi_mani_al_compito(p_class_id uuid, p_lesson_id integer, p_titolo text, p_smazzate text[], p_soluzioni text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.aggiungi_mani_al_compito(p_class_id uuid, p_lesson_id integer, p_titolo text, p_smazzate text[], p_soluzioni text) TO service_role;
@@ -7815,6 +7952,8 @@ GRANT EXECUTE ON FUNCTION public.confronto_mano(p_assignment_id uuid, p_smazzata
 GRANT EXECUTE ON FUNCTION public.confronto_mano(p_assignment_id uuid, p_smazzata_id text) TO service_role;
 REVOKE ALL ON FUNCTION public.custodisci_nome_in_classe() FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.custodisci_nome_in_classe() TO service_role;
+REVOKE ALL ON FUNCTION public.custodisci_titolare_classe() FROM PUBLIC, anon, authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.custodisci_titolare_classe() TO service_role;
 REVOKE ALL ON FUNCTION public.custodisci_turno() FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.custodisci_turno() TO service_role;
 REVOKE ALL ON FUNCTION public.distribuzione_sondaggio(p_id uuid) FROM PUBLIC, anon, authenticated, service_role;
@@ -7888,6 +8027,9 @@ GRANT EXECUTE ON FUNCTION public.imp_da_differenza(p_diff integer) TO service_ro
 REVOKE ALL ON FUNCTION public.insegna_esercizio(p_id uuid) FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.insegna_esercizio(p_id uuid) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.insegna_esercizio(p_id uuid) TO service_role;
+REVOKE ALL ON FUNCTION public.insegnanti_della_classe(p_class_id uuid) FROM PUBLIC, anon, authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.insegnanti_della_classe(p_class_id uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.insegnanti_della_classe(p_class_id uuid) TO service_role;
 REVOKE ALL ON FUNCTION public.is_admin() FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.is_admin() TO authenticated;
 GRANT EXECUTE ON FUNCTION public.is_admin() TO service_role;
@@ -7909,6 +8051,9 @@ GRANT EXECUTE ON FUNCTION public.is_instructor_of_class(p_class_id uuid) TO serv
 REVOKE ALL ON FUNCTION public.is_member_of_class(p_class_id uuid) FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.is_member_of_class(p_class_id uuid) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.is_member_of_class(p_class_id uuid) TO service_role;
+REVOKE ALL ON FUNCTION public.is_owner_of_class(p_class_id uuid) FROM PUBLIC, anon, authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.is_owner_of_class(p_class_id uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.is_owner_of_class(p_class_id uuid) TO service_role;
 REVOKE ALL ON FUNCTION public.is_pending_of_class(p_class_id uuid) FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.is_pending_of_class(p_class_id uuid) TO PUBLIC;
 GRANT EXECUTE ON FUNCTION public.is_pending_of_class(p_class_id uuid) TO anon;
@@ -8048,6 +8193,9 @@ GRANT EXECUTE ON FUNCTION public.tocca_bidding_session() TO PUBLIC;
 GRANT EXECUTE ON FUNCTION public.tocca_bidding_session() TO anon;
 GRANT EXECUTE ON FUNCTION public.tocca_bidding_session() TO authenticated;
 GRANT EXECUTE ON FUNCTION public.tocca_bidding_session() TO service_role;
+REVOKE ALL ON FUNCTION public.togli_insegnante_classe(p_class_id uuid, p_insegnante_id uuid) FROM PUBLIC, anon, authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.togli_insegnante_classe(p_class_id uuid, p_insegnante_id uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.togli_insegnante_classe(p_class_id uuid, p_insegnante_id uuid) TO service_role;
 REVOKE ALL ON FUNCTION public.torneo_corrente(p_tipo text) FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.torneo_corrente(p_tipo text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.torneo_corrente(p_tipo text) TO service_role;

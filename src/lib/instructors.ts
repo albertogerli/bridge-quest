@@ -10,6 +10,7 @@
 
 import { erroreNonAutenticato } from "@/lib/errore-di-rete";
 import { createClient } from "@/lib/supabase/client";
+import { segnalaSalvoRete } from "@/lib/report-error";
 import type { Smazzata } from "@/lib/catalog";
 import type { AccessoLibero, Gruppo } from "@/lib/permessi-allievo";
 
@@ -275,7 +276,11 @@ export async function createClass(input: {
   return data as ClassRoom;
 }
 
-/** Classes owned by the current instructor (newest first). */
+/**
+ * Le classi in cui l'utente insegna: quelle che ha creato e quelle in cui un
+ * collega l'ha aggiunto come insegnante (`classe_insegnanti`, 16/11/2026: un
+ * corso tenuto da tre istruttori).
+ */
 export async function getMyClasses(): Promise<ClassRoom[]> {
   const supabase = createClient();
   const {
@@ -283,10 +288,18 @@ export async function getMyClasses(): Promise<ClassRoom[]> {
   } = await supabase.auth.getUser();
   if (!user) throw erroreNonAutenticato();
 
-  const { data, error } = await supabase
-    .from("classes")
-    .select("*")
-    .eq("instructor_id", user.id)
+  const { data: colleghi, error: erroreColleghi } = await supabase
+    .from("classe_insegnanti")
+    .select("class_id")
+    .eq("insegnante_id", user.id);
+  // Senza quest'elenco restano le classi proprie: meglio di nessuna.
+  if (erroreColleghi) segnalaSalvoRete("classi:da-collega", erroreColleghi);
+  const altre = (colleghi ?? []).map((r) => r.class_id as string);
+
+  const base = supabase.from("classes").select("*");
+  const { data, error } = await (altre.length > 0
+    ? base.or(`instructor_id.eq.${user.id},id.in.(${altre.join(",")})`)
+    : base.eq("instructor_id", user.id))
     // In ordine di creazione, la più vecchia per prima (Trevissoi, ottobre
     // 2026: «FIFO»). La nuova in testa spostava tutte le altre a ogni corso
     // aperto, e chi ritrovava le classi a memoria per posizione si perdeva.

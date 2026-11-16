@@ -3213,5 +3213,20 @@
   "Errore di connessione. Riprova.": "Connection error. Please try again.",
   "Carica foto": "Upload photo",
   "Il compagno e gli avversari li fa il computer, e a volte dichiarano in modo diverso da come avete imparato al corso. Il voto guarda il contratto a cui arrivi, non se hai seguito il sistema alla lettera.": "Your partner and opponents are played by the computer, and sometimes they bid differently from what you learned in the course. The score looks at the contract you reach, not at whether you followed the system to the letter.",
-  "{n} lezioni": "{n} lessons"
+  "{n} lezioni": "{n} lessons",
+  "Aggiungi un insegnante": "Add a teacher",
+  "Ha creato la classe": "Created the class",
+  "Insegnanti della classe": "Class teachers",
+  "Insegnate insieme: vedi e gestisci la classe come chi l'ha creata. Solo lui o lei può eliminarla e scegliere chi insegna.": "You teach together: you see and manage the class just like the person who created it. Only they can delete it and choose who teaches.",
+  "L'email con cui il collega entra in BridgeLab. Deve essere già approvato come insegnante.": "The email your colleague signs in to BridgeLab with. They must already be approved as a teacher.",
+  "Lascia la classe": "Leave the class",
+  "Lasciare la classe?": "Leave the class?",
+  "Non la vedrai più tra le tue classi. Compiti, risultati e allievi restano come sono; per tornare, chiedi a chi l'ha creata di aggiungerti di nuovo.": "You won't see it among your classes anymore. Assignments, results and students stay as they are; to come back, ask the person who created it to add you again.",
+  "Non trovo un insegnante approvato con questa email. Il collega deve registrarsi su BridgeLab e chiedere di diventare insegnante; quando la FIGB l'ha approvato, lo aggiungi da qui.": "I can't find an approved teacher with this email. Your colleague needs to sign up on BridgeLab and apply to become a teacher; once FIGB has approved them, you add them here.",
+  "Non vedrà più la classe. Compiti, risultati e allievi restano come sono; puoi aggiungerlo di nuovo quando vuoi.": "They won't see the class anymore. Assignments, results and students stay as they are; you can add them again whenever you like.",
+  "Se il corso lo tenete in più d'uno, aggiungi i colleghi: vedono e gestiscono la classe come te. Solo tu puoi eliminarla e scegliere chi insegna.": "If more than one of you teaches the course, add your colleagues: they see and manage the class just like you. Only you can delete it and choose who teaches.",
+  "Solo chi ha creato la classe può aggiungere insegnanti.": "Only the person who created the class can add teachers.",
+  "Togliere {nome} dagli insegnanti?": "Remove {nome} from the teachers?",
+  "email del collega": "colleague's email",
+  "È l'email di chi ha creato la classe: insegna già qui.": "That's the email of the person who created the class: they already teach here."
 }
