@@ -145,3 +145,47 @@ export function isInAppBrowserNoise(event: {
   // l'errore ci riguarda: la libreria potrebbe averlo solo fatto emergere.
   return frames.every((f) => FRAME_ESTERNO_APP.test(f.filename ?? ""));
 }
+
+/**
+ * Codice iniettato nella pagina da altri: traduttori, app che fanno da browser.
+ *
+ * Eventi reali del 16/11/2026 (BRIDGELAB-2T…2X): un iPhone con l'app Google
+ * che traduceva in italiano le pagine /en. Due funzioni che si chiamano a
+ * vicenda (`vk` → `xk` → `vk`…) fino a «Maximum call stack size exceeded»,
+ * tutte alla riga 230 di `app:///en/gioca`, `app:///en/classi`, `app:///en`.
+ * Le nostre pagine sono di 16 righe: quella riga 230 non è nostra. Lo script
+ * si attribuisce all'indirizzo del documento in cui è stato iniettato, e
+ * siccome cambiava a ogni pagina Sentry apriva ogni volta un problema NUOVO,
+ * con la sua email «high priority».
+ *
+ * COME SI RICONOSCE
+ * Il nostro codice sta tutto in file `.js` sotto `app:///_next/`. Un
+ * fotogramma che punta a una PAGINA (`app:///en/gioca`, nessun `.js`) è codice
+ * scritto dentro il documento. Gli unici script nostri scritti nella pagina
+ * sono il tema e i blocchi `self.__next_f.push(...)` di React: righe brevi che
+ * non chiamano niente in ricorsione.
+ *
+ * Come per i browser dentro le app: TUTTI i fotogrammi devono essere così. Se
+ * anche uno solo sta nei nostri file, l'errore ci riguarda.
+ */
+// Senza lookbehind: Safari lo capisce solo da iOS 16.4, e un'espressione che
+// non si compila fermerebbe l'intero file di Sentry.
+const INDIRIZZO_DI_PAGINA = /^(?:app:\/\/\/|https?:\/\/[^/]+\/)(?!_next\/)([^?#]*)/;
+const FILE_SCRIPT = /\.m?js$/;
+
+function fotogrammaNelDocumento(filename: string | undefined): boolean {
+  const m = INDIRIZZO_DI_PAGINA.exec(filename ?? "");
+  return !!m && !FILE_SCRIPT.test(m[1]);
+}
+
+export function isInjectedScriptNoise(event: {
+  exception?: {
+    values?: Array<{
+      stacktrace?: { frames?: Array<{ filename?: string }> };
+    }>;
+  };
+}): boolean {
+  const frames = (event.exception?.values ?? []).flatMap((v) => v.stacktrace?.frames ?? []);
+  if (frames.length === 0) return false;
+  return frames.every((f) => fotogrammaNelDocumento(f.filename));
+}

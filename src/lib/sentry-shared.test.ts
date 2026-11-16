@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { IGNORE_ERRORS, isInAppBrowserNoise, isServiceWorkerNoise } from "./sentry-shared";
+import { IGNORE_ERRORS, isInAppBrowserNoise, isInjectedScriptNoise, isServiceWorkerNoise } from "./sentry-shared";
 
 /**
  * Il primo evento reale arrivato in produzione: il renderer di Google (WRS),
@@ -279,5 +279,38 @@ describe("il rumore delle estensioni del browser", () => {
     expect(scartato("Non riesco a inviare il messaggio alla classe")).toBe(false);
     expect(scartato("BEN non ha dichiarato per north: server")).toBe(false);
     expect(scartato("permission denied for table adesioni")).toBe(false);
+  });
+});
+
+describe("isInjectedScriptNoise — script scritti nella pagina da altri", () => {
+  const ricorsione = (pagina: string) =>
+    evt([
+      { filename: `app:///${pagina}` },
+      { filename: `app:///${pagina}` },
+      { filename: "app:///en" },
+    ]);
+
+  it("scarta la ricorsione della traduzione dell'app Google (eventi reali del 16/11/2026)", () => {
+    expect(isInjectedScriptNoise(ricorsione("en/gioca"))).toBe(true);
+    expect(isInjectedScriptNoise(ricorsione("en/classi"))).toBe(true);
+    expect(isInjectedScriptNoise(evt([{ filename: "https://bridgelab.it/en/gioca?x=1" }]))).toBe(true);
+  });
+
+  it("NON scarta se anche un solo fotogramma sta nei nostri file", () => {
+    expect(
+      isInjectedScriptNoise(
+        evt([{ filename: "app:///en/gioca" }, { filename: "app:///_next/static/chunks/page-abc.js" }])
+      )
+    ).toBe(false);
+  });
+
+  it("NON scarta i nostri file, nemmeno fuori da _next", () => {
+    expect(isInjectedScriptNoise(evt([{ filename: "app:///sw.js" }]))).toBe(false);
+    expect(isInjectedScriptNoise(evt([{ filename: "https://bridgelab.it/worker.mjs?v=2" }]))).toBe(false);
+  });
+
+  it("NON scarta un evento senza stack, né fotogrammi senza indirizzo", () => {
+    expect(isInjectedScriptNoise({ exception: { values: [{}] } })).toBe(false);
+    expect(isInjectedScriptNoise(evt([{ function: "x" }]))).toBe(false);
   });
 });

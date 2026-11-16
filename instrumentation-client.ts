@@ -6,6 +6,7 @@ import {
   SENTRY_ENABLED,
   TRACES_SAMPLE_RATE,
   isInAppBrowserNoise,
+  isInjectedScriptNoise,
   isServiceWorkerNoise,
 } from "@/lib/sentry-shared";
 
@@ -28,6 +29,10 @@ if (SENTRY_ENABLED) {
       // si scollega mentre la pagina si chiude. Nessuna riga nostra nello
       // stack, niente da correggere.
       if (isInAppBrowserNoise(event)) return null;
+
+      // Script iniettati nella pagina (la traduzione dell'app Google): lo
+      // stack punta solo al documento, mai ai nostri file .js.
+      if (isInjectedScriptNoise(event)) return null;
 
       // Difesa in profondità: nessuna email/IP nell'evento.
       if (event.user) {
