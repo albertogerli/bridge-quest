@@ -177,7 +177,7 @@ export function QuizBlock({ block, blockIndex, delay, ctx }: ContentBlockProps) 
                 !answered
                   ? isJunior
                     ? "hover:border-primary/60 hover:bg-primary/10 dark:hover:bg-primary/15 hover:scale-[1.01] cursor-pointer"
-                    : "hover:border-emerald/50 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/30 cursor-pointer"
+                    : "hover:border-primary/40 hover:bg-primary/5 cursor-pointer"
                   : ""
               }`}
             >
@@ -185,7 +185,7 @@ export function QuizBlock({ block, blockIndex, delay, ctx }: ContentBlockProps) 
                 <span
                   className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2 text-xs font-bold transition-colors ${
                     answered && isCorrectOption
-                      ? "bg-emerald text-white border-emerald"
+                      ? "bg-primary text-primary-foreground border-primary"
                       : answered && isSelected && !isCorrect
                         ? "bg-red-500 text-white border-red-500"
                         : "bg-card border-border"

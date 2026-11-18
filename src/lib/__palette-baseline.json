@@ -7,7 +7,7 @@
  "src/app/circolo/[slug]/page.tsx": 16,
  "src/app/classifica/page.tsx": 39,
  "src/app/collezione/page.tsx": 1,
- "src/app/dispense/page.tsx": 5,
+ "src/app/dispense/page.tsx": 4,
  "src/app/gioca/mano-guidata/page.tsx": 15,
  "src/app/gioca/trova-errore/page.tsx": 20,
  "src/app/impostazioni/page.tsx": 29,

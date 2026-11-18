@@ -432,7 +432,7 @@ export default function AmiciPage() {
                         <div className="flex items-center gap-2 shrink-0">
                           <button
                             onClick={() => acceptFriend(request.id)}
-                            className="flex items-center gap-1 px-3 py-2 rounded-xl bg-emerald-500 text-white text-xs font-semibold hover:bg-emerald-600 transition-colors"
+                            className="flex items-center gap-1 px-3 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-semibold hover:bg-primary/90 transition-colors"
                           >
                             <Check className="h-3.5 w-3.5" />
                             {t("Accetta")}

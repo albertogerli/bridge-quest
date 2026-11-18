@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "@/components/link";
+import { ChevronLeft } from "lucide-react";
 import { useWeeklyObjectives } from "@/hooks/use-weekly-objectives";
 import {
   Trophy, Gift, Sparkles, FileText, Spade, Star, BookOpen,
@@ -137,91 +138,38 @@ export default function ObiettiviPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#fafbfc] dark:bg-[#0f1219]">
-      {/* Header with gradient */}
-      <div className="bg-emerald-700 px-4 pt-12 pb-10">
-        <div className="max-w-lg mx-auto">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-4 transition-colors"
-          >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M15 18l-6-6 6-6" />
-            </svg>
-            <span className="text-sm font-medium">{t("Indietro")}</span>
-          </Link>
-
-          <div className="flex items-center justify-between">
-            <div>
-              <motion.h1
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4 }}
-                className="text-3xl font-bold text-white tracking-tight font-display"
-              >
-                {t("Obiettivi Settimanali")}
-              </motion.h1>
-              <motion.p
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.1 }}
-                className="text-emerald-100 mt-1 text-sm"
-              >
-                {t("Completa tutti e 3 per il bonus")}
-              </motion.p>
-            </div>
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.4, delay: 0.15 }}
-            >
-              <Badge className="bg-white/20 text-white font-semibold text-sm px-3 py-1.5 backdrop-blur-sm border border-white/10 hover:bg-white/20">
-                {weekDisplay}
-              </Badge>
-            </motion.div>
+    <div className="min-h-screen bg-background">
+      {/* Testata a foglio, come le altre pagine: era una banda verde piena con
+          il testo bianco, l'unica rimasta del sito (18/11/2026). */}
+      <div className="max-w-3xl mx-auto px-4 pt-6 lg:pt-10">
+        <Link
+          href="/"
+          className="inline-flex min-h-10 items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+        >
+          <ChevronLeft className="size-4" aria-hidden="true" />
+          {t("Indietro")}
+        </Link>
+        <div className="mt-2 flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h1 className="font-display text-3xl font-bold text-balance lg:text-4xl">{t("Obiettivi Settimanali")}</h1>
+            <p className="mt-1 text-muted-foreground">{t("Completa tutti e 3 per il bonus")}</p>
           </div>
-
-          {/* Countdown timer */}
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.2 }}
-            className="mt-4 flex items-center gap-3"
-          >
-            <div className="flex items-center gap-1.5 bg-white/10 backdrop-blur-sm rounded-xl px-3 py-2 border border-white/10">
-              <span className="text-white/70 text-xs font-medium">{t("Tempo rimasto:")}</span>
-              <div className="flex items-center gap-1">
-                <span className="bg-white/20 text-white font-bold text-xs rounded-md px-1.5 py-0.5 min-w-[24px] text-center">
-                  {timeRemaining.days}g
-                </span>
-                <span className="text-white/50 text-xs">:</span>
-                <span className="bg-white/20 text-white font-bold text-xs rounded-md px-1.5 py-0.5 min-w-[24px] text-center">
-                  {timeRemaining.hours}h
-                </span>
-                <span className="text-white/50 text-xs">:</span>
-                <span className="bg-white/20 text-white font-bold text-xs rounded-md px-1.5 py-0.5 min-w-[24px] text-center">
-                  {timeRemaining.minutes}m
-                </span>
-              </div>
-            </div>
-            <Badge className="bg-white/15 text-white/90 text-xs font-bold hover:bg-white/15 border border-white/10">
-              {completedCount}/3
-            </Badge>
-          </motion.div>
+          <span className="rounded-full border border-border bg-card px-3 py-1.5 text-sm font-semibold tabular-nums">{weekDisplay}</span>
         </div>
+        <p className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
+          <span>
+            {t("Tempo rimasto:")}{" "}
+            <span className="font-semibold tabular-nums text-foreground">
+              {timeRemaining.days}g {timeRemaining.hours}h {timeRemaining.minutes}m
+            </span>
+          </span>
+          <span aria-hidden="true">·</span>
+          <span className="font-semibold tabular-nums text-foreground">{completedCount}/3</span>
+        </p>
       </div>
 
       {/* Content */}
-      <div className="max-w-lg mx-auto px-4 -mt-5 pb-28 space-y-4">
+      <div className="max-w-3xl mx-auto px-4 mt-6 pb-28 space-y-4">
         {/* Overall progress mini bar */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}

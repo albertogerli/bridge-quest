@@ -36,11 +36,11 @@ export function NextUpCards({
         >
           <Link href={`/lezioni/${lessonId}/${nextModule.id}`}>
             <div className="group card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer">
-              <p className="text-xs font-bold text-emerald uppercase tracking-wider mb-2">
+              <p className="text-xs font-bold text-primary uppercase tracking-wider mb-2">
                 {t("Prossimo modulo")}
               </p>
               <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald text-white text-lg">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground text-lg">
                   {moduleIndex + 2}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -52,7 +52,7 @@ export function NextUpCards({
                     <span className="text-xs text-muted-foreground">{nextModule.duration} min · +{nextModule.xpReward} XP</span>
                   </div>
                 </div>
-                <svg className="h-5 w-5 text-muted-foreground/50 group-hover:text-emerald group-hover:translate-x-0.5 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                <svg className="h-5 w-5 text-muted-foreground/50 group-hover:text-primary group-hover:translate-x-0.5 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                   <polyline points="9,6 15,12 9,18" />
                 </svg>
               </div>

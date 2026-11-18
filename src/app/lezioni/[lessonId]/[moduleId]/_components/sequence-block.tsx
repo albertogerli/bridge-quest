@@ -29,7 +29,7 @@ export function SequenceBlock({ block, delay }: ContentBlockProps) {
             key={step}
             className="flex items-center gap-3 rounded-xl bg-muted/50 border border-border p-3"
           >
-            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald text-white text-xs font-bold">
+            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
               {step + 1}
             </span>
             <span className="text-[14px] text-foreground/80 font-medium">

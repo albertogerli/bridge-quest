@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { levelInfo, type Course, type World } from "@/lib/catalog";
 import { worldProgress, type CompletedModules } from "@/lib/profile-stats";
 import { useT } from "@/contexts/traduzioni-provider";
+import { useTestoSA } from "@/hooks/use-testo-sa";
 
 /** "Progresso per Corso": barra di avanzamento di ogni mondo, raggruppata per corso. */
 export function CourseProgressSection({
@@ -16,6 +17,13 @@ export function CourseProgressSection({
   completedModules: CompletedModules;
 }) {
   const t = useT();
+  // L'icona del mondo della competizione è «NT» nei dati: in italiano è SA,
+  // come nel Percorso (vedi lezioni/page.tsx).
+  const testoSA = useTestoSA();
+  const iconaMondo = (icona: unknown) => {
+    const testo = String(icona);
+    return testo === "NT" ? testoSA("1NT").slice(1) : testoSA(testo);
+  };
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
@@ -46,7 +54,7 @@ export function CourseProgressSection({
                     <div key={w.id} className="rounded-xl bg-card p-3.5 border-2 border-border shadow-sm">
                       <div className="flex items-center gap-3">
                         <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-lg ${w.iconBg}`}>
-                          {w.icon}
+                          {iconaMondo(w.icon)}
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between mb-1">

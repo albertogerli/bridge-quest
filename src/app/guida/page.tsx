@@ -393,25 +393,25 @@ export default function GuidaPage() {
 
         {/* Closing CTA */}
         <motion.div
-          className="mt-10 rounded-2xl bg-emerald-700 p-6 text-center text-white"
+          className="mt-10 rounded-2xl border border-border bg-card p-6 text-center"
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
           <p className="font-display text-xl font-bold">{t("Pronto a giocare?")}</p>
-          <p className="mx-auto mt-1 max-w-md text-sm text-white/80">
+          <p className="mx-auto mt-1 max-w-md text-sm text-muted-foreground">
             {t("Il modo migliore per imparare il bridge è giocarlo. Ti aspettiamo al tavolo.")}
           </p>
           <div className="mt-4 flex flex-wrap justify-center gap-3">
             <Link
               href="/prima-mano"
-              className="rounded-xl bg-white px-5 py-2.5 text-sm font-bold text-[#1B5E3B] transition-transform active:scale-95"
+              className="rounded-xl bg-primary px-5 py-2.5 text-sm font-bold text-primary-foreground transition-colors hover:bg-primary/90"
             >
               🃏 {t("Gioca la tua prima mano")}
             </Link>
             <Link
               href="/gioca"
-              className="rounded-xl border border-white/40 px-5 py-2.5 text-sm font-bold text-white transition-transform active:scale-95"
+              className="rounded-xl border border-border px-5 py-2.5 text-sm font-bold transition-colors hover:bg-muted"
             >
               🎮 Vai a Gioca
             </Link>

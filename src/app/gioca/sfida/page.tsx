@@ -376,7 +376,7 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
           {game.phase === "ready" && (
             <Button
               onClick={game.startGame}
-              className="rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-12 px-8 shadow-lg"
+              className="rounded-xl bg-primary hover:bg-primary/90 text-sm font-bold h-12 px-8 shadow-lg"
             >
               {t("Gioca la sfida")}
             </Button>
@@ -390,7 +390,7 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
               </Link>
               <Button
                 onClick={() => { xpSaved.current = false; game.startGame(); }}
-                className="rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-12 px-6 shadow-lg"
+                className="rounded-xl bg-primary hover:bg-primary/90 text-sm font-bold h-12 px-6 shadow-lg"
               >
                 {t("Rigioca")}
               </Button>

@@ -268,7 +268,7 @@ export function TavoloVerde({
                 aria-pressed={vista}
                 aria-label={t(l)}
                 className={`flex h-11 w-11 items-center justify-center rounded-lg text-sm font-bold transition-colors ${
-                  vista ? "bg-emerald-600 text-white" : "border border-border text-muted-foreground hover:bg-muted"
+                  vista ? "bg-primary text-primary-foreground" : "border border-border text-muted-foreground hover:bg-muted"
                 }`}
               >
                 {iniziale}

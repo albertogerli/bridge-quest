@@ -28,29 +28,22 @@ export default function AppuntiPage() {
 
   return (
     <div className="min-h-screen bg-background pb-28 lg:pb-8">
-      {/* Header */}
-      <div className="bg-figb px-5 pt-14 pb-8 lg:pt-8">
-        <div className="mx-auto max-w-6xl">
-          <Link href="/" className="text-white/70 text-sm font-medium hover:text-white transition-colors">
-            ← Home
-          </Link>
-          <div className="flex items-center gap-3 mt-3">
-            <span className="text-4xl">📝</span>
-            <div>
-              <h1 className={`font-bold text-white font-display ${isSenior ? "text-2xl" : "text-xl"}`}>
-                {t("I Miei Appunti")}
-              </h1>
-              <p className={`text-white/70 ${isSenior ? "text-base" : "text-sm"}`}>
-                {totalRules > 0
-                  ? t("{rules} regole salvate da {lessons} lezioni", { rules: totalRules, lessons: lessonIds.length })
-                  : t("Le regole che impari verranno salvate qui")}
-              </p>
-            </div>
-          </div>
-        </div>
+      {/* Testata a foglio (18/11/2026): era una banda blu piena. */}
+      <div className="mx-auto max-w-6xl px-5 pt-6 lg:pt-10">
+        <Link href="/" className="inline-flex min-h-10 items-center text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+          {t("← Home")}
+        </Link>
+        <h1 className={`mt-2 font-display font-bold text-balance ${isSenior ? "text-4xl" : "text-3xl lg:text-4xl"}`}>
+          {t("I Miei Appunti")}
+        </h1>
+        <p className={`mt-1 text-muted-foreground ${isSenior ? "text-lg" : ""}`}>
+          {totalRules > 0
+            ? t("{rules} regole salvate da {lessons} lezioni", { rules: totalRules, lessons: lessonIds.length })
+            : t("Le regole che impari verranno salvate qui")}
+        </p>
       </div>
 
-      <div className="mx-auto max-w-6xl px-5 -mt-4">
+      <div className="mx-auto max-w-6xl px-5 mt-6">
         {appunti.length === 0 ? (
           <motion.div
             initial={{ opacity: 0, y: 12 }}
@@ -65,7 +58,7 @@ export default function AppuntiPage() {
               {t("Completa i moduli delle lezioni e le regole importanti verranno salvate automaticamente qui.")}
             </p>
             <Link href="/lezioni">
-              <Button className="mt-4 rounded-xl bg-figb hover:bg-figb-dark font-bold">
+              <Button className="mt-4 rounded-xl font-bold">
                 {t("Vai alle lezioni")}
               </Button>
             </Link>

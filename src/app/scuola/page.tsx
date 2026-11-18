@@ -94,7 +94,7 @@ export default function ScuolaPage() {
                 <div
                   className={`flex h-full items-center gap-3 rounded-2xl border p-4 transition-all hover:shadow-md ${
                     c.highlight
-                      ? "border-transparent bg-emerald-700 text-white"
+                      ? "border-transparent bg-primary text-primary-foreground"
                       : "border-border bg-card"
                   }`}
                 >

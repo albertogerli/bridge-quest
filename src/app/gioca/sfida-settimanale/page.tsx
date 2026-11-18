@@ -17,7 +17,7 @@ import { useBridgeGame } from "@/hooks/use-bridge-game";
 import { usePlayableSmazzate, useSmazzate } from "@/store/use-smazzate-store";
 import type { Smazzata } from "@/lib/catalog";
 import { getLessonDisplayNumber } from "@/data/lesson-meta";
-import { useCurrentWeeklyChallenge } from "@/store/use-weekly-challenges-store";
+import { useCurrentWeeklyChallenge, useWeeklyChallengesStore } from "@/store/use-weekly-challenges-store";
 import { getIsoWeekId, getTimeRemainingInWeek, type WeeklyChallenge } from "@/lib/catalog";
 import {
   getWeeklyChallengeProgress,
@@ -68,6 +68,7 @@ function getWeeklySmazzate(pool: Smazzata[]): Smazzata[] {
 export default function SfidaSettimanale() {
   const t = useT();
   const challenge = useCurrentWeeklyChallenge();
+  const sfideCaricate = useWeeklyChallengesStore((st) => st.isLoaded);
   const [mounted, setMounted] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState({ days: 0, hours: 0, minutes: 0 });
   const [currentHandIndex, setCurrentHandIndex] = useState<number | null>(null);
@@ -92,7 +93,32 @@ export default function SfidaSettimanale() {
     ? progress.completedHands.length
     : null;
 
-  if (!mounted || !challenge) return null;
+  if (!mounted) return null;
+
+  // Nessuna sfida questa settimana (o il caricamento è fallito): prima la
+  // pagina restava bianca, senza dire niente né offrire una strada (18/11/2026).
+  if (!challenge) {
+    if (!sfideCaricate) {
+      return (
+        <div className="min-h-screen bg-background flex items-center justify-center pb-24" role="status">
+          <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" aria-hidden="true" />
+          <span className="sr-only">{t("Caricamento...")}</span>
+        </div>
+      );
+    }
+    return (
+      <div className="mx-auto max-w-lg px-4 py-16 text-center">
+        <h1 className="font-display text-2xl font-bold text-balance">{t("Questa settimana non c'è una sfida")}</h1>
+        <p className="mt-2 text-muted-foreground text-pretty">{t("La prossima comincia lunedì. Intanto c'è la Mano del giorno.")}</p>
+        <Link
+          href="/gioca/mano-del-giorno"
+          className="mt-6 inline-flex min-h-12 items-center justify-center rounded-xl bg-primary px-6 font-bold text-primary-foreground transition-colors hover:bg-primary/90"
+        >
+          {t("Gioca la Mano del Giorno")}
+        </Link>
+      </div>
+    );
+  }
 
   if (!isSmazzateLoaded) {
     return (

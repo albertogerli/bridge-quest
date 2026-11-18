@@ -53,9 +53,9 @@ function countHCP(hand: Card[]): number {
 
 type Difficulty = "facile" | "medio" | "difficile";
 const difficultyConfig = {
-  facile: { rounds: 8, options: 4, spread: 5, label: "Facile", xpMult: 0.8, color: "bg-emerald-700", shadow: "" },
-  medio: { rounds: 10, options: 4, spread: 3, label: "Medio", xpMult: 1, color: "bg-gold-dark", shadow: "" },
-  difficile: { rounds: 12, options: 6, spread: 2, label: "Difficile", xpMult: 1.5, color: "bg-red-600", shadow: "" },
+  facile: { rounds: 8, options: 4, spread: 5, label: "Facile", xpMult: 0.8, color: "border-l-emerald-600", shadow: "" },
+  medio: { rounds: 10, options: 4, spread: 3, label: "Medio", xpMult: 1, color: "border-l-gold", shadow: "" },
+  difficile: { rounds: 12, options: 6, spread: 2, label: "Difficile", xpMult: 1.5, color: "border-l-red-600", shadow: "" },
 };
 
 export default function ContaVelocePage() {
@@ -230,9 +230,9 @@ export default function ContaVelocePage() {
       <div className="pt-6 px-5 pb-24">
         <div className="mx-auto max-w-6xl">
           <div className="flex items-center gap-2 text-xs text-muted-foreground mb-4">
-            <Link href="/gioca" className="hover:text-emerald transition-colors">{t("Gioca")}</Link>
+            <Link href="/gioca" className="hover:text-primary transition-colors">{t("Gioca")}</Link>
             <span>/</span>
-            <span className="text-emerald font-semibold">{t("Conta Veloce")}</span>
+            <span className="text-primary font-semibold">{t("Conta Veloce")}</span>
           </div>
 
           <motion.div
@@ -263,13 +263,13 @@ export default function ContaVelocePage() {
                 <button
                   key={key}
                   onClick={() => startGame(key)}
-                  className={`w-full flex items-center justify-between p-4 rounded-xl ${cfg.color} text-white shadow-lg ${cfg.shadow} active:scale-[0.97] transition-transform`}
+                  className={`w-full flex items-center justify-between min-h-16 rounded-xl border border-border border-l-4 ${cfg.color} bg-card p-4 text-left text-foreground transition-colors hover:bg-muted/40`}
                 >
                   <div className="text-left">
                     <p className="font-semibold">{cfg.label}</p>
-                    <p className="text-white/70 text-sm">{cfg.rounds} mani · {cfg.options} opzioni</p>
+                    <p className="text-muted-foreground text-sm">{cfg.rounds} mani · {cfg.options} opzioni</p>
                   </div>
-                  <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
+                  <svg className="h-6 w-6 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
                 </button>
               ))}
             </div>

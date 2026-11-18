@@ -35,7 +35,7 @@ const difficultyConfig = {
     label: "Facile",
     desc: "8 domande, 30s ciascuna",
     xpMult: 0.8,
-    color: "bg-emerald-700",
+    color: "border-l-emerald-600",
     shadow: "",
   },
   medio: {
@@ -43,7 +43,7 @@ const difficultyConfig = {
     label: "Medio",
     desc: "12 domande, 30s ciascuna",
     xpMult: 1.0,
-    color: "bg-gold-dark",
+    color: "border-l-gold",
     shadow: "",
   },
   difficile: {
@@ -51,7 +51,7 @@ const difficultyConfig = {
     label: "Difficile",
     desc: "16 domande, 30s ciascuna",
     xpMult: 1.5,
-    color: "bg-red-600",
+    color: "border-l-red-600",
     shadow: "",
   },
 };
@@ -516,12 +516,12 @@ export default function QuizLampoPage() {
           <div className="flex items-center gap-2 text-xs text-muted-foreground mb-4">
             <Link
               href="/gioca"
-              className="hover:text-emerald transition-colors"
+              className="hover:text-primary transition-colors"
             >
               {t("Gioca")}
             </Link>
             <span>/</span>
-            <span className="text-emerald font-semibold">{t("Quiz Lampo")}</span>
+            <span className="text-primary font-semibold">{t("Quiz Lampo")}</span>
           </div>
 
           <motion.div
@@ -620,11 +620,11 @@ export default function QuizLampoPage() {
                 <button
                   key={key}
                   onClick={() => startGame(key)}
-                  className={`w-full flex items-center justify-between p-4 rounded-xl ${cfg.color} text-white shadow-lg ${cfg.shadow} active:scale-[0.97] transition-transform`}
+                  className={`w-full flex items-center justify-between min-h-16 rounded-xl border border-border border-l-4 ${cfg.color} bg-card p-4 text-left text-foreground transition-colors hover:bg-muted/40`}
                 >
                   <div className="text-left">
                     <p className="font-semibold">{cfg.label}</p>
-                    <p className="text-white/70 text-sm">{cfg.desc}</p>
+                    <p className="text-muted-foreground text-sm">{cfg.desc}</p>
                   </div>
                   <svg
                     className="h-6 w-6"

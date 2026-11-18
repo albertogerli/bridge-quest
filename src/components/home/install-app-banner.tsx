@@ -44,14 +44,14 @@ export function InstallAppBanner() {
                     {canInstall ? (
                       <button
                         onClick={() => install()}
-                        className="px-4 py-2 rounded-xl bg-[#1B5E3B] text-white text-xs font-bold shadow-sm hover:bg-[#14472D] transition-colors"
+                        className="px-4 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-bold hover:bg-primary/90 transition-colors"
                       >
                         {t("Installa")}
                       </button>
                     ) : isIOS ? (
                       <button
                         onClick={() => setShowIOSGuide(true)}
-                        className="px-4 py-2 rounded-xl bg-[#1B5E3B] text-white text-xs font-bold shadow-sm hover:bg-[#14472D] transition-colors"
+                        className="px-4 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-bold hover:bg-primary/90 transition-colors"
                       >
                         {t("Come fare")}
                       </button>

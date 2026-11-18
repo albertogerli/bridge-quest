@@ -498,7 +498,7 @@ function GuidedGameplay({
           {game.phase === "ready" && (
             <Button
               onClick={game.startGame}
-              className="rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-12 px-8 shadow-lg"
+              className="rounded-xl bg-primary hover:bg-primary/90 text-sm font-bold h-12 px-8 shadow-lg"
             >
               {alreadyCompleted ? "Rigioca" : "Inizia la mano"}
             </Button>
@@ -525,7 +525,7 @@ function GuidedGameplay({
               )}
               <Button
                 onClick={() => { xpSaved.current = false; game.startGame(); }}
-                className="rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-12 px-6 shadow-lg"
+                className="rounded-xl bg-primary hover:bg-primary/90 text-sm font-bold h-12 px-6 shadow-lg"
               >
                 {t("Rigioca")}
               </Button>

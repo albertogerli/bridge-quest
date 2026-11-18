@@ -1,21 +1,16 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import type { LucideIcon } from "lucide-react";
 import { useT } from "@/contexts/traduzioni-provider";
 import { AvvisoRichiesteAmicizia } from "@/components/avviso-richieste-amicizia";
 import Link from "@/components/link";
 import { useSmazzate } from "@/store/use-smazzate-store";
 import { useProfile } from "@/hooks/use-profile";
-import { useLingua } from "@/hooks/use-lingua";
 import { getWeekNum } from "@/lib/tournament-stats";
-import { getSmazzataForDate, getTodayString } from "@/lib/daily-hand";
-import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 import { CollegamentiSezione } from "@/components/collegamenti-sezione";
-import { Ventaglio } from "@/components/bridge/ventaglio";
-import { ordinaManoAlternata } from "@/lib/ordine-semi";
-import { toGamePosition } from "@/lib/bridge-engine";
-import { BarChart3, BookOpen, Brain, Calculator, CalendarDays, CheckCircle2, ChevronRight, Flame, Gavel, GraduationCap, Handshake, Hash, Link2, Megaphone, MessageCircle, MessagesSquare, Radio, Search, Spade, Swords, Target, Trophy, Users, Zap } from "lucide-react";
+import { ManoDelGiornoTessera } from "@/components/home/mano-del-giorno-tessera";
+import { BarChart3, BookOpen, Brain, Calculator, CheckCircle2, Flame, Gavel, GraduationCap, Handshake, Hash, Link2, Megaphone, MessageCircle, MessagesSquare, Radio, Search, Spade, Swords, Target, Trophy, Users, Zap } from "lucide-react";
 
 /**
  * GIOCA, RIDISEGNATA IL 18/11/2026.
@@ -131,7 +126,7 @@ export default function GiocaPage() {
       <AvvisoRichiesteAmicizia className="mb-6" />
 
       <div className="grid grid-cols-[minmax(0,1fr)] gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
-        <ManoDelGiorno pool={playableSmazzate} />
+        <ManoDelGiornoTessera pool={playableSmazzate} />
         <div className="grid content-start gap-4">
           {onboarded && (
             <Tessera voce={{ href: "/gioca/mano-guidata", Icona: Target, titolo: t("Mano Guidata"), descrizione: t("Pratica passo-passo con suggerimenti"), etichetta: `+35 ${xp}` }} />
@@ -169,57 +164,6 @@ export default function GiocaPage() {
  * pagina della Mano del giorno sceglie (stessa funzione, stessa pool), così chi
  * tocca «Gioca la mano» ritrova le carte che ha appena visto.
  */
-function ManoDelGiorno({ pool }: { pool: Parameters<typeof getSmazzataForDate>[1] }) {
-  const t = useT();
-  const { lingua } = useLingua();
-  // La data si legge dopo il primo disegno: sul server sarebbe un altro giorno.
-  const [oggi, setOggi] = useState<string | null>(null);
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- data locale letta dopo il mount: sul server il giorno può essere un altro, e il disegno non deve divergere
-    setOggi(getTodayString(Date.now()));
-  }, []);
-  const mano = useMemo(() => (oggi ? getSmazzataForDate(oggi, pool) : null), [oggi, pool]);
-  const contratto = mano ? contrattoLeggibile(mano.contract) : "";
-  const contrattoMostrato = lingua === "en" ? contratto.replace("SA", "NT") : contratto;
-  const giorno = oggi
-    ? new Date(`${oggi}T12:00:00`).toLocaleDateString(lingua === "en" ? "en-US" : "it-IT", { weekday: "long", day: "numeric", month: "long" })
-    : "";
-  const posti: Record<string, string> = { north: t("Nord"), south: t("Sud"), east: t("Est"), west: t("Ovest") };
-
-  return (
-    <section className="grid overflow-hidden rounded-2xl border border-border bg-card sm:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
-      <div className="panno-bg flex min-h-52 flex-col items-center justify-center gap-3 px-5 py-6 text-white">
-        <p className="text-xs font-semibold uppercase tracking-wider text-white/75">{giorno}</p>
-        {mano ? (
-          <>
-            <p className="font-display text-5xl font-extrabold tabular-nums" aria-label={t("Contratto {c}", { c: contrattoMostrato })}>{contrattoMostrato}</p>
-            <Ventaglio carte={ordinaManoAlternata(mano.hands[toGamePosition("south", mano.declarer)])} larghezza={44} etichetta={t("La tua mano (Sud)")} />
-          </>
-        ) : (
-          <div className="h-32" aria-hidden="true" />
-        )}
-      </div>
-      <div className="flex flex-col gap-2 p-5">
-        <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          <CalendarDays className="size-4" aria-hidden="true" />
-          {t("Mano del Giorno")}
-        </p>
-        <h2 className="font-display text-xl font-bold text-balance">{mano?.title ?? t("Una mano al giorno, uguale per tutti")}</h2>
-        <p className="text-sm text-muted-foreground text-pretty">
-          {mano ? t("Dichiarante {posto}. Una mano al giorno, uguale per tutti, con la classifica.", { posto: posti[mano.declarer] ?? mano.declarer }) : t("Una mano al giorno, uguale per tutti. Classifica!")}
-        </p>
-        <Link
-          href="/gioca/mano-del-giorno"
-          className="mt-auto inline-flex min-h-12 items-center justify-center gap-2 self-start rounded-xl bg-primary px-5 font-bold text-primary-foreground transition-colors hover:bg-primary/90"
-        >
-          {t("Gioca la mano")}
-          <ChevronRight className="size-5" aria-hidden="true" />
-        </Link>
-      </div>
-    </section>
-  );
-}
-
 function Gruppo({ titolo, voci }: { titolo: string; voci: Voce[] }) {
   return (
     <section className="mt-10">

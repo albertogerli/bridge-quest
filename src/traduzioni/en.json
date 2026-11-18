@@ -3252,5 +3252,18 @@
   "Obiettivo: {n} prese": "Target: {n} tricks",
   "Vulnerabilità: {v}": "Vulnerability: {v}",
   "Livello {n}": "Level {n}",
-  "Si apre quando completi la lezione": "Opens when you complete the lesson"
+  "Si apre quando completi la lezione": "Opens when you complete the lesson",
+  "Ciao, {nome}": "Hi, {nome}",
+  "Comincia dalla prima lezione": "Start with the first lesson",
+  "Dichiara con gli altri": "Bid with others",
+  "Il percorso": "Your path",
+  "Il tuo profilo": "Your profile",
+  "Prossimo passo: {lezione}": "Next step: {lezione}",
+  "Riprendi da qui": "Pick up here",
+  "Tutti i giochi": "All games",
+  "{n} moduli": "{n} modules",
+  "{p}% verso il livello {n}": "{p}% of the way to level {n}",
+  "← Home": "← Home",
+  "La prossima comincia lunedì. Intanto c'è la Mano del giorno.": "The next one starts on Monday. In the meantime, there's the Hand of the Day.",
+  "Questa settimana non c'è una sfida": "There's no challenge this week"
 }

@@ -166,11 +166,11 @@ function SmazzataBrowserContent() {
           className="mb-5"
         >
           <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
-            <Link href="/gioca" className="hover:text-emerald transition-colors">
+            <Link href="/gioca" className="hover:text-primary transition-colors">
               {t("Gioca")}
             </Link>
             <span>/</span>
-            <span className="text-emerald font-semibold">{t("Smazzate")}</span>
+            <span className="text-primary font-semibold">{t("Smazzate")}</span>
           </div>
           <h1 className="text-2xl font-bold text-foreground font-display">
             {t("Smazzate del Corso")}
@@ -224,7 +224,7 @@ function SmazzataBrowserContent() {
                       }}
                       className={`shrink-0 rounded-xl px-3 py-2 text-xs font-bold transition-all ${
                         selectedLesson === lesson.id
-                          ? "bg-emerald text-white shadow-md"
+                          ? "bg-primary text-primary-foreground shadow-md"
                           : "bg-muted text-muted-foreground hover:bg-muted/70"
                       }`}
                     >
@@ -269,7 +269,7 @@ function SmazzataBrowserContent() {
                   onClick={() => setSelectedSmazzata(smazzata)}
                   className={`w-full text-left card-elevated rounded-2xl bg-card p-4 transition-all ${
                     isSelected
-                      ? "ring-2 ring-emerald shadow-lg"
+                      ? "ring-2 ring-primary shadow-lg"
                       : "hover:shadow-lg"
                   }`}
                 >
@@ -336,7 +336,7 @@ function SmazzataBrowserContent() {
 
               <Button
                 onClick={() => setIsPlaying(true)}
-                className="w-full rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-12 shadow-lg"
+                className="w-full rounded-xl bg-primary hover:bg-primary/90 text-sm font-bold h-12 shadow-lg"
               >
                 {t("Gioca questa mano")}
               </Button>
@@ -735,13 +735,13 @@ function PlayingView({
             <div className="inline-flex rounded-xl border border-border bg-card p-0.5 shadow-sm">
               <button
                 onClick={() => setMode("declare")}
-                className={`min-h-10 rounded-lg px-3.5 py-1.5 text-sm font-bold transition-colors ${mode === "declare" ? "bg-emerald text-white" : "text-muted-foreground hover:bg-muted/50"}`}
+                className={`min-h-10 rounded-lg px-3.5 py-1.5 text-sm font-bold transition-colors ${mode === "declare" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted/50"}`}
               >
                 {t("Dichiarante")}
               </button>
               <button
                 onClick={() => setMode("defend")}
-                className={`min-h-10 rounded-lg px-3.5 py-1.5 text-sm font-bold transition-colors ${mode === "defend" ? "bg-emerald text-white" : "text-muted-foreground hover:bg-muted/50"}`}
+                className={`min-h-10 rounded-lg px-3.5 py-1.5 text-sm font-bold transition-colors ${mode === "defend" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted/50"}`}
               >
                 {t("Difesa")}
               </button>
@@ -754,7 +754,7 @@ function PlayingView({
           <div className="mb-3 flex justify-center">
             <Button
               onClick={game.startGame}
-              className="rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-11 px-8 shadow-lg"
+              className="rounded-xl bg-primary hover:bg-primary/90 text-sm font-bold h-11 px-8 shadow-lg"
             >
               {t("Inizia a giocare")}
             </Button>
@@ -898,7 +898,7 @@ function PlayingView({
           {game.phase === "ready" && !isMobile && (
             <Button
               onClick={game.startGame}
-              className="rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-12 px-8 shadow-lg"
+              className="rounded-xl bg-primary hover:bg-primary/90 text-sm font-bold h-12 px-8 shadow-lg"
             >
               {t("Inizia a giocare")}
             </Button>
@@ -914,7 +914,7 @@ function PlayingView({
               </Button>
               <Button
                 onClick={game.startGame}
-                className="rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-12 px-6 shadow-lg"
+                className="rounded-xl bg-primary hover:bg-primary/90 text-sm font-bold h-12 px-6 shadow-lg"
               >
                 {t("Rigioca")}
               </Button>

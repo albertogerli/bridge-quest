@@ -156,7 +156,7 @@ function SfidaAmicoContent() {
             className="mb-8"
           >
             <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
-              <Link href="/gioca" className="hover:text-emerald transition-colors font-bold">
+              <Link href="/gioca" className="hover:text-primary transition-colors font-bold">
                 {t("Gioca")}
               </Link>
               <span>/</span>

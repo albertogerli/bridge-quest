@@ -65,7 +65,7 @@ export function BidSelectBlock({ block, blockIndex, delay, ctx }: ContentBlockPr
           const suitInfo = suitSymbols[bidSuit];
           let bidCls = "bg-card border-border hover:border-primary/60 hover:bg-primary/10 dark:hover:bg-primary/15";
           if (bsAnswered) {
-            if (isCorrectBid) bidCls = "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-400 ring-2 ring-emerald/30";
+            if (isCorrectBid) bidCls = "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-400 ring-2 ring-primary/30";
             else if (isSelected && !bsCorrect) bidCls = "bg-red-50 dark:bg-red-950/40 border-red-400";
             else bidCls = "bg-muted/50 border-border opacity-50";
           }

@@ -43,7 +43,7 @@ export function CardSelectBlock({ block, blockIndex, delay, ctx }: ContentBlockP
           const color = suitCh === "♥" || suitCh === "♦" ? "text-red-600" : suitCh === "♣" ? "text-green-700" : "text-gray-900";
           let cardCls = "bg-white border-gray-200 hover:border-emerald hover:shadow-md";
           if (csAnswered) {
-            if (isCorrectCard) cardCls = "bg-emerald-50 border-emerald-400 ring-2 ring-emerald/30";
+            if (isCorrectCard) cardCls = "bg-emerald-50 border-emerald-400 ring-2 ring-primary/30";
             else if (isSelected && !csCorrect) cardCls = "bg-red-50 border-red-400";
             else cardCls = "bg-gray-50 border-gray-200 opacity-50";
           }

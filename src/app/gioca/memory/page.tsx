@@ -216,11 +216,11 @@ export default function MemoryPage() {
       <div className="pt-6 px-5 pb-24">
         <div className="mx-auto max-w-6xl">
           <div className="flex items-center gap-2 text-xs text-muted-foreground mb-4">
-            <Link href="/gioca" className="hover:text-emerald transition-colors font-bold">
+            <Link href="/gioca" className="hover:text-primary transition-colors font-bold">
               {t("Gioca")}
             </Link>
             <span>/</span>
-            <span className="text-emerald font-semibold">{t("Memory Bridge")}</span>
+            <span className="text-primary font-semibold">{t("Memory Bridge")}</span>
           </div>
 
           <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }}>
@@ -262,20 +262,20 @@ export default function MemoryPage() {
               <h3 className="font-semibold text-foreground mb-3">{t("Scegli difficoltà")}</h3>
               <div className="space-y-2">
                 {([
-                  { diff: 4 as const, label: "Facile", desc: "4 coppie (8 carte)", color: "bg-emerald-700", shadow: "" },
-                  { diff: 6 as const, label: "Medio", desc: "6 coppie (12 carte)", color: "bg-gold-dark", shadow: "" },
-                  { diff: 8 as const, label: "Difficile", desc: "8 coppie (16 carte)", color: "bg-red-600", shadow: "" },
-                ]).map(({ diff, label, desc, color, shadow }) => (
+                  { diff: 4 as const, label: "Facile", desc: "4 coppie (8 carte)", color: "border-l-emerald-600" },
+                  { diff: 6 as const, label: "Medio", desc: "6 coppie (12 carte)", color: "border-l-gold" },
+                  { diff: 8 as const, label: "Difficile", desc: "8 coppie (16 carte)", color: "border-l-red-600" },
+                ]).map(({ diff, label, desc, color }) => (
                   <button
                     key={diff}
                     onClick={() => startGame(diff)}
-                    className={`w-full flex items-center justify-between p-4 rounded-xl ${color} text-white shadow-lg ${shadow} active:scale-[0.97] transition-transform ${isSenior ? "text-lg" : ""}`}
+                    className={`w-full flex items-center justify-between min-h-16 rounded-xl border border-border border-l-4 ${color} bg-card p-4 text-left text-foreground transition-colors hover:bg-muted/40 ${isSenior ? "text-lg" : ""}`}
                   >
                     <div className="text-left">
                       <p className="font-semibold">{label}</p>
-                      <p className="text-white/70 text-sm">{desc}</p>
+                      <p className="text-muted-foreground text-sm">{desc}</p>
                     </div>
-                    <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
+                    <svg className="h-6 w-6 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
                   </button>
                 ))}
               </div>

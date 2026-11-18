@@ -63,10 +63,10 @@ export function InstructorCard() {
   if (loading || !user || !isIstruttore) return null;
 
   return (
-    <section className="px-5 mt-6" aria-labelledby="riquadro-istruttori">
+    <section aria-labelledby="riquadro-istruttori">
       <h2
         id="riquadro-istruttori"
-        className="text-sm font-bold uppercase tracking-wider text-muted-foreground mb-3"
+        className="mb-3 font-display text-lg font-bold"
       >
         {t("Per insegnare")}
       </h2>

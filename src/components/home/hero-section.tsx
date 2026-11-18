@@ -3,7 +3,7 @@
 import { useT } from "@/contexts/traduzioni-provider";
 import { useLingua } from "@/hooks/use-lingua";
 import Link from "@/components/link";
-import { Play, Target, Zap } from "lucide-react";
+import { BookOpen, ChevronRight, Play } from "lucide-react";
 
 interface HeroStats {
   level: number;
@@ -21,89 +21,109 @@ interface NextModule {
   lessonIcon: string;
 }
 
-interface HeroSectionProps {
-  stats: HeroStats;
-  totalModulesCompleted: number;
-  handsPlayed: number;
-  hasStarted: boolean;
-  nextModule: NextModule | null;
+/**
+ * La testata della home di chi non segue un corso (seconda versione,
+ * 18/11/2026).
+ *
+ * La prima era un foglio unico con il saluto, quattro numeri in quattro
+ * caselle grigie, la barra del livello e un pulsante blu largo quanto lo
+ * schermo: su un monitor diventava una fascia di 1000 pixel con una parola
+ * dentro. Adesso sono due cose diverse, ciascuna dove serve: il saluto e il
+ * «riprendi» in alto nella colonna principale, i numeri nella colonna a lato.
+ */
+export function Saluto({ nome }: { nome: string | null }) {
+  const t = useT();
+  const primo = nome?.trim().split(/\s+/)[0];
+  return (
+    <header>
+      <h1 className="font-display text-3xl font-bold text-balance lg:text-4xl">
+        {primo ? t("Ciao, {nome}", { nome: primo }) : t("Ciao")}
+      </h1>
+    </header>
+  );
 }
 
-/**
- * La testata della home di chi non segue un corso.
- *
- * Era una banda di panno verde sfumato con il marchio, i numeri in bianco e un
- * pulsante «squishy»: il panno senza carte, che dal 18/11/2026 si usa solo dove
- * ci sono carte da guardare. Adesso è un foglio: il saluto, il livello in una
- * pillola, i quattro numeri e un solo pulsante blu, «Riprendi» o «Inizia».
- */
-export function HeroSection({
+export function RiprendiLezione({ hasStarted, nextModule }: { hasStarted: boolean; nextModule: NextModule | null }) {
+  const t = useT();
+  const riprendi = hasStarted && nextModule;
+  const href = riprendi ? `/lezioni/${nextModule.lessonId}/${nextModule.moduleId}` : "/lezioni";
+  return (
+    <section className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-5 sm:flex-row sm:items-center sm:p-6">
+      <span className="flex size-14 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-2xl text-primary" aria-hidden="true">
+        {riprendi && nextModule.lessonIcon ? nextModule.lessonIcon : <BookOpen className="size-6" />}
+      </span>
+      <div className="min-w-0 flex-1">
+        <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          {riprendi ? t("Riprendi da qui") : t("Il percorso")}
+        </p>
+        <h2 className="mt-0.5 font-display text-xl font-bold text-balance">
+          {riprendi ? nextModule.moduleTitle : t("Comincia dalla prima lezione")}
+        </h2>
+      </div>
+      <Link
+        href={href}
+        className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-primary px-6 font-bold text-primary-foreground transition-colors hover:bg-primary/90"
+      >
+        <Play className="size-4" aria-hidden="true" />
+        {riprendi ? t("Riprendi") : t("Inizia")}
+      </Link>
+    </section>
+  );
+}
+
+export function IlTuoLivello({
   stats,
   totalModulesCompleted,
   handsPlayed,
-  hasStarted,
-  nextModule,
-}: HeroSectionProps) {
+}: {
+  stats: HeroStats;
+  totalModulesCompleted: number;
+  handsPlayed: number;
+}) {
   const t = useT();
   const { lingua } = useLingua();
+  const locale = lingua === "en" ? "en-US" : "it-IT";
+  const giro = 2 * Math.PI * 26;
   const numeri = [
-    { valore: stats.xp.toLocaleString(lingua === "en" ? "en-US" : "it-IT"), etichetta: "XP" },
-    { valore: String(stats.streak), etichetta: t("Streak") },
+    { valore: stats.xp.toLocaleString(locale), etichetta: t("Totale XP") },
+    { valore: t("{n} gg", { n: stats.streak }), etichetta: t("Streak") },
     { valore: String(totalModulesCompleted), etichetta: t("Moduli") },
     { valore: String(handsPlayed), etichetta: t("Mani") },
   ];
   return (
-    <section className="px-4 pt-6 sm:px-5 lg:pt-10">
-      <div className="mx-auto grid max-w-6xl gap-4 rounded-2xl border border-border bg-card p-5 sm:p-6">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <h1 className="font-display text-3xl font-extrabold tracking-tight">{t("Ciao")}</h1>
-          <span className="flex items-center gap-2 rounded-full border border-border px-3 py-1.5 text-sm">
-            <Zap className="size-4 text-gold" aria-hidden="true" />
-            <span className="font-bold tabular-nums">{t("Livello {n}", { n: stats.level })}</span>
-            <span className="text-muted-foreground">{stats.levelName}</span>
-          </span>
+    <section className="rounded-2xl border border-border bg-card p-5">
+      <div className="flex items-center gap-4">
+        <div className="relative flex size-16 shrink-0 items-center justify-center">
+          <svg className="absolute inset-0 -rotate-90" viewBox="0 0 60 60" aria-hidden="true">
+            <circle cx="30" cy="30" r="26" fill="none" strokeWidth="5" className="stroke-muted" />
+            <circle
+              cx="30" cy="30" r="26" fill="none" strokeWidth="5" strokeLinecap="round"
+              className="stroke-primary"
+              strokeDasharray={`${(stats.levelProgress / 100) * giro} ${giro}`}
+            />
+          </svg>
+          <span className="font-display text-xl font-bold tabular-nums">{stats.level}</span>
         </div>
-
-        <dl className="grid grid-cols-4 gap-2">
-          {numeri.map((n) => (
-            <div key={n.etichetta} className="rounded-xl bg-muted/50 px-2 py-2.5 text-center">
-              <dd className="text-lg font-bold leading-none tabular-nums">{n.valore}</dd>
-              <dt className="mt-1 text-xs font-semibold uppercase text-muted-foreground">{n.etichetta}</dt>
-            </div>
-          ))}
-        </dl>
-
-        <div>
-          <div className="mb-1 flex items-center justify-between text-xs">
-            <span className="font-semibold text-muted-foreground tabular-nums">{t("Livello {n}", { n: stats.level })} → {stats.level + 1}</span>
-            <span className="font-bold tabular-nums">{stats.xpInLevel} XP</span>
-          </div>
-          <div className="h-1.5 overflow-hidden rounded-full bg-muted">
-            <div className="h-full rounded-full bg-primary" style={{ width: `${stats.levelProgress}%` }} />
-          </div>
+        <div className="min-w-0">
+          <h2 className="font-display text-lg font-bold">{t("Livello {n}", { n: stats.level })}</h2>
+          <p className="text-sm font-semibold">{stats.levelName}</p>
+          <p className="text-sm text-muted-foreground tabular-nums">
+            {t("{p}% verso il livello {n}", { p: stats.levelProgress, n: stats.level + 1 })}
+          </p>
         </div>
-
-        {hasStarted && nextModule ? (
-          <Link
-            href={`/lezioni/${nextModule.lessonId}/${nextModule.moduleId}`}
-            className="flex min-h-14 items-center gap-3 rounded-xl bg-primary px-5 py-3 text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            <span className="min-w-0 flex-1">
-              <span className="block text-xs font-bold uppercase tracking-wider text-primary-foreground/75">{t("Riprendi")}</span>
-              <span className="block truncate font-bold">{nextModule.moduleTitle}</span>
-            </span>
-            <Play className="size-5 shrink-0" aria-hidden="true" />
-          </Link>
-        ) : (
-          <Link
-            href="/lezioni"
-            className="flex min-h-14 items-center justify-center gap-2 rounded-xl bg-primary px-5 font-bold text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            <Target className="size-5" aria-hidden="true" />
-            {t("Inizia il tuo viaggio")}
-          </Link>
-        )}
       </div>
+      <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 border-t border-border pt-4">
+        {numeri.map((n) => (
+          <div key={n.etichetta}>
+            <dt className="text-xs text-muted-foreground">{n.etichetta}</dt>
+            <dd className="text-lg font-bold tabular-nums">{n.valore}</dd>
+          </div>
+        ))}
+      </dl>
+      <Link href="/profilo" className="mt-4 flex min-h-10 items-center gap-1 text-sm font-semibold text-primary hover:underline">
+        {t("Il tuo profilo")}
+        <ChevronRight className="size-4" aria-hidden="true" />
+      </Link>
     </section>
   );
 }

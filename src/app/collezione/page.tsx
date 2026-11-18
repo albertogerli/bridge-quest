@@ -234,7 +234,7 @@ export default function CollezionePage() {
               {t("Progresso collezione")}
             </p>
             <p className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
-              {Math.round((unlockedCount / totalCards) * 100)}%
+              {totalCards > 0 ? Math.round((unlockedCount / totalCards) * 100) : 0}%
             </p>
           </div>
           <div className="h-2.5 rounded-full bg-muted overflow-hidden">
@@ -242,7 +242,7 @@ export default function CollezionePage() {
               className="h-full rounded-full bg-emerald-700"
               initial={{ width: 0 }}
               animate={{
-                width: `${(unlockedCount / totalCards) * 100}%`,
+                width: `${totalCards > 0 ? (unlockedCount / totalCards) * 100 : 0}%`,
               }}
               transition={{ delay: 0.3, duration: 0.8 }}
             />

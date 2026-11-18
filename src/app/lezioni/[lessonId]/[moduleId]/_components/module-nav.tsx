@@ -66,7 +66,7 @@ export function ModuleNav({
               disabled={!canAdvance}
               className={`flex-1 rounded-xl font-bold shadow-lg ${
                 canAdvance
-                  ? "bg-emerald hover:bg-emerald-dark shadow-emerald/25"
+                  ? "bg-primary hover:bg-primary/90 shadow-emerald/25"
                   : "bg-muted-foreground/30 cursor-not-allowed shadow-none"
               } ${profile.profile === "senior" ? "h-14 text-base" : "h-12"}`}
             >
@@ -81,7 +81,7 @@ export function ModuleNav({
               }
               className="flex-1"
             >
-              <Button className="w-full rounded-xl bg-emerald hover:bg-emerald-dark h-12 font-bold shadow-lg shadow-emerald/25">
+              <Button className="w-full rounded-xl bg-primary hover:bg-primary/90 h-12 font-bold shadow-lg shadow-emerald/25">
                 {nextModule ? "Prossimo modulo" : "Completa lezione"} →
               </Button>
             </Link>

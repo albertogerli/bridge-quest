@@ -306,7 +306,7 @@ export function PendingChallengesBanner() {
                       <>
                         <button
                           onClick={() => handleAccept(challenge.id)}
-                          className="rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1.5 text-xs font-bold transition-colors flex items-center gap-1"
+                          className="rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground px-3 py-1.5 text-xs font-bold transition-colors flex items-center gap-1"
                         >
                           <Check className="w-3 h-3" />
                           {t("Accetta")}

@@ -63,7 +63,7 @@ export default function LessonDetailPage({
     return (
       <div className="pt-10 px-5 text-center">
         <p className="text-muted-foreground">{t("Lezione non trovata")}</p>
-        <Link href="/lezioni" className="text-emerald font-bold text-sm mt-2 inline-block">
+        <Link href="/lezioni" className="text-primary font-bold text-sm mt-2 inline-block">
           {t("Torna alle lezioni")}
         </Link>
       </div>
@@ -93,11 +93,11 @@ export default function LessonDetailPage({
           animate={{ opacity: 1 }}
           className="flex items-center gap-2 text-xs text-muted-foreground mb-4"
         >
-          <Link href="/lezioni" className="hover:text-emerald transition-colors">
+          <Link href="/lezioni" className="hover:text-primary transition-colors">
             {t("Lezioni")}
           </Link>
           <span>/</span>
-          <span className="text-emerald font-semibold">Lezione {lessonNumber}</span>
+          <span className="text-primary font-semibold">Lezione {lessonNumber}</span>
         </motion.div>
 
         {/* Header */}
@@ -246,7 +246,7 @@ export default function LessonDetailPage({
                   <div
                     className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-xl ${
                       isCompleted
-                        ? "bg-emerald text-white"
+                        ? "bg-primary text-primary-foreground"
                         : isLocked
                         ? "bg-muted text-muted-foreground/50"
                         : "bg-muted text-muted-foreground"
@@ -301,7 +301,7 @@ export default function LessonDetailPage({
                     </div>
                   ) : (
                     <svg
-                      className="h-5 w-5 text-muted-foreground/50 shrink-0 group-hover:text-emerald group-hover:translate-x-0.5 transition-all"
+                      className="h-5 w-5 text-muted-foreground/50 shrink-0 group-hover:text-primary group-hover:translate-x-0.5 transition-all"
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
@@ -355,7 +355,7 @@ export default function LessonDetailPage({
             >
               <div className="group card-clean card-interactive cursor-pointer rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900 p-4">
                 <div className="flex items-center gap-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald text-white text-xl">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground text-xl">
                     🃏
                   </div>
                   <div className="flex-1 min-w-0">
@@ -373,7 +373,7 @@ export default function LessonDetailPage({
                     </p>
                   </div>
                   <svg
-                    className="h-5 w-5 text-emerald/60 shrink-0 group-hover:text-emerald group-hover:translate-x-0.5 transition-all"
+                    className="h-5 w-5 text-primary/60 shrink-0 group-hover:text-primary group-hover:translate-x-0.5 transition-all"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"

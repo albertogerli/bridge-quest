@@ -20,7 +20,7 @@ const diffConfig = {
     label: "Facile",
     desc: "8 secondi per decidere",
     xpMult: 0.8,
-    color: "bg-emerald-700",
+    color: "border-l-emerald-600",
     shadow: "",
   },
   medio: {
@@ -28,7 +28,7 @@ const diffConfig = {
     label: "Medio",
     desc: "5 secondi per decidere",
     xpMult: 1,
-    color: "bg-gold-dark",
+    color: "border-l-gold",
     shadow: "",
   },
   difficile: {
@@ -36,7 +36,7 @@ const diffConfig = {
     label: "Difficile",
     desc: "3 secondi per decidere",
     xpMult: 1.5,
-    color: "bg-red-600",
+    color: "border-l-red-600",
     shadow: "",
   },
 };
@@ -409,11 +409,11 @@ export default function ImpassePage() {
                 <button
                   key={key}
                   onClick={() => startGame(key)}
-                  className={`w-full flex items-center justify-between p-4 rounded-xl ${c.color} text-white shadow-lg ${c.shadow} active:scale-[0.97] transition-transform`}
+                  className={`w-full flex items-center justify-between min-h-16 rounded-xl border border-border border-l-4 ${c.color} bg-card p-4 text-left text-foreground transition-colors hover:bg-muted/40`}
                 >
                   <div className="text-left">
                     <p className="font-semibold">{c.label}</p>
-                    <p className="text-white/70 text-sm">{c.desc}</p>
+                    <p className="text-muted-foreground text-sm">{c.desc}</p>
                   </div>
                   <svg
                     className="h-6 w-6"

@@ -144,7 +144,7 @@ export function PlayingView({
           <div className="mb-3 flex justify-center">
             <Button
               onClick={game.startGame}
-              className="rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-11 px-8 shadow-lg"
+              className="rounded-xl bg-primary hover:bg-primary/90 text-sm font-bold h-11 px-8 shadow-lg"
             >
               {t("Inizia a giocare")}
             </Button>
@@ -276,7 +276,7 @@ export function PlayingView({
           {game.phase === "ready" && !isMobile && (
             <Button
               onClick={game.startGame}
-              className="rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-12 px-8 shadow-lg"
+              className="rounded-xl bg-primary hover:bg-primary/90 text-sm font-bold h-12 px-8 shadow-lg"
             >
               {t("Inizia a giocare")}
             </Button>
@@ -292,7 +292,7 @@ export function PlayingView({
               </Button>
               <Button
                 onClick={replay}
-                className="rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-12 px-6 shadow-lg"
+                className="rounded-xl bg-primary hover:bg-primary/90 text-sm font-bold h-12 px-6 shadow-lg"
               >
                 {t("Rigioca")}
               </Button>

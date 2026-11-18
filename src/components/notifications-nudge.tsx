@@ -55,8 +55,8 @@ export function NotificationsNudge({ show = true }: { show?: boolean }) {
   if (!visible && !justEnabled) return null;
 
   return (
-    <section className="px-4 sm:px-5 pt-4">
-      <div className="mx-auto max-w-3xl">
+    <section>
+      <div>
         <AnimatePresence mode="wait">
           {justEnabled ? (
             <motion.div

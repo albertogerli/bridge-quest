@@ -128,7 +128,7 @@ export default function ForumPage() {
             <p className="text-sm text-muted-foreground mt-0.5">{t("La community dei bridgisti")}</p>
           </div>
           <Link href="/forum/nuovo">
-            <Button className="h-10 px-4 rounded-xl bg-emerald-700 font-bold text-sm shadow-lg">
+            <Button className="h-10 px-4 rounded-xl font-bold text-sm">
               <svg className="w-4 h-4 mr-1.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                 <path d="M12 5v14M5 12h14" />
               </svg>
@@ -145,7 +145,7 @@ export default function ForumPage() {
               onClick={() => setCategory(key)}
               className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
                 category === key
-                  ? "bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300"
+                  ? "bg-primary/10 text-primary"
                   : "bg-muted/50 text-muted-foreground hover:bg-muted"
               }`}
             >
@@ -196,7 +196,7 @@ export default function ForumPage() {
             <p className="text-lg font-bold text-foreground">{t("Nessun post ancora")}</p>
             <p className="text-sm text-muted-foreground mt-1">{t("Sii il primo a scrivere!")}</p>
             <Link href="/forum/nuovo">
-              <Button className="mt-4 h-10 px-6 rounded-xl bg-emerald-700 font-bold text-sm">
+              <Button className="mt-4 h-10 px-6 rounded-xl font-bold text-sm">
                 {t("Scrivi il primo post")}
               </Button>
             </Link>

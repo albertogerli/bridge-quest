@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useMemo, useCallback, Suspense } from "react";
 import dynamic from "next/dynamic";
-import Link from "@/components/link";
 import { motion, AnimatePresence } from "motion/react";
 import { useCatalog } from "@/store/use-catalog-store";
 import { useAchievementChecker, AchievementPopup } from "@/components/achievement-popup";
@@ -14,7 +13,11 @@ import { MarketingConsentBanner } from "@/components/marketing-consent-banner";
 import { NotificationsNudge } from "@/components/notifications-nudge";
 import { useBeginnerStatus } from "@/hooks/use-beginner-status";
 import { LostCard } from "@/components/beginner/lost-card";
-import { HeroSection } from "@/components/home/hero-section";
+import { IlTuoLivello, RiprendiLezione, Saluto } from "@/components/home/hero-section";
+import { RigaLink } from "@/components/home/riga-link";
+import { ManoDelGiornoTessera } from "@/components/home/mano-del-giorno-tessera";
+import { Button } from "@/components/ui/button";
+import { usePlayableSmazzate } from "@/store/use-smazzate-store";
 import { LicitaSection } from "@/components/home/licita-section";
 import { HomeFooter } from "@/components/home/home-footer";
 import { ReferralHandler } from "@/components/home/referral-handler";
@@ -35,7 +38,7 @@ import { SuggestedNextStep } from "@/components/home/banners/suggested-next-step
 import { FindAsdBanner } from "@/components/home/banners/find-asd-banner";
 import { useLocalStats } from "@/hooks/use-local-stats";
 import { useGameStore, useHasHydrated } from "@/store/use-game-store";
-import { BookOpen, GraduationCap, Spade, Zap } from "lucide-react";
+import { GraduationCap, Hourglass, MapPin, Ticket, Zap } from "lucide-react";
 import { reportError, segnalaSalvoRete } from "@/lib/report-error";
 import {
   CHIAVE_VUOLE_INSEGNARE,
@@ -70,6 +73,7 @@ const WeeklyRecapModal = dynamic(
 
 export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
   const t = useT();
+  const manoPool = usePlayableSmazzate();
   const { user, profile: authProfile, loading: authLoading, profiloLetto } = useSharedAuth();
   // Solo per chi ha fatto l'accesso: vedi `useEnrolledClasses`.
   const { classes: classiIscritte, isLoaded: classiCaricate, error: erroreClassi } = useEnrolledClasses(!!user);
@@ -414,69 +418,58 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
     );
   }
 
-  return (
-    <div>
-      <AvvisoRichiesteAmicizia className="mx-4 mt-4 sm:mx-auto sm:max-w-6xl" />
+  const avvisi = (
+    <>
+      <AvvisoRichiesteAmicizia />
       {/*
         In attesa dell'insegnante: la prima cosa da sapere, prima di tutto il
         resto della bacheca. Porta alla classe, dove si vede lo stato.
       */}
       {!insegna && classiIscritte.length === 0 && richiesteInAttesa && richiesteInAttesa.length > 0 && (
-        <Link
+        <RigaLink
           href={`/classi/${richiesteInAttesa[0].class_id}`}
-          className="mx-4 mt-4 block rounded-2xl border border-amber-400/60 bg-card p-4 sm:mx-auto sm:max-w-6xl"
-        >
-          <span className="block text-sm font-semibold text-foreground">
-            {t("La tua richiesta per «{nome}» è in attesa dell'insegnante", { nome: richiesteInAttesa[0].nome })}
-          </span>
-          <span className="block text-xs text-muted-foreground">
-            {t("Appena ti accetta, trovi qui la tua classe con i compiti.")}
-          </span>
-        </Link>
+          Icona={Hourglass}
+          titolo={t("La tua richiesta per «{nome}» è in attesa dell'insegnante", { nome: richiesteInAttesa[0].nome })}
+          testo={t("Appena ti accetta, trovi qui la tua classe con i compiti.")}
+        />
       )}
+      {/* UNA richiesta alla volta: la regola e la priorità stanno in
+          `richiesta-home.ts`, con i suoi test. */}
+      {richiesta === "ospite" && <GuestLoginReminder />}
+      {richiesta === "prima-mano" && <PrimaManoBanner />}
+      {/* Chi ha chiesto di insegnare e aspetta: la strada per il portale resta in vista. */}
+      {user && !insegna && vaVersoIlPortale && (
+        <RigaLink
+          href="/diventa-istruttore"
+          Icona={GraduationCap}
+          titolo={statoRichiestaInsegnante === "pending"
+            ? t("La tua richiesta per il Portale Insegnanti è in attesa di approvazione.")
+            : t("Hai scelto di insegnare: manca solo la richiesta per il Portale Insegnanti.")}
+          testo={statoRichiestaInsegnante === "pending" ? t("Vedi la richiesta →") : t("Inviala ora →")}
+        />
+      )}
+      {richiesta === "notifiche" && <NotificationsNudge />}
+    </>
+  );
+
+  /*
+   * LA HOME DI CHI NON SEGUE UN CORSO (seconda versione, 18/11/2026).
+   *
+   * Prima erano dieci blocchi impilati, ognuno con la sua larghezza massima
+   * (max-w-lg, 3xl, 5xl, 6xl): su un monitor non stavano allineati fra loro e
+   * pesavano tutti uguale. Adesso è come la home di chi ha un corso: il saluto,
+   * una colonna principale con le cose da fare (riprendere, la mano del giorno,
+   * la licita con gli altri) e una colonna a lato con le cose da guardare
+   * (livello, codice del corso, premi). Sul telefono la colonna a lato scende
+   * sotto. Percorso, Gioca e Scuola non ci sono più come tessere: sono già
+   * nella barra di navigazione, in alto a sinistra o in basso.
+   */
+  return (
+    <div className="mx-auto w-full max-w-6xl px-4 pb-10 pt-6 sm:px-6 lg:pt-10">
       {/* Referral code handler (reads ?ref= from URL) */}
       <Suspense fallback={null}>
         <ReferralHandler onReferralBonus={handleReferralBonus} />
       </Suspense>
-
-      {/*
-        La strada di ritorno. Senza, «vai alla bacheca» sarebbe una porta a
-        senso unico: la preferenza resta salvata, e l'insegnante si ritroverebbe
-        la bacheca dell'allievo per sempre senza sapere perché.
-      */}
-      {insegna && (
-        <div className="mx-auto max-w-5xl px-4 pt-4 sm:px-6">
-          <button
-            onClick={() => {
-              ricordaPreferenzaBacheca(false);
-              setVuoleLaBacheca(false);
-            }}
-            className="flex w-full items-center gap-2 rounded-xl border border-border bg-muted/40 px-4 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-muted"
-          >
-            <GraduationCap className="h-4 w-4 shrink-0" aria-hidden="true" />
-            {t("Torna all'area insegnanti")}
-          </button>
-        </div>
-      )}
-      {/*
-        Anche chi segue un corso deve poter tornare. Il pulsante c'era solo per
-        gli insegnanti: l'allievo che sceglieva «il resto del portale» restava
-        sulla bacheca generale fino alla chiusura del browser (feedback 5).
-      */}
-      {!insegna && corsiIscritti.length > 0 && (
-        <div className="mx-auto max-w-5xl px-4 pt-4 sm:px-6">
-          <button
-            onClick={() => {
-              ricordaPreferenzaBacheca(false);
-              setVuoleLaBacheca(false);
-            }}
-            className="flex w-full items-center gap-2 rounded-xl border border-border bg-muted/40 px-4 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-muted"
-          >
-            <GraduationCap className="h-4 w-4 shrink-0" aria-hidden="true" />
-            {t("Torna al tuo corso")}
-          </button>
-        </div>
-      )}
 
       {/* Marketing consent banner (logged-in users, shown once) */}
       <MarketingConsentBanner
@@ -513,131 +506,106 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
           title={profile.weeklyRecapTitle}
         />
       )}
-      {/* ===== HERO — compact green header with inline stats ===== */}
-      <HeroSection
-        stats={stats}
-        totalModulesCompleted={totalModulesCompleted}
-        handsPlayed={handsPlayed}
-        hasStarted={hasStarted}
-        nextModule={nextModule}
-      />
-
-      {/* UNA richiesta alla volta: la regola e la priorità stanno in
-          `richiesta-home.ts`, con i suoi test. Prima erano quattro
-          condizioni sparse che non sapevano l'una dell'altra, e chi era
-          registrato e senza ASD ne vedeva due in fila. */}
-      {richiesta === "ospite" && <GuestLoginReminder />}
-      {richiesta === "prima-mano" && <PrimaManoBanner />}
-
-      {/* Chi ha chiesto di insegnare e aspetta: la strada per il portale resta in vista. */}
-      {user && !insegna && vaVersoIlPortale && (
-        <Link
-          href="/diventa-istruttore"
-          className="block rounded-2xl border border-primary/20 bg-primary/5 px-4 py-3 text-sm transition-colors hover:bg-primary/10"
-        >
-          <span className="font-semibold text-foreground">
-            {statoRichiestaInsegnante === "pending"
-              ? t("La tua richiesta per il Portale Insegnanti è in attesa di approvazione.")
-              : t("Hai scelto di insegnare: manca solo la richiesta per il Portale Insegnanti.")}
-          </span>{" "}
-          <span className="text-primary">
-            {statoRichiestaInsegnante === "pending" ? t("Vedi la richiesta →") : t("Inviala ora →")}
-          </span>
-        </Link>
-      )}
-
-      {/*
-        L'INVITO A ENTRARE IN UNA CLASSE, per chi non ne ha nessuna.
-
-        È tutto quello che serviva per la «vista esterna». Il punto 4 chiedeva
-        una versione ridotta del portale per chi non ha un insegnante, ma le
-        persone senza classe sono 1047 su 1098: ridurre avrebbe voluto dire
-        togliere qualcosa a quasi tutti gli iscritti, cioè la regressione
-        silenziosa che ci siamo vietati tre volte, alla scala più grande.
-
-        Quello che manca davvero non è una barriera: è la porta. L'unico modo
-        di entrare in una classe era `/classi`, che chi non ci è mai stato non
-        sa che esiste. Un allievo che digita il codice smette di essere «vista
-        esterna» e diventa un allievo vero — che è l'obiettivo, non un ripiego.
-      */}
-      {user && classiIscritte.length === 0 && (
-        <section className="px-4 sm:px-5 pt-4">
-          <Link
-            href="/classi"
-            className="mx-auto flex max-w-6xl items-center gap-3 rounded-2xl border border-border bg-card p-4 transition-colors hover:bg-muted/40"
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <Saluto nome={authProfile?.display_name ?? null} />
+        {/*
+          La strada di ritorno. Senza, «vai alla bacheca» sarebbe una porta a
+          senso unico: la preferenza resta salvata, e l'insegnante (o l'allievo
+          che ha scelto «il resto del portale», feedback 5) si ritroverebbe la
+          bacheca generale per sempre senza sapere perché.
+        */}
+        {(insegna || corsiIscritti.length > 0) && (
+          <Button
+            variant="outline"
+            onClick={() => {
+              ricordaPreferenzaBacheca(false);
+              setVuoleLaBacheca(false);
+            }}
+            className="min-h-10"
           >
-            <span className="text-2xl" aria-hidden="true">🎟️</span>
-            <span className="min-w-0">
-              <span className="block font-semibold">{t("Segui un corso? Hai un codice")}</span>
-              <span className="block text-sm text-muted-foreground">
-                {t("Il tuo insegnante te l'ha dato: qui entri nella tua classe.")}
-              </span>
-            </span>
-          </Link>
-        </section>
-      )}
+            <GraduationCap className="size-4" aria-hidden="true" />
+            {insegna ? t("Torna all'area insegnanti") : t("Torna al tuo corso")}
+          </Button>
+        )}
+      </div>
 
-      {/*
-        CHI IL CORSO L'HA FINITO NON VA RIMANDATO IN AULA.
-        Tecnicamente è «senza classe» — la sua classe è chiusa o archiviata —
-        ma invitarlo a digitare un codice che non ha è la cosa sbagliata da
-        mostrargli. A lui serve il passo dopo: un circolo dove giocare, che è
-        poi il traguardo di tutto il percorso.
-      */}
-      {user && classiIscritte.length > 0 && corsiIscritti.length === 0 && (
-        <section className="px-4 sm:px-5 pt-4">
-          <Link
-            href="/trova-circolo"
-            className="mx-auto flex max-w-6xl items-center gap-3 rounded-2xl border border-border bg-card p-4 transition-colors hover:bg-muted/40"
-          >
-            <span className="text-2xl" aria-hidden="true">📍</span>
-            <span className="min-w-0">
-              <span className="block font-semibold">{t("Il tuo corso è finito")}</span>
-              <span className="block text-sm text-muted-foreground">
-                {t("Adesso viene il bello: trova un circolo vicino a te e gioca con altri.")}
-              </span>
-            </span>
-          </Link>
-        </section>
-      )}
-
-      {/* ===== HUB DI NAVIGAZIONE (Percorso / Gioca / Scuola) =====
-          Le etichette passavano da `{h.label}` senza `t()`: la traduzione
-          esisteva nel dizionario e non veniva mai applicata, quindi sotto
-          /en uscivano in italiano. «Impara» diventa «Percorso» e punta a
-          /lezioni, come la barra. */}
-      <section className="px-4 sm:px-5 pt-4">
-        <div className="mx-auto grid max-w-6xl grid-cols-3 gap-3">
-          {[
-            { href: "/lezioni", Icona: BookOpen, label: "Percorso", desc: "Lezioni e corsi" },
-            { href: "/gioca", Icona: Spade, label: "Gioca", desc: "Pratica e sfide" },
-            { href: "/scuola", Icona: GraduationCap, label: "Scuola", desc: "Le tue classi" },
-          ].map((h) => (
-            <Link key={h.href} href={h.href} aria-label={t(h.label)} className="block">
-              {/* Tre fogli uguali, non tre sfumature di colore diverso (18/11/2026). */}
-              <div className="flex h-full flex-col items-center gap-1 rounded-2xl border border-border bg-card p-4 text-center transition-colors hover:border-primary/40">
-                <span className="mb-1 flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary" aria-hidden="true"><h.Icona className="size-5" /></span>
-                <span className="font-bold">{t(h.label)}</span>
-                <span className="text-sm text-muted-foreground">{t(h.desc)}</span>
-              </div>
-            </Link>
-          ))}
+      <div className="mt-6 grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
+        <div className="grid gap-6">
+          <div className="grid gap-3 empty:hidden">{avvisi}</div>
+          <RiprendiLezione hasStarted={hasStarted} nextModule={nextModule} />
+          {hasStarted && !isGuidedMode && <SuggestedNextStep />}
+          {isOnboarded && isStuck && <LostCard nextModule={nextModule} />}
+          <ManoDelGiornoTessera pool={manoPool} />
+          <LicitaSection />
+          {/* ===== PER L'INSEGNANTE ===== (non rende nulla se non hai classi) */}
+          {!isGuidedMode && <InstructorCard />}
         </div>
-      </section>
 
-      {/* ===== LICITA — le tre porte al gioco con gli altri ===== */}
-      <LicitaSection />
+        <aside className="grid gap-4">
+          <IlTuoLivello stats={stats} totalModulesCompleted={totalModulesCompleted} handsPlayed={handsPlayed} />
 
-      {/* ===== ATTIVA PROMEMORIA ===== (logged-in; activates the reminder loop) */}
-      {richiesta === "notifiche" && <NotificationsNudge />}
+          {/*
+            L'INVITO A ENTRARE IN UNA CLASSE, per chi non ne ha nessuna. Le
+            persone senza classe sono quasi tutti gli iscritti: non manca una
+            barriera, manca la porta. L'unico modo di entrare in una classe era
+            `/classi`, che chi non ci è mai stato non sa che esiste.
+          */}
+          {user && classiIscritte.length === 0 && (
+            <RigaLink
+              href="/classi"
+              Icona={Ticket}
+              titolo={t("Segui un corso? Hai un codice")}
+              testo={t("Il tuo insegnante te l'ha dato: qui entri nella tua classe.")}
+            />
+          )}
+          {/*
+            CHI IL CORSO L'HA FINITO NON VA RIMANDATO IN AULA: gli serve il
+            passo dopo, un circolo dove giocare.
+          */}
+          {user && classiIscritte.length > 0 && corsiIscritti.length === 0 && (
+            <RigaLink
+              href="/trova-circolo"
+              Icona={MapPin}
+              titolo={t("Il tuo corso è finito")}
+              testo={t("Adesso viene il bello: trova un circolo vicino a te e gioca con altri.")}
+            />
+          )}
+          {richiesta === "trova-asd" && <FindAsdBanner />}
 
-      {/* ===== "MI SONO PERSO" CARD (stuck users) ===== */}
+          {!isGuidedMode && (
+            <section className="grid gap-3">
+              <div className="flex items-baseline justify-between">
+                <h2 className="font-display text-lg font-bold">{t("Prossimo premio")}</h2>
+                <span className="text-sm text-muted-foreground tabular-nums">
+                  {t("{n} moduli", { n: totalModulesCompleted })}
+                </span>
+              </div>
+              <TreasureChests modulesCompleted={totalModulesCompleted} />
+            </section>
+          )}
 
-      {/* ===== "MI SONO PERSO" CARD (stuck users) ===== */}
-      {isOnboarded && isStuck && (
-        <section className="mx-auto max-w-6xl px-4 mb-4">
-          <LostCard nextModule={nextModule} />
-        </section>
+          {!isGuidedMode && (
+            <CollectionTeaser
+              xp={stats.xp}
+              streak={stats.streak}
+              handsPlayed={handsPlayed}
+              completedModules={totalModulesCompleted}
+            />
+          )}
+        </aside>
+      </div>
+
+      {/* Achievement popup */}
+      <AchievementPopup badge={newBadge} onDismiss={dismiss} />
+
+      {/* Weekly Recap Modal */}
+      {weeklyRecapArmed && (
+        <WeeklyRecapModal
+          open={showWeeklyRecap}
+          onClose={() => setShowWeeklyRecap(false)}
+          data={weeklyData}
+          title={profile.weeklyRecapTitle}
+        />
       )}
 
       {/* Daily login XP toast */}
@@ -659,54 +627,10 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
         )}
       </AnimatePresence>
 
-      {/* ===== PROSSIMO PASSO SUGGERITO ===== */}
-      {hasStarted && !isGuidedMode && <SuggestedNextStep nextModule={nextModule} />}
-
-      {/* ===== TROVA ASD BANNER ===== (logged-in users without ASD) */}
-      {richiesta === "trova-asd" && <FindAsdBanner />}
-
-      {/* ===== TREASURE CHESTS ===== (hidden in guided mode) */}
-      {!isGuidedMode && (
-        <section className="px-4 sm:px-5 pt-4">
-          <div className="mx-auto max-w-6xl">
-            <div className="flex items-center justify-between mb-3">
-              <h2 className="font-display text-base font-semibold text-foreground">
-                {t("Prossimo premio")}
-              </h2>
-              <span className="text-xs font-bold text-amber-600">
-                {totalModulesCompleted} moduli
-              </span>
-            </div>
-            <TreasureChests modulesCompleted={totalModulesCompleted} />
-          </div>
-        </section>
-      )}
-
-      {/* ===== PER L'INSEGNANTE ===== (non rende nulla se non hai classi) */}
-      {!isGuidedMode && <InstructorCard />}
-
-      {/* ===== COLLEZIONE CARTE ===== (hidden in guided mode) */}
-      {!isGuidedMode && (
-        <CollectionTeaser
-          xp={stats.xp}
-          streak={stats.streak}
-          handsPlayed={handsPlayed}
-          completedModules={totalModulesCompleted}
-        />
-      )}
-
-      {/* Suit divider */}
-      {/* pointer-events-none: è decorativo e, essendo dentro un <main>
-          che si estende, intercettava i clic sui comandi del footer
-          sottostante — fra cui «Preferenze cookie». */}
-      <div className="flex items-center justify-center gap-3 py-2 pointer-events-none" aria-hidden="true">
-        <div className="h-px w-12 bg-foreground/10" />
-        <span className="text-xs tracking-[0.3em] text-foreground/20 select-none">♠ ♥ ♦ ♣</span>
-        <div className="h-px w-12 bg-foreground/10" />
-      </div>
-
       {/* ===== FIGB FOOTER ===== (hidden on desktop, sidebar shows it) */}
-      <HomeFooter />
+      <div className="mt-8">
+        <HomeFooter />
+      </div>
     </div>
   );
 }

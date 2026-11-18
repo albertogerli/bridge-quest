@@ -19,10 +19,10 @@ import { materialiPubblicati } from "@/lib/materiali-lezione-db";
 import { dispensaDellaLezione } from "@/lib/materiali-corso";
 
 const courseColors: Record<CourseId, { active: string; inactive: string; border: string }> = {
-  fiori: { active: "bg-emerald-500 text-white", inactive: "text-emerald-700 dark:text-emerald-300", border: "border-emerald-200 dark:border-emerald-900" },
-  quadri: { active: "bg-orange-500 text-white", inactive: "text-orange-700 dark:text-orange-300", border: "border-orange-200 dark:border-orange-900" },
-  "cuori-gioco": { active: "bg-red-500 text-white", inactive: "text-red-700 dark:text-red-300", border: "border-red-200 dark:border-red-900" },
-  "cuori-licita": { active: "bg-rose-500 text-white", inactive: "text-rose-700 dark:text-rose-300", border: "border-rose-200 dark:border-rose-900" },
+  fiori: { active: "bg-primary text-primary-foreground", inactive: "text-emerald-700 dark:text-emerald-300", border: "border-emerald-200 dark:border-emerald-900" },
+  quadri: { active: "bg-primary text-primary-foreground", inactive: "text-orange-700 dark:text-orange-300", border: "border-orange-200 dark:border-orange-900" },
+  "cuori-gioco": { active: "bg-primary text-primary-foreground", inactive: "text-red-700 dark:text-red-300", border: "border-red-200 dark:border-red-900" },
+  "cuori-licita": { active: "bg-primary text-primary-foreground", inactive: "text-rose-700 dark:text-rose-300", border: "border-rose-200 dark:border-rose-900" },
 };
 
 /**

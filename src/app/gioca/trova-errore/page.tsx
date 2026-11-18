@@ -24,7 +24,7 @@ const difficultyConfig = {
     label: "Facile",
     desc: "Errori di regole base",
     xpMult: 0.8,
-    color: "bg-emerald-700",
+    color: "border-l-emerald-600",
     shadow: "",
     accent: "emerald",
   },
@@ -32,7 +32,7 @@ const difficultyConfig = {
     label: "Medio",
     desc: "Errori in licita e gioco",
     xpMult: 1,
-    color: "bg-gold-dark",
+    color: "border-l-gold",
     shadow: "",
     accent: "amber",
   },
@@ -40,7 +40,7 @@ const difficultyConfig = {
     label: "Difficile",
     desc: "Difesa avanzata e slam",
     xpMult: 1.5,
-    color: "bg-red-600",
+    color: "border-l-red-600",
     shadow: "",
     accent: "red",
   },
@@ -277,7 +277,7 @@ export default function TrovaErrorePage() {
           <div className="flex items-center gap-2 text-xs text-muted-foreground mb-4">
             <Link
               href="/gioca"
-              className="hover:text-emerald transition-colors"
+              className="hover:text-primary transition-colors"
             >
               {t("Gioca")}
             </Link>
@@ -353,11 +353,11 @@ export default function TrovaErrorePage() {
                 <button
                   key={key}
                   onClick={() => startGame(key)}
-                  className={`w-full flex items-center justify-between p-4 rounded-xl ${cfg.color} text-white shadow-lg ${cfg.shadow} active:scale-[0.97] transition-transform ${isSenior ? "text-lg" : ""}`}
+                  className={`w-full flex items-center justify-between min-h-16 rounded-xl border border-border border-l-4 ${cfg.color} bg-card p-4 text-left text-foreground transition-colors hover:bg-muted/40 ${isSenior ? "text-lg" : ""}`}
                 >
                   <div className="text-left">
                     <p className="font-semibold">{cfg.label}</p>
-                    <p className="text-white/70 text-sm">{cfg.desc}</p>
+                    <p className="text-muted-foreground text-sm">{cfg.desc}</p>
                   </div>
                   <svg
                     className="h-6 w-6"

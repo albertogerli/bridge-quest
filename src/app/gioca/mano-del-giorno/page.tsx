@@ -76,12 +76,12 @@ export default function ManoDelGiornoPage() {
           <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
             <Link
               href="/gioca"
-              className="hover:text-emerald transition-colors"
+              className="hover:text-primary transition-colors"
             >
               {t("Gioca")}
             </Link>
             <span>/</span>
-            <span className="text-emerald font-semibold">
+            <span className="text-primary font-semibold">
               {t("Mano del Giorno")}
             </span>
           </div>

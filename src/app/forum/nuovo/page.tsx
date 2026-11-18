@@ -94,7 +94,7 @@ export default function NuovoPostPage() {
   if (authLoading) {
     return (
       <div className="pt-6 px-4 sm:px-5 pb-24 flex justify-center">
-        <div className="mt-12 w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+        <div className="mt-12 w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -105,7 +105,7 @@ export default function NuovoPostPage() {
         <span className="text-5xl block mb-4 mt-12">🔒</span>
         <p className="text-lg font-bold text-foreground">{t("Devi accedere per scrivere")}</p>
         <Link href="/login">
-          <Button className="mt-4 h-10 px-6 rounded-xl bg-emerald-700 font-bold text-sm">
+          <Button className="mt-4 h-10 px-6 rounded-xl font-bold text-sm">
             {t("Accedi")}
           </Button>
         </Link>
@@ -119,7 +119,7 @@ export default function NuovoPostPage() {
         {/* Back */}
         <Link
           href="/forum"
-          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors mb-4"
+          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors mb-4"
         >
           <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
             <polyline points="15,18 9,12 15,6" />
@@ -147,7 +147,7 @@ export default function NuovoPostPage() {
                     onClick={() => setCategory(key)}
                     className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all ${
                       category === key
-                        ? "bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 ring-2 ring-emerald-500"
+                        ? "bg-primary/10 text-primary ring-2 ring-primary"
                         : "bg-muted/50 text-muted-foreground hover:bg-muted"
                     }`}
                   >
@@ -274,7 +274,7 @@ export default function NuovoPostPage() {
               <Button
                 type="submit"
                 disabled={loading}
-                className="flex-1 h-12 rounded-xl bg-emerald-700 font-bold shadow-lg disabled:opacity-50"
+                className="flex-1 h-12 rounded-xl font-bold disabled:opacity-50"
               >
                 {loading ? "Pubblicazione..." : "Pubblica"}
               </Button>

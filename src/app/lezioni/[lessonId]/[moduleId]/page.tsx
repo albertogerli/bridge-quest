@@ -41,7 +41,7 @@ export default function ModulePage({
     return (
       <div className="pt-10 px-5 text-center">
         <p className="text-muted-foreground">{t("Modulo non trovato")}</p>
-        <Link href="/lezioni" className="text-emerald font-bold text-sm mt-2 inline-block">
+        <Link href="/lezioni" className="text-primary font-bold text-sm mt-2 inline-block">
           {t("Torna alle lezioni")}
         </Link>
       </div>

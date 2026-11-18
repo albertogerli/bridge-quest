@@ -1,6 +1,6 @@
 "use client";
 
-import { Gavel, Trophy, Users } from "lucide-react";
+import { ChevronRight, Gavel, Trophy, Users } from "lucide-react";
 
 import Link from "@/components/link";
 import { useT } from "@/contexts/traduzioni-provider";
@@ -16,8 +16,11 @@ import { useT } from "@/contexts/traduzioni-provider";
  *
  * TRE PORTE ALLA STESSA COSA, in ordine di quanto è facile cominciare: da soli
  * col compagno finto, con un amico vero, o nel torneo dove si finisce in
- * classifica. Il sottotitolo dice cosa succede davvero, non cosa promette:
- * chi legge deve poter scegliere senza entrare a provare.
+ * classifica. Il sottotitolo dice cosa succede davvero, non cosa promette.
+ *
+ * Un foglio solo con tre righe, non tre tessere: sono tre modi della stessa
+ * cosa, e tre tessere uguali in fila si leggono come tre cose diverse
+ * (18/11/2026).
  */
 const PORTE = [
   {
@@ -46,30 +49,34 @@ const PORTE = [
 export function LicitaSection() {
   const t = useT();
   return (
-    <section className="mx-auto max-w-6xl px-4 sm:px-5 pt-4">
-      <h2 className="mb-2 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-        {t("Dichiara")}
-      </h2>
-      <div className="grid gap-3 sm:grid-cols-3">
-        {PORTE.map((p) => (
-          <Link key={p.href} href={p.href} className="block">
-            <div className="flex h-full flex-col gap-1 rounded-2xl border border-border bg-card p-4 transition-colors hover:border-primary/40">
-              <div className="flex items-center gap-2">
-                <span className="flex size-8 items-center justify-center rounded-lg bg-primary/10 text-primary" aria-hidden="true">
-                  <p.Icona className="size-4" />
-                </span>
-                <span className="font-bold">{t(p.titolo)}</span>
-                {p.nuovo && (
-                  <span className="ml-auto rounded-full bg-gold/25 px-2 py-0.5 text-xs font-bold text-foreground">
-                    {t("Nuovo")}
-                  </span>
-                )}
-              </div>
-              <span className="text-sm leading-snug text-muted-foreground">{t(p.desc)}</span>
-            </div>
-          </Link>
-        ))}
+    <section className="overflow-hidden rounded-2xl border border-border bg-card">
+      <div className="flex items-baseline justify-between gap-3 px-5 pt-5">
+        <h2 className="font-display text-lg font-bold">{t("Dichiara con gli altri")}</h2>
+        <Link href="/gioca" className="text-sm font-semibold text-primary hover:underline">
+          {t("Tutti i giochi")}
+        </Link>
       </div>
+      <ul className="mt-3 divide-y divide-border border-t border-border">
+        {PORTE.map((p) => (
+          <li key={p.href}>
+            <Link href={p.href} className="flex min-h-16 items-center gap-3 px-5 py-3 transition-colors hover:bg-muted/40">
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary" aria-hidden="true">
+                <p.Icona className="size-5" />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="flex items-center gap-2">
+                  <span className="font-semibold">{t(p.titolo)}</span>
+                  {p.nuovo && (
+                    <span className="rounded-full bg-gold/25 px-2 py-0.5 text-xs font-bold text-foreground">{t("Nuovo")}</span>
+                  )}
+                </span>
+                <span className="block text-sm text-muted-foreground text-pretty">{t(p.desc)}</span>
+              </span>
+              <ChevronRight className="size-5 shrink-0 text-muted-foreground" aria-hidden="true" />
+            </Link>
+          </li>
+        ))}
+      </ul>
     </section>
   );
 }

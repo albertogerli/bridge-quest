@@ -50,7 +50,7 @@ export function TrueFalseBlock({ block, blockIndex, delay, ctx }: ContentBlockPr
               onClick={() => !tfAnswered && handleQuizAnswer(blockIndex, idx)}
               disabled={tfAnswered}
               className={`rounded-xl border-2 p-4 text-center font-bold text-lg transition-all ${cls} ${
-                !tfAnswered ? "hover:border-emerald/50 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/30 cursor-pointer" : ""
+                !tfAnswered ? "hover:border-primary/40 hover:bg-primary/5 cursor-pointer" : ""
               }`}
             >
               {tfAnswered && isCorrectOpt && "✓ "}{tfAnswered && isSelected && !tfCorrect && "✗ "}{label}

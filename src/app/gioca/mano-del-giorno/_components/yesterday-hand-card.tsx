@@ -89,7 +89,7 @@ export function YesterdayHandCard({
               variant="ghost"
               size="sm"
               onClick={onPlay}
-              className="text-xs font-bold text-emerald hover:text-emerald-dark"
+              className="text-xs font-bold text-primary hover:underline"
             >
               {t("Rigioca")}
             </Button>
@@ -99,7 +99,7 @@ export function YesterdayHandCard({
             variant="outline"
             size="sm"
             onClick={onPlay}
-            className="w-full rounded-xl h-10 text-xs font-bold border-border text-muted-foreground hover:text-emerald hover:border-emerald/30"
+            className="w-full rounded-xl h-10 text-xs font-bold border-border text-muted-foreground hover:text-primary hover:border-emerald/30"
           >
             {t("Gioca la mano di ieri")}
           </Button>

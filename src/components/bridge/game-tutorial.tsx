@@ -231,7 +231,7 @@ export function GameTutorial() {
                 {/* Action button */}
                 <button
                   onClick={handleNext}
-                  className="mt-3 w-full rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-bold py-2.5 transition-colors shadow-md shadow-emerald-500/25"
+                  className="mt-3 w-full rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-bold py-2.5 transition-colors"
                 >
                   {isLast ? t("Iniziamo!") : t("Avanti")}
                 </button>

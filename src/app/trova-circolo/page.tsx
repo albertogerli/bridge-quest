@@ -207,7 +207,7 @@ export default function TrovaCircoloPage() {
                 onClick={() => setFilter("scuola")}
                 className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl text-sm font-bold transition-all ${
                   filter === "scuola"
-                    ? "bg-emerald-600 text-white shadow-lg"
+                    ? "bg-primary text-primary-foreground"
                     : "bg-muted/50 text-muted-foreground hover:bg-muted"
                 }`}
               >
