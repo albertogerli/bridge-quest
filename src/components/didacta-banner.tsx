@@ -85,7 +85,7 @@ export function DidactaBanner() {
               <p className="text-sm font-black text-amber-900 dark:text-amber-200">
                 {t("DIDACTA 2026")}
               </p>
-              <span className="text-[12px] font-bold px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-700 dark:text-amber-300 animate-pulse">
+              <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-700 dark:text-amber-300 animate-pulse">
                 LIVE
               </span>
             </div>

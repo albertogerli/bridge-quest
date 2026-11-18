@@ -422,7 +422,7 @@ export default async function AccessibilitaPage() {
           </section>
 
           <section className="pt-2">
-            <p className="text-[12px] text-muted-foreground leading-relaxed">
+            <p className="text-xs text-muted-foreground leading-relaxed">
               {t("Sviluppo: Tourbillon Tech S.r.l. per FIGB")}
             </p>
           </section>

@@ -23,7 +23,7 @@ export function GameStatsPanel({ gameStats }: { gameStats: GameStats }) {
       </div>
 
       {/* 30-day plays trend */}
-      <h3 className="text-[12px] font-bold text-gray-400 uppercase tracking-wider mb-2">
+      <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
         {t("Partite ultimi 30 giorni")}
       </h3>
       <div className="flex items-end gap-[2px] mb-1" style={{ height: 90 }}>
@@ -40,7 +40,7 @@ export function GameStatsPanel({ gameStats }: { gameStats: GameStats }) {
                 title={`${d.date}: ${d.plays} partite · ${d.players} giocatori`}
               >
                 {d.plays > 0 && ratio >= 0.5 && (
-                  <span className="text-[12px] font-bold text-gray-500 mb-0.5">{d.plays}</span>
+                  <span className="text-xs font-bold text-gray-500 mb-0.5">{d.plays}</span>
                 )}
                 <div
                   className={`w-full rounded-t transition-all ${isToday ? "bg-emerald-500" : "bg-violet-500/60"}`}
@@ -52,18 +52,18 @@ export function GameStatsPanel({ gameStats }: { gameStats: GameStats }) {
         })()}
       </div>
       <div className="flex justify-between mb-6">
-        <span className="text-[12px] text-gray-400">{gameStats.daily[0]?.date.slice(5)}</span>
-        <span className="text-[12px] text-gray-400">oggi</span>
+        <span className="text-xs text-gray-400">{gameStats.daily[0]?.date.slice(5)}</span>
+        <span className="text-xs text-gray-400">oggi</span>
       </div>
 
       {/* Per-game breakdown */}
-      <h3 className="text-[12px] font-bold text-gray-400 uppercase tracking-wider mb-2">
+      <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
         {t("Per gioco")}
       </h3>
       <div className="overflow-x-auto">
         <table className="w-full text-xs">
           <thead>
-            <tr className="bg-gray-50 text-left text-[12px] font-bold text-gray-500 uppercase tracking-wider">
+            <tr className="bg-gray-50 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
               <th className="px-3 py-2">{t("Gioco")}</th>
               <th className="px-3 py-2 text-right">{t("Partite")}</th>
               <th className="px-3 py-2 text-right">{t("Ultimi 7 gg")}</th>

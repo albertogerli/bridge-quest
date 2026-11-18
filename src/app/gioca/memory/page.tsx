@@ -386,7 +386,7 @@ export default function MemoryPage() {
                     {faceUp ? (
                       <div className="absolute inset-0 flex flex-col items-center justify-center p-1.5 gap-1">
                         {/* Type indicator */}
-                        <span className={`text-[12px] font-bold px-1.5 py-0.5 rounded-full ${
+                        <span className={`text-xs font-bold px-1.5 py-0.5 rounded-full ${
                           card.type === "card"
                             ? "bg-primary/10 text-primary dark:bg-primary/15 dark:text-primary"
                             : "bg-figb/10 text-figb dark:bg-primary/15 dark:text-primary"
@@ -394,7 +394,7 @@ export default function MemoryPage() {
                           {card.type === "card" ? "🃏 Carta" : "📖 Concetto"}
                         </span>
                         <span className={`text-center leading-tight ${
-                          isSenior ? "text-sm" : "text-[12px]"
+                          isSenior ? "text-sm" : "text-xs"
                         } ${isMatched ? "text-emerald-700 dark:text-emerald-300" : "text-foreground"} font-semibold`}>
                           {card.content}
                         </span>
@@ -488,17 +488,17 @@ export default function MemoryPage() {
                 <div>
                   <p className="text-2xl font-bold text-primary">⏱️</p>
                   <p className="text-lg font-bold text-foreground mt-1">{formatTime(timer)}</p>
-                  <p className="text-[12px] text-muted-foreground font-medium">{t("Tempo")}</p>
+                  <p className="text-xs text-muted-foreground font-medium">{t("Tempo")}</p>
                 </div>
                 <div>
                   <p className="text-2xl font-bold text-amber-500">👆</p>
                   <p className="text-lg font-bold text-foreground mt-1">{moves}</p>
-                  <p className="text-[12px] text-muted-foreground font-medium">{t("Mosse")}</p>
+                  <p className="text-xs text-muted-foreground font-medium">{t("Mosse")}</p>
                 </div>
                 <div>
                   <p className="text-2xl font-bold text-orange-500">🔥</p>
                   <p className="text-lg font-bold text-foreground mt-1">{maxStreak}</p>
-                  <p className="text-[12px] text-muted-foreground font-medium">{t("Max streak")}</p>
+                  <p className="text-xs text-muted-foreground font-medium">{t("Max streak")}</p>
                 </div>
               </div>
               {/* Efficiency */}

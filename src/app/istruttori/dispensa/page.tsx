@@ -357,18 +357,18 @@ function Dispensa() {
                 i 65 anni. In stampa comanda comunque `print:text-[10pt]` sul
                 contenitore, che è la misura giusta per un hand record.
               */}
-              <h3 className={`font-bold mb-2 ${compatto ? "text-[12px]" : "text-sm"}`}>
+              <h3 className={`font-bold mb-2 ${compatto ? "text-xs" : "text-sm"}`}>
                 {compatto ? `${i + 1}. ${f.titolo}` : f.titolo}
               </h3>
               <Diagramma hands={f.hands} />
               {conPunti && (
-                <p className="mt-1 text-[12px] text-muted-foreground print:text-black">
+                <p className="mt-1 text-xs text-muted-foreground print:text-black">
                   N {handHcp(f.hands.north)} · E {handHcp(f.hands.east)} · S{" "}
                   {handHcp(f.hands.south)} · O {handHcp(f.hands.west)}
                 </p>
               )}
               {!compatto && f.id && note.get(f.id) && (
-                <p className="mt-2 border-t border-border pt-2 text-[12px] leading-relaxed print:border-black print:text-black">
+                <p className="mt-2 border-t border-border pt-2 text-xs leading-relaxed print:border-black print:text-black">
                   {note.get(f.id)}
                 </p>
               )}
@@ -448,7 +448,7 @@ function Diagramma({ hands }: { hands: Record<Position, Card[]> }) {
 function ManoStampa({ cards, etichetta }: { cards: Card[]; etichetta: string }) {
   return (
     <div className="min-w-0">
-      <p className="font-sans font-bold text-[12px] text-muted-foreground print:text-black">
+      <p className="font-sans font-bold text-xs text-muted-foreground print:text-black">
         {etichetta} <span className="font-normal">{handHcp(cards)} PO</span>
       </p>
       {SUITS.map((suit) => (

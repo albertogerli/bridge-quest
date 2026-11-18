@@ -81,8 +81,8 @@ export function ModuleHeader({
               animate={{ scale: 1, rotate: 0 }}
               className="flex items-center gap-0.5 bg-gold-dark rounded-full px-2 py-0.5 shadow-lg shadow-orange-200"
             >
-              <span className="text-[12px] text-white font-bold">{correctStreak}x</span>
-              <span className="text-[12px]">🔥</span>
+              <span className="text-xs text-white font-bold">{correctStreak}x</span>
+              <span className="text-xs">🔥</span>
             </motion.div>
           )}
           <span className={`font-bold text-muted-foreground ${profile.profile === "senior" ? "text-sm" : "text-xs"}`}>
@@ -94,8 +94,8 @@ export function ModuleHeader({
               animate={{ scale: 1 }}
               className="flex items-center gap-0.5 bg-amber-50 dark:bg-amber-950/40 rounded-full px-2 py-0.5"
             >
-              <span className="text-[12px]">⚡</span>
-              <span className="text-[12px] font-bold text-amber-600 dark:text-amber-400">{xpEarned} {profile.xpLabel}</span>
+              <span className="text-xs">⚡</span>
+              <span className="text-xs font-bold text-amber-600 dark:text-amber-400">{xpEarned} {profile.xpLabel}</span>
             </motion.div>
           )}
         </div>
@@ -126,7 +126,7 @@ export function ModuleHeader({
         animate={{ opacity: 1, y: 0 }}
         className="mb-3 flex items-center gap-2"
       >
-        <Badge className="bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 text-[12px] font-bold border-0">
+        <Badge className="bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 text-xs font-bold border-0">
           Lezione {lessonNumber}
         </Badge>
         <span className="text-xs text-muted-foreground font-medium">{moduleTitle}</span>

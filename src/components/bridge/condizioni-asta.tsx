@@ -68,7 +68,7 @@ export function CondizioniAsta({
       {" · "}
       {t(ZONA[vulnerability])}
       {punti !== undefined && ` · ${punti} PO`}
-      <span className="block text-[12px]">
+      <span className="block text-xs">
         {t("Apre {posto}", { posto: t(ETICHETTA[dealer]) })}
       </span>
     </p>

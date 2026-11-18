@@ -609,7 +609,7 @@ function PresaCorrente({ stato }: { stato: GameState | null }) {
         <CartaDellaPresa stato={stato} seat="north" />
         <span />
         <CartaDellaPresa stato={stato} seat="west" />
-        <span className="text-center text-[12px] leading-tight text-muted-foreground">
+        <span className="text-center text-xs leading-tight text-muted-foreground">
           {stato && stato.tricks.length > 0 ? t("{n} prese giocate", { n: stato.tricks.length }) : t("inizio mano")}
         </span>
         <CartaDellaPresa stato={stato} seat="east" />

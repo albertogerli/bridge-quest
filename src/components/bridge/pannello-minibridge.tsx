@@ -106,7 +106,7 @@ export function PannelloMinibridge({
                   }`}
                 >
                   <p className="font-display text-lg font-bold">{contrattoLeggibile(contratto)}</p>
-                  <p className="text-[12px] opacity-70">{STRAIN_LABEL[strain]}</p>
+                  <p className="text-xs opacity-70">{STRAIN_LABEL[strain]}</p>
                 </button>
               );
             })}

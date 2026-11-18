@@ -24,7 +24,7 @@ export function MaestroTip() {
               <p className="font-bold text-sm text-foreground">
                 {t("Maestro Fiori")}
               </p>
-              <Badge className="bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 text-[12px] font-bold border-0">
+              <Badge className="bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 text-xs font-bold border-0">
                 {t("Consiglio")}
               </Badge>
             </div>

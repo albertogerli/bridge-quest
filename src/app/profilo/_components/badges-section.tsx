@@ -55,7 +55,7 @@ export function BadgesSection({
         </h2>
         <Badge
           variant="outline"
-          className="text-[12px] text-muted-foreground border-border"
+          className="text-xs text-muted-foreground border-border"
         >
           {earnedCount} / {badges.length}
         </Badge>
@@ -90,7 +90,7 @@ export function BadgesSection({
                 )}
               </button>
             )}
-            <span className="text-[12px] text-center text-muted-foreground font-semibold leading-tight">
+            <span className="text-xs text-center text-muted-foreground font-semibold leading-tight">
               {badge.name}
             </span>
           </motion.div>
@@ -120,7 +120,7 @@ export function BadgesSection({
             <Star className="w-4 h-4 text-amber-500" />
             {t("Achievement Segreti")}
           </h3>
-          <Badge variant="outline" className="text-[12px] text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-900">
+          <Badge variant="outline" className="text-xs text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-900">
             {earnedSecretAchievements.length} / {totalSecretAchievements}
           </Badge>
         </div>
@@ -131,7 +131,7 @@ export function BadgesSection({
                 <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900 text-xl">
                   {a.icon}
                 </div>
-                <span className="text-[12px] text-center text-amber-700 dark:text-amber-300 font-semibold leading-tight">{a.name}</span>
+                <span className="text-xs text-center text-amber-700 dark:text-amber-300 font-semibold leading-tight">{a.name}</span>
               </div>
             ))}
           </div>

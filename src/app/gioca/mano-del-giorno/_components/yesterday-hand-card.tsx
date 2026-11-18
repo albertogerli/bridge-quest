@@ -49,14 +49,14 @@ export function YesterdayHandCard({
               <h3 className="text-sm font-bold text-foreground">
                 {t("Mano di Ieri")}
               </h3>
-              <p className="text-[12px] text-muted-foreground">
+              <p className="text-xs text-muted-foreground">
                 {mounted ? formatDate(yesterday) : ""}
               </p>
             </div>
           </div>
           <Badge
             variant="outline"
-            className="text-[12px] font-bold text-muted-foreground border-border"
+            className="text-xs font-bold text-muted-foreground border-border"
           >
             {contrattoLeggibile(yesterdayHand.contract)}
           </Badge>

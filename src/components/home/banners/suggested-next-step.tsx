@@ -70,7 +70,7 @@ export function SuggestedNextStep({ nextModule }: SuggestedNextStepProps) {
                         <Gamepad2 className="w-5 h-5 text-primary dark:text-primary" />
                       </div>
                       <div className="flex-1">
-                        <p className="text-[12px] font-bold text-primary dark:text-primary uppercase tracking-wider">{t("Prossimo passo")}</p>
+                        <p className="text-xs font-bold text-primary dark:text-primary uppercase tracking-wider">{t("Prossimo passo")}</p>
                         <p className="text-sm font-bold text-foreground truncate">{manoPertinente.lessonTitle}</p>
                         <p className="text-xs text-muted-foreground">{t("Gioca una mano su quello che hai appena studiato")}</p>
                       </div>
@@ -90,7 +90,7 @@ export function SuggestedNextStep({ nextModule }: SuggestedNextStepProps) {
                         <GraduationCap className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
                       </div>
                       <div className="flex-1">
-                        <p className="text-[12px] font-bold text-emerald-500 dark:text-emerald-400 uppercase tracking-wider">{t("Prossimo passo")}</p>
+                        <p className="text-xs font-bold text-emerald-500 dark:text-emerald-400 uppercase tracking-wider">{t("Prossimo passo")}</p>
                         <p className="text-sm font-bold text-foreground truncate">{nextModule.moduleTitle}</p>
                         <p className="text-xs text-muted-foreground">{t("Continua il percorso di apprendimento")}</p>
                       </div>

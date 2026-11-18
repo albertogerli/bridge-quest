@@ -39,7 +39,7 @@ export function ChallengeHistorySection({
           </div>
           <div className="flex-1">
             <p className="text-sm font-bold text-foreground">{t("Sfide IMP")}</p>
-            <p className="text-[12px] text-muted-foreground">
+            <p className="text-xs text-muted-foreground">
               {challengeStats
                 ? `${challengeStats.played} sfide · ${challengeStats.won} vinte · ${challengeWinRate(challengeStats)}%`
                 : "Sfida un amico per iniziare"}
@@ -71,19 +71,19 @@ export function ChallengeHistorySection({
                 <div className="grid grid-cols-4 gap-2 rounded-xl bg-primary/10 dark:bg-primary/15 border border-primary/20 dark:border-primary/20 p-3">
                   <div className="text-center">
                     <p className="text-lg font-bold text-foreground">{challengeStats.played}</p>
-                    <p className="text-[12px] text-muted-foreground">{t("Giocate")}</p>
+                    <p className="text-xs text-muted-foreground">{t("Giocate")}</p>
                   </div>
                   <div className="text-center">
                     <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400">{challengeStats.won}</p>
-                    <p className="text-[12px] text-muted-foreground">{t("Vinte")}</p>
+                    <p className="text-xs text-muted-foreground">{t("Vinte")}</p>
                   </div>
                   <div className="text-center">
                     <p className="text-lg font-bold text-red-500 dark:text-red-400">{challengeStats.lost}</p>
-                    <p className="text-[12px] text-muted-foreground">{t("Perse")}</p>
+                    <p className="text-xs text-muted-foreground">{t("Perse")}</p>
                   </div>
                   <div className="text-center">
                     <p className="text-lg font-bold text-figb dark:text-primary">{challengeStats.avg_imp_margin > 0 ? "+" : ""}{Math.round(challengeStats.avg_imp_margin)}</p>
-                    <p className="text-[12px] text-muted-foreground">{t("IMP medio")}</p>
+                    <p className="text-xs text-muted-foreground">{t("IMP medio")}</p>
                   </div>
                 </div>
               )}
@@ -103,7 +103,7 @@ export function ChallengeHistorySection({
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-xs font-semibold text-foreground truncate">vs {opponentName}</p>
-                          <p className="text-[12px] text-muted-foreground">
+                          <p className="text-xs text-muted-foreground">
                             {ch.board_count} mani · {ch.completed_at ? new Date(ch.completed_at).toLocaleDateString("it-IT", { day: "numeric", month: "short" }) : ""}
                           </p>
                         </div>

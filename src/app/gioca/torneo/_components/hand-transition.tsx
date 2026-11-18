@@ -110,14 +110,14 @@ export function HandTransition({
                 <p className="text-lg font-bold text-foreground">
                   {totalTricks}
                 </p>
-                <p className="text-[12px] text-muted-foreground">{t("Prese fatte")}</p>
+                <p className="text-xs text-muted-foreground">{t("Prese fatte")}</p>
               </div>
               <div className="h-8 w-px bg-border" />
               <div className="text-center">
                 <p className="text-lg font-bold text-foreground">
                   {totalNeeded}
                 </p>
-                <p className="text-[12px] text-muted-foreground">{t("Necessarie")}</p>
+                <p className="text-xs text-muted-foreground">{t("Necessarie")}</p>
               </div>
               <div className="h-8 w-px bg-border" />
               <div className="text-center">
@@ -130,7 +130,7 @@ export function HandTransition({
                 >
                   {delta >= 0 ? `+${delta}` : delta}
                 </p>
-                <p className="text-[12px] text-muted-foreground">{t("Bilancio")}</p>
+                <p className="text-xs text-muted-foreground">{t("Bilancio")}</p>
               </div>
             </div>
           </div>

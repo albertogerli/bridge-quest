@@ -160,7 +160,7 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
               >
                 <div className="mb-2">{feat.icon}</div>
                 <p className="text-sm font-semibold text-foreground">{feat.title}</p>
-                <p className="text-[12px] text-muted-foreground mt-0.5 leading-tight">{feat.desc}</p>
+                <p className="text-xs text-muted-foreground mt-0.5 leading-tight">{feat.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -173,7 +173,7 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
           sottostante — fra cui «Preferenze cookie». */}
       <div className="flex items-center justify-center gap-3 py-2 pointer-events-none" aria-hidden="true">
         <div className="h-px w-12 bg-foreground/10" />
-        <span className="text-[12px] tracking-[0.3em] text-foreground/20 select-none">♠ ♥ ♦ ♣</span>
+        <span className="text-xs tracking-[0.3em] text-foreground/20 select-none">♠ ♥ ♦ ♣</span>
         <div className="h-px w-12 bg-foreground/10" />
       </div>
 
@@ -189,15 +189,15 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
             <div className="grid grid-cols-3 gap-4 mb-4">
               <div>
                 <p className="text-2xl font-bold text-figb dark:text-primary">49</p>
-                <p className="text-[12px] font-bold text-figb/80 dark:text-primary/80 uppercase">{t("Lezioni")}</p>
+                <p className="text-xs font-bold text-figb/80 dark:text-primary/80 uppercase">{t("Lezioni")}</p>
               </div>
               <div>
                 <p className="text-2xl font-bold text-figb dark:text-primary">4</p>
-                <p className="text-[12px] font-bold text-figb dark:text-primary uppercase">{t("Corsi")}</p>
+                <p className="text-xs font-bold text-figb dark:text-primary uppercase">{t("Corsi")}</p>
               </div>
               <div>
                 <p className="text-2xl font-bold text-figb dark:text-primary">200+</p>
-                <p className="text-[12px] font-bold text-figb dark:text-primary uppercase">{t("Mani")}</p>
+                <p className="text-xs font-bold text-figb dark:text-primary uppercase">{t("Mani")}</p>
               </div>
             </div>
             {/* eslint-disable-next-line @next/next/no-img-element -- SVG: next/image non ottimizza gli SVG */}
@@ -234,7 +234,7 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
             >
               {t("Registrati gratis")}
             </a>
-            <p className="text-center text-[12px] text-muted-foreground -mt-1">{t("Nessuna carta di credito richiesta")}</p>
+            <p className="text-center text-xs text-muted-foreground -mt-1">{t("Nessuna carta di credito richiesta")}</p>
             <a
               href="/login?mode=login"
               className="flex items-center justify-center w-full h-12 rounded-2xl bg-card text-primary font-semibold text-sm border-2 border-primary/20 hover:border-primary/40 transition-all"
@@ -253,13 +253,13 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
 
       {/* Footer */}
       <footer className="px-5 pb-8 text-center space-y-1">
-        <p className="text-[12px] font-semibold text-foreground/80">
+        <p className="text-xs font-semibold text-foreground/80">
           {t("Contenuti tecnici a cura della Commissione del Settore Insegnamento FIGB")}
         </p>
-        <p className="text-[12px] text-muted-foreground">
+        <p className="text-xs text-muted-foreground">
           {t("Sviluppo e hosting: Alberto Giovanni Gerli / Tourbillon Tech S.r.l.")}
         </p>
-        <p className="text-[12px] text-muted-foreground">
+        <p className="text-xs text-muted-foreground">
           <a href="/privacy" className="underline hover:text-foreground transition-colors">{t("Privacy e Cookie Policy")}</a>
         </p>
       </footer>

@@ -35,7 +35,7 @@ export function ProgressCharts({
             {gamesPerDay.days.map((d) => (
               <div key={d.date} className="flex-1 flex flex-col items-center justify-end h-full">
                 {d.games > 0 && (
-                  <span className="text-[12px] font-bold text-muted-foreground mb-0.5">{d.games}</span>
+                  <span className="text-xs font-bold text-muted-foreground mb-0.5">{d.games}</span>
                 )}
                 <motion.div
                   initial={{ height: 0 }}
@@ -43,7 +43,7 @@ export function ProgressCharts({
                   transition={{ delay: 0.2, duration: 0.5 }}
                   className="w-full rounded-t bg-figb/70 dark:bg-primary/70"
                 />
-                <span className="text-[12px] text-muted-foreground mt-1">{d.label}</span>
+                <span className="text-xs text-muted-foreground mt-1">{d.label}</span>
               </div>
             ))}
           </div>
@@ -66,7 +66,7 @@ export function ProgressCharts({
             <div key={course.id}>
               <div className="flex items-center justify-between mb-1">
                 <span className="text-xs font-semibold text-foreground/80">{course.name}</span>
-                <span className="text-[12px] font-bold text-muted-foreground">
+                <span className="text-xs font-bold text-muted-foreground">
                   {course.completed}/{course.total} ({course.progress}%)
                 </span>
               </div>
@@ -93,25 +93,25 @@ export function ProgressCharts({
           <div className="rounded-xl bg-muted p-3 text-center">
             <Gamepad2 className="w-5 h-5 text-figb dark:text-primary mx-auto mb-1" />
             <p className="text-xl font-bold text-foreground">{gamePerformanceStats.totalGames}</p>
-            <p className="text-[12px] text-muted-foreground font-medium">{t("Partite totali")}</p>
+            <p className="text-xs text-muted-foreground font-medium">{t("Partite totali")}</p>
           </div>
           {/* Streak ATTUALE: il progetto non salva il record storico */}
           <div className="rounded-xl bg-muted p-3 text-center">
             <Flame className="w-5 h-5 text-orange-500 mx-auto mb-1" />
             <p className="text-xl font-bold text-foreground">{gamePerformanceStats.currentStreak}</p>
-            <p className="text-[12px] text-muted-foreground font-medium">{t("Streak attuale")}</p>
+            <p className="text-xs text-muted-foreground font-medium">{t("Streak attuale")}</p>
           </div>
           <div className="rounded-xl bg-muted p-3 text-center">
             <Clock className="w-5 h-5 text-primary mx-auto mb-1" />
             <p className="text-xl font-bold text-foreground">{gamePerformanceStats.timeDisplay}</p>
-            <p className="text-[12px] text-muted-foreground font-medium">{t("Tempo di gioco")}</p>
+            <p className="text-xs text-muted-foreground font-medium">{t("Tempo di gioco")}</p>
           </div>
           {/* Gli XP della singola partita non sono nello storico: si mostra
               la media prese, che quella fonte conosce davvero. */}
           <div className="rounded-xl bg-muted p-3 text-center">
             <Target className="w-5 h-5 text-emerald-500 mx-auto mb-1" />
             <p className="text-xl font-bold text-foreground">{gamePerformanceStats.avgTricks}</p>
-            <p className="text-[12px] text-muted-foreground font-medium">{t("Media prese/mano")}</p>
+            <p className="text-xs text-muted-foreground font-medium">{t("Media prese/mano")}</p>
           </div>
         </div>
       </div>

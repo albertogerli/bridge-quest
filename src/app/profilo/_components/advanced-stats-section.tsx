@@ -50,7 +50,7 @@ export function AdvancedStatsSection({
           </div>
           <div className="flex-1">
             <p className="text-sm font-bold text-foreground">{t("Statistiche Avanzate")}</p>
-            <p className="text-[12px] text-muted-foreground">
+            <p className="text-xs text-muted-foreground">
               {gameStats.totalGames > 0
                 ? t("{games} partite · {rate}% vittorie", { games: gameStats.totalGames, rate: gameStats.winRate })
                 : t("Gioca per sbloccare le statistiche")}

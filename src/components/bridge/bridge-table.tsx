@@ -142,7 +142,7 @@ function CompactFaceDown({ count, gradient }: { count: number; gradient: string 
       ))}
       {/* Count badge */}
       <div
-        className="absolute -bottom-1 -right-1 z-10 flex h-4 w-4 items-center justify-center rounded-full bg-white/90 text-[12px] font-black text-gray-700 shadow-sm"
+        className="absolute -bottom-1 -right-1 z-10 flex h-4 w-4 items-center justify-center rounded-full bg-white/90 text-xs font-black text-gray-700 shadow-sm"
         aria-hidden="true"
       >
         {count}
@@ -294,7 +294,7 @@ export function BridgeTable({
               {/* La colonna di mezzo prende lo spazio che resta: con tre colonne
                   uguali «dich-dif» andava a capo in «dich- / dif» (guida
                   allievi, 14/11/2026), sul telefono e sul computer. */}
-              <div className={`grid grid-cols-[auto_1fr_auto] grid-rows-3 gap-x-1 text-white/80 ${isCompact ? "text-[12px]" : "text-[12px]"} font-bold`} aria-hidden="true">
+              <div className={`grid grid-cols-[auto_1fr_auto] grid-rows-3 gap-x-1 text-white/80 ${isCompact ? "text-xs" : "text-xs"} font-bold`} aria-hidden="true">
                 <div />
                 <div className={`flex items-center justify-center ${isActive("north") ? "text-amber" : ""}`}>{inizialeVera("north")}</div>
                 <div />
@@ -302,7 +302,7 @@ export function BridgeTable({
                 <div className="flex flex-col items-center justify-center leading-tight">
                   <span className="text-amber text-xs font-black">{trickCount.ns}-{trickCount.ew}</span>
                   {(trickCount.ns > 0 || trickCount.ew > 0) && (
-                    <span className="whitespace-nowrap text-[12px] text-white/60 font-medium">dich-dif</span>
+                    <span className="whitespace-nowrap text-xs text-white/60 font-medium">dich-dif</span>
                   )}
                 </div>
                 <div className={`flex items-center justify-center ${isActive("east") ? "text-amber" : ""}`}>{inizialeVera("east")}</div>
@@ -368,7 +368,7 @@ export function BridgeTable({
       {/* North hand */}
       <div className="absolute top-2 inset-x-4 z-10">
         <div className="text-center mb-1">
-          <span className={`text-[12px] font-bold uppercase tracking-wider ${isActive("north") ? "text-amber" : isDummy("north") ? "text-white/80" : "text-white/80"}`}>
+          <span className={`text-xs font-bold uppercase tracking-wider ${isActive("north") ? "text-amber" : isDummy("north") ? "text-white/80" : "text-white/80"}`}>
             {posLabel("north", "N")}
           </span>
         </div>
@@ -421,7 +421,7 @@ export function BridgeTable({
           />
         )}
         <div className="text-center mt-1">
-          <span className={`text-[12px] font-bold uppercase tracking-wider ${isActive("south") ? "text-amber" : isDummy("south") ? "text-white/80" : "text-white/80"}`}>
+          <span className={`text-xs font-bold uppercase tracking-wider ${isActive("south") ? "text-amber" : isDummy("south") ? "text-white/80" : "text-white/80"}`}>
             {posLabel("south", "S")}
           </span>
         </div>
@@ -444,7 +444,7 @@ export function BridgeTable({
               trumpSuit={trumpSuit}
             />
           )}
-          <span className={`text-[12px] font-bold uppercase tracking-wider [writing-mode:vertical-lr] ${isActive("east") ? "text-amber" : "text-white/80"}`}>
+          <span className={`text-xs font-bold uppercase tracking-wider [writing-mode:vertical-lr] ${isActive("east") ? "text-amber" : "text-white/80"}`}>
             {t(nomeVero("east"))}
           </span>
         </div>
@@ -453,7 +453,7 @@ export function BridgeTable({
       {/* West hand */}
       <div className="absolute left-2 top-1/2 -translate-y-1/2 z-[5]">
         <div className="flex items-center gap-1">
-          <span className={`text-[12px] font-bold uppercase tracking-wider [writing-mode:vertical-lr] rotate-180 ${isActive("west") ? "text-amber" : "text-white/80"}`}>
+          <span className={`text-xs font-bold uppercase tracking-wider [writing-mode:vertical-lr] rotate-180 ${isActive("west") ? "text-amber" : "text-white/80"}`}>
             {t(nomeVero("west"))}
           </span>
           {isDummy("west") && !westFaceDown ? (

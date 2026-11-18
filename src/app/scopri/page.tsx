@@ -394,7 +394,7 @@ function ChampionCard({
         {icon}
         <p className="text-xs font-bold text-foreground truncate">{name}</p>
       </div>
-      <p className="text-[12px] text-muted-foreground leading-tight">{detail}</p>
+      <p className="text-xs text-muted-foreground leading-tight">{detail}</p>
     </div>
   );
 }

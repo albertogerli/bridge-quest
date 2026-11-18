@@ -66,7 +66,7 @@ export function StepTavolo({ onComplete, playSound }: StepProps) {
                 <p className={`text-sm font-bold ${isPlayer ? "text-[#8f6b16]" : "text-[#12305f]"}`}>
                   {pos.label}
                 </p>
-                <p className="text-[12px] text-[#5c677d] mt-0.5">{pos.sub}</p>
+                <p className="text-xs text-[#5c677d] mt-0.5">{pos.sub}</p>
               </div>
             </motion.div>
           );

@@ -190,7 +190,7 @@ function NavItem({
           />
         )}
       </span>
-      <span className={`relative text-[12px] ${active ? "font-bold" : "font-semibold"}`}>{etichetta}</span>
+      <span className={`relative text-xs ${active ? "font-bold" : "font-semibold"}`}>{etichetta}</span>
     </Link>
   );
 }

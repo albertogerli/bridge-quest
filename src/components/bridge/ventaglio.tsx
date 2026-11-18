@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { PlayingCard } from "@/components/bridge/playing-card";
 import type { Card } from "@/lib/bridge-engine";
 
@@ -22,10 +23,27 @@ export function Ventaglio({
   /** Cosa dice uno screen reader: «Le tue carte della prossima mano». */
   etichetta?: string;
 }) {
-  const sovrapposizione = Math.round(larghezza * 0.6);
+  // Lo spazio che c'è davvero: sul telefono tredici carte con la
+  // sovrapposizione di sempre non entrano, e la prima finiva tagliata.
+  const box = useRef<HTMLDivElement>(null);
+  const [spazio, setSpazio] = useState<number | null>(null);
+  useEffect(() => {
+    const el = box.current;
+    if (!el) return;
+    const misura = () => setSpazio(el.clientWidth - 48);
+    misura();
+    const ro = new ResizeObserver(misura);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+  const n = carte?.length ?? 0;
+  const passoIdeale = larghezza * 0.4;
+  const passo = spazio && n > 1 ? Math.min(passoIdeale, (spazio - larghezza) / (n - 1)) : passoIdeale;
+  const sovrapposizione = Math.round(larghezza - passo);
   return (
     <div
-      className="flex justify-center overflow-hidden px-8 pt-3"
+      ref={box}
+      className="flex justify-center overflow-hidden px-6 pt-3"
       style={{ height: Math.round(larghezza * 1.45) + 24 }}
       aria-hidden={!carte}
       aria-label={carte ? etichetta : undefined}

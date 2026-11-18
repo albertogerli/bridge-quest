@@ -671,7 +671,7 @@ export default function AssignmentResultsPage({
                 {smazzataIds.map((id, i) => (
                   <th key={id} className="px-2 py-2 text-center font-semibold">
                     {!assignment.licita && <div className="font-mono text-xs">{colLabel(id)}</div>}
-                    <div className="text-[12px] font-normal text-muted-foreground">M{i + 1}</div>
+                    <div className="text-xs font-normal text-muted-foreground">M{i + 1}</div>
                     {/*
                       LA MANO SBAGLIATA DA TANTI SI PORTA AL TAVOLO CONDIVISO,
                       quello che si proietta in aula: si apre con il compito
@@ -718,7 +718,7 @@ export default function AssignmentResultsPage({
                         <span className="relative inline-block">
                           {aspettaRisposta(filoDellaMano(messaggi, id, m.student_id)) && (
                             <span
-                              className="absolute -left-1 -top-1 z-10 flex h-3.5 w-3.5 items-center justify-center rounded-full border border-card bg-amber-500 text-[12px] font-bold leading-none text-white"
+                              className="absolute -left-1 -top-1 z-10 flex h-3.5 w-3.5 items-center justify-center rounded-full border border-card bg-amber-500 text-xs font-bold leading-none text-white"
                               title={t("L'allievo ti ha fatto una domanda")}
                             >
                               ?
@@ -879,7 +879,7 @@ export default function AssignmentResultsPage({
                     {r.daGuardare.map((v) => (
                       <span
                         key={v.smazzataId}
-                        className={`rounded-full px-2 py-0.5 text-[12px] font-medium ${
+                        className={`rounded-full px-2 py-0.5 text-xs font-medium ${
                           v.segnale === "lento-e-sbagliato"
                             ? "bg-amber-100 text-amber-800 dark:bg-amber-950/50 dark:text-amber-300"
                             : "bg-red-100 text-red-700 dark:bg-red-950/50 dark:text-red-300"
@@ -1221,7 +1221,7 @@ function HeatCell({
         {contratto ?? t("Passo")}
         {contratto && dichiarante && <span className="font-normal opacity-80">{t(INIZIALE[dichiarante])}</span>}
         {stelleInsegnante !== null && <span aria-hidden="true" className="font-normal">★</span>}
-        {gioco && <span aria-hidden="true" className="text-[12px] font-normal">▶</span>}
+        {gioco && <span aria-hidden="true" className="text-xs font-normal">▶</span>}
       </button>
     );
   }

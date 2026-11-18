@@ -132,7 +132,7 @@ export function OspiteConverti() {
           >
             {inCorso ? "Salvo…" : "Tieni tutto"}
           </Button>
-          <p className="mt-2 text-[12px] text-muted-foreground">
+          <p className="mt-2 text-xs text-muted-foreground">
             {t("Puoi anche non farlo: continui a giocare fino a fine lezione.")}
           </p>
         </>

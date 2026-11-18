@@ -519,7 +519,7 @@ export default function CompitoPage({
                 </div>
                 <div className="min-w-0 flex-1">
                   {nuove.has(hand.id) && (
-                    <span className="mb-1 inline-flex items-center gap-1 rounded-full bg-primary px-2 py-0.5 text-[12px] font-bold text-primary-foreground">
+                    <span className="mb-1 inline-flex items-center gap-1 rounded-full bg-primary px-2 py-0.5 text-xs font-bold text-primary-foreground">
                       <MessageSquareText className="h-3 w-3" aria-hidden="true" />
                       {t("Nuovo dall'insegnante")}
                     </span>

@@ -78,7 +78,7 @@ function WinRateRing({ rate }: { rate: number }) {
         <span className="text-3xl font-bold" style={{ color }}>
           {rate}%
         </span>
-        <span className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
+        <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
           vittorie
         </span>
       </div>
@@ -121,7 +121,7 @@ function Last10Chart({ stats }: { stats: GameStats }) {
               style={{ minHeight: 4 }}
             />
             {/* Trick count label */}
-            <span className="text-[12px] font-bold text-muted-foreground">{game.tricksMade}</span>
+            <span className="text-xs font-bold text-muted-foreground">{game.tricksMade}</span>
           </div>
         );
       })}
@@ -148,7 +148,7 @@ function ContractBars({ stats }: { stats: GameStats }) {
                 >
                   {contractTypeLabel(cs.type)}
                 </span>
-                <span className="text-[12px] text-muted-foreground font-semibold">
+                <span className="text-xs text-muted-foreground font-semibold">
                   {cs.played} partite
                 </span>
               </div>
@@ -220,7 +220,7 @@ export function StatsDashboard({ stats }: StatsDashboardProps) {
           className="rounded-2xl bg-card border-2 border-border shadow-sm p-4 flex flex-col items-center justify-center"
         >
           <WinRateRing rate={stats.winRate} />
-          <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mt-1">
+          <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mt-1">
             {t("Percentuale vittorie")}
           </p>
         </motion.div>
@@ -235,7 +235,7 @@ export function StatsDashboard({ stats }: StatsDashboardProps) {
             className="rounded-2xl bg-card border-2 border-border shadow-sm p-3.5 flex-1 flex flex-col justify-center"
           >
             <p className="text-2xl font-bold text-figb dark:text-primary">{stats.avgTricks}</p>
-            <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
+            <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
               {t("Prese medie")}
             </p>
           </motion.div>
@@ -250,12 +250,12 @@ export function StatsDashboard({ stats }: StatsDashboardProps) {
             <div className="flex items-center gap-1.5">
               <p className="text-2xl font-bold text-amber-600">{stats.bestStreak}</p>
               {stats.currentStreak > 0 && (
-                <span className="text-[12px] font-bold px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300">
+                <span className="text-xs font-bold px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300">
                   ora {stats.currentStreak}
                 </span>
               )}
             </div>
-            <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
+            <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
               {t("Miglior serie")}
             </p>
           </motion.div>
@@ -287,7 +287,7 @@ export function StatsDashboard({ stats }: StatsDashboardProps) {
             <h4 className="text-xs font-semibold text-foreground uppercase tracking-wider">
               Ultime {stats.last10.length} partite
             </h4>
-            <div className="flex items-center gap-2 text-[12px] font-bold text-muted-foreground">
+            <div className="flex items-center gap-2 text-xs font-bold text-muted-foreground">
               <span className="flex items-center gap-1">
                 <span className="inline-block w-2 h-2 rounded-sm bg-emerald-500" />
                 {t("Vinto")}
@@ -315,7 +315,7 @@ export function StatsDashboard({ stats }: StatsDashboardProps) {
           <p className={`text-sm font-semibold ${trendDisplay.color}`}>
             {trendDisplay.label}
           </p>
-          <p className="text-[12px] text-muted-foreground font-semibold mt-0.5">
+          <p className="text-xs text-muted-foreground font-semibold mt-0.5">
             {t("Tendenza recente")}
           </p>
         </motion.div>
@@ -330,12 +330,12 @@ export function StatsDashboard({ stats }: StatsDashboardProps) {
           {stats.weakSuits.length > 0 ? (
             <>
               <span className="text-xl block mb-1">⚠️</span>
-              <p className="text-[12px] font-semibold text-foreground uppercase tracking-wider mb-1.5">
+              <p className="text-xs font-semibold text-foreground uppercase tracking-wider mb-1.5">
                 {t("Punti deboli")}
               </p>
               <div className="space-y-1">
                 {stats.weakSuits.map((suit) => (
-                  <p key={suit} className="text-[12px] text-red-600 dark:text-red-400 font-semibold leading-tight">
+                  <p key={suit} className="text-xs text-red-600 dark:text-red-400 font-semibold leading-tight">
                     Difficolta con {contractTypeName(suit)} {suit !== "SA" ? suit : ""}
                   </p>
                 ))}
@@ -347,7 +347,7 @@ export function StatsDashboard({ stats }: StatsDashboardProps) {
               <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">
                 {t("Ottimo lavoro!")}
               </p>
-              <p className="text-[12px] text-muted-foreground font-semibold mt-0.5">
+              <p className="text-xs text-muted-foreground font-semibold mt-0.5">
                 {t("Nessun punto debole")}
               </p>
             </>
@@ -362,7 +362,7 @@ export function StatsDashboard({ stats }: StatsDashboardProps) {
         transition={{ delay: 0.45 }}
         className="text-center py-2"
       >
-        <p className="text-[12px] text-muted-foreground font-semibold">
+        <p className="text-xs text-muted-foreground font-semibold">
           Basato su {stats.totalGames} {stats.totalGames === 1 ? "partita" : "partite"} registrate
         </p>
       </motion.div>

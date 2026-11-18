@@ -80,7 +80,7 @@ export function TournamentHero({
               </div>
             </div>
             {alreadyPlayed && (
-              <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300 text-[12px] font-bold border-0 shrink-0">
+              <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300 text-xs font-bold border-0 shrink-0">
                 {t("Completato")}
               </Badge>
             )}
@@ -90,7 +90,7 @@ export function TournamentHero({
           <div className="space-y-3 mt-2">
             <div className="inline-flex items-center gap-3 bg-card/80 backdrop-blur-sm rounded-xl px-4 py-3 border border-primary/20 dark:border-primary/20 w-full">
               <div className="text-center flex-1">
-                <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
+                <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                   {t("Mani")}
                 </p>
                 <p className="text-lg font-bold text-primary leading-tight">
@@ -99,7 +99,7 @@ export function TournamentHero({
               </div>
               <div className="h-8 w-px bg-primary/20" />
               <div className="text-center flex-1">
-                <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
+                <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                   {t("Prese necessarie")}
                 </p>
                 <p className="text-lg font-bold text-foreground leading-tight">
@@ -108,7 +108,7 @@ export function TournamentHero({
               </div>
               <div className="h-8 w-px bg-primary/20" />
               <div className="text-center flex-1">
-                <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
+                <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                   {t("Tempo rimasto")}
                 </p>
                 <p className="text-sm font-bold text-primary leading-tight tabular-nums">
@@ -124,7 +124,7 @@ export function TournamentHero({
 
           {/* Hand previews */}
           <div className="mt-4 space-y-2">
-            <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
+            <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
               Le {displayCount} mani del torneo
             </p>
             <div
@@ -148,18 +148,18 @@ export function TournamentHero({
                         : "bg-card/70 border-primary/20 dark:border-primary/20"
                     }`}
                   >
-                    <p className="text-[12px] font-bold text-muted-foreground">
+                    <p className="text-xs font-bold text-muted-foreground">
                       #{i + 1}
                     </p>
                     <p className="text-sm font-bold text-foreground leading-tight">
                       {contrattoLeggibile(h.contract)}
                     </p>
-                    <p className="text-[12px] text-muted-foreground">
+                    <p className="text-xs text-muted-foreground">
                       {tricksNeeded}p
                     </p>
                     {handResult && (
                       <p
-                        className={`text-[12px] font-bold mt-0.5 ${
+                        className={`text-xs font-bold mt-0.5 ${
                           handResult.result >= 0
                             ? "text-emerald-600"
                             : "text-red-600"
@@ -184,7 +184,7 @@ export function TournamentHero({
             >
               <div className="inline-flex items-center gap-1.5 bg-primary/10 rounded-full px-3 py-1">
                 <span className="text-xs">+150 {xpLabel}</span>
-                <span className="text-[12px] font-bold text-primary">
+                <span className="text-xs font-bold text-primary">
                   {t("Bonus Torneo")}
                 </span>
               </div>

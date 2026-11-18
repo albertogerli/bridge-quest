@@ -219,7 +219,7 @@ export default function TrovaCircoloPage() {
             {/* Advanced Filters Toggle */}
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-1 mt-2 text-[12px] text-muted-foreground font-bold hover:text-muted-foreground transition-colors"
+              className="flex items-center gap-1 mt-2 text-xs text-muted-foreground font-bold hover:text-muted-foreground transition-colors"
             >
               <Filter className="w-3 h-3" />
               {t("Filtri avanzati")}
@@ -276,8 +276,8 @@ export default function TrovaCircoloPage() {
                       }`}>
                         {dist !== null ? (
                           <>
-                            <span className="text-[12px] font-black leading-none">{dist < 1 ? `${Math.round(dist * 1000)}` : dist < 10 ? dist.toFixed(1) : Math.round(dist).toString()}</span>
-                            <span className="text-[12px] font-bold opacity-60">{dist < 1 ? "m" : "km"}</span>
+                            <span className="text-xs font-black leading-none">{dist < 1 ? `${Math.round(dist * 1000)}` : dist < 10 ? dist.toFixed(1) : Math.round(dist).toString()}</span>
+                            <span className="text-xs font-bold opacity-60">{dist < 1 ? "m" : "km"}</span>
                           </>
                         ) : (
                           <span className="text-sm font-bold">{i + 1}</span>
@@ -291,13 +291,13 @@ export default function TrovaCircoloPage() {
                         </div>
                         <div className="flex items-center gap-1.5 flex-wrap">
                           {club.hasSchool && (
-                            <span className="inline-flex items-center gap-0.5 text-[12px] font-bold text-emerald-700 bg-emerald-50 dark:bg-emerald-950/40 dark:text-emerald-300 px-1.5 py-0.5 rounded">
+                            <span className="inline-flex items-center gap-0.5 text-xs font-bold text-emerald-700 bg-emerald-50 dark:bg-emerald-950/40 dark:text-emerald-300 px-1.5 py-0.5 rounded">
                               <School className="w-2.5 h-2.5" />
                               {t("SCUOLA BRIDGE")}
                             </span>
                           )}
                           {club.active && (
-                            <span className="text-[12px] font-bold text-figb dark:text-primary bg-figb/5 dark:bg-primary/15 px-1.5 py-0.5 rounded">
+                            <span className="text-xs font-bold text-figb dark:text-primary bg-figb/5 dark:bg-primary/15 px-1.5 py-0.5 rounded">
                               ATTIVO
                             </span>
                           )}

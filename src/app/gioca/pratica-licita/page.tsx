@@ -296,7 +296,7 @@ export default function PraticaLicitaPage() {
                 ].map((t) => (
                   <span
                     key={t}
-                    className="text-[12px] font-bold text-figb bg-figb/10 dark:text-primary dark:bg-primary/15 rounded-full px-2.5 py-1"
+                    className="text-xs font-bold text-figb bg-figb/10 dark:text-primary dark:bg-primary/15 rounded-full px-2.5 py-1"
                   >
                     {t}
                   </span>
@@ -386,13 +386,13 @@ export default function PraticaLicitaPage() {
             <div className="grid grid-cols-3 gap-3 mt-6">
               <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-foreground">{correct}</p>
-                <p className="text-[12px] text-muted-foreground font-bold">{t("Corrette")}</p>
+                <p className="text-xs text-muted-foreground font-bold">{t("Corrette")}</p>
               </div>
               <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-foreground">
                   {bestStreak}
                 </p>
-                <p className="text-[12px] text-muted-foreground font-bold">
+                <p className="text-xs text-muted-foreground font-bold">
                   {t("Streak max")}
                 </p>
               </div>
@@ -400,7 +400,7 @@ export default function PraticaLicitaPage() {
                 <p className="text-lg font-bold text-figb dark:text-primary">
                   +{xpEarned}
                 </p>
-                <p className="text-[12px] text-muted-foreground font-bold">
+                <p className="text-xs text-muted-foreground font-bold">
                   {profileConfig.xpLabel}
                 </p>
               </div>
@@ -495,12 +495,12 @@ export default function PraticaLicitaPage() {
                   : t("Riferimento di base: FIGB Fiori 2022; le convenzioni aggiuntive sono indicate nell'esercizio.")}
             </p>
             <div className="flex items-center gap-2 mb-3">
-              <Badge className="bg-figb/10 text-figb dark:bg-primary/15 dark:text-primary text-[12px] font-bold border-0">
+              <Badge className="bg-figb/10 text-figb dark:bg-primary/15 dark:text-primary text-xs font-bold border-0">
                 {sa(scenario.topic)}
               </Badge>
               <Badge
                 variant="outline"
-                className="text-[12px] font-bold text-muted-foreground"
+                className="text-xs font-bold text-muted-foreground"
               >
                 {scenario.vulnerability !== "Nessuna"
                   ? `Vuln: ${scenario.vulnerability}`
@@ -522,7 +522,7 @@ export default function PraticaLicitaPage() {
                 <div className="flex flex-wrap items-center gap-2">
                   {scenario.biddingHistory.map((entry, i) => (
                     <div key={i} className="flex items-center gap-1.5">
-                      <span className="text-[12px] font-bold text-muted-foreground bg-muted rounded px-1.5 py-0.5">
+                      <span className="text-xs font-bold text-muted-foreground bg-muted rounded px-1.5 py-0.5">
                         {entry.seat}
                       </span>
                       <span
@@ -536,7 +536,7 @@ export default function PraticaLicitaPage() {
                     </div>
                   ))}
                   <div className="flex items-center gap-1.5">
-                    <span className="text-[12px] font-bold text-figb bg-figb/10 dark:text-primary dark:bg-primary/15 rounded px-1.5 py-0.5 animate-pulse">
+                    <span className="text-xs font-bold text-figb bg-figb/10 dark:text-primary dark:bg-primary/15 rounded px-1.5 py-0.5 animate-pulse">
                       {scenario.position}
                     </span>
                     <span className="text-sm font-bold text-figb dark:text-primary">

@@ -299,7 +299,7 @@ export default function CombinazionePage() {
                     >
                       {r}
                       {p && p !== postoAttivo && (
-                        <span className="absolute -right-1 -top-1 rounded-full bg-foreground px-1 text-[12px] leading-4 text-background">
+                        <span className="absolute -right-1 -top-1 rounded-full bg-foreground px-1 text-xs leading-4 text-background">
                           {nomeDi.charAt(0)}
                         </span>
                       )}

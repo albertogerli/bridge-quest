@@ -183,7 +183,7 @@ function Dispense() {
                     {/* «Corso di Primo Livello» diventava «di Primo Livello». */}
                     {course.name.replace(/^Corso (di )?/, "")}
                   </div>
-                  <div className={`text-[12px] leading-tight ${isActive ? "text-white/70" : "text-muted-foreground"}`}>
+                  <div className={`text-xs leading-tight ${isActive ? "text-white/70" : "text-muted-foreground"}`}>
                     {t("{n} lezioni", { n: course.lessonCount })}
                   </div>
                 </div>
@@ -205,7 +205,7 @@ function Dispense() {
             <div className={`rounded-2xl border border-border bg-card p-5 mb-5`}>
               <div className="flex items-center justify-between">
                 <div>
-                  <Badge className="bg-primary/10 text-foreground text-[12px] font-bold border-0 mb-2">
+                  <Badge className="bg-primary/10 text-foreground text-xs font-bold border-0 mb-2">
                     {levelInfo[currentCourse.level].label}
                   </Badge>
                   <h2 className="text-lg font-bold text-foreground">
@@ -240,7 +240,7 @@ function Dispense() {
                     </svg>
                     <div className="flex flex-col items-start leading-tight">
                       <span>{t("Tutte")}</span>
-                      <span className="text-[12px] font-medium text-muted-foreground">
+                      <span className="text-xs font-medium text-muted-foreground">
                         {completedModulesCount}/{totalModules} moduli
                       </span>
                     </div>
@@ -356,26 +356,17 @@ function InfographicCard({
         ) : (
           <div className={`absolute inset-0 flex flex-col items-center justify-center text-muted-foreground/40 ${locked ? "grayscale opacity-50" : ""}`}>
             <span className="text-3xl mb-1">{icon}</span>
-            <span className="text-[12px] font-medium">{t("Anteprima non disponibile")}</span>
+            <span className="text-xs font-medium">{t("Anteprima non disponibile")}</span>
           </div>
         )}
 
-        {/* Lock overlay for locked materials */}
-        {locked && loaded && (
-          <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
-            <div className="flex flex-col items-center gap-1.5">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/90 shadow-md">
-                <svg className="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/>
-                </svg>
-              </div>
-            </div>
-          </div>
-        )}
+        {/* Materiale non ancora aperto: attenuato, senza lucchetto (18/11/2026,
+            «La prima schermata dà, non chiede»). Sotto si dice cosa lo apre. */}
+        {locked && loaded && <div className="absolute inset-0 bg-background/50" aria-hidden="true" />}
 
         {/* Lesson number badge */}
         <div className="absolute top-2 left-2">
-          <Badge className={`${colors.active} text-[12px] font-bold border-0 shadow-sm`}>
+          <Badge className={`${colors.active} text-xs font-bold border-0 shadow-sm`}>
             Lez. {lessonNumber}
           </Badge>
         </div>
@@ -384,8 +375,9 @@ function InfographicCard({
         {pdfSrc && !locked && (
           <button
             onClick={() => downloadPdf(pdfSrc)}
-            className="absolute bottom-2 right-2 flex h-8 w-8 items-center justify-center rounded-full bg-figb text-white shadow-lg transition-all hover:bg-figb-dark active:scale-90 opacity-0 group-hover:opacity-100 lg:opacity-100"
+            className="absolute bottom-2 right-2 flex size-11 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-md transition-colors hover:bg-primary/90 lg:size-8"
             title={t("Scarica PDF")}
+            aria-label={t("Scarica PDF")}
           >
             <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
               <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
@@ -398,17 +390,17 @@ function InfographicCard({
 
       {/* Title */}
       <div className="p-2.5">
-        <h3 className="text-[12px] font-bold text-foreground leading-tight line-clamp-2">
+        <h3 className="text-xs font-bold text-foreground leading-tight line-clamp-2">
           {title}
         </h3>
         {locked ? (
-          <p className="text-[12px] font-medium text-amber-600/80 dark:text-amber-400/80 mt-1 flex items-center gap-1">
-            <span>🔒</span> {t("Completa la lezione per sbloccare")}
+          <p className="mt-1 text-xs font-medium text-muted-foreground">
+            {t("Si apre quando completi la lezione")}
           </p>
         ) : diClasse ? null : (
           <Link
             href={`/lezioni/${lessonId}`}
-            className="text-[12px] font-semibold text-figb dark:text-primary mt-1 inline-block hover:underline"
+            className="text-xs font-semibold text-figb dark:text-primary mt-1 inline-block hover:underline"
           >
             {t("Vai alla lezione →")}
           </Link>
@@ -420,7 +412,7 @@ function InfographicCard({
             href={dispensa.file}
             target="_blank"
             rel="noopener"
-            className="text-[12px] font-semibold text-figb dark:text-primary mt-1 block hover:underline"
+            className="text-xs font-semibold text-figb dark:text-primary mt-1 block hover:underline"
           >
             {t("Dispensa da stampare (PDF)")}
           </a>

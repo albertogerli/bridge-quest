@@ -95,7 +95,7 @@ export function CollegamentiSezione({
                 <span className="block text-[15px] font-semibold text-foreground">
                   {t(v.etichetta)}
                 </span>
-                <span className="block text-[12px] leading-snug text-muted-foreground">
+                <span className="block text-xs leading-snug text-muted-foreground">
                   {t(v.descrizione)}
                 </span>
               </span>

@@ -34,7 +34,7 @@ export function CourseProgressSection({
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-base">{course.icon}</span>
                 <p className="text-sm font-semibold text-foreground/80">{course.name}</p>
-                <span className={`text-[12px] font-bold px-1.5 py-0.5 rounded-full ${levelInfo[course.level].bg} ${levelInfo[course.level].color}`}>
+                <span className={`text-xs font-bold px-1.5 py-0.5 rounded-full ${levelInfo[course.level].bg} ${levelInfo[course.level].color}`}>
                   {levelInfo[course.level].label}
                 </span>
               </div>
@@ -51,7 +51,7 @@ export function CourseProgressSection({
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between mb-1">
                             <p className="text-sm font-bold text-foreground truncate">{w.name}</p>
-                            <span className="text-[12px] font-bold text-muted-foreground tabular-nums">
+                            <span className="text-xs font-bold text-muted-foreground tabular-nums">
                               {wCompleted}/{wModules}
                             </span>
                           </div>

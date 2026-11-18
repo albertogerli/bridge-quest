@@ -210,7 +210,7 @@ function SmazzataBrowserContent() {
             return courseGroups.map((group) => (
               <div key={group.courseName}>
                 {courseGroups.length > 1 && (
-                  <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5 ml-1">
+                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1.5 ml-1">
                     {group.courseName}
                   </p>
                 )}
@@ -276,7 +276,7 @@ function SmazzataBrowserContent() {
                   <div className="flex items-center justify-between mb-2">
                     <Badge
                       variant="outline"
-                      className="text-[12px] font-bold"
+                      className="text-xs font-bold"
                     >
                       Board {smazzata.board}
                     </Badge>
@@ -284,10 +284,10 @@ function SmazzataBrowserContent() {
                       {contrattoLeggibile(smazzata.contract)}
                     </span>
                   </div>
-                  <p className="text-[12px] font-semibold text-foreground/80 leading-tight mt-1 mb-1 line-clamp-2">
+                  <p className="text-xs font-semibold text-foreground/80 leading-tight mt-1 mb-1 line-clamp-2">
                     {smazzata.title}
                   </p>
-                  <p className="text-[12px] text-muted-foreground">
+                  <p className="text-xs text-muted-foreground">
                     Dich: {smazzata.declarer === "north" ? "N" : smazzata.declarer === "south" ? "S" : smazzata.declarer === "east" ? "E" : "O"}
                     {" · "}
                     {tricksNeeded} prese
@@ -324,10 +324,10 @@ function SmazzataBrowserContent() {
               {commentoSelezionata && (
                 <div className="rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-100 dark:border-amber-900 p-3 mb-4">
                   <div className="flex items-start gap-2">
-                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-emerald-700 text-white font-bold text-[12px]">
+                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-emerald-700 text-white font-bold text-xs">
                       M
                     </div>
-                    <p className="text-[12px] text-amber-800 dark:text-amber-300 leading-relaxed">
+                    <p className="text-xs text-amber-800 dark:text-amber-300 leading-relaxed">
                       {commentoSelezionata}
                     </p>
                   </div>
@@ -735,13 +735,13 @@ function PlayingView({
             <div className="inline-flex rounded-xl border border-border bg-card p-0.5 shadow-sm">
               <button
                 onClick={() => setMode("declare")}
-                className={`rounded-lg px-3.5 py-1.5 text-sm font-bold transition-colors ${mode === "declare" ? "bg-emerald text-white" : "text-muted-foreground hover:bg-muted/50"}`}
+                className={`min-h-10 rounded-lg px-3.5 py-1.5 text-sm font-bold transition-colors ${mode === "declare" ? "bg-emerald text-white" : "text-muted-foreground hover:bg-muted/50"}`}
               >
                 {t("Dichiarante")}
               </button>
               <button
                 onClick={() => setMode("defend")}
-                className={`rounded-lg px-3.5 py-1.5 text-sm font-bold transition-colors ${mode === "defend" ? "bg-emerald text-white" : "text-muted-foreground hover:bg-muted/50"}`}
+                className={`min-h-10 rounded-lg px-3.5 py-1.5 text-sm font-bold transition-colors ${mode === "defend" ? "bg-emerald text-white" : "text-muted-foreground hover:bg-muted/50"}`}
               >
                 {t("Difesa")}
               </button>
@@ -1039,10 +1039,10 @@ function PlayingView({
                     </div>
                     <span className="text-xs font-bold text-primary dark:text-primary">{t("Analisi Double-Dummy")}</span>
                     {ddsLoading && (
-                      <span className="text-[12px] text-primary animate-pulse">{t("Calcolo...")}</span>
+                      <span className="text-xs text-primary animate-pulse">{t("Calcolo...")}</span>
                     )}
                     {ddsResult && !ddsResult.isExact && ddSalvato === null && (
-                      <span className="text-[12px] text-primary">(stima)</span>
+                      <span className="text-xs text-primary">(stima)</span>
                     )}
                   </div>
                   {ddTricks !== null ? (
@@ -1084,13 +1084,13 @@ function PlayingView({
                 <div className="grid grid-cols-3 gap-2 mt-6">
                   <div className="bg-card/60 rounded-xl p-2.5">
                     <p className="text-lg font-bold text-foreground">{game.result.tricksMade}</p>
-                    <p className="text-[12px] font-bold text-muted-foreground uppercase">{t("Prese")}</p>
+                    <p className="text-xs font-bold text-muted-foreground uppercase">{t("Prese")}</p>
                   </div>
                   <div className="bg-card/60 rounded-xl p-2.5">
                     <p className={`text-lg font-bold ${success ? "text-emerald-600" : "text-red-600"}`}>
                       {game.result.result >= 0 ? `+${game.result.result}` : game.result.result}
                     </p>
-                    <p className="text-[12px] font-bold text-muted-foreground uppercase">{t("Risultato")}</p>
+                    <p className="text-xs font-bold text-muted-foreground uppercase">{t("Risultato")}</p>
                   </div>
                   <div className="bg-card/60 rounded-xl p-2.5">
                     <p className="text-lg font-bold text-amber-600">
@@ -1098,7 +1098,7 @@ function PlayingView({
                         ? 30 + (game.result.result >= 0 ? 20 : 0) + Math.max(0, game.result.result) * 10
                         : 30 + (game.result.result < 0 ? 20 : 0) + Math.max(0, -game.result.result) * 10}
                     </p>
-                    <p className="text-[12px] font-bold text-muted-foreground uppercase">{profile.xpLabel}</p>
+                    <p className="text-xs font-bold text-muted-foreground uppercase">{profile.xpLabel}</p>
                   </div>
                 </div>
 
@@ -1267,7 +1267,7 @@ function PlayingView({
                       </div>
                       <div className="flex-1">
                         <p className="text-sm font-bold text-foreground">{t("Analizza con l'AI")}</p>
-                        <p className="text-[12px] text-muted-foreground">{t("Scopri dove potevi migliorare")}</p>
+                        <p className="text-xs text-muted-foreground">{t("Scopri dove potevi migliorare")}</p>
                       </div>
                       <svg className="h-5 w-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                         <polyline points="9,6 15,12 9,18" />

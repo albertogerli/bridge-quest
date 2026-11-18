@@ -36,7 +36,7 @@ export function NextUpCards({
         >
           <Link href={`/lezioni/${lessonId}/${nextModule.id}`}>
             <div className="group card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer">
-              <p className="text-[12px] font-bold text-emerald uppercase tracking-wider mb-2">
+              <p className="text-xs font-bold text-emerald uppercase tracking-wider mb-2">
                 {t("Prossimo modulo")}
               </p>
               <div className="flex items-center gap-3">
@@ -46,10 +46,10 @@ export function NextUpCards({
                 <div className="flex-1 min-w-0">
                   <h4 className="font-bold text-foreground text-[15px]">{nextModule.title}</h4>
                   <div className="flex items-center gap-2 mt-0.5">
-                    <Badge className="text-[12px] font-bold border-0 bg-blue-50 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400">
+                    <Badge className="text-xs font-bold border-0 bg-blue-50 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400">
                       {nextModule.type === "theory" ? "Teoria" : nextModule.type === "quiz" ? "Quiz" : nextModule.type === "exercise" ? "Esercizio" : "Pratica"}
                     </Badge>
-                    <span className="text-[12px] text-muted-foreground">{nextModule.duration} min · +{nextModule.xpReward} XP</span>
+                    <span className="text-xs text-muted-foreground">{nextModule.duration} min · +{nextModule.xpReward} XP</span>
                   </div>
                 </div>
                 <svg className="h-5 w-5 text-muted-foreground/50 group-hover:text-emerald group-hover:translate-x-0.5 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
@@ -70,7 +70,7 @@ export function NextUpCards({
         >
           <Link href={`/lezioni/${nextLesson.id}`}>
             <div className="group card-clean card-interactive rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900 p-4 cursor-pointer">
-              <p className="text-[12px] font-bold text-emerald-dark dark:text-emerald-300 uppercase tracking-wider mb-2">
+              <p className="text-xs font-bold text-emerald-dark dark:text-emerald-300 uppercase tracking-wider mb-2">
                 {t("Prossima lezione")}
               </p>
               <div className="flex items-center gap-3">
@@ -81,7 +81,7 @@ export function NextUpCards({
                   <h4 className="font-bold text-foreground text-[15px]">
                     Lezione {getLessonDisplayNumber(nextLesson.id)}: {nextLesson.title}
                   </h4>
-                  <p className="text-[12px] text-muted-foreground mt-0.5">
+                  <p className="text-xs text-muted-foreground mt-0.5">
                     {nextLesson.modules.length} moduli · {nextLesson.subtitle}
                   </p>
                 </div>

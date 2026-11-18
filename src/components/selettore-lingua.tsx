@@ -38,7 +38,7 @@ export function SelettoreLingua({ className = "" }: { className?: string }) {
             // Un cambio di lingua non si prepara in anticipo: la radice `/en` darebbe 404 al prefetch.
             prefetch={false}
             aria-current={attiva ? "true" : undefined}
-            className={`rounded px-2 py-1 text-xs font-medium transition-colors ${
+            className={`flex min-h-10 items-center rounded px-3 text-sm font-medium transition-colors lg:min-h-0 lg:px-2 lg:py-1 lg:text-xs ${
               attiva
                 ? "bg-muted text-foreground"
                 : "text-muted-foreground hover:text-foreground"

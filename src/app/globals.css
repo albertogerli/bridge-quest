@@ -5,6 +5,11 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  /* Il testo più piccolo del sito è 13px (18/11/2026, giro mobile): text-xs
+     di Tailwind è 12px, troppo poco per un pubblico fra i 45 e i 75 anni
+     sullo schermo di un telefono. Vedi src/lib/tipografia.test.ts. */
+  --text-xs: 0.8125rem;
+  --text-xs--line-height: 1.125rem;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);

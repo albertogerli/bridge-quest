@@ -191,7 +191,7 @@ export default function ImpostazioniPage() {
       {/* Header */}
       <div className="border-b border-border bg-card px-4 pt-12 pb-8">
         <div className="max-w-3xl mx-auto">
-          <Link href="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground mb-4 transition-colors">
+          <Link href="/" className="mb-2 -my-2 inline-flex min-h-11 items-center gap-2 py-2 text-muted-foreground transition-colors hover:text-foreground">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M15 18l-6-6 6-6" />
             </svg>
@@ -469,11 +469,11 @@ export default function ImpostazioniPage() {
                 {notifications.enabled ? "Attive" : notifications.permission === "denied" ? "Bloccate dal browser" : "Disattivate"}
               </Badge>
             </div>
-            <p className="mt-2 text-[12px] text-muted-foreground">
+            <p className="mt-2 text-xs text-muted-foreground">
               {t("Sfide, risultati e promemoria compaiono mentre l’app è aperta. Quando non lo è, i promemoria arrivano per email.")}
             </p>
             {notifications.permission === "denied" && (
-              <p className="mt-2 text-[12px] text-red-600 dark:text-red-400">
+              <p className="mt-2 text-xs text-red-600 dark:text-red-400">
                 {t("Le notifiche sono bloccate dal browser. Per riattivarle, modifica le impostazioni del sito nel browser.")}
               </p>
             )}
@@ -515,7 +515,7 @@ export default function ImpostazioniPage() {
                     {AI_LEVEL_LABELS[level]}
                   </span>
                   {aiLevel === level && (
-                    <Badge className="ml-auto bg-figb text-white text-[12px] hover:bg-figb">
+                    <Badge className="ml-auto bg-figb text-white text-xs hover:bg-figb">
                       {t("Attivo")}
                     </Badge>
                   )}
@@ -568,7 +568,7 @@ export default function ImpostazioniPage() {
                     {p.label}
                   </span>
                   {profile === p.key && (
-                    <Badge className="ml-auto bg-figb text-white text-[12px] hover:bg-figb">
+                    <Badge className="ml-auto bg-figb text-white text-xs hover:bg-figb">
                       {t("Attivo")}
                     </Badge>
                   )}
@@ -777,12 +777,12 @@ export default function ImpostazioniPage() {
         >
           <div className="inline-flex items-center gap-2 bg-card/80 border border-border rounded-full px-4 py-2 shadow-sm">
             <span className="text-figb dark:text-primary font-bold text-sm">{t("Bridge LAB")}</span>
-            <Badge variant="secondary" className="bg-muted text-muted-foreground text-[12px] hover:bg-muted">
+            <Badge variant="secondary" className="bg-muted text-muted-foreground text-xs hover:bg-muted">
               v{APP_VERSION}
             </Badge>
           </div>
           <p className="text-muted-foreground text-xs mt-2">{t("FIGB - Federazione Italiana Gioco Bridge")}</p>
-          <p className="text-muted-foreground text-[12px] mt-1">{t("Sviluppo: A. G. Gerli / Tourbillon Tech")}</p>
+          <p className="text-muted-foreground text-xs mt-1">{t("Sviluppo: A. G. Gerli / Tourbillon Tech")}</p>
         </motion.div>
       </div>
     </div>

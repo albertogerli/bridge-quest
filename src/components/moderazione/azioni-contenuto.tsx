@@ -84,7 +84,7 @@ export function AzioniContenuto({
       <button
         type="button"
         onClick={apri}
-        className={`inline-flex items-center gap-1 text-[12px] text-muted-foreground transition-colors hover:text-red-500 ${className}`}
+        className={`-my-2 inline-flex min-h-10 items-center gap-1 px-1 py-2 text-xs text-muted-foreground transition-colors hover:text-red-500 ${className}`}
         aria-label={t("Segnala o blocca")}
       >
         <Flag className="h-3 w-3" aria-hidden="true" />

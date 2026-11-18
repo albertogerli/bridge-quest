@@ -40,10 +40,20 @@ export function Hand({
   // Fluid mode: compute exact card pixel width from container
   // Cap at 70px so cards with 1-2 remaining don't become absurdly large
   const MAX_CARD_WIDTH = position === "south" ? 80 : 60;
-  const cardWidth =
+  const affiancate =
     containerWidth && cards.length > 0 && !isVertical
       ? Math.min(MAX_CARD_WIDTH, Math.floor((containerWidth - GAP * (cards.length - 1)) / cards.length))
       : undefined;
+  /*
+   * SUL TELEFONO SI SOVRAPPONGONO (18/11/2026). Affiancate, tredici carte su
+   * 350 pixel erano larghe 25 e alte 35: il bersaglio più toccato dell'app era
+   * il più piccolo. Sotto i 40 pixel le carte diventano più grandi e si
+   * sovrappongono come in mano, con l'indice nell'angolo: ognuna resta larga
+   * quanto prima da toccare, ma il doppio più alta e leggibile.
+   */
+  const sovrapposte = affiancate !== undefined && affiancate < 40 && cards.length > 1 && !!containerWidth;
+  const cardWidth = sovrapposte ? Math.min(56, Math.floor(containerWidth! * 0.16)) : affiancate;
+  const passo = sovrapposte ? (containerWidth! - cardWidth!) / (cards.length - 1) : 0;
 
   /*
    * L'ORDINE SI CAMBIA SOLO A VIDEO. I semi si mostrano alternando nero e
@@ -74,7 +84,7 @@ export function Hand({
     return (
       <div
         className="flex items-end justify-center"
-        style={{ gap: GAP }}
+        style={{ gap: sovrapposte ? 0 : GAP }}
         role="group"
         aria-label={
           faceDown
@@ -88,7 +98,7 @@ export function Hand({
             initial={{ y: 10 }}
             animate={{ y: 0 }}
             transition={{ delay: index * 0.03, duration: 0.15 }}
-            style={{ zIndex: index }}
+            style={{ zIndex: index, marginLeft: sovrapposte && index > 0 ? passo - cardWidth : 0 }}
           >
             <PlayingCard
               card={card}
@@ -98,6 +108,7 @@ export function Hand({
               disabled={disabled || (highlightedCards.length > 0 && !isHighlighted(card))}
               onClick={() => onSelectCard?.(i)}
               cardWidth={cardWidth}
+              angolo={sovrapposte}
               noHover={noHover}
             />
           </motion.div>

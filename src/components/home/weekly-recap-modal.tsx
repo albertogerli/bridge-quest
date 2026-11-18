@@ -57,19 +57,19 @@ export function WeeklyRecapModal({ open, onClose, data, title }: WeeklyRecapModa
             <div className="grid grid-cols-2 gap-3 mt-6">
               <div className="bg-emerald-50 dark:bg-emerald-950/30 rounded-xl p-3 border border-emerald-200 dark:border-emerald-800">
                 <p className="text-2xl font-bold text-emerald-600">+{data.xpEarned}</p>
-                <p className="text-[12px] font-medium text-emerald-700 dark:text-emerald-400">{t("XP guadagnati")}</p>
+                <p className="text-xs font-medium text-emerald-700 dark:text-emerald-400">{t("XP guadagnati")}</p>
               </div>
               <div className="bg-amber-50 dark:bg-amber-950/30 rounded-xl p-3 border border-amber-200 dark:border-amber-800">
                 <p className="text-2xl font-bold text-amber-600">{data.modulesCompleted}</p>
-                <p className="text-[12px] font-medium text-amber-700 dark:text-amber-400">{t("Moduli completati")}</p>
+                <p className="text-xs font-medium text-amber-700 dark:text-amber-400">{t("Moduli completati")}</p>
               </div>
               <div className="bg-primary/10 dark:bg-primary/15 rounded-xl p-3 border border-primary/20 dark:border-primary/20">
                 <p className="text-2xl font-bold text-primary">{data.handsPlayed}</p>
-                <p className="text-[12px] font-medium text-primary dark:text-primary">{t("Mani giocate")}</p>
+                <p className="text-xs font-medium text-primary dark:text-primary">{t("Mani giocate")}</p>
               </div>
               <div className="bg-orange-50 dark:bg-orange-950/30 rounded-xl p-3 border border-orange-200 dark:border-orange-800">
                 <p className="text-2xl font-bold text-orange-600">{data.streakDays}</p>
-                <p className="text-[12px] font-medium text-orange-700 dark:text-orange-400">{t("Giorni streak")}</p>
+                <p className="text-xs font-medium text-orange-700 dark:text-orange-400">{t("Giorni streak")}</p>
               </div>
             </div>
 

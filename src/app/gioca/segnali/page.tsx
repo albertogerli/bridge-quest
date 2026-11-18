@@ -444,15 +444,15 @@ export default function SegnaliPage() {
                 <p className="text-lg font-bold text-foreground">
                   {correctCount}/{config.rounds}
                 </p>
-                <p className="text-[12px] text-muted-foreground font-bold">{t("Corrette")}</p>
+                <p className="text-xs text-muted-foreground font-bold">{t("Corrette")}</p>
               </div>
               <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-foreground">{bestStreak}</p>
-                <p className="text-[12px] text-muted-foreground font-bold">{t("Streak max")}</p>
+                <p className="text-xs text-muted-foreground font-bold">{t("Streak max")}</p>
               </div>
               <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-primary">+{xpEarned}</p>
-                <p className="text-[12px] text-muted-foreground font-bold">{profileConfig.xpLabel}</p>
+                <p className="text-xs text-muted-foreground font-bold">{profileConfig.xpLabel}</p>
               </div>
             </div>
 
@@ -506,7 +506,7 @@ export default function SegnaliPage() {
 
         {/* Streak + score */}
         <div className="flex items-center justify-between mb-4">
-          <span className="inline-flex items-center rounded-full bg-primary/10 dark:bg-primary/15 px-3 py-1 text-[12px] font-bold text-primary dark:text-primary">
+          <span className="inline-flex items-center rounded-full bg-primary/10 dark:bg-primary/15 px-3 py-1 text-xs font-bold text-primary dark:text-primary">
             {KIND_LABELS[current.kind]}
           </span>
           {streak > 0 && (

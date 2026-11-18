@@ -53,7 +53,7 @@ export function Briciole({ percorso }: { percorso: Briciola[] }) {
       {ultimoLink && !ritornoInCornice && (
         <Link
           href={ultimoLink.href!}
-          className="inline-flex items-center gap-1 hover:text-foreground hover:underline sm:hidden"
+          className="-my-2 inline-flex min-h-11 items-center gap-1 py-2 pr-3 hover:text-foreground hover:underline sm:hidden"
         >
           <ChevronLeft className="h-4 w-4" />
           {ultimoLink.etichetta}

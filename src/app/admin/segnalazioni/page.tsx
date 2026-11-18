@@ -156,7 +156,7 @@ export default function SegnalazioniPage() {
                 <summary className="cursor-pointer text-xs font-semibold text-muted-foreground">
                   {t("Contesto")}
                 </summary>
-                <pre className="mt-2 max-h-64 overflow-auto rounded-lg bg-muted p-3 text-[12px] leading-relaxed">
+                <pre className="mt-2 max-h-64 overflow-auto rounded-lg bg-muted p-3 text-xs leading-relaxed">
                   {JSON.stringify(s.contesto, null, 2)}
                 </pre>
               </details>

@@ -121,7 +121,7 @@ export function CompositoreVincoli({
             >
               <span className="font-semibold">{p.nome}</span>
               {attivo && (
-                <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[12px] font-medium text-primary">
+                <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
                   con vincoli
                 </span>
               )}
@@ -215,7 +215,7 @@ export function CompositoreVincoli({
               onChange={(e) => setTesto(e.target.value)}
               rows={10}
               spellCheck={false}
-              className="w-full rounded-lg border border-border bg-background p-2 font-mono text-[12px]"
+              className="w-full rounded-lg border border-border bg-background p-2 font-mono text-xs"
             />
             {erroreTesto && <p className="mt-1 text-sm text-destructive">{erroreTesto}</p>}
             <button

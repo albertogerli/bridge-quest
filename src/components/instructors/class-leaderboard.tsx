@@ -115,7 +115,7 @@ export function ClassLeaderboard({
           })}
         </tbody>
       </table>
-      <p className="border-t border-border px-3 py-2 text-[12px] text-muted-foreground">
+      <p className="border-t border-border px-3 py-2 text-xs text-muted-foreground">
         {t("Ordine: mani mantenute al 1° tentativo → prese totali → velocità.")}
       </p>
     </div>

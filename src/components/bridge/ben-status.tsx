@@ -39,7 +39,7 @@ export function BenStatus({ available, aiLevel = AI_LEVEL_PREDEFINITO }: BenStat
     <motion.div
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[12px] font-bold"
+      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold"
       style={{
         backgroundColor: colors.bg,
         color: colors.text,

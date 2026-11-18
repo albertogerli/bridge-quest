@@ -20,7 +20,9 @@ import { join } from "node:path";
  */
 
 const ROOTS = ["src/app", "src/components"];
-const TROPPO_PICCOLO = /text-\[([0-9]|1[01])px\]/g;
+// Dal 18/11/2026 il pavimento è 13px: `text-xs` vale 13px (globals.css) e
+// anche `text-[12px]` è vietato, perché scavalcava il pavimento.
+const TROPPO_PICCOLO = /text-\[([0-9]|1[012])px\]/g;
 
 function walk(dir: string): string[] {
   const out: string[] = [];
@@ -32,7 +34,7 @@ function walk(dir: string): string[] {
   return out;
 }
 
-describe("nessun testo sotto i 12 pixel", () => {
+describe("nessun testo sotto i 13 pixel", () => {
   it("in tutta l'interfaccia", () => {
     const colpevoli: string[] = [];
     for (const file of ROOTS.flatMap(walk)) {
@@ -41,9 +43,9 @@ describe("nessun testo sotto i 12 pixel", () => {
     }
     expect(
       colpevoli,
-      "Sotto i 12px il testo diventa illeggibile per buona parte del pubblico " +
+      "Sotto i 13px il testo diventa illeggibile per buona parte del pubblico " +
         "di BridgeLab (45-65 anni). Per un'etichetta molto secondaria usare " +
-        "text-[12px]; per il corpo del testo 14px o più."
+        "text-xs (13px); per il corpo del testo 14px o più."
     ).toEqual([]);
   });
 });

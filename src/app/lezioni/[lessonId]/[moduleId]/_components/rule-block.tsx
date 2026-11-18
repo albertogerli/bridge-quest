@@ -31,7 +31,7 @@ export function RuleBlock({ block, delay, ctx }: ContentBlockProps) {
         </div>
         <div>
           <p className={`font-bold uppercase tracking-widest mb-1 ${
-            isJunior ? "text-[12px] text-primary dark:text-primary" : "text-[12px] text-emerald"
+            isJunior ? "text-xs text-primary dark:text-primary" : "text-xs text-emerald"
           }`}>{isJunior ? "Regola Importante!" : "Regola"}</p>
           <p className={`font-semibold leading-relaxed ${
             isJunior ? "text-[15px] text-primary dark:text-primary" : "text-[14px] text-emerald-900 dark:text-emerald-200"

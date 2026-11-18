@@ -487,7 +487,7 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
                       </div>
                       <div className="flex-1">
                         <p className="text-sm font-bold text-foreground">{t("Analizza con l'AI")}</p>
-                        <p className="text-[12px] text-muted-foreground">{t("Scopri dove potevi migliorare")}</p>
+                        <p className="text-xs text-muted-foreground">{t("Scopri dove potevi migliorare")}</p>
                       </div>
                       <svg className="h-5 w-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                         <polyline points="9,6 15,12 9,18" />
@@ -544,7 +544,7 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1.5">
                           <p className="font-bold text-sm text-foreground">{t("Maestro Fiori")}</p>
-                          <Badge className="bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 text-[12px] font-bold border-0">
+                          <Badge className="bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 text-xs font-bold border-0">
                             {t("Suggerimento")}
                           </Badge>
                         </div>

@@ -3251,5 +3251,6 @@
   "{n} gg": "{n} d",
   "Obiettivo: {n} prese": "Target: {n} tricks",
   "Vulnerabilità: {v}": "Vulnerability: {v}",
-  "Livello {n}": "Level {n}"
+  "Livello {n}": "Level {n}",
+  "Si apre quando completi la lezione": "Opens when you complete the lesson"
 }

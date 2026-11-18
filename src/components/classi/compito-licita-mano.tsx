@@ -4,13 +4,14 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, Play, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { SuitSymbol } from "@/components/bridge/suit-symbol";
+import { Ventaglio } from "@/components/bridge/ventaglio";
+import { ordinaManoAlternata } from "@/lib/ordine-semi";
 import { Asta } from "@/components/bridge/asta";
 import { AttesaDichiarazione } from "@/components/bridge/attesa-dichiarazione";
 import { RiepilogoMano } from "@/components/bridge/riepilogo-mano";
 import { RisultatoDoppioMorto } from "@/components/bridge/risultato-doppio-morto";
 import { Stelle } from "@/components/bridge/stelle";
-import { partnershipOf, type Card, type Position, type Suit } from "@/lib/bridge-engine";
+import { partnershipOf, type Position } from "@/lib/bridge-engine";
 import type { Smazzata, Vulnerability } from "@/lib/catalog";
 import { handHcp } from "@/lib/deal-generator";
 import { calcTableAndPar, type DdsTable } from "@/lib/dds-table";
@@ -23,8 +24,6 @@ import { mazziereDellaMano, rigaCompitoLicita } from "@/lib/compito-licita";
 import { reportError } from "@/lib/report-error";
 import { useT } from "@/contexts/traduzioni-provider";
 
-const SUITS: Suit[] = ["spade", "heart", "diamond", "club"];
-const RANK_ORDER = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
 
 const ETICHETTA: Record<Position, string> = {
   north: "Nord", east: "Est", south: "Sud", west: "Ovest",
@@ -270,12 +269,11 @@ export function CompitoLicitaMano({
             {handHcp(deal.south)} PO · {t(ZONA[vulnerability])}
           </span>
         </div>
-        {SUITS.map((suit) => (
-          <p key={suit} className="flex items-center gap-2 font-mono text-lg">
-            <SuitSymbol suit={suit} size="sm" />
-            {formatSuit(deal.south, suit)}
-          </p>
-        ))}
+        {/* Le carte vere sul panno, non «♠ K Q J 7» scritto (18/11/2026):
+            è la mano da cui si dichiara, ed è l'unica cosa da guardare. */}
+        <div className="-mx-5 -mb-5 rounded-b-2xl panno-bg px-2 pb-3">
+          <Ventaglio carte={ordinaManoAlternata(deal.south)} larghezza={48} etichetta={t("La tua mano (Sud)")} />
+        </div>
       </div>
 
       {erroreCalcolo && (
@@ -405,12 +403,4 @@ export interface ContrattoDaGiocare {
   /** La licita come l'ha dichiarata, nella forma della schermata. */
   bids: string[];
   riga: ReturnType<typeof rigaCompitoLicita>;
-}
-
-function formatSuit(hand: readonly Card[], suit: Suit): string {
-  const cards = hand
-    .filter((c) => c.suit === suit)
-    .sort((a, b) => RANK_ORDER.indexOf(a.rank) - RANK_ORDER.indexOf(b.rank))
-    .map((c) => c.rank);
-  return cards.length ? cards.join(" ") : "—";
 }

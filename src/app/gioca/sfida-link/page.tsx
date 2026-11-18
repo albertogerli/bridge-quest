@@ -605,14 +605,14 @@ function SfidaLinkContent() {
                       <div className="grid grid-cols-2 gap-4 mb-5">
                         {/* Your result */}
                         <div className="text-center rounded-2xl bg-muted/50 p-4 border border-border">
-                          <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-2">Tu</p>
+                          <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Tu</p>
                           <p className="text-4xl font-bold text-foreground">{myResult.myTricks}</p>
                           <p className="text-xs text-muted-foreground mt-1">prese</p>
                         </div>
 
                         {/* Creator result */}
                         <div className="text-center rounded-2xl bg-muted/50 p-4 border border-border">
-                          <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-2">{t("Sfidante")}</p>
+                          <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">{t("Sfidante")}</p>
                           <p className="text-4xl font-bold text-foreground">{creatorResult.myTricks}</p>
                           <p className="text-xs text-muted-foreground mt-1">prese</p>
                         </div>
@@ -705,7 +705,7 @@ function SfidaLinkContent() {
 
                     {/* Link preview */}
                     <div className="mt-4 bg-black/20 rounded-xl px-4 py-2.5">
-                      <p className="text-[12px] text-white/50 font-mono break-all">
+                      <p className="text-xs text-white/50 font-mono break-all">
                         bridgelab.it/gioca/sfida-link?s={seed}
                       </p>
                     </div>

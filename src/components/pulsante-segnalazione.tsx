@@ -150,7 +150,7 @@ export function PulsanteSegnalazione({
             </span>
           </label>
 
-          <p className="mt-2 text-[12px] leading-relaxed text-muted-foreground">
+          <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
             {t("Mandiamo anche: pagina, mano in corso, dimensioni dello schermo, browser ed eventuali errori. Nessun dato personale.")}
           </p>
 

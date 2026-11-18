@@ -181,7 +181,7 @@ export function TournamentSummary({
                       : "bg-red-100/80 border border-red-200 dark:bg-red-950/40 dark:border-red-900"
                   }`}
                 >
-                  <p className="text-[12px] font-bold text-muted-foreground">
+                  <p className="text-xs font-bold text-muted-foreground">
                     #{i + 1}
                   </p>
                   <p className="text-xs font-bold text-muted-foreground">
@@ -198,7 +198,7 @@ export function TournamentSummary({
                     {hr.tricksMade}/{hr.tricksNeeded}
                   </p>
                   <p
-                    className={`text-[12px] font-bold ${
+                    className={`text-xs font-bold ${
                       hr.result >= 0
                         ? "text-emerald-600 dark:text-emerald-400"
                         : "text-red-500 dark:text-red-400"
@@ -223,7 +223,7 @@ export function TournamentSummary({
                     +{xpEarned} {xpLabel}
                   </span>
                 </div>
-                <p className="text-[12px] text-muted-foreground">
+                <p className="text-xs text-muted-foreground">
                   ({handXp} gioco + {tournamentBonus} bonus torneo)
                 </p>
               </motion.div>

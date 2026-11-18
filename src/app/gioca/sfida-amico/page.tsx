@@ -749,7 +749,7 @@ function ActiveChallenge({
 
                     {/* Link preview */}
                     <div className="mt-4 bg-black/20 rounded-xl px-4 py-2.5">
-                      <p className="text-[12px] text-white/50 font-mono break-all">
+                      <p className="text-xs text-white/50 font-mono break-all">
                         bridgelab.it/gioca/sfida-amico?id=...
                       </p>
                     </div>
@@ -785,16 +785,16 @@ function ActiveChallenge({
                   <div className="grid grid-cols-2 gap-4 mb-5">
                     {/* Your result */}
                     <div className="text-center rounded-2xl bg-muted/50 p-4 border border-border">
-                      <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-2">Tu</p>
+                      <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Tu</p>
                       <p className="text-4xl font-bold text-foreground">{myTricks}</p>
                       <p className="text-xs text-muted-foreground mt-1">prese</p>
                       <div className="mt-2">
                         {game.result.result >= 0 ? (
-                          <span className="inline-flex items-center gap-1 text-[12px] font-bold text-emerald-700 bg-emerald-50 dark:text-emerald-300 dark:bg-emerald-950/40 rounded-full px-2.5 py-0.5">
+                          <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 bg-emerald-50 dark:text-emerald-300 dark:bg-emerald-950/40 rounded-full px-2.5 py-0.5">
                             {game.result.result === 0 ? "Fatto" : `+${game.result.result}`}
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 text-[12px] font-bold text-red-700 bg-red-50 dark:text-red-300 dark:bg-red-950/40 rounded-full px-2.5 py-0.5">
+                          <span className="inline-flex items-center gap-1 text-xs font-bold text-red-700 bg-red-50 dark:text-red-300 dark:bg-red-950/40 rounded-full px-2.5 py-0.5">
                             {game.result.result}
                           </span>
                         )}
@@ -803,18 +803,18 @@ function ActiveChallenge({
 
                     {/* Challenger result */}
                     <div className="text-center rounded-2xl bg-muted/50 p-4 border border-border">
-                      <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-2">{t("Sfidante")}</p>
+                      <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">{t("Sfidante")}</p>
                       <p className="text-4xl font-bold text-foreground">{challengerTricks}</p>
                       <p className="text-xs text-muted-foreground mt-1">prese</p>
                       <div className="mt-2">
                         {challengerTricks! - (challengerNeeded ?? tricksNeeded) >= 0 ? (
-                          <span className="inline-flex items-center gap-1 text-[12px] font-bold text-emerald-700 bg-emerald-50 dark:text-emerald-300 dark:bg-emerald-950/40 rounded-full px-2.5 py-0.5">
+                          <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 bg-emerald-50 dark:text-emerald-300 dark:bg-emerald-950/40 rounded-full px-2.5 py-0.5">
                             {challengerTricks! - (challengerNeeded ?? tricksNeeded) === 0
                               ? "Fatto"
                               : `+${challengerTricks! - (challengerNeeded ?? tricksNeeded)}`}
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 text-[12px] font-bold text-red-700 bg-red-50 dark:text-red-300 dark:bg-red-950/40 rounded-full px-2.5 py-0.5">
+                          <span className="inline-flex items-center gap-1 text-xs font-bold text-red-700 bg-red-50 dark:text-red-300 dark:bg-red-950/40 rounded-full px-2.5 py-0.5">
                             {challengerTricks! - (challengerNeeded ?? tricksNeeded)}
                           </span>
                         )}
@@ -890,7 +890,7 @@ function ActiveChallenge({
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1.5">
                     <p className="font-bold text-sm text-foreground">{t("Maestro Fiori")}</p>
-                    <Badge className="bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 text-[12px] font-bold border-0">
+                    <Badge className="bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 text-xs font-bold border-0">
                       {t("Suggerimento")}
                     </Badge>
                   </div>
@@ -933,7 +933,7 @@ function PastChallenges() {
       <div className="rounded-2xl bg-card p-5 border-2 border-border">
         <div className="flex items-center justify-between mb-3">
           <h3 className="font-bold text-foreground">{t("Sfide Create")}</h3>
-          <Badge variant="outline" className="text-[12px] font-bold text-muted-foreground border-border">
+          <Badge variant="outline" className="text-xs font-bold text-muted-foreground border-border">
             {challenges.length} sfide
           </Badge>
         </div>
@@ -960,7 +960,7 @@ function PastChallenges() {
                   <p className="text-sm font-bold text-foreground truncate">
                     {smz?.title ?? `Mano ${ch.smazzataId}`}
                   </p>
-                  <p className="text-[12px] text-muted-foreground">
+                  <p className="text-xs text-muted-foreground">
                     {ch.myTricks}/{ch.tricksNeeded} prese {"\u00B7"} {dateStr}
                   </p>
                 </div>

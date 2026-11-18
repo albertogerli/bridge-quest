@@ -76,7 +76,7 @@ export function SingleHandView({
             </button>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
-                <Badge className="bg-primary/10 text-primary text-[12px] font-bold border-0 shrink-0">
+                <Badge className="bg-primary/10 text-primary text-xs font-bold border-0 shrink-0">
                   Torneo · Mano {handNumber}/{totalHands}
                 </Badge>
                 <BenStatus available={game.benAvailable} />
@@ -119,7 +119,7 @@ export function SingleHandView({
             className={`card-elevated rounded-xl bg-card flex items-center text-sm ${isMobile ? "px-3 py-1.5 gap-3" : "px-4 py-2 gap-5"}`}
           >
             <div className="text-center">
-              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
+              <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                 {t("Contratto")}
               </p>
               <p
@@ -130,7 +130,7 @@ export function SingleHandView({
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
+              <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                 {t("Obiettivo")}
               </p>
               <p
@@ -141,7 +141,7 @@ export function SingleHandView({
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
+              <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                 {t("Dich. / Dif.")}
               </p>
               <p

@@ -843,22 +843,22 @@ function SfidaIMPContent() {
             <div className="mt-6 rounded-2xl bg-card p-5 border-2 border-border">
               <div className="grid grid-cols-3 gap-4 text-center">
                 <div>
-                  <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-1">{t("Contratto")}</p>
+                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">{t("Contratto")}</p>
                   <p className="text-xl font-bold text-foreground">{contractDisplay(boardContract.contract)}</p>
                 </div>
                 <div>
-                  <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-1">{t("Prese")}</p>
+                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">{t("Prese")}</p>
                   <p className="text-xl font-bold text-foreground">{currentBoardResult.tricksMade}/{tricksNeeded}</p>
                 </div>
                 <div>
-                  <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-1">{t("Risultato")}</p>
+                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">{t("Risultato")}</p>
                   <p className={`text-xl font-bold ${trickDiff >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-500 dark:text-red-400"}`}>
                     {formatResult(trickDiff)}
                   </p>
                 </div>
               </div>
               <div className="mt-3 pt-3 border-t border-border text-center">
-                <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-1">{t("Punteggio grezzo")}</p>
+                <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">{t("Punteggio grezzo")}</p>
                 <p className={`text-lg font-bold ${currentBoardResult.rawScore >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-500 dark:text-red-400"}`}>
                   {currentBoardResult.rawScore > 0 ? "+" : ""}{currentBoardResult.rawScore}
                 </p>
@@ -968,7 +968,7 @@ function SfidaIMPContent() {
               {/* Comparison Table */}
               <div className="mt-6 rounded-2xl bg-card border-2 border-border overflow-hidden">
                 {/* Table Header */}
-                <div className="grid grid-cols-5 text-[12px] font-bold text-muted-foreground uppercase tracking-wider bg-muted/50 px-4 py-3">
+                <div className="grid grid-cols-5 text-xs font-bold text-muted-foreground uppercase tracking-wider bg-muted/50 px-4 py-3">
                   <div className="text-left">{t("Mano")}</div>
                   <div className="text-center">{t("Contr.")}</div>
                   <div className="text-center">Tu</div>

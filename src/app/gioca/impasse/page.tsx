@@ -492,13 +492,13 @@ export default function ImpassePage() {
                 <p className="text-lg font-bold text-foreground">
                   {correctCount}
                 </p>
-                <p className="text-[12px] text-muted-foreground font-bold">{t("Corrette")}</p>
+                <p className="text-xs text-muted-foreground font-bold">{t("Corrette")}</p>
               </div>
               <div className="card-clean rounded-xl bg-card p-3">
                 <p className="text-lg font-bold text-foreground">
                   {bestStreak}
                 </p>
-                <p className="text-[12px] text-muted-foreground font-bold">
+                <p className="text-xs text-muted-foreground font-bold">
                   {t("Streak max")}
                 </p>
               </div>
@@ -506,7 +506,7 @@ export default function ImpassePage() {
                 <p className="text-lg font-bold text-blue-500">
                   +{xpEarned}
                 </p>
-                <p className="text-[12px] text-muted-foreground font-bold">{profileConfig.xpLabel}</p>
+                <p className="text-xs text-muted-foreground font-bold">{profileConfig.xpLabel}</p>
               </div>
             </div>
 
@@ -648,7 +648,7 @@ export default function ImpassePage() {
           <div className="grid grid-cols-2 gap-4">
             {/* Your hand */}
             <div className="text-center">
-              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-2">
+              <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">
                 {t("La tua mano")}
               </p>
               <div className="bg-card rounded-xl p-3 border border-blue-100 dark:border-blue-900">
@@ -660,7 +660,7 @@ export default function ImpassePage() {
 
             {/* Dummy */}
             <div className="text-center">
-              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-2">
+              <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">
                 {t("Il morto")}
               </p>
               <div className="bg-amber-50 dark:bg-amber-950/30 rounded-xl p-3 border border-amber-100 dark:border-amber-900">
@@ -708,7 +708,7 @@ export default function ImpassePage() {
                 <path d="M12 18 L20 18" />
               </svg>
               <p className="text-xl font-bold">{t("IMPASSE")}</p>
-              <p className="text-[12px] text-white/70 font-bold mt-1">
+              <p className="text-xs text-white/70 font-bold mt-1">
                 {t("Finesse")}
               </p>
             </button>
@@ -732,7 +732,7 @@ export default function ImpassePage() {
                 <line x1="8" y1="26" x2="24" y2="26" />
               </svg>
               <p className="text-xl font-bold">DROP</p>
-              <p className="text-[12px] text-white/70 font-bold mt-1">
+              <p className="text-xs text-white/70 font-bold mt-1">
                 {t("Gioca dall'alto")}
               </p>
             </button>

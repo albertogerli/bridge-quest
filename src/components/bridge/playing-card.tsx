@@ -78,7 +78,7 @@ export function PlayingCard({
   };
 
   const suitSizes = {
-    xs: "text-[12px]",
+    xs: "text-xs",
     sm: "text-sm",
     md: "text-lg",
     lg: "text-xl",
@@ -142,10 +142,12 @@ export function PlayingCard({
     >
       {/* Simple clean layout: rank + suit, centered */}
       <div
-        className={`flex h-full flex-col ${angolo ? "items-start justify-start px-1 pt-1" : "items-center justify-center"} ${suitColors[card.suit]}`}
+        className={`flex h-full flex-col ${angolo ? "items-start justify-start pl-0.5 pt-1" : "items-center justify-center"} ${suitColors[card.suit]}`}
         aria-hidden="true"
       >
-        <span className={`${rankSizes[effectiveSize]} font-black leading-none`}>{card.rank}</span>
+        {/* Nell'angolo (carte sovrapposte) il «10» deve stare nella striscia che
+            resta scoperta, circa 24 pixel sul telefono: si stringe. */}
+        <span className={`${rankSizes[effectiveSize]} font-black leading-none ${angolo && card.rank === "10" ? "-ml-0.5 tracking-[-0.12em]" : ""}`}>{card.rank}</span>
         <span className={`${suitSizes[effectiveSize]} leading-none`}>{suitSymbols[card.suit]}</span>
       </div>
     </motion.button>

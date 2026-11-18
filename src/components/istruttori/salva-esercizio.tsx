@@ -151,7 +151,7 @@ export function SalvaEsercizio({
                 key={c}
                 onClick={() => setConsegna(c)}
                 aria-pressed={consegna === c}
-                className={`rounded-lg px-2.5 py-1.5 text-[12px] font-semibold transition-colors ${
+                className={`rounded-lg px-2.5 py-1.5 text-xs font-semibold transition-colors ${
                   consegna === c ? "bg-primary text-primary-foreground" : "bg-muted hover:bg-muted/70"
                 }`}
               >

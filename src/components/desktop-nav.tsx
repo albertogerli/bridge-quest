@@ -201,7 +201,7 @@ export function DesktopNav({ variante = "barra" }: { variante?: "barra" | "panne
           <span>{t(item.label)}</span>
           {item.href === "/amici" && pendingFriends > 0 && (
             <span
-              className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1.5 text-[12px] font-bold text-white"
+              className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1.5 text-xs font-bold text-white"
               aria-label={t("{n} richieste di amicizia in attesa", { n: pendingFriends })}
             >
               {pendingFriends > 9 ? "9+" : pendingFriends}
@@ -233,7 +233,7 @@ export function DesktopNav({ variante = "barra" }: { variante?: "barra" | "panne
       <div className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
         {insegna && (
           <div className="pb-4">
-            <p className="px-4 pb-1 text-[12px] font-bold uppercase tracking-wider text-muted-foreground">
+            <p className="px-4 pb-1 text-xs font-bold uppercase tracking-wider text-muted-foreground">
               {t("Insegnante")}
             </p>
             {areaInsegnante.map(({ href, label, Icona }) => {
@@ -264,7 +264,7 @@ export function DesktopNav({ variante = "barra" }: { variante?: "barra" | "panne
 
         {/* Secondary "Altro" group */}
         <div className="pt-4">
-          <p className="px-4 pb-1 text-[12px] font-bold uppercase tracking-wider text-muted-foreground">
+          <p className="px-4 pb-1 text-xs font-bold uppercase tracking-wider text-muted-foreground">
             {t("Altro")}
           </p>
           {moreNav.filter((v) => !nascosti.has(v.href)).map(renderItem)}

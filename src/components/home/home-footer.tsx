@@ -25,10 +25,10 @@ export function HomeFooter() {
           <p className="mt-2 text-sm font-semibold text-figb dark:text-primary">
             {t("Contenuti tecnici a cura della Commissione del Settore Insegnamento")}
           </p>
-          <p className="mt-2 text-[12px] text-figb dark:text-primary">
+          <p className="mt-2 text-xs text-figb dark:text-primary">
             {t("Sviluppo e hosting: Alberto Giovanni Gerli / Tourbillon Tech S.r.l.")}
           </p>
-          <Link href="/privacy" className="mt-2 inline-block text-[12px] text-figb/50 dark:text-primary/60 underline">
+          <Link href="/privacy" className="mt-2 inline-block text-xs text-figb/50 dark:text-primary/60 underline">
             {t("Privacy e Cookie Policy")}
           </Link>
         </div>

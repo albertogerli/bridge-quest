@@ -20,7 +20,7 @@ export function LoginCta() {
         </div>
         <div className="flex-1">
           <p className="text-sm font-bold text-foreground">{t("Accedi per salvare i progressi")}</p>
-          <p className="text-[12px] text-muted-foreground">{t("Sincronizza su tutti i dispositivi")}</p>
+          <p className="text-xs text-muted-foreground">{t("Sincronizza su tutti i dispositivi")}</p>
         </div>
         <a href="/login" className="inline-flex h-9 px-4 items-center rounded-xl bg-figb text-white font-semibold text-xs shadow-md hover:bg-figb/90 transition-colors">
           {t("Accedi")}

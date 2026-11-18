@@ -31,7 +31,7 @@ export function CoursesSection({ completedModules }: CoursesSectionProps) {
               {t("I Corsi FIGB")}
             </h2>
           </div>
-          <Badge variant="outline" className="text-[12px] font-bold text-primary/60 border-primary/20">
+          <Badge variant="outline" className="text-xs font-bold text-primary/60 border-primary/20">
             {availableCourses.length} corsi
           </Badge>
         </div>
@@ -61,14 +61,14 @@ export function CoursesSection({ completedModules }: CoursesSectionProps) {
                       <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-white font-bold text-lg`}>
                         {course.icon}
                       </div>
-                      <span className={`text-[12px] font-bold px-1.5 py-0.5 rounded-full ${info.bg} ${info.color}`}>
+                      <span className={`text-xs font-bold px-1.5 py-0.5 rounded-full ${info.bg} ${info.color}`}>
                         {info.label}
                       </span>
                     </div>
                     <p className="text-sm font-semibold text-foreground truncate">
                       {course.name.replace(/^Corso (di )?/, "")}
                     </p>
-                    <p className="text-[12px] text-muted-foreground mt-0.5 truncate">
+                    <p className="text-xs text-muted-foreground mt-0.5 truncate">
                       {course.lessonCount} lezioni
                     </p>
                     <div className="mt-2.5 flex items-center gap-2">
@@ -78,7 +78,7 @@ export function CoursesSection({ completedModules }: CoursesSectionProps) {
                           style={{ width: `${stats.progress}%` }}
                         />
                       </div>
-                      <span className="text-[12px] font-bold text-muted-foreground">{stats.progress}%</span>
+                      <span className="text-xs font-bold text-muted-foreground">{stats.progress}%</span>
                     </div>
                   </div>
                 </Link>

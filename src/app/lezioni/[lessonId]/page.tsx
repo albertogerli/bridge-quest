@@ -109,10 +109,10 @@ export default function LessonDetailPage({
           <div className="relative">
             <div className="text-4xl mb-3">{lesson.icon}</div>
             <div className="flex items-center gap-2 mb-2">
-              <Badge className="bg-primary/10 text-foreground text-[12px] font-bold border-0">
+              <Badge className="bg-primary/10 text-foreground text-xs font-bold border-0">
                 Lezione {lessonNumber}
               </Badge>
-              <Badge className="bg-primary/10 text-muted-foreground text-[12px] font-bold border-0">
+              <Badge className="bg-primary/10 text-muted-foreground text-xs font-bold border-0">
                 {totalDuration} min
               </Badge>
             </div>
@@ -266,15 +266,15 @@ export default function LessonDetailPage({
                   {/* Content */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
-                      <Badge className={`text-[12px] font-bold border-0 ${config.color}`}>
+                      <Badge className={`text-xs font-bold border-0 ${config.color}`}>
                         {config.icon} {config.label}
                       </Badge>
                       {hasDraft && !isLocked && (
-                        <Badge className="text-[12px] font-bold border-0 bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300">
+                        <Badge className="text-xs font-bold border-0 bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300">
                           {t("Riprendi")}
                         </Badge>
                       )}
-                      <span className="text-[12px] text-muted-foreground">
+                      <span className="text-xs text-muted-foreground">
                         {module.duration} min
                       </span>
                     </div>
@@ -282,11 +282,11 @@ export default function LessonDetailPage({
                       {module.title}
                     </h3>
                     {isLocked ? (
-                      <p className="text-[12px] text-amber-600/80 dark:text-amber-400/80 mt-0.5 flex items-center gap-1">
+                      <p className="text-xs text-amber-600/80 dark:text-amber-400/80 mt-0.5 flex items-center gap-1">
                         <span>🔒</span> {t("Completa il modulo precedente per sbloccare")}
                       </p>
                     ) : (
-                      <p className="text-[12px] text-muted-foreground mt-0.5">
+                      <p className="text-xs text-muted-foreground mt-0.5">
                         +{module.xpReward} XP
                       </p>
                     )}
@@ -360,14 +360,14 @@ export default function LessonDetailPage({
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
-                      <Badge className="text-[12px] font-bold border-0 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300">
+                      <Badge className="text-xs font-bold border-0 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300">
                         🃏 Pratica
                       </Badge>
                     </div>
                     <h3 className="font-bold text-foreground text-[15px]">
                       {t("Esercitati con questa lezione")}
                     </h3>
-                    <p className="text-[12px] text-muted-foreground mt-0.5">
+                    <p className="text-xs text-muted-foreground mt-0.5">
                       {lessonSmazzateCount}{" "}
                       {lessonSmazzateCount === 1 ? "mano pratica" : "mani pratiche"} FIGB da giocare
                     </p>

@@ -218,7 +218,7 @@ function TrickTable({
   function etichetta(slot: Position) {
     const vero = toGamePosition(slot, declarer);
     return (
-      <span className="text-[12px] font-bold text-muted-foreground uppercase">
+      <span className="text-xs font-bold text-muted-foreground uppercase">
         <span aria-hidden="true">{t(INIZIALI[vero])}</span>
         <span className="sr-only">{t(POSITION_LABELS[vero])}</span>
       </span>
@@ -240,7 +240,7 @@ function TrickTable({
       </div>
       <div className="flex items-center justify-center">
         <span
-          className="text-[12px] font-bold text-muted-foreground"
+          className="text-xs font-bold text-muted-foreground"
           role="img"
           aria-label={trumpSuit ? `${t("Atout")}: ${suitAriaLabel(trumpSuit)}` : t("Senza atout")}
         >
@@ -461,7 +461,7 @@ export function HandReplay({
               <p className="text-sm font-semibold text-foreground/80">
                 {trickCommentary(trick, t)}
               </p>
-              <p className="text-[12px] text-muted-foreground mt-0.5">
+              <p className="text-xs text-muted-foreground mt-0.5">
                 {t("Attacco: {posto}", { posto: t(nomeVero(trick.leader)) })}
               </p>
             </motion.div>
@@ -470,7 +470,7 @@ export function HandReplay({
 
         {/* Hands at this point */}
         <div className="px-5 pb-4">
-          <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-2">
+          <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">
             {t("Carte in mano (prima della presa)")}
           </p>
           {/* Cross layout: Nord top, Ovest/Est sides, Sud bottom — like the table. */}
@@ -490,7 +490,7 @@ export function HandReplay({
                       : "col-start-2 row-start-3";
               return (
                 <div key={slot} className={`rounded-lg bg-muted px-2.5 py-1.5 ${cellClass}`}>
-                  <span className="text-[12px] font-bold text-muted-foreground uppercase">
+                  <span className="text-xs font-bold text-muted-foreground uppercase">
                     {t(POSITION_LABELS[pos])}
                   </span>
                   <MiniHand cards={hand} playedCard={playedInTrick[pos]} />

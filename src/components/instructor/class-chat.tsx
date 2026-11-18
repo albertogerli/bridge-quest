@@ -141,12 +141,12 @@ export function ClassChat({ classId, moderatore = false }: { classId: string; mo
                   }`}
                 >
                   {!mine && (
-                    <p className="mb-0.5 text-[12px] font-semibold opacity-70">
+                    <p className="mb-0.5 text-xs font-semibold opacity-70">
                       {m.display_name ?? "Utente"}
                     </p>
                   )}
                   <p className="whitespace-pre-wrap break-words">{m.body}</p>
-                  <p className={`mt-0.5 flex items-center gap-3 text-[12px] ${mine ? "text-primary-foreground/60" : "text-muted-foreground"}`}>
+                  <p className={`mt-0.5 flex items-center gap-3 text-xs ${mine ? "text-primary-foreground/60" : "text-muted-foreground"}`}>
                     {new Date(m.created_at).toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" })}
                     {!mine && user && (
                       <AzioniContenuto

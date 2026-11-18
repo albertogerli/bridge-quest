@@ -40,7 +40,7 @@ export function QuickStats({
         >
           <span className="flex justify-center">{s.icon}</span>
           <p className="text-lg font-bold text-foreground mt-0.5">{s.val}</p>
-          <p className="text-[12px] text-muted-foreground font-medium">{t(s.label)}</p>
+          <p className="text-xs text-muted-foreground font-medium">{t(s.label)}</p>
         </motion.div>
       ))}
     </div>

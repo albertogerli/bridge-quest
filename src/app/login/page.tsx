@@ -304,7 +304,7 @@ function LoginContent() {
                     }`}
                   >
                     <span className="text-sm font-semibold text-foreground block">{label}</span>
-                    <span className="text-[12px] text-muted-foreground block mt-0.5">{desc}</span>
+                    <span className="text-xs text-muted-foreground block mt-0.5">{desc}</span>
                   </button>
                 ))}
               </div>
@@ -525,7 +525,7 @@ function LoginContent() {
                       >
                         <div className="flex justify-center">{icon}</div>
                         <span className="text-xs font-semibold text-foreground block mt-1">{label}</span>
-                        <span className="text-[12px] text-muted-foreground block">{desc}</span>
+                        <span className="text-xs text-muted-foreground block">{desc}</span>
                       </button>
                     ))}
                   </div>
@@ -584,7 +584,7 @@ function LoginContent() {
                             >
                               <div>{club.name}</div>
                               {club.city && (
-                                <div className="text-[12px] text-muted-foreground">
+                                <div className="text-xs text-muted-foreground">
                                   {club.city}{club.province ? ` (${club.province})` : ""}
                                 </div>
                               )}

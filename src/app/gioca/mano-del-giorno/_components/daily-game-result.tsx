@@ -135,7 +135,7 @@ export function DailyGameResult({
             <p className="text-lg font-bold text-foreground">
               {result.tricksMade}
             </p>
-            <p className="text-[12px] font-bold text-muted-foreground uppercase">
+            <p className="text-xs font-bold text-muted-foreground uppercase">
               {t("Prese")}
             </p>
           </div>
@@ -147,7 +147,7 @@ export function DailyGameResult({
                 ? `+${result.result}`
                 : result.result}
             </p>
-            <p className="text-[12px] font-bold text-muted-foreground uppercase">
+            <p className="text-xs font-bold text-muted-foreground uppercase">
               {t("Risultato")}
             </p>
           </div>
@@ -155,7 +155,7 @@ export function DailyGameResult({
             <p className="text-lg font-bold text-amber-600 dark:text-amber-400">
               +{computeDailyXp(result.result, isDaily && !alreadyPlayed)}
             </p>
-            <p className="text-[12px] font-bold text-muted-foreground uppercase">
+            <p className="text-xs font-bold text-muted-foreground uppercase">
               {xpLabel}
             </p>
           </div>

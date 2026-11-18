@@ -41,7 +41,7 @@ export function DailyChallengeStreakMobile({
                     {dailyDone ? <CheckCircle2 className="w-5 h-5 text-emerald-600" aria-hidden="true" /> : <Flame className="w-5 h-5 text-amber-600" aria-hidden="true" />}
                   </div>
                   {!dailyDone && (
-                    <span className="text-[12px] font-bold text-amber-700 bg-amber-50 dark:text-amber-400 dark:bg-amber-950/40 rounded-full px-2 py-0.5">
+                    <span className="text-xs font-bold text-amber-700 bg-amber-50 dark:text-amber-400 dark:bg-amber-950/40 rounded-full px-2 py-0.5">
                       +40 XP
                     </span>
                   )}
@@ -49,7 +49,7 @@ export function DailyChallengeStreakMobile({
                 <p className="mt-2.5 text-sm font-bold text-foreground">
                   {dailyChallengeLabel}
                 </p>
-                <p className="mt-0.5 text-[12px] text-muted-foreground">
+                <p className="mt-0.5 text-xs text-muted-foreground">
                   {dailyDone ? "Completata!" : "Mano quotidiana"}
                 </p>
                 <div className="mt-2">
@@ -75,7 +75,7 @@ export function DailyChallengeStreakMobile({
                   {streak >= 7 ? <Flame className="w-5 h-5 text-[#1B5E3B] dark:text-emerald-400" aria-hidden="true" /> : <CalendarDays className="w-5 h-5 text-[#1B5E3B] dark:text-emerald-400" aria-hidden="true" />}
                 </div>
                 {streak > 0 && (
-                  <span className="text-[12px] font-bold text-[#1B5E3B] dark:text-emerald-400 bg-[#1B5E3B]/8 dark:bg-emerald-900/40 rounded-full px-2 py-0.5">
+                  <span className="text-xs font-bold text-[#1B5E3B] dark:text-emerald-400 bg-[#1B5E3B]/8 dark:bg-emerald-900/40 rounded-full px-2 py-0.5">
                     +{Math.min(streak * 5, 50)} XP
                   </span>
                 )}
@@ -84,7 +84,7 @@ export function DailyChallengeStreakMobile({
                 {streak} {streak === 1 ? "giorno" : "giorni"}
               </p>
               {streakAtRisk && (
-                <p className="mt-1 text-[12px] font-semibold text-red-600 dark:text-red-400">
+                <p className="mt-1 text-xs font-semibold text-red-600 dark:text-red-400">
                   {t("Streak a rischio!")}
                 </p>
               )}
@@ -92,7 +92,7 @@ export function DailyChallengeStreakMobile({
                 {["L", "M", "M", "G", "V", "S", "D"].map((day, i) => (
                   <div
                     key={i}
-                    className={`flex h-6 w-6 items-center justify-center rounded-md text-[12px] font-bold ${
+                    className={`flex h-6 w-6 items-center justify-center rounded-md text-xs font-bold ${
                       i < Math.min(streak, 7)
                         ? "bg-[#1B5E3B] text-white"
                         : "bg-muted text-muted-foreground"
