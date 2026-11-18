@@ -230,6 +230,7 @@ function LicitaAmico() {
         <div className="mb-4">
           <Asta
             dealer={sessione.dealer}
+            zona="none"
             bids={sessione.bids}
             ioSono={sessione.seat}
             onDichiara={tocca ? invia : undefined}

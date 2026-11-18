@@ -483,6 +483,7 @@ export default function LicitaPage() {
               // ogni dichiarazione al posto sbagliato — tre volte su quattro —
               // e l'asta mostrata non era quella giocata.
               dealer={mano.dealer}
+              zona={mano.vulnerability}
               bids={licita}
               ioSono="south"
               onDichiara={dichiara}

@@ -8,11 +8,26 @@ import {
   type Posto,
 } from "@/lib/asta";
 import { useT } from "@/contexts/traduzioni-provider";
+import type { Vulnerability } from "@/lib/catalog";
 
 const ETICHETTA: Record<Posto, string> = {
   north: "Nord", east: "Est", south: "Sud", west: "Ovest",
 };
 const COLONNE: Posto[] = ["north", "east", "south", "west"];
+
+/**
+ * In zona o in prima, per posto. Si legge sui punti cardinali come sulle
+ * scatole d'asta del circolo: rosso chi è in zona, verde chi è in prima
+ * (richiesta dell'utente, 18/11/2026). La zona cambia quanto costa cadere e
+ * quanto vale la manche, quindi va vista mentre si dichiara, non letta in
+ * una riga di testo sopra la mano.
+ */
+function inZona(p: Posto, zona: Vulnerability): boolean {
+  if (zona === "both") return true;
+  if (zona === "none") return false;
+  const ns = p === "north" || p === "south";
+  return zona === "ns" ? ns : !ns;
+}
 
 /**
  * Il tono di ogni colonna del cassetto, come nella scatola di BridgeChamp: si
@@ -61,6 +76,7 @@ export function Asta({
   onDichiara,
   disabilitato = false,
   vulnerabilita,
+  zona,
 }: {
   dealer: Posto;
   bids: string[];
@@ -70,6 +86,8 @@ export function Asta({
   onDichiara?: (bid: string) => void;
   disabilitato?: boolean;
   vulnerabilita?: string;
+  /** Se c'è, i punti cardinali si colorano: rosso in zona, verde in prima. */
+  zona?: Vulnerability;
 }) {
   const t = useT();
   const righe = righeAsta(dealer, bids);
@@ -98,13 +116,20 @@ export function Asta({
     <div>
       {/* ── La griglia ────────────────────────────────────────────────── */}
       <div className="rounded-2xl border border-border bg-card overflow-hidden mb-3">
-        <div className="grid grid-cols-4 text-center text-xs font-bold bg-muted/60">
+        <div className={`grid grid-cols-4 text-center text-xs font-bold bg-muted/60 ${zona ? "divide-x divide-white/40" : ""}`}>
           {COLONNE.map((p) => (
             <div
               key={p}
-              className={`py-1.5 ${p === ioSono ? "text-figb" : "text-muted-foreground"}`}
+              className={`py-1.5 ${
+                zona
+                  ? inZona(p, zona)
+                    ? "bg-red-600 text-white"
+                    : "bg-emerald-700 text-white"
+                  : p === ioSono ? "text-figb" : "text-muted-foreground"
+              } ${zona && p === ioSono ? "underline decoration-2 underline-offset-4" : ""}`}
             >
-              {ETICHETTA[p]}
+              {t(ETICHETTA[p])}
+              {zona && <span className="sr-only"> {inZona(p, zona) ? t("in zona") : t("in prima")}</span>}
               {p === dealer && (
                 <span className="block text-xs font-normal">{t("mazziere")}</span>
               )}

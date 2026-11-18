@@ -3265,5 +3265,7 @@
   "{p}% verso il livello {n}": "{p}% of the way to level {n}",
   "← Home": "← Home",
   "La prossima comincia lunedì. Intanto c'è la Mano del giorno.": "The next one starts on Monday. In the meantime, there's the Hand of the Day.",
-  "Questa settimana non c'è una sfida": "There's no challenge this week"
+  "Questa settimana non c'è una sfida": "There's no challenge this week",
+  "in zona": "vulnerable",
+  "in prima": "not vulnerable"
 }
