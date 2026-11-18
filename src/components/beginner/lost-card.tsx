@@ -46,7 +46,7 @@ export function LostCard({ nextModule }: LostCardProps) {
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      className="rounded-[22px] border border-[#c8a44e]/30 bg-gradient-to-br from-[#fffdf5] to-[#fff8e1] p-4 shadow-sm relative"
+      className="rounded-[22px] border border-[#c8a44e]/30 bg-gold-dark p-4 shadow-sm relative"
     >
       {/* Dismiss button */}
       <button
@@ -78,7 +78,7 @@ export function LostCard({ nextModule }: LostCardProps) {
         </Link>
         <Link href={nextLessonHref}>
           <div className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-white px-3.5 py-2.5 transition-all hover:border-[#c8a44e]/30 hover:shadow-sm">
-            <Target className="h-4 w-4 shrink-0 text-purple-500" />
+            <Target className="h-4 w-4 shrink-0 text-primary" />
             <span className="text-sm font-medium text-[#12305f]">
               {nextModule ? `Continua: ${nextModule.moduleTitle}` : "Vai alle lezioni"}
             </span>

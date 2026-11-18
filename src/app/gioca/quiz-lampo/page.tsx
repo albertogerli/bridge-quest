@@ -35,24 +35,24 @@ const difficultyConfig = {
     label: "Facile",
     desc: "8 domande, 30s ciascuna",
     xpMult: 0.8,
-    color: "from-green-500 to-emerald-500",
-    shadow: "shadow-green-400/30",
+    color: "bg-emerald-700",
+    shadow: "",
   },
   medio: {
     rounds: 12,
     label: "Medio",
     desc: "12 domande, 30s ciascuna",
     xpMult: 1.0,
-    color: "from-amber-500 to-orange-500",
-    shadow: "shadow-amber-400/30",
+    color: "bg-gold-dark",
+    shadow: "",
   },
   difficile: {
     rounds: 16,
     label: "Difficile",
     desc: "16 domande, 30s ciascuna",
     xpMult: 1.5,
-    color: "from-red-500 to-rose-500",
-    shadow: "shadow-red-400/30",
+    color: "bg-red-600",
+    shadow: "",
   },
 };
 
@@ -184,7 +184,7 @@ function getTypeBadge(type: QuizQuestion["type"]) {
     case "quiz":
       return { label: "Quiz", bg: "bg-blue-50 dark:bg-blue-950/40", text: "text-blue-600 dark:text-blue-400" };
     case "true-false":
-      return { label: "Vero/Falso", bg: "bg-violet-50 dark:bg-violet-950/40", text: "text-violet-600 dark:text-violet-400" };
+      return { label: "Vero/Falso", bg: "bg-primary/10 dark:bg-primary/15", text: "text-primary dark:text-primary" };
     case "bid-select":
       return { label: "Dichiarazione", bg: "bg-figb/10 dark:bg-primary/15", text: "text-figb dark:text-primary" };
     case "hand-eval":
@@ -490,10 +490,10 @@ export default function QuizLampoPage() {
   const timerFraction = timeLeft / TIMER_SECONDS;
   const timerBarColor =
     timerFraction > 0.5
-      ? "from-emerald-400 to-emerald-500"
+      ? "bg-emerald-700"
       : timerFraction > 0.2
-        ? "from-amber-400 to-orange-500"
-        : "from-red-500 to-rose-500";
+        ? "bg-gold-dark"
+        : "bg-red-600";
 
   // Stars calculation
   const getStars = () => {
@@ -530,7 +530,7 @@ export default function QuizLampoPage() {
             className="text-center mt-8"
           >
             {/* Icon */}
-            <div className="inline-flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br from-yellow-400 via-amber-500 to-orange-500 text-white text-5xl shadow-xl shadow-amber-400/30 mb-6">
+            <div className="inline-flex h-24 w-24 items-center justify-center rounded-3xl bg-gold-dark text-white text-5xl shadow-xl mb-6">
               <svg
                 className="h-12 w-12"
                 viewBox="0 0 24 24"
@@ -620,7 +620,7 @@ export default function QuizLampoPage() {
                 <button
                   key={key}
                   onClick={() => startGame(key)}
-                  className={`w-full flex items-center justify-between p-4 rounded-xl bg-gradient-to-r ${cfg.color} text-white shadow-lg ${cfg.shadow} active:scale-[0.97] transition-transform`}
+                  className={`w-full flex items-center justify-between p-4 rounded-xl ${cfg.color} text-white shadow-lg ${cfg.shadow} active:scale-[0.97] transition-transform`}
                 >
                   <div className="text-left">
                     <p className="font-semibold">{cfg.label}</p>
@@ -703,7 +703,7 @@ export default function QuizLampoPage() {
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.7, type: "spring" }}
-                className="mt-2 inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 text-white text-sm font-semibold shadow-lg shadow-amber-300/40"
+                className="mt-2 inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-gold-dark text-white text-sm font-semibold shadow-lg"
               >
                 <span>🏆</span> {t("Nuovo record!")}
               </motion.div>
@@ -875,7 +875,7 @@ export default function QuizLampoPage() {
               </Link>
               <Button
                 onClick={() => startGame()}
-                className="flex-1 h-12 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 font-bold shadow-lg shadow-amber-300/30"
+                className="flex-1 h-12 rounded-xl bg-gold-dark font-bold shadow-lg"
               >
                 {t("Rigioca")}
               </Button>
@@ -918,7 +918,7 @@ export default function QuizLampoPage() {
           <div className="flex-1 mx-3">
             <div className="h-2 rounded-full bg-muted overflow-hidden">
               <motion.div
-                className="h-full rounded-full bg-gradient-to-r from-amber-400 to-orange-500"
+                className="h-full rounded-full bg-gold-dark"
                 animate={{
                   width: `${((currentIdx + 1) / config.rounds) * 100}%`,
                 }}
@@ -935,7 +935,7 @@ export default function QuizLampoPage() {
         {/* Timer bar */}
         <div className="relative h-3 rounded-full bg-muted overflow-hidden mb-4">
           <motion.div
-            className={`absolute inset-y-0 left-0 rounded-full bg-gradient-to-r ${timerBarColor}`}
+            className={`absolute inset-y-0 left-0 rounded-full ${timerBarColor}`}
             style={{ width: `${timerFraction * 100}%` }}
             transition={{ duration: 0.05 }}
           />
@@ -968,7 +968,7 @@ export default function QuizLampoPage() {
                 animate={{ scale: 1, rotate: 0 }}
                 exit={{ scale: 0 }}
                 transition={{ type: "spring", stiffness: 400, damping: 15 }}
-                className="flex items-center gap-1.5 bg-gradient-to-r from-orange-50 to-amber-50 dark:from-orange-950/40 dark:to-amber-950/30 border border-orange-200/50 dark:border-orange-900 rounded-full px-3 py-1"
+                className="flex items-center gap-1.5 bg-amber-50 dark:bg-amber-950/30 border border-orange-200/50 dark:border-orange-900 rounded-full px-3 py-1"
               >
                 <span className="text-sm">🔥</span>
                 <span className="text-xs font-bold text-orange-600 dark:text-orange-400">
@@ -1050,11 +1050,11 @@ export default function QuizLampoPage() {
             if (showResult) {
               if (idx === currentQuestion.correctIndex) {
                 btnStyle =
-                  "bg-emerald-50 dark:bg-emerald-950/40 border-2 border-emerald-400 shadow-lg shadow-emerald-200/40 dark:shadow-none";
+                  "bg-emerald-50 dark:bg-emerald-950/40 border-2 border-emerald-400 shadow-lg dark:shadow-none";
                 textColor = "text-emerald-700 dark:text-emerald-300";
               } else if (idx === selectedIdx && !wasCorrect) {
                 btnStyle =
-                  "bg-red-50 dark:bg-red-950/40 border-2 border-red-300 shadow-lg shadow-red-200/30 dark:shadow-none";
+                  "bg-red-50 dark:bg-red-950/40 border-2 border-red-300 shadow-lg dark:shadow-none";
                 textColor = "text-red-600 dark:text-red-400";
               } else {
                 btnStyle = "bg-muted opacity-40";

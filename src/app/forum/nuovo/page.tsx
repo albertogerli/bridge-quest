@@ -105,7 +105,7 @@ export default function NuovoPostPage() {
         <span className="text-5xl block mb-4 mt-12">🔒</span>
         <p className="text-lg font-bold text-foreground">{t("Devi accedere per scrivere")}</p>
         <Link href="/login">
-          <Button className="mt-4 h-10 px-6 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-700 font-bold text-sm">
+          <Button className="mt-4 h-10 px-6 rounded-xl bg-emerald-700 font-bold text-sm">
             {t("Accedi")}
           </Button>
         </Link>
@@ -165,7 +165,7 @@ export default function NuovoPostPage() {
                 onClick={() => setIsPoll(!isPoll)}
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all ${
                   isPoll
-                    ? "bg-purple-100 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 ring-2 ring-purple-500"
+                    ? "bg-primary/10 dark:bg-primary/15 text-primary dark:text-primary ring-2 ring-primary/60"
                     : "bg-muted/50 text-muted-foreground hover:bg-muted"
                 }`}
               >
@@ -193,7 +193,7 @@ export default function NuovoPostPage() {
                       value={opt}
                       onChange={(e) => updatePollOption(idx, e.target.value)}
                       maxLength={100}
-                      className="flex-1 h-10 px-3 rounded-xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      className="flex-1 h-10 px-3 rounded-xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/60 focus:border-transparent"
                       placeholder={`Opzione ${idx + 1}`}
                     />
                     {pollOptions.length > 2 && (
@@ -213,7 +213,7 @@ export default function NuovoPostPage() {
                   <button
                     type="button"
                     onClick={addPollOption}
-                    className="text-xs font-bold text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 flex items-center gap-1"
+                    className="text-xs font-bold text-primary dark:text-primary hover:text-primary dark:hover:text-primary flex items-center gap-1"
                   >
                     <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                       <path d="M12 5v14M5 12h14" />
@@ -234,7 +234,7 @@ export default function NuovoPostPage() {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 maxLength={200}
-                className="w-full h-12 px-4 rounded-xl border border-border bg-card text-foreground text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                className="w-full h-12 px-4 rounded-xl border border-border bg-card text-foreground text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/60 focus:border-transparent transition-all"
                 placeholder={t("Di cosa vuoi parlare?")}
               />
             </div>
@@ -248,7 +248,7 @@ export default function NuovoPostPage() {
                 value={body}
                 onChange={(e) => setBody(e.target.value)}
                 rows={8}
-                className="w-full px-4 py-3 rounded-xl border border-border bg-card text-foreground text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all resize-none"
+                className="w-full px-4 py-3 rounded-xl border border-border bg-card text-foreground text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-primary/60 focus:border-transparent transition-all resize-none"
                 placeholder={t("Scrivi il tuo messaggio...")}
               />
             </div>
@@ -274,7 +274,7 @@ export default function NuovoPostPage() {
               <Button
                 type="submit"
                 disabled={loading}
-                className="flex-1 h-12 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-700 font-bold shadow-lg shadow-emerald-500/20 disabled:opacity-50"
+                className="flex-1 h-12 rounded-xl bg-emerald-700 font-bold shadow-lg disabled:opacity-50"
               >
                 {loading ? "Pubblicazione..." : "Pubblica"}
               </Button>

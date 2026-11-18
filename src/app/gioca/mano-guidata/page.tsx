@@ -121,8 +121,8 @@ function HandSelector({
                 <div
                   className={`px-5 py-3 ${
                     hand.difficulty === "facile"
-                      ? "bg-gradient-to-r from-cyan-500 to-blue-500"
-                      : "bg-gradient-to-r from-purple-500 to-indigo-500"
+                      ? "bg-primary"
+                      : "bg-primary"
                   }`}
                 >
                   <div className="flex items-center justify-between">
@@ -198,7 +198,7 @@ function HintOverlay({ text, onDismiss }: { text: string; onDismiss: () => void 
       exit={{ opacity: 0, y: -10 }}
       className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 w-[90%] max-w-sm"
     >
-      <div className="rounded-2xl border border-cyan-200 bg-gradient-to-r from-cyan-50 to-blue-50 p-4 shadow-lg shadow-cyan-500/10">
+      <div className="rounded-2xl border border-cyan-200 bg-card p-4 shadow-lg">
         <div className="flex items-start gap-3">
           <span className="text-lg shrink-0">💡</span>
           <div className="flex-1">
@@ -360,7 +360,7 @@ function GuidedGameplay({
               className={`text-[12px] font-bold border-0 ${
                 hand.difficulty === "facile"
                   ? "bg-cyan-50 text-cyan-700 dark:bg-cyan-950/40 dark:text-cyan-300"
-                  : "bg-purple-50 text-purple-700 dark:bg-purple-950/40 dark:text-purple-300"
+                  : "bg-primary/10 text-primary dark:bg-primary/15 dark:text-primary"
               }`}
             >
               Mano Guidata {hand.id}
@@ -498,7 +498,7 @@ function GuidedGameplay({
           {game.phase === "ready" && (
             <Button
               onClick={game.startGame}
-              className="rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-12 px-8 shadow-lg shadow-emerald/25"
+              className="rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-12 px-8 shadow-lg"
             >
               {alreadyCompleted ? "Rigioca" : "Inizia la mano"}
             </Button>
@@ -518,14 +518,14 @@ function GuidedGameplay({
                     xpSaved.current = false;
                     onBack();
                   }}
-                  className="rounded-xl bg-figb hover:bg-figb-dark text-sm font-bold h-12 px-6 shadow-lg shadow-figb/25"
+                  className="rounded-xl bg-figb hover:bg-figb-dark text-sm font-bold h-12 px-6 shadow-lg"
                 >
                   Prova Mano {otherHand.id}
                 </Button>
               )}
               <Button
                 onClick={() => { xpSaved.current = false; game.startGame(); }}
-                className="rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-12 px-6 shadow-lg shadow-emerald/25"
+                className="rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-12 px-6 shadow-lg"
               >
                 {t("Rigioca")}
               </Button>
@@ -549,8 +549,8 @@ function GuidedGameplay({
               <div
                 className={`card-elevated rounded-2xl p-6 text-center ${
                   game.result.result >= 0
-                    ? "bg-gradient-to-br from-emerald-50 to-emerald-100/50 border border-emerald-200 dark:from-emerald-950/40 dark:to-emerald-900/20 dark:border-emerald-900"
-                    : "bg-gradient-to-br from-red-50 to-red-100/50 border border-red-200 dark:from-red-950/40 dark:to-red-900/20 dark:border-red-900"
+                    ? "bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900"
+                    : "bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900"
                 }`}
               >
                 <div className="text-4xl mb-3">

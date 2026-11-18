@@ -28,13 +28,13 @@ const bidSuitColor = (bid: string): string => {
 };
 
 const bidBgGradient = (bid: string): string => {
-  if (bid.includes("\u2660")) return "from-blue-50 to-slate-50 dark:from-blue-950/40 dark:to-slate-900/40";
-  if (bid.includes("\u2665")) return "from-red-50 to-pink-50 dark:from-red-950/40 dark:to-pink-950/30";
-  if (bid.includes("\u2666")) return "from-orange-50 to-amber-50 dark:from-orange-950/40 dark:to-amber-950/30";
-  if (bid.includes("\u2663")) return "from-emerald-50 to-green-50 dark:from-emerald-950/40 dark:to-green-950/30";
-  if (bid === "Passo") return "from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800";
-  if (bid === "Contro") return "from-red-50 to-rose-50 dark:from-red-950/40 dark:to-rose-950/30";
-  return "from-figb/10 to-figb/5 dark:from-primary/15 dark:to-primary/10";
+  if (bid.includes("\u2660")) return "bg-card";
+  if (bid.includes("\u2665")) return "bg-red-50 dark:bg-red-950/30";
+  if (bid.includes("\u2666")) return "bg-amber-50 dark:bg-amber-950/30";
+  if (bid.includes("\u2663")) return "bg-emerald-50 dark:bg-emerald-950/30";
+  if (bid === "Passo") return "bg-card";
+  if (bid === "Contro") return "bg-red-50 dark:bg-red-950/30";
+  return "bg-card";
 };
 
 type Difficulty = "facile" | "medio" | "difficile";
@@ -45,24 +45,24 @@ const diffConfig = {
     label: "Facile",
     desc: "Situazioni base: risposte semplici, Stayman, Texas",
     xpMult: 0.8,
-    color: "from-green-500 to-emerald-500",
-    shadow: "shadow-green-400/30",
+    color: "bg-emerald-700",
+    shadow: "",
   },
   medio: {
     levels: [1, 2] as (1 | 2 | 3)[],
     label: "Medio",
     desc: "Aperture deboli, interventi, 2♣ forte",
     xpMult: 1,
-    color: "from-amber-500 to-orange-500",
-    shadow: "shadow-amber-400/30",
+    color: "bg-gold-dark",
+    shadow: "",
   },
   difficile: {
     levels: [2, 3] as (1 | 2 | 3)[],
     label: "Difficile",
     desc: "Cue bid, splinter, dichiarazione competitiva",
     xpMult: 1.5,
-    color: "from-red-500 to-rose-500",
-    shadow: "shadow-red-400/30",
+    color: "bg-red-600",
+    shadow: "",
   },
 };
 
@@ -244,7 +244,7 @@ export default function PraticaLicitaPage() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mt-8"
           >
-            <div className="inline-flex h-24 w-24 items-center justify-center rounded-3xl bg-figb text-white text-5xl shadow-xl shadow-figb/20 mb-6">
+            <div className="inline-flex h-24 w-24 items-center justify-center rounded-3xl bg-figb text-white text-5xl shadow-xl mb-6">
               🗣️
             </div>
 
@@ -318,7 +318,7 @@ export default function PraticaLicitaPage() {
                 <button
                   key={key}
                   onClick={() => startGame(key)}
-                  className={`w-full flex items-center justify-between p-4 rounded-xl bg-gradient-to-r ${cfg.color} text-white shadow-lg ${cfg.shadow} active:scale-[0.97] transition-transform`}
+                  className={`w-full flex items-center justify-between p-4 rounded-xl ${cfg.color} text-white shadow-lg ${cfg.shadow} active:scale-[0.97] transition-transform`}
                 >
                   <div className="text-left">
                     <p className="font-semibold">{cfg.label}</p>
@@ -471,10 +471,10 @@ export default function PraticaLicitaPage() {
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
-              className="flex items-center gap-1 bg-purple-50 dark:bg-purple-950/40 rounded-full px-3 py-1"
+              className="flex items-center gap-1 bg-primary/10 dark:bg-primary/15 rounded-full px-3 py-1"
             >
               <span className="text-sm">🔥</span>
-              <span className="text-xs font-bold text-purple-600 dark:text-purple-400">
+              <span className="text-xs font-bold text-primary dark:text-primary">
                 x{streak}
               </span>
             </motion.div>
@@ -596,14 +596,14 @@ export default function PraticaLicitaPage() {
             {/* Bid options — bidding box style */}
             <div className="grid grid-cols-2 gap-3">
               {shuffledOptions.map((bid) => {
-                let btnClass = `bg-gradient-to-br ${bidBgGradient(bid)} border-2 border-border hover:shadow-lg hover:border-figb/30 dark:hover:border-primary/40`;
+                let btnClass = `${bidBgGradient(bid)} border-2 border-border hover:shadow-lg hover:border-figb/30 dark:hover:border-primary/40`;
                 if (showFeedback) {
                   if (bid === scenario.correctBid) {
                     btnClass =
-                      "bg-gradient-to-br from-emerald-50 to-green-100 dark:from-emerald-950/40 dark:to-green-900/30 border-2 border-emerald-400 shadow-lg shadow-emerald-200/50 dark:shadow-none";
+                      "bg-emerald-50 dark:bg-emerald-950/30 border-2 border-emerald-400 shadow-lg dark:shadow-none";
                   } else if (bid === selectedAnswer && !lastCorrect) {
                     btnClass =
-                      "bg-gradient-to-br from-red-50 to-rose-100 dark:from-red-950/40 dark:to-rose-900/30 border-2 border-red-300 shadow-lg shadow-red-200/50 dark:shadow-none";
+                      "bg-red-50 dark:bg-red-950/30 border-2 border-red-300 shadow-lg dark:shadow-none";
                   } else {
                     btnClass =
                       "bg-muted border-2 border-border opacity-40";

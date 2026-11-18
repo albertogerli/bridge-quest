@@ -332,7 +332,7 @@ export function HandAnalysisPanel({
   return (
     <div className="w-full h-full flex flex-col bg-card rounded-2xl overflow-hidden">
       {/* Header with overall grade */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4">
+      <div className="bg-primary text-white p-4">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-xl font-bold">{t("Analisi AI")}</h2>

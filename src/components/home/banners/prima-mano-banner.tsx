@@ -17,9 +17,8 @@ export function PrimaManoBanner() {
         href="/prima-mano"
         className="relative block overflow-hidden rounded-2xl border border-border bg-card p-4 transition-colors hover:border-primary/40"
       >
-        <div className="absolute -right-6 -top-6 h-20 w-20 rounded-full bg-[#c8a44e]/10 blur-2xl" />
         <div className="relative flex items-center gap-3">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-figb text-white shadow-lg shadow-figb/20">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-figb text-white shadow-lg">
             <BookOpen className="w-5 h-5" />
           </div>
           <div className="flex-1">

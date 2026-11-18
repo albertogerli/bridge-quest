@@ -58,8 +58,8 @@ export function GamificationBar({
               animate={{ scale: 1, rotate: 0 }}
               className={`flex items-center gap-1 rounded-full px-3 py-1 font-bold text-sm shadow-lg ${
                 xpMultiplier >= 3
-                  ? "bg-gradient-to-r from-red-500 to-orange-500 text-white shadow-red-200"
-                  : "bg-gradient-to-r from-amber-400 to-amber-500 text-white shadow-amber-200"
+                  ? "bg-red-600 text-white shadow-red-200"
+                  : "bg-gold-dark text-white shadow-amber-200"
               }`}
             >
               <motion.span
@@ -75,7 +75,7 @@ export function GamificationBar({
           {/* Power-ups */}
           <div className="flex items-center gap-1.5">
             {powerups.fiftyFifty > 0 && (
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-100 text-xs font-bold text-violet-700 dark:bg-violet-900/40 dark:text-violet-300 cursor-pointer" title="50/50">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-xs font-bold text-primary dark:bg-primary/15 dark:text-primary cursor-pointer" title="50/50">
                 50
               </div>
             )}
@@ -98,7 +98,7 @@ export function GamificationBar({
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="mb-5 rounded-2xl bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-950/40 dark:to-orange-950/30 border-2 border-red-200 dark:border-red-900 p-5 text-center"
+          className="mb-5 rounded-2xl bg-red-50 dark:bg-red-950/30 border-2 border-red-200 dark:border-red-900 p-5 text-center"
         >
           <span className="text-3xl">💔</span>
           <p className="text-base font-bold text-red-800 dark:text-red-300 mt-2">{t("Vite esaurite!")}</p>

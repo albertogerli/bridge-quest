@@ -26,7 +26,7 @@ export default function GameError({
         transition={{ duration: 0.45, ease: "easeOut" }}
         className="w-full max-w-md bg-card rounded-2xl border border-border shadow-sm p-8 text-center"
       >
-        <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-950/40 dark:to-pink-950/30">
+        <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-card">
           <span className="text-3xl">🃏</span>
         </div>
 
@@ -46,7 +46,7 @@ export default function GameError({
         <div className="flex flex-col gap-3">
           <button
             onClick={reset}
-            className="w-full rounded-xl bg-gradient-to-r from-purple-500 to-pink-600 px-5 py-3 text-sm font-semibold text-white shadow-md hover:shadow-lg transition-shadow"
+            className="w-full rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-white shadow-md hover:shadow-lg transition-shadow"
           >
             {t("Riprova")}
           </button>

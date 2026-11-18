@@ -53,8 +53,8 @@ export function ModuleHeader({
             <motion.div
               className={`h-full rounded-full ${
                 profile.profile === "giovane"
-                  ? "bg-gradient-to-r from-orange-400 via-amber-400 to-amber-300"
-                  : "bg-gradient-to-r from-emerald to-emerald-light"
+                  ? "bg-gold-dark"
+                  : "bg-emerald-700"
               }`}
               initial={{ width: 0 }}
               animate={{ width: `${progress}%` }}
@@ -79,7 +79,7 @@ export function ModuleHeader({
             <motion.div
               initial={{ scale: 0, rotate: -20 }}
               animate={{ scale: 1, rotate: 0 }}
-              className="flex items-center gap-0.5 bg-gradient-to-r from-orange-400 to-amber-400 rounded-full px-2 py-0.5 shadow-lg shadow-orange-200"
+              className="flex items-center gap-0.5 bg-gold-dark rounded-full px-2 py-0.5 shadow-lg shadow-orange-200"
             >
               <span className="text-[12px] text-white font-bold">{correctStreak}x</span>
               <span className="text-[12px]">🔥</span>

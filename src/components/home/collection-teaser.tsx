@@ -83,7 +83,7 @@ export function CollectionTeaser({ xp, streak, handsPlayed, completedModules }: 
             {/* Progress bar */}
             <div className="h-3 rounded-full bg-muted border border-border overflow-hidden">
               <div
-                className="h-full rounded-full bg-gradient-to-r from-amber-400 to-amber-500"
+                className="h-full rounded-full bg-gold-dark"
                 style={{ width: `${(unlocked.length / total) * 100}%` }}
               />
             </div>

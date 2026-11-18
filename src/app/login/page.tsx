@@ -28,7 +28,7 @@ type ProfileType = "junior" | "giovane" | "adulto" | "senior";
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-gradient-to-b from-primary/5 via-primary/3 to-background flex items-center justify-center"><div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" /></div>}>
+    <Suspense fallback={<div className="min-h-screen bg-card flex items-center justify-center"><div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" /></div>}>
       <LoginContent />
     </Suspense>
   );
@@ -232,7 +232,7 @@ function LoginContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-primary/5 via-primary/3 to-background flex items-center justify-center px-4 py-8">
+    <div className="min-h-screen bg-card flex items-center justify-center px-4 py-8">
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
@@ -245,7 +245,7 @@ function LoginContent() {
               {(["club", "diamond", "heart", "spade"] as const).map((suit) => (
                 <div
                   key={suit}
-                  className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-figb to-figb-dark shadow-lg shadow-figb/20"
+                  className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary shadow-lg"
                 >
                   <SuitSymbol suit={suit} size="md" />
                 </div>
@@ -686,7 +686,7 @@ function LoginContent() {
           <Button
             type="submit"
             disabled={loading}
-            className="w-full h-12 rounded-xl bg-gradient-to-r from-figb to-figb-light text-white font-semibold text-sm shadow-lg shadow-figb/25 hover:shadow-xl transition-all active:scale-[0.98] disabled:opacity-50"
+            className="w-full h-12 rounded-xl bg-primary text-white font-semibold text-sm shadow-lg hover:shadow-xl transition-all active:scale-[0.98] disabled:opacity-50"
           >
             {loading ? (
               <div className="flex items-center gap-2">

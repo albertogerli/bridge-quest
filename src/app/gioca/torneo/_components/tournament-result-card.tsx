@@ -36,8 +36,8 @@ export function TournamentResultCard({
           <div
             className={`card-elevated rounded-2xl p-6 text-center ${
               existingResult.totalTricks >= existingResult.totalNeeded
-                ? "bg-gradient-to-br from-emerald-50 to-emerald-100/50 border border-emerald-200"
-                : "bg-gradient-to-br from-red-50 to-red-100/50 border border-red-200"
+                ? "bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200"
+                : "bg-red-50 dark:bg-red-950/30 border border-red-200"
             }`}
           >
             {/* Star Rating */}
@@ -96,8 +96,8 @@ export function TournamentResultCard({
                   transition={{ delay: 0.5, duration: 0.8 }}
                   className={`h-full rounded-full ${
                     existingResult.totalTricks >= existingResult.totalNeeded
-                      ? "bg-gradient-to-r from-emerald-400 to-emerald-500"
-                      : "bg-gradient-to-r from-red-400 to-red-500"
+                      ? "bg-emerald-700"
+                      : "bg-red-600"
                   }`}
                 />
               </div>
@@ -150,8 +150,8 @@ export function TournamentResultCard({
 
             {/* XP earned */}
             <div className="mt-5 flex items-center justify-center">
-              <div className="inline-flex items-center gap-2 bg-indigo-50 dark:bg-indigo-950/40 rounded-xl px-4 py-2">
-                <span className="text-sm font-bold text-indigo-700 dark:text-indigo-300">
+              <div className="inline-flex items-center gap-2 bg-primary/10 dark:bg-primary/15 rounded-xl px-4 py-2">
+                <span className="text-sm font-bold text-primary dark:text-primary">
                   +{existingResult.xpEarned} {xpLabel} guadagnati
                 </span>
               </div>

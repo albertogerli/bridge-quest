@@ -60,8 +60,8 @@ export function DailyGameResult({
       <div
         className={`card-elevated rounded-2xl p-6 text-center ${
           result.result >= 0
-            ? "bg-gradient-to-br from-emerald-50 to-emerald-100/50 dark:from-emerald-950/40 dark:to-emerald-900/20 border border-emerald-200 dark:border-emerald-900"
-            : "bg-gradient-to-br from-red-50 to-red-100/50 dark:from-red-950/40 dark:to-red-900/20 border border-red-200 dark:border-red-900"
+            ? "bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900"
+            : "bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900"
         }`}
       >
         {/* Star Rating */}
@@ -114,8 +114,8 @@ export function DailyGameResult({
               transition={{ delay: 0.5, duration: 0.8 }}
               className={`h-full rounded-full ${
                 result.result >= 0
-                  ? "bg-gradient-to-r from-emerald-400 to-emerald-500"
-                  : "bg-gradient-to-r from-red-400 to-red-500"
+                  ? "bg-emerald-700 dark:bg-emerald-600"
+                  : "bg-red-600 dark:bg-red-500"
               }`}
             />
           </div>
@@ -203,7 +203,7 @@ export function DailyGameResult({
           className="card-elevated rounded-2xl bg-card p-5 border border-border"
         >
           <div className="flex items-center gap-2 mb-3">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-emerald to-emerald-dark text-white font-bold text-xs">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-700 dark:bg-emerald-600 text-white font-bold text-xs">
               M
             </div>
             <h4 className="text-sm font-bold text-foreground">

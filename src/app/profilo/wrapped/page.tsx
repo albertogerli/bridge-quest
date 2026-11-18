@@ -205,7 +205,7 @@ export default function WrappedPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-indigo-600 to-purple-800">
+      <div className="flex min-h-screen items-center justify-center bg-primary">
         <div className="text-white text-xl">{t("Caricamento...")}</div>
       </div>
     );
@@ -213,7 +213,7 @@ export default function WrappedPage() {
 
   if (!stats) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-indigo-600 to-purple-800 p-6 text-white">
+      <div className="flex min-h-screen flex-col items-center justify-center bg-primary p-6 text-white">
         <div className="card-clean max-w-md rounded-2xl bg-white/10 p-8 text-center backdrop-blur">
           <div className="mb-4 text-6xl">🃏</div>
           <h1 className="mb-4 text-3xl font-bold">{t("Nessuna Statistica")}</h1>
@@ -244,7 +244,7 @@ export default function WrappedPage() {
   // Opening screen
   if (!hasStarted) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-indigo-600 to-purple-800 p-6 text-white">
+      <div className="flex min-h-screen flex-col items-center justify-center bg-primary p-6 text-white">
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -332,7 +332,7 @@ export default function WrappedPage() {
   const isLastCard = currentCard >= 7;
 
   return (
-    <div className="relative flex min-h-screen flex-col bg-gradient-to-br from-indigo-600 to-purple-800">
+    <div className="relative flex min-h-screen flex-col bg-primary">
       {/* Back button */}
       <div className="absolute left-4 top-4 z-10">
         <Link

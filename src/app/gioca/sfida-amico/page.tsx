@@ -186,8 +186,7 @@ function SfidaAmicoContent() {
             className="mb-4"
           >
             <button onClick={startCreate} className="w-full text-left">
-              <div className="relative overflow-hidden rounded-3xl p-6 cursor-pointer transition-all hover:shadow-xl bg-gradient-to-br from-figb to-figb-dark">
-                <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-white/5 blur-2xl" />
+              <div className="relative overflow-hidden rounded-3xl p-6 cursor-pointer transition-all hover:shadow-xl bg-primary">
                 <div className="relative flex items-center gap-5">
                   <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-white/15 text-3xl">
                     {"\u2694\uFE0F"}
@@ -218,7 +217,7 @@ function SfidaAmicoContent() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <div className="rounded-2xl bg-card p-5 border-2 border-border shadow-[0_4px_0_var(--border)]">
+            <div className="rounded-2xl bg-card p-5 border-2 border-border">
               <h3 className="font-bold text-foreground mb-4">{t("Come funziona")}</h3>
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
@@ -630,7 +629,7 @@ function ActiveChallenge({
           {game.phase === "ready" && (
             <Button
               onClick={game.startGame}
-              className="rounded-xl bg-figb hover:bg-figb-dark text-sm font-bold h-12 px-8 shadow-lg shadow-figb/20"
+              className="rounded-xl bg-figb hover:bg-figb-dark text-sm font-bold h-12 px-8 shadow-lg"
             >
               {mode === "playing-challenge" ? "Accetta la sfida" : "Gioca la sfida"}
             </Button>
@@ -648,7 +647,7 @@ function ActiveChallenge({
                   xpSaved.current = false;
                   game.startGame();
                 }}
-                className="rounded-xl bg-figb hover:bg-figb-dark text-sm font-bold h-12 px-6 shadow-lg shadow-figb/20"
+                className="rounded-xl bg-figb hover:bg-figb-dark text-sm font-bold h-12 px-6 shadow-lg"
               >
                 {t("Rigioca")}
               </Button>
@@ -669,8 +668,8 @@ function ActiveChallenge({
               <div
                 className={`card-elevated rounded-2xl p-6 text-center ${
                   game.result.result >= 0
-                    ? "bg-gradient-to-br from-emerald-50 to-emerald-100/50 border border-emerald-200 dark:from-emerald-950/40 dark:to-emerald-900/20 dark:border-emerald-900"
-                    : "bg-gradient-to-br from-red-50 to-red-100/50 border border-red-200 dark:from-red-950/40 dark:to-red-900/20 dark:border-red-900"
+                    ? "bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900"
+                    : "bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900"
                 }`}
               >
                 <div className="text-4xl mb-3">
@@ -705,7 +704,7 @@ function ActiveChallenge({
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
                 >
-                  <div className="rounded-2xl bg-gradient-to-br from-figb to-figb-dark p-6 text-center text-white">
+                  <div className="rounded-2xl bg-primary p-6 text-center text-white">
                     <div className="text-3xl mb-2">{"\u2694\uFE0F"}</div>
                     <h3 className="text-lg font-bold mb-1">{t("Sfida Pronta!")}</h3>
                     <p className="text-sm text-white/70 mb-5">
@@ -773,7 +772,7 @@ function ActiveChallenge({
               {/* Comparison card */}
               <div className="card-elevated rounded-2xl overflow-hidden border border-border">
                 {/* Header */}
-                <div className="bg-gradient-to-r from-figb to-figb-dark px-5 py-4 text-center">
+                <div className="bg-primary px-5 py-4 text-center">
                   <div className="text-3xl mb-1">{"\u2694\uFE0F"}</div>
                   <h3 className="text-lg font-bold text-white">{t("Risultato Sfida")}</h3>
                   <p className="text-xs text-white/60 mt-1">
@@ -866,7 +865,7 @@ function ActiveChallenge({
               >
                 <button
                   onClick={onNewChallenge}
-                  className="w-full flex items-center justify-center gap-2 h-12 rounded-xl bg-figb hover:bg-figb-dark text-white text-sm font-bold transition-colors shadow-lg shadow-figb/20"
+                  className="w-full flex items-center justify-center gap-2 h-12 rounded-xl bg-figb hover:bg-figb-dark text-white text-sm font-bold transition-colors shadow-lg"
                 >
                   {"\u2694\uFE0F"} Crea la tua sfida
                 </button>
@@ -885,7 +884,7 @@ function ActiveChallenge({
           >
             <div className="card-elevated rounded-2xl bg-card p-5">
               <div className="flex items-start gap-3.5">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald to-emerald-dark text-white font-bold text-sm shadow-md shadow-emerald/30">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-emerald-700 text-white font-bold text-sm shadow-md">
                   M
                 </div>
                 <div className="flex-1">
@@ -931,7 +930,7 @@ function PastChallenges() {
       transition={{ delay: 0.3 }}
       className="mt-4"
     >
-      <div className="rounded-2xl bg-card p-5 border-2 border-border shadow-[0_4px_0_var(--border)]">
+      <div className="rounded-2xl bg-card p-5 border-2 border-border">
         <div className="flex items-center justify-between mb-3">
           <h3 className="font-bold text-foreground">{t("Sfide Create")}</h3>
           <Badge variant="outline" className="text-[12px] font-bold text-muted-foreground border-border">

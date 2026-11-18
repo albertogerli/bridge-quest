@@ -215,7 +215,7 @@ Gioca su bridgelab.it`;
         </div>
 
         {/* Overall grade card */}
-        <div className="card-clean p-6 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/40 dark:to-indigo-950/30">
+        <div className="card-clean p-6 bg-card">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-lg font-semibold text-foreground/80 mb-1">
@@ -332,7 +332,7 @@ Gioca su bridgelab.it`;
         </div>
 
         {/* Bottom CTA */}
-        <div className="card-clean p-6 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-center">
+        <div className="card-clean p-6 bg-primary text-white text-center">
           <h3 className="text-xl font-bold mb-2">{t("Vuoi migliorare ancora?")}</h3>
           <p className="text-blue-100 mb-4">
             {t("Rivedi le lezioni e pratica con le smazzate didattiche")}

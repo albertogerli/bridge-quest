@@ -48,7 +48,7 @@ const CATEGORY_LABELS: Record<Category, { label: string; emoji: string }> = {
 
 const CATEGORY_BADGE_CLASSES: Record<GlossaryEntry["category"], string> = {
   base: "bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300",
-  licita: "bg-purple-100 text-purple-700 dark:bg-purple-950/40 dark:text-purple-300",
+  licita: "bg-primary/10 text-primary dark:bg-primary/15 dark:text-primary",
   gioco: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300",
   difesa: "bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-300",
   punteggio: "bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300",

@@ -14,12 +14,12 @@ import { useT } from "@/contexts/traduzioni-provider";
 
 // Map weekly objective IDs to Lucide icons
 const objectiveIcons: Record<string, React.ReactNode> = {
-  quiz: <FileText className="w-6 h-6 text-indigo-500" />,
+  quiz: <FileText className="w-6 h-6 text-primary" />,
   hands: <Spade className="w-6 h-6 text-foreground/80" />,
   xp: <Star className="w-6 h-6 text-amber-500" />,
   modules: <BookOpen className="w-6 h-6 text-blue-500" />,
   streak: <Flame className="w-6 h-6 text-orange-500" />,
-  minigames: <Gamepad2 className="w-6 h-6 text-purple-500" />,
+  minigames: <Gamepad2 className="w-6 h-6 text-primary" />,
   daily: <CalendarDays className="w-6 h-6 text-teal-500" />,
   perfect: <TargetIcon className="w-6 h-6 text-rose-500" />,
 };
@@ -139,7 +139,7 @@ export default function ObiettiviPage() {
   return (
     <div className="min-h-screen bg-[#fafbfc] dark:bg-[#0f1219]">
       {/* Header with gradient */}
-      <div className="bg-gradient-to-br from-emerald-600 via-emerald-500 to-teal-500 px-4 pt-12 pb-10">
+      <div className="bg-emerald-700 px-4 pt-12 pb-10">
         <div className="max-w-lg mx-auto">
           <Link
             href="/"
@@ -241,7 +241,7 @@ export default function ObiettiviPage() {
                 <motion.div
                   className={`h-full rounded-full ${
                     i < completedCount
-                      ? "bg-gradient-to-r from-emerald-500 to-emerald-400"
+                      ? "bg-emerald-700"
                       : "bg-muted"
                   }`}
                   initial={{ width: 0 }}
@@ -265,7 +265,7 @@ export default function ObiettiviPage() {
               transition={{ duration: 0.4, delay: 0.15 + i * 0.1 }}
               className={`card-clean rounded-2xl bg-card p-5 shadow-sm border transition-all duration-300 ${
                 obj.completed
-                  ? "border-emerald-200 dark:border-emerald-900 bg-gradient-to-br from-card to-emerald-50/50 dark:to-emerald-950/30"
+                  ? "border-emerald-200 dark:border-emerald-900 bg-emerald-50 dark:bg-emerald-950/30"
                   : "border-border"
               }`}
             >
@@ -275,7 +275,7 @@ export default function ObiettiviPage() {
                   <div
                     className={`flex h-14 w-14 items-center justify-center rounded-2xl text-2xl transition-all duration-300 ${
                       obj.completed
-                        ? "bg-emerald-100 dark:bg-emerald-900/40 shadow-sm shadow-emerald-200/50"
+                        ? "bg-emerald-100 dark:bg-emerald-900/40 shadow-sm"
                         : "bg-muted/50"
                     }`}
                   >
@@ -286,7 +286,7 @@ export default function ObiettiviPage() {
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
                       transition={{ type: "spring", stiffness: 500, damping: 25, delay: 0.3 + i * 0.1 }}
-                      className="absolute -top-1.5 -right-1.5 w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center shadow-md shadow-emerald-300/50"
+                      className="absolute -top-1.5 -right-1.5 w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center shadow-md"
                     >
                       <svg
                         width="14"
@@ -348,8 +348,8 @@ export default function ObiettiviPage() {
                       <motion.div
                         className={`h-full rounded-full ${
                           obj.completed
-                            ? "bg-gradient-to-r from-emerald-500 to-emerald-400"
-                            : "bg-gradient-to-r from-amber-400 to-amber-300"
+                            ? "bg-emerald-700"
+                            : "bg-gold-dark"
                         }`}
                         initial={{ width: 0 }}
                         animate={{ width: `${Math.min(progressPercent, 100)}%` }}
@@ -373,9 +373,9 @@ export default function ObiettiviPage() {
           <div
             className={`card-clean rounded-2xl overflow-hidden transition-all duration-500 ${
               bonusClaimed
-                ? "bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/40 dark:to-teal-950/30 border-2 border-emerald-200 dark:border-emerald-900"
+                ? "bg-emerald-50 dark:bg-emerald-950/30 border-2 border-emerald-200 dark:border-emerald-900"
                 : allCompleted
-                  ? "bg-gradient-to-br from-amber-50 via-yellow-50 to-amber-50 dark:from-amber-950/40 dark:via-yellow-950/30 dark:to-amber-950/40 border-2 border-amber-200 dark:border-amber-900"
+                  ? "bg-amber-50 dark:bg-amber-950/30 border-2 border-amber-200 dark:border-amber-900"
                   : "bg-card border border-border"
             }`}
           >
@@ -387,7 +387,7 @@ export default function ObiettiviPage() {
                   scale: [1, 1.02, 1],
                 }}
                 transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute inset-0 bg-gradient-to-br from-amber-200/30 via-yellow-200/20 to-amber-200/30 rounded-2xl"
+                className="absolute inset-0 bg-amber-50 dark:bg-amber-950/30 rounded-2xl"
               />
             )}
 
@@ -398,7 +398,7 @@ export default function ObiettiviPage() {
                     bonusClaimed
                       ? "bg-emerald-100 dark:bg-emerald-900/40"
                       : allCompleted
-                        ? "bg-amber-100 dark:bg-amber-900/40 shadow-md shadow-amber-200/50"
+                        ? "bg-amber-100 dark:bg-amber-900/40 shadow-md"
                         : "bg-muted/50"
                   }`}
                 >
@@ -481,7 +481,7 @@ export default function ObiettiviPage() {
                   >
                     <Button
                       onClick={handleClaimBonus}
-                      className="w-full h-12 rounded-xl bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-600 hover:to-amber-500 text-white font-semibold text-base shadow-lg shadow-amber-300/40 transition-all duration-200 active:scale-[0.98]"
+                      className="w-full h-12 rounded-xl bg-gold-dark text-white font-semibold text-base shadow-lg transition-all duration-200 active:scale-[0.98]"
                     >
                       <Sparkles className="w-5 h-5 mr-2" />
                       {t("Riscuoti +100 XP Bonus")}

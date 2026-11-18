@@ -225,7 +225,7 @@ export default function MemoryPage() {
 
           <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }}>
             <div className="text-center mb-8">
-              <div className="inline-flex h-20 w-20 items-center justify-center rounded-3xl bg-figb text-4xl shadow-lg shadow-figb/20 mb-4">
+              <div className="inline-flex h-20 w-20 items-center justify-center rounded-3xl bg-figb text-4xl shadow-lg mb-4">
                 🧠
               </div>
               <h1 className={`font-bold text-foreground font-display ${isSenior ? "text-3xl" : "text-2xl"}`}>
@@ -242,15 +242,15 @@ export default function MemoryPage() {
               <h3 className="font-semibold text-foreground mb-3">{t("Come si gioca")}</h3>
               <ul className={`space-y-2 text-muted-foreground ${isSenior ? "text-base" : "text-sm"}`}>
                 <li className="flex items-start gap-2">
-                  <span className="text-purple-500 font-bold">1.</span>
+                  <span className="text-primary font-bold">1.</span>
                   {t("Tocca una carta per girarla")}
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-purple-500 font-bold">2.</span>
+                  <span className="text-primary font-bold">2.</span>
                   {t("Trova le coppie: carta ↔ concetto")}
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-purple-500 font-bold">3.</span>
+                  <span className="text-primary font-bold">3.</span>
                   Meno mosse fai, più {prof.xpLabel} guadagni!
                 </li>
               </ul>
@@ -262,14 +262,14 @@ export default function MemoryPage() {
               <h3 className="font-semibold text-foreground mb-3">{t("Scegli difficoltà")}</h3>
               <div className="space-y-2">
                 {([
-                  { diff: 4 as const, label: "Facile", desc: "4 coppie (8 carte)", color: "from-green-500 to-emerald-500", shadow: "shadow-green-400/30" },
-                  { diff: 6 as const, label: "Medio", desc: "6 coppie (12 carte)", color: "from-amber-500 to-orange-500", shadow: "shadow-amber-400/30" },
-                  { diff: 8 as const, label: "Difficile", desc: "8 coppie (16 carte)", color: "from-red-500 to-rose-500", shadow: "shadow-red-400/30" },
+                  { diff: 4 as const, label: "Facile", desc: "4 coppie (8 carte)", color: "bg-emerald-700", shadow: "" },
+                  { diff: 6 as const, label: "Medio", desc: "6 coppie (12 carte)", color: "bg-gold-dark", shadow: "" },
+                  { diff: 8 as const, label: "Difficile", desc: "8 coppie (16 carte)", color: "bg-red-600", shadow: "" },
                 ]).map(({ diff, label, desc, color, shadow }) => (
                   <button
                     key={diff}
                     onClick={() => startGame(diff)}
-                    className={`w-full flex items-center justify-between p-4 rounded-xl bg-gradient-to-r ${color} text-white shadow-lg ${shadow} active:scale-[0.97] transition-transform ${isSenior ? "text-lg" : ""}`}
+                    className={`w-full flex items-center justify-between p-4 rounded-xl ${color} text-white shadow-lg ${shadow} active:scale-[0.97] transition-transform ${isSenior ? "text-lg" : ""}`}
                   >
                     <div className="text-left">
                       <p className="font-semibold">{label}</p>
@@ -377,8 +377,8 @@ export default function MemoryPage() {
                           ? "bg-red-50 dark:bg-red-950/40 border-2 border-red-300"
                           : faceUp
                             ? card.type === "card"
-                              ? "bg-card border-2 border-purple-300 shadow-lg shadow-purple-200/50 dark:shadow-none"
-                              : "bg-card border-2 border-figb/20 dark:border-primary/30 shadow-lg shadow-figb/20 dark:shadow-none"
+                              ? "bg-card border-2 border-primary/20 shadow-lg dark:shadow-none"
+                              : "bg-card border-2 border-figb/20 dark:border-primary/30 shadow-lg dark:shadow-none"
                             : "bg-figb border-2 border-figb/60 shadow-md cursor-pointer active:scale-95"
                     }`}
                     style={{ perspective: 1000 }}
@@ -388,7 +388,7 @@ export default function MemoryPage() {
                         {/* Type indicator */}
                         <span className={`text-[12px] font-bold px-1.5 py-0.5 rounded-full ${
                           card.type === "card"
-                            ? "bg-purple-50 text-purple-500 dark:bg-purple-950/40 dark:text-purple-400"
+                            ? "bg-primary/10 text-primary dark:bg-primary/15 dark:text-primary"
                             : "bg-figb/10 text-figb dark:bg-primary/15 dark:text-primary"
                         }`}>
                           {card.type === "card" ? "🃏 Carta" : "📖 Concetto"}
@@ -471,7 +471,7 @@ export default function MemoryPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7 }}
           >
-            <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400 font-bold text-lg">
+            <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary/10 dark:bg-primary/15 text-primary dark:text-primary font-bold text-lg">
               +{earned} {prof.xpLabel}
             </span>
           </motion.div>
@@ -486,7 +486,7 @@ export default function MemoryPage() {
             <div className="card-clean rounded-2xl bg-card p-5">
               <div className="grid grid-cols-3 gap-4 text-center">
                 <div>
-                  <p className="text-2xl font-bold text-purple-600">⏱️</p>
+                  <p className="text-2xl font-bold text-primary">⏱️</p>
                   <p className="text-lg font-bold text-foreground mt-1">{formatTime(timer)}</p>
                   <p className="text-[12px] text-muted-foreground font-medium">{t("Tempo")}</p>
                 </div>
@@ -536,7 +536,7 @@ export default function MemoryPage() {
           >
             <button
               onClick={() => startGame(difficulty)}
-              className={`w-full py-4 rounded-2xl bg-figb text-white font-semibold shadow-lg shadow-figb/20 active:scale-[0.97] transition-transform ${isSenior ? "text-lg" : ""}`}
+              className={`w-full py-4 rounded-2xl bg-figb text-white font-semibold shadow-lg active:scale-[0.97] transition-transform ${isSenior ? "text-lg" : ""}`}
             >
               {t("Gioca ancora")}
             </button>

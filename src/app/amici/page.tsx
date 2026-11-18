@@ -349,7 +349,7 @@ export default function AmiciPage() {
                           friendship.profile.display_name || "Giocatore"
                         )
                       }
-                      className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-gradient-to-r from-violet-600 to-violet-500 text-white text-xs font-semibold hover:from-violet-700 hover:to-violet-600 transition-all shadow-sm shrink-0"
+                      className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-primary text-white text-xs font-semibold hover:from-primary hover:to-primary transition-all shadow-sm shrink-0"
                     >
                       <Swords className="h-3.5 w-3.5" />
                       {t("Sfida")}
@@ -683,8 +683,8 @@ export default function AmiciPage() {
                 {/* Modal header */}
                 <div className="flex items-center justify-between mb-5">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100 dark:bg-violet-950/40 border border-violet-200 dark:border-violet-900">
-                      <Swords className="h-5 w-5 text-violet-600 dark:text-violet-400" />
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 dark:bg-primary/15 border border-primary/20 dark:border-primary/20">
+                      <Swords className="h-5 w-5 text-primary dark:text-primary" />
                     </div>
                     <div>
                       <p id="challenge-dialog-title" className="text-sm font-bold text-foreground">

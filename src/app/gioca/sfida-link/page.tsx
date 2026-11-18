@@ -340,8 +340,7 @@ function SfidaLinkContent() {
             transition={{ delay: 0.1 }}
             className="mb-6"
           >
-            <div className="relative overflow-hidden rounded-3xl p-6 bg-gradient-to-br from-figb to-figb-dark">
-              <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-white/5 blur-2xl" />
+            <div className="relative overflow-hidden rounded-3xl p-6 bg-primary">
               <div className="relative text-center">
                 <div className="text-5xl mb-3">{"\u2694\uFE0F"}</div>
                 <h2 className="text-2xl font-bold text-white mb-2">
@@ -366,7 +365,7 @@ function SfidaLinkContent() {
             transition={{ delay: 0.2 }}
             className="mb-6"
           >
-            <div className="rounded-2xl bg-card p-6 border-2 border-border shadow-[0_4px_0_var(--border)]">
+            <div className="rounded-2xl bg-card p-6 border-2 border-border">
               <h3 className="font-bold text-foreground mb-4 text-center">{t("La tua mano (Sud)")}</h3>
               <div className="flex flex-wrap justify-center gap-2">
                 {southHand.map((card, idx) => (
@@ -390,7 +389,7 @@ function SfidaLinkContent() {
           >
             <Button
               onClick={handleStartGame}
-              className="w-full rounded-xl bg-figb hover:bg-figb-dark text-base font-bold h-14 shadow-lg shadow-figb/20"
+              className="w-full rounded-xl bg-figb hover:bg-figb-dark text-base font-bold h-14 shadow-lg"
             >
               {mode === "create" ? "Gioca questa mano" : "Accetta Sfida"}
             </Button>
@@ -558,8 +557,8 @@ function SfidaLinkContent() {
               <div
                 className={`card-elevated rounded-2xl p-6 text-center ${
                   game.result.result >= 0
-                    ? "bg-gradient-to-br from-emerald-50 to-emerald-100/50 border border-emerald-200 dark:from-emerald-950/40 dark:to-emerald-900/20 dark:border-emerald-900"
-                    : "bg-gradient-to-br from-red-50 to-red-100/50 border border-red-200 dark:from-red-950/40 dark:to-red-900/20 dark:border-red-900"
+                    ? "bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900"
+                    : "bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900"
                 }`}
               >
                 <div className="text-4xl mb-3">
@@ -596,7 +595,7 @@ function SfidaLinkContent() {
                 >
                   <div className="card-elevated rounded-2xl overflow-hidden border border-border">
                     {/* Header */}
-                    <div className="bg-gradient-to-r from-figb to-figb-dark px-5 py-4 text-center">
+                    <div className="bg-primary px-5 py-4 text-center">
                       <div className="text-3xl mb-1">{"\u2694\uFE0F"}</div>
                       <h3 className="text-lg font-bold text-white">{t("Confronto Risultati")}</h3>
                     </div>
@@ -653,7 +652,7 @@ function SfidaLinkContent() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
                 >
-                  <div className="rounded-2xl bg-gradient-to-br from-figb to-figb-dark p-6 text-center text-white">
+                  <div className="rounded-2xl bg-primary p-6 text-center text-white">
                     <div className="text-3xl mb-2">{"\u2694\uFE0F"}</div>
                     <h3 className="text-lg font-bold mb-1">{t("Sfida Pronta!")}</h3>
                     <p className="text-sm text-white/70 mb-5">
@@ -729,7 +728,7 @@ function SfidaLinkContent() {
                 </Button>
                 <Button
                   onClick={() => router.push("/gioca/sfida-link")}
-                  className="flex-1 rounded-xl bg-figb hover:bg-figb-dark text-sm font-bold h-12 px-6 shadow-lg shadow-figb/20"
+                  className="flex-1 rounded-xl bg-figb hover:bg-figb-dark text-sm font-bold h-12 px-6 shadow-lg"
                 >
                   {t("Nuova Sfida")}
                 </Button>

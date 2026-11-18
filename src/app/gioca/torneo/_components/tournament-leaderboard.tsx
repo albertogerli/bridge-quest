@@ -93,8 +93,8 @@ export function TournamentLeaderboard({
                 : "Gioca il torneo per entrare in classifica"}
             </p>
             {alreadyPlayed && existingResult && (
-              <div className="mt-3 inline-flex items-center gap-2 bg-indigo-50 dark:bg-indigo-950/40 rounded-xl px-4 py-2">
-                <span className="text-sm font-bold text-indigo-700 dark:text-indigo-300">
+              <div className="mt-3 inline-flex items-center gap-2 bg-primary/10 dark:bg-primary/15 rounded-xl px-4 py-2">
+                <span className="text-sm font-bold text-primary dark:text-primary">
                   {existingResult.totalTricks}/{existingResult.totalNeeded}{" "}
                   prese
                 </span>

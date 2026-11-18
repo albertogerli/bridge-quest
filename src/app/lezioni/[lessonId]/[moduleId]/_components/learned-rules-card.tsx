@@ -26,7 +26,7 @@ export function LearnedRulesCard({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 1.0 }}
-      className="rounded-2xl bg-gradient-to-br from-blue-50 dark:from-blue-950/40 via-card to-figb/5 dark:to-primary/10 border border-blue-200 dark:border-blue-900 p-5"
+      className="rounded-2xl bg-card border border-blue-200 dark:border-blue-900 p-5"
     >
       <div className="flex items-center gap-2 mb-3">
         <span className="text-2xl">📝</span>

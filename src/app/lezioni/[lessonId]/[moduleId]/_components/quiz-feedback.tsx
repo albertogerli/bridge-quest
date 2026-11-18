@@ -30,7 +30,7 @@ export function QuizFeedback({
       >
         {/* Junior: HUGE celebration */}
         {isJunior ? (
-          <div className="rounded-2xl bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 p-4 flex items-center gap-3 shadow-lg shadow-purple-300">
+          <div className="rounded-2xl bg-primary p-4 flex items-center gap-3 shadow-lg shadow-purple-300">
             <motion.span
               className="text-3xl"
               animate={{ rotate: [0, 20, -20, 0], scale: [1, 1.5, 1] }}
@@ -51,7 +51,7 @@ export function QuizFeedback({
           </div>
         ) : profile.profile === "giovane" ? (
           /* Giovane: big flashy correct */
-          <div className="rounded-xl bg-gradient-to-r from-amber-400 to-orange-400 p-3 flex items-center gap-3 shadow-lg shadow-amber-200">
+          <div className="rounded-xl bg-gold-dark p-3 flex items-center gap-3 shadow-lg shadow-amber-200">
             <motion.span
               className="text-2xl"
               animate={{ rotate: [0, 15, -15, 0], scale: [1, 1.3, 1] }}
@@ -73,7 +73,7 @@ export function QuizFeedback({
         ) : profile.profile === "adulto" ? (
           /* Adulto: Maestro Fiori encouragement */
           <div className="rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 p-3 flex items-center gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald to-emerald-dark text-white font-bold text-sm shadow-md">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-700 text-white font-bold text-sm shadow-md">
               M
             </div>
             <div>
@@ -110,7 +110,7 @@ export function QuizFeedback({
       className="space-y-2"
     >
       {isJunior ? (
-        <div className="rounded-2xl bg-gradient-to-r from-orange-100 to-amber-50 border border-orange-200 p-4 flex items-center gap-3">
+        <div className="rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-orange-200 p-4 flex items-center gap-3">
           <motion.span
             className="text-2xl"
             animate={{ scale: [1, 1.2, 1] }}
@@ -145,7 +145,7 @@ export function QuizFeedback({
         </div>
       ) : (
         <div className="rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 p-3 flex items-center gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald to-emerald-dark text-white font-bold text-sm shadow-md">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-700 text-white font-bold text-sm shadow-md">
             M
           </div>
           <p className="text-sm font-semibold text-red-800 dark:text-red-300">

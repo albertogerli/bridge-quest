@@ -16,25 +16,25 @@ export function RuleBlock({ block, delay, ctx }: ContentBlockProps) {
       transition={{ delay: delay * profile.animSpeed, type: "spring", stiffness: 300, damping: 25 }}
       className={`rounded-2xl border p-4 mb-5 relative overflow-hidden ${profile.contentClasses} ${
         isJunior
-          ? "bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/40 dark:to-pink-950/30 border-purple-200/60 dark:border-purple-900"
-          : "bg-gradient-to-br from-emerald-50 to-emerald-100/50 dark:from-emerald-950/40 dark:to-emerald-900/20 border-emerald-200/60 dark:border-emerald-900"
+          ? "bg-card border-primary/20 dark:border-primary/20"
+          : "bg-emerald-50 dark:bg-emerald-950/30 border-emerald-200/60 dark:border-emerald-900"
       }`}
     >
       <div className="absolute top-3 right-3 opacity-10">
-        <ShieldIcon className={`h-16 w-16 ${isJunior ? "text-purple-400" : "text-emerald"}`} />
+        <ShieldIcon className={`h-16 w-16 ${isJunior ? "text-primary" : "text-emerald"}`} />
       </div>
       <div className="relative flex gap-3">
         <div className={`flex shrink-0 items-center justify-center rounded-xl text-white shadow-sm ${
-          isJunior ? "h-10 w-10 bg-gradient-to-br from-purple-500 to-pink-500 text-lg" : "h-8 w-8 bg-emerald"
+          isJunior ? "h-10 w-10 bg-primary text-lg" : "h-8 w-8 bg-emerald"
         }`}>
           {isJunior ? "📌" : <ShieldIcon className="h-4 w-4" />}
         </div>
         <div>
           <p className={`font-bold uppercase tracking-widest mb-1 ${
-            isJunior ? "text-[12px] text-purple-600 dark:text-purple-400" : "text-[12px] text-emerald"
+            isJunior ? "text-[12px] text-primary dark:text-primary" : "text-[12px] text-emerald"
           }`}>{isJunior ? "Regola Importante!" : "Regola"}</p>
           <p className={`font-semibold leading-relaxed ${
-            isJunior ? "text-[15px] text-purple-900 dark:text-purple-200" : "text-[14px] text-emerald-900 dark:text-emerald-200"
+            isJunior ? "text-[15px] text-primary dark:text-primary" : "text-[14px] text-emerald-900 dark:text-emerald-200"
           }`}>
             <EnrichedText text={block.content} termMap={glossaryTermMap} />
           </p>

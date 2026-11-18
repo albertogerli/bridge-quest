@@ -49,7 +49,7 @@ export function WeeklyRecapModal({ open, onClose, data, title }: WeeklyRecapModa
             aria-label={t("Riepilogo settimanale")}
           >
             <div className="flex justify-center mb-3" aria-hidden="true">
-              <BarChart3 className="w-12 h-12 text-indigo-500" />
+              <BarChart3 className="w-12 h-12 text-primary" />
             </div>
             <h2 className="text-2xl font-bold text-foreground font-display">{title}</h2>
             <p className="text-sm text-muted-foreground mt-1">{t("Ecco i tuoi progressi!")}</p>
@@ -63,9 +63,9 @@ export function WeeklyRecapModal({ open, onClose, data, title }: WeeklyRecapModa
                 <p className="text-2xl font-bold text-amber-600">{data.modulesCompleted}</p>
                 <p className="text-[12px] font-medium text-amber-700 dark:text-amber-400">{t("Moduli completati")}</p>
               </div>
-              <div className="bg-indigo-50 dark:bg-indigo-950/30 rounded-xl p-3 border border-indigo-200 dark:border-indigo-800">
-                <p className="text-2xl font-bold text-indigo-600">{data.handsPlayed}</p>
-                <p className="text-[12px] font-medium text-indigo-700 dark:text-indigo-400">{t("Mani giocate")}</p>
+              <div className="bg-primary/10 dark:bg-primary/15 rounded-xl p-3 border border-primary/20 dark:border-primary/20">
+                <p className="text-2xl font-bold text-primary">{data.handsPlayed}</p>
+                <p className="text-[12px] font-medium text-primary dark:text-primary">{t("Mani giocate")}</p>
               </div>
               <div className="bg-orange-50 dark:bg-orange-950/30 rounded-xl p-3 border border-orange-200 dark:border-orange-800">
                 <p className="text-2xl font-bold text-orange-600">{data.streakDays}</p>

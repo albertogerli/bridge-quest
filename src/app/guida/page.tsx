@@ -393,7 +393,7 @@ export default function GuidaPage() {
 
         {/* Closing CTA */}
         <motion.div
-          className="mt-10 rounded-2xl bg-gradient-to-br from-[#1B5E3B] to-[#2A7A4F] p-6 text-center text-white"
+          className="mt-10 rounded-2xl bg-emerald-700 p-6 text-center text-white"
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}

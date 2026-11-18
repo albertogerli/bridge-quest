@@ -239,7 +239,7 @@ export default function CollezionePage() {
           </div>
           <div className="h-2.5 rounded-full bg-muted overflow-hidden">
             <motion.div
-              className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400"
+              className="h-full rounded-full bg-emerald-700"
               initial={{ width: 0 }}
               animate={{
                 width: `${(unlockedCount / totalCards) * 100}%`,
@@ -385,7 +385,7 @@ export default function CollezionePage() {
                   {isUnlocked ? (
                     <>
                       {/* Subtle shine overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-transparent to-transparent pointer-events-none" />
+                      <div className="absolute inset-0  pointer-events-none" />
 
                       {/* Rarity badge top-right */}
                       <div className="absolute top-2 right-2">
@@ -630,7 +630,7 @@ export default function CollezionePage() {
                     <div className="relative pt-8 pb-6 flex flex-col items-center">
                       {/* Shine */}
                       {isUnlocked && (
-                        <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-transparent to-transparent pointer-events-none" />
+                        <div className="absolute inset-0  pointer-events-none" />
                       )}
 
                       {/* New reveal sparkles */}

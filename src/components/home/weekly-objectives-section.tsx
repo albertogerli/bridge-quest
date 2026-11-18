@@ -21,12 +21,12 @@ import { useT } from "@/contexts/traduzioni-provider";
 
 // Map weekly objective IDs to Lucide icons
 const objectiveIcons: Record<string, React.ReactNode> = {
-  quiz: <FileText className="w-4 h-4 text-indigo-500" />,
+  quiz: <FileText className="w-4 h-4 text-primary" />,
   hands: <Spade className="w-4 h-4 text-foreground/80" />,
   xp: <Star className="w-4 h-4 text-amber-500" />,
   modules: <BookOpen className="w-4 h-4 text-blue-500" />,
   streak: <Flame className="w-4 h-4 text-orange-500" />,
-  minigames: <Gamepad2 className="w-4 h-4 text-purple-500" />,
+  minigames: <Gamepad2 className="w-4 h-4 text-primary" />,
   daily: <CalendarDays className="w-4 h-4 text-teal-500" />,
   perfect: <Target className="w-4 h-4 text-rose-500" />,
 };
@@ -79,7 +79,7 @@ export function WeeklyObjectivesSection() {
 
         <div className={`rounded-2xl p-4 border transition-all ${
           completedCount === 3
-            ? "bg-gradient-to-br from-[#1B5E3B]/5 to-card dark:from-emerald-950/30 dark:to-card border-[#1B5E3B]/20 dark:border-emerald-900"
+            ? "bg-emerald-700 border-[#1B5E3B]/20 dark:border-emerald-900"
             : "bg-card border-border"
         }`}>
           <div className="space-y-2.5">

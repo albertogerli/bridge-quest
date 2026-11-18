@@ -69,12 +69,12 @@ export function NextUpCards({
           transition={{ delay: 0.8 }}
         >
           <Link href={`/lezioni/${nextLesson.id}`}>
-            <div className="group card-clean card-interactive rounded-2xl bg-gradient-to-r from-emerald-50 to-emerald-100/50 dark:from-emerald-950/40 dark:to-emerald-900/20 border border-emerald-200 dark:border-emerald-900 p-4 cursor-pointer">
+            <div className="group card-clean card-interactive rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900 p-4 cursor-pointer">
               <p className="text-[12px] font-bold text-emerald-dark dark:text-emerald-300 uppercase tracking-wider mb-2">
                 {t("Prossima lezione")}
               </p>
               <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald to-emerald-dark text-white text-xl font-bold shadow-md shadow-emerald/30">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-700 text-white text-xl font-bold shadow-md">
                   {nextLesson.icon}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -100,7 +100,7 @@ export function NextUpCards({
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8 }}
-          className="rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/40 dark:to-orange-950/30 border border-amber-200 dark:border-amber-900 p-5 text-center"
+          className="rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900 p-5 text-center"
         >
           <span className="text-3xl">🎓</span>
           <h4 className="text-lg font-semibold text-amber-800 dark:text-amber-300 mt-2">{t("Corso di Primo Livello completato!")}</h4>

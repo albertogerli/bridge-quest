@@ -25,7 +25,7 @@ export function QuickStats({
   return (
     <div className="grid grid-cols-4 gap-2 mt-3">
       {[
-        { icon: <BookOpen className="w-4 h-4 text-indigo-500" />, val: String(totalModulesCompleted), label: "Moduli" },
+        { icon: <BookOpen className="w-4 h-4 text-primary" />, val: String(totalModulesCompleted), label: "Moduli" },
         { icon: <Spade className="w-4 h-4 text-foreground/80" />, val: String(handsPlayed), label: "Mani" },
         { icon: <CheckCircle2 className="w-4 h-4 text-emerald-500" />, val: `${completionPercent}%`, label: "Completato" },
         { icon: <Globe className="w-4 h-4 text-blue-500" />, val: `${worldsCompleted}/${totalWorldsCount}`, label: "Mondi" },

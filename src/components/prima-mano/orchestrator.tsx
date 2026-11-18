@@ -271,7 +271,7 @@ export function PrimaManoV2({
               </div>
               <div className="h-1.5 rounded-full bg-[#d8d0c0]/40">
                 <motion.div
-                  className="h-full rounded-full bg-gradient-to-r from-[#c8a44e] to-[#f0d37a]"
+                  className="h-full rounded-full bg-gold-dark"
                   initial={{ width: 0 }}
                   animate={{ width: `${((currentStep + 1) / STEPS.length) * 100}%` }}
                 />

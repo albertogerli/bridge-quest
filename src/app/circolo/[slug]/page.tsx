@@ -22,7 +22,7 @@ const avatarColors = [
   "bg-rose-100 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300",
   "bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300",
   "bg-cyan-100 text-cyan-700 dark:bg-cyan-950/40 dark:text-cyan-300",
-  "bg-purple-100 text-purple-700 dark:bg-purple-950/40 dark:text-purple-300",
+  "bg-primary/10 text-primary dark:bg-primary/15 dark:text-primary",
   "bg-orange-100 text-orange-700 dark:bg-orange-950/40 dark:text-orange-300",
   "bg-teal-100 text-teal-700 dark:bg-teal-950/40 dark:text-teal-300",
   "bg-sky-100 text-sky-700 dark:bg-sky-950/40 dark:text-sky-300",
@@ -217,7 +217,7 @@ export default function CircoloPage() {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.05 }}
-          className="rounded-2xl bg-gradient-to-br from-figb to-figb-light p-5 shadow-lg shadow-figb/20 mb-5"
+          className="rounded-2xl bg-primary p-5 shadow-lg mb-5"
         >
           <div className="flex items-start gap-3">
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/20 text-white text-2xl font-bold flex-shrink-0 backdrop-blur-sm">
@@ -386,7 +386,7 @@ export default function CircoloPage() {
                           <AvatarFallback
                             className={`text-xs font-bold ${
                               isCurrentUser
-                                ? "bg-gradient-to-br from-amber-400 to-amber-600 text-white"
+                                ? "bg-gold-dark text-white"
                                 : avatarColors[index % avatarColors.length]
                             }`}
                           >

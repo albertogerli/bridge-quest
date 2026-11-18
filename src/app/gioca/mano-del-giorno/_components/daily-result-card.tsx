@@ -47,8 +47,8 @@ export function DailyResultCard({
           <div
             className={`card-elevated rounded-2xl p-6 text-center ${
               todayResult.made
-                ? "bg-gradient-to-br from-emerald-50 to-emerald-100/50 dark:from-emerald-950/40 dark:to-emerald-900/20 border border-emerald-200 dark:border-emerald-900"
-                : "bg-gradient-to-br from-red-50 to-red-100/50 dark:from-red-950/40 dark:to-red-900/20 border border-red-200 dark:border-red-900"
+                ? "bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900"
+                : "bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900"
             }`}
           >
             {/* Star Rating */}
@@ -97,8 +97,8 @@ export function DailyResultCard({
                   transition={{ delay: 0.5, duration: 0.8 }}
                   className={`h-full rounded-full ${
                     todayResult.made
-                      ? "bg-gradient-to-r from-emerald-400 to-emerald-500"
-                      : "bg-gradient-to-r from-red-400 to-red-500"
+                      ? "bg-emerald-700 dark:bg-emerald-600"
+                      : "bg-red-600 dark:bg-red-500"
                   }`}
                 />
               </div>
@@ -176,8 +176,8 @@ export function DailyResultCard({
                   transition={{ delay: 0.8, duration: 0.8 }}
                   className={`h-full rounded-full ${
                     fieldStats.percentile >= 50
-                      ? "bg-gradient-to-r from-emerald-400 to-emerald-500"
-                      : "bg-gradient-to-r from-amber-400 to-amber-500"
+                      ? "bg-emerald-700 dark:bg-emerald-600"
+                      : "bg-gold-dark"
                   }`}
                 />
               </div>
@@ -235,16 +235,16 @@ export function DailyResultCard({
             className="mt-4"
           >
             <Link href="/gioca/analisi">
-              <div className="card-elevated card-interactive rounded-2xl bg-gradient-to-r from-violet-50 to-indigo-50 dark:from-violet-950/40 dark:to-indigo-950/30 border border-violet-200 dark:border-violet-900 p-4 cursor-pointer">
+              <div className="card-elevated card-interactive rounded-2xl bg-card border border-primary/20 dark:border-primary/20 p-4 cursor-pointer">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100 border border-violet-200 dark:bg-violet-900/40 dark:border-violet-800">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 border border-primary/20 dark:bg-primary/15 dark:border-primary/20">
                     <span className="text-lg">🤖</span>
                   </div>
                   <div className="flex-1">
                     <p className="text-sm font-bold text-foreground">{t("Analizza con l'AI")}</p>
                     <p className="text-[12px] text-muted-foreground">{t("Scopri dove potevi migliorare")}</p>
                   </div>
-                  <svg className="h-5 w-5 text-violet-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                  <svg className="h-5 w-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                     <polyline points="9,6 15,12 9,18" />
                   </svg>
                 </div>

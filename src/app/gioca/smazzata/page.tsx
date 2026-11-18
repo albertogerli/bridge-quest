@@ -224,7 +224,7 @@ function SmazzataBrowserContent() {
                       }}
                       className={`shrink-0 rounded-xl px-3 py-2 text-xs font-bold transition-all ${
                         selectedLesson === lesson.id
-                          ? "bg-emerald text-white shadow-md shadow-emerald/25"
+                          ? "bg-emerald text-white shadow-md"
                           : "bg-muted text-muted-foreground hover:bg-muted/70"
                       }`}
                     >
@@ -324,7 +324,7 @@ function SmazzataBrowserContent() {
               {commentoSelezionata && (
                 <div className="rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-100 dark:border-amber-900 p-3 mb-4">
                   <div className="flex items-start gap-2">
-                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-emerald to-emerald-dark text-white font-bold text-[12px]">
+                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-emerald-700 text-white font-bold text-[12px]">
                       M
                     </div>
                     <p className="text-[12px] text-amber-800 dark:text-amber-300 leading-relaxed">
@@ -336,7 +336,7 @@ function SmazzataBrowserContent() {
 
               <Button
                 onClick={() => setIsPlaying(true)}
-                className="w-full rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-12 shadow-lg shadow-emerald/25"
+                className="w-full rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-12 shadow-lg"
               >
                 {t("Gioca questa mano")}
               </Button>
@@ -754,7 +754,7 @@ function PlayingView({
           <div className="mb-3 flex justify-center">
             <Button
               onClick={game.startGame}
-              className="rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-11 px-8 shadow-lg shadow-emerald/25"
+              className="rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-11 px-8 shadow-lg"
             >
               {t("Inizia a giocare")}
             </Button>
@@ -898,7 +898,7 @@ function PlayingView({
           {game.phase === "ready" && !isMobile && (
             <Button
               onClick={game.startGame}
-              className="rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-12 px-8 shadow-lg shadow-emerald/25"
+              className="rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-12 px-8 shadow-lg"
             >
               {t("Inizia a giocare")}
             </Button>
@@ -914,7 +914,7 @@ function PlayingView({
               </Button>
               <Button
                 onClick={game.startGame}
-                className="rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-12 px-6 shadow-lg shadow-emerald/25"
+                className="rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-12 px-6 shadow-lg"
               >
                 {t("Rigioca")}
               </Button>
@@ -935,8 +935,8 @@ function PlayingView({
               <div
                 className={`card-elevated rounded-2xl p-6 text-center ${
                   success
-                    ? "bg-gradient-to-br from-emerald-50 to-emerald-100/50 dark:from-emerald-950/40 dark:to-emerald-900/20 border border-emerald-200 dark:border-emerald-900"
-                    : "bg-gradient-to-br from-red-50 to-red-100/50 dark:from-red-950/40 dark:to-red-900/20 border border-red-200 dark:border-red-900"
+                    ? "bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900"
+                    : "bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900"
                 }`}
               >
                 {/* Star Rating (DDS-based, 1-5) */}
@@ -1001,8 +1001,8 @@ function PlayingView({
                       transition={{ delay: 0.5, duration: 0.8 }}
                       className={`h-full rounded-full ${
                         success
-                          ? "bg-gradient-to-r from-emerald-400 to-emerald-500"
-                          : "bg-gradient-to-r from-red-400 to-red-500"
+                          ? "bg-emerald-700"
+                          : "bg-red-600"
                       }`}
                     />
                   </div>
@@ -1017,7 +1017,7 @@ function PlayingView({
                   {ddTricks !== null && ddTricks !== game.result.tricksNeeded && (
                     <div className="relative h-0">
                       <div
-                        className="absolute -top-3 w-0.5 h-3 bg-indigo-500/60"
+                        className="absolute -top-3 w-0.5 h-3 bg-primary"
                         style={{ left: `${(ddTricks / 13) * 100}%` }}
                       />
                     </div>
@@ -1029,25 +1029,25 @@ function PlayingView({
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.6 }}
-                  className="mt-4 rounded-xl bg-indigo-50/80 dark:bg-indigo-950/40 border border-indigo-200/60 dark:border-indigo-900 p-3"
+                  className="mt-4 rounded-xl bg-primary/10 dark:bg-primary/15 border border-primary/20 dark:border-primary/20 p-3"
                 >
                   <div className="flex items-center gap-2 mb-1.5">
-                    <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-indigo-500 text-white">
+                    <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-primary text-white">
                       <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                         <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                       </svg>
                     </div>
-                    <span className="text-xs font-bold text-indigo-700 dark:text-indigo-300">{t("Analisi Double-Dummy")}</span>
+                    <span className="text-xs font-bold text-primary dark:text-primary">{t("Analisi Double-Dummy")}</span>
                     {ddsLoading && (
-                      <span className="text-[12px] text-indigo-400 animate-pulse">{t("Calcolo...")}</span>
+                      <span className="text-[12px] text-primary animate-pulse">{t("Calcolo...")}</span>
                     )}
                     {ddsResult && !ddsResult.isExact && ddSalvato === null && (
-                      <span className="text-[12px] text-indigo-400">(stima)</span>
+                      <span className="text-[12px] text-primary">(stima)</span>
                     )}
                   </div>
                   {ddTricks !== null ? (
                     <div className="space-y-1">
-                      <p className="text-sm font-bold text-indigo-900 dark:text-indigo-200">
+                      <p className="text-sm font-bold text-primary dark:text-primary">
                         {t("{n} prese ottimali", { n: ddTricks })}
                       </p>
                       {ddDopoAttacco && (
@@ -1076,7 +1076,7 @@ function PlayingView({
                       </p>
                     </div>
                   ) : (
-                    <p className="text-xs text-indigo-400">{t("Analisi in corso...")}</p>
+                    <p className="text-xs text-primary">{t("Analisi in corso...")}</p>
                   )}
                 </motion.div>
 
@@ -1194,7 +1194,7 @@ function PlayingView({
                   className="card-elevated rounded-2xl bg-card p-5 border border-border"
                 >
                   <div className="flex items-center gap-2 mb-3">
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-emerald to-emerald-dark text-white font-bold text-xs">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-700 text-white font-bold text-xs">
                       M
                     </div>
                     <h4 className="text-sm font-bold text-foreground">{t("Analisi del Maestro")}</h4>
@@ -1235,7 +1235,7 @@ function PlayingView({
                   {ddTricks !== null && (
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-muted-foreground">{t("DD Ottimale")}</span>
-                      <span className="font-bold text-indigo-600">
+                      <span className="font-bold text-primary">
                         {ddTricks} prese{ddsResult && !ddsResult.isExact ? " (stima)" : ""}
                       </span>
                     </div>
@@ -1260,16 +1260,16 @@ function PlayingView({
                 transition={{ delay: 1.2 }}
               >
                 <Link href="/gioca/analisi">
-                  <div className="card-elevated card-interactive rounded-2xl bg-gradient-to-r from-violet-50 to-indigo-50 dark:from-violet-950/40 dark:to-indigo-950/30 border border-violet-200 dark:border-violet-900 p-4 cursor-pointer">
+                  <div className="card-elevated card-interactive rounded-2xl bg-card border border-primary/20 dark:border-primary/20 p-4 cursor-pointer">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100 border border-violet-200 dark:bg-violet-900/40 dark:border-violet-800">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 border border-primary/20 dark:bg-primary/15 dark:border-primary/20">
                         <span className="text-lg">🤖</span>
                       </div>
                       <div className="flex-1">
                         <p className="text-sm font-bold text-foreground">{t("Analizza con l'AI")}</p>
                         <p className="text-[12px] text-muted-foreground">{t("Scopri dove potevi migliorare")}</p>
                       </div>
-                      <svg className="h-5 w-5 text-violet-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                      <svg className="h-5 w-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                         <polyline points="9,6 15,12 9,18" />
                       </svg>
                     </div>

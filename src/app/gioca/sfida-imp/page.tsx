@@ -489,10 +489,10 @@ function SfidaIMPContent() {
             className="text-center mt-20"
           >
             <div className={`flex h-16 w-16 items-center justify-center rounded-full mx-auto mb-4 ${
-              isNoChallengeId ? "bg-violet-50 dark:bg-violet-950/40" : "bg-red-50 dark:bg-red-950/40"
+              isNoChallengeId ? "bg-primary/10 dark:bg-primary/15" : "bg-red-50 dark:bg-red-950/40"
             }`}>
               {isNoChallengeId ? (
-                <Swords className="w-8 h-8 text-violet-500" />
+                <Swords className="w-8 h-8 text-primary" />
               ) : (
                 <XCircle className="w-8 h-8 text-red-500" />
               )}
@@ -504,7 +504,7 @@ function SfidaIMPContent() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               {isNoChallengeId && (
                 <Link href="/amici">
-                  <Button className="rounded-xl bg-violet-600 hover:bg-violet-700 text-sm font-bold h-11 px-6">
+                  <Button className="rounded-xl bg-primary hover:bg-primary text-sm font-bold h-11 px-6">
                     <Swords className="w-4 h-4 mr-2" />
                     {t("Sfida un amico")}
                   </Button>
@@ -560,8 +560,7 @@ function SfidaIMPContent() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
           >
-            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-figb to-figb-dark p-6">
-              <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-white/5 blur-2xl" />
+            <div className="relative overflow-hidden rounded-3xl bg-primary p-6">
               <div className="relative">
                 {/* Opponent */}
                 <div className="flex items-center gap-4 mb-6">
@@ -621,7 +620,7 @@ function SfidaIMPContent() {
             transition={{ delay: 0.2 }}
             className="mt-4"
           >
-            <div className="rounded-2xl bg-card p-5 border-2 border-border shadow-[0_4px_0_var(--border)]">
+            <div className="rounded-2xl bg-card p-5 border-2 border-border">
               <h3 className="font-bold text-foreground mb-3">{t("Come funziona il punteggio IMP")}</h3>
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
@@ -795,7 +794,7 @@ function SfidaIMPContent() {
             <div className="mt-4 flex justify-center">
               <Button
                 onClick={game.startGame}
-                className="rounded-xl bg-figb hover:bg-figb-dark text-sm font-bold h-12 px-8 shadow-lg shadow-figb/20"
+                className="rounded-xl bg-figb hover:bg-figb-dark text-sm font-bold h-12 px-8 shadow-lg"
               >
                 {t("Gioca questa mano")}
               </Button>
@@ -841,7 +840,7 @@ function SfidaIMPContent() {
             </p>
 
             {/* Stats */}
-            <div className="mt-6 rounded-2xl bg-card p-5 border-2 border-border shadow-[0_4px_0_var(--border)]">
+            <div className="mt-6 rounded-2xl bg-card p-5 border-2 border-border">
               <div className="grid grid-cols-3 gap-4 text-center">
                 <div>
                   <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-1">{t("Contratto")}</p>
@@ -967,7 +966,7 @@ function SfidaIMPContent() {
               </p>
 
               {/* Comparison Table */}
-              <div className="mt-6 rounded-2xl bg-card border-2 border-border shadow-[0_4px_0_var(--border)] overflow-hidden">
+              <div className="mt-6 rounded-2xl bg-card border-2 border-border overflow-hidden">
                 {/* Table Header */}
                 <div className="grid grid-cols-5 text-[12px] font-bold text-muted-foreground uppercase tracking-wider bg-muted/50 px-4 py-3">
                   <div className="text-left">{t("Mano")}</div>
@@ -1056,7 +1055,7 @@ function SfidaIMPContent() {
 
             {/* My results summary */}
             {myResults && myResults.length > 0 && (
-              <div className="mt-6 rounded-2xl bg-card p-4 border-2 border-border shadow-[0_4px_0_var(--border)]">
+              <div className="mt-6 rounded-2xl bg-card p-4 border-2 border-border">
                 <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3">{t("I tuoi risultati")}</h3>
                 {myResults.map((r, i) => {
                   const needed = parseContract(r.contract).tricksNeeded;

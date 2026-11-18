@@ -54,7 +54,7 @@ export function HandTransition({
                         ? "bg-emerald-400"
                         : "bg-red-400"
                       : i === completedCount
-                        ? "bg-indigo-400"
+                        ? "bg-primary"
                         : "bg-muted"
                   }`}
                 />
@@ -137,8 +137,8 @@ export function HandTransition({
 
           {/* Next hand preview */}
           {nextHand && (
-            <div className="rounded-2xl bg-indigo-50 border border-indigo-200 dark:bg-indigo-950/40 dark:border-indigo-900 p-5 mb-6">
-              <p className="text-xs font-bold text-indigo-500 dark:text-indigo-400 mb-2">
+            <div className="rounded-2xl bg-primary/10 border border-primary/20 dark:bg-primary/15 dark:border-primary/20 p-5 mb-6">
+              <p className="text-xs font-bold text-primary dark:text-primary mb-2">
                 Prossima mano: #{completedCount + 1} di {totalHands}
               </p>
               <p className="text-lg font-bold text-foreground">
@@ -153,7 +153,7 @@ export function HandTransition({
 
           <Button
             onClick={onNextHand}
-            className="w-full rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-base font-bold h-14 shadow-lg shadow-indigo-600/25"
+            className="w-full rounded-2xl bg-primary hover:bg-primary text-base font-bold h-14 shadow-lg"
           >
             Gioca Mano #{completedCount + 1}
           </Button>

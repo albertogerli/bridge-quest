@@ -38,7 +38,7 @@ const SLIDES: Slide[] = [
     emoji: "✨",
     title: "BridgeLab è cambiata",
     body: "La barra ha quattro voci: Home, Percorso, Gioca e Profilo. Se sei iscritto a una classe, compare anche Classe. Ecco dove sono le cose che usavi.",
-    accent: "from-[#1B5E3B] to-[#2A7A4F]",
+    accent: "bg-emerald-700",
   },
   {
     emoji: "🎓",
@@ -46,7 +46,7 @@ const SLIDES: Slide[] = [
     body: "Il tuo corso, lezione dopo lezione, con il punto da cui riprendere. Qui trovi anche la Prima Mano, le dispense e il ripasso.",
     href: "/lezioni",
     cta: "Apri il Percorso",
-    accent: "from-[#1B5E3B] to-[#2A7A4F]",
+    accent: "bg-emerald-700",
   },
   {
     emoji: "🎮",
@@ -54,7 +54,7 @@ const SLIDES: Slide[] = [
     body: "Tornei, sfide, la mano contro il computer, il MiniBridge e i giochi per allenare una singola abilità.",
     href: "/gioca",
     cta: "Apri Gioca",
-    accent: "from-figb to-figb-light",
+    accent: "bg-primary",
   },
   {
     emoji: "👤",
@@ -62,7 +62,7 @@ const SLIDES: Slide[] = [
     body: "I tuoi progressi, i premi, gli amici e le impostazioni. Se insegni, da qui chiedi l'accesso al portale insegnanti.",
     href: "/profilo",
     cta: "Apri il Profilo",
-    accent: "from-[#c8a44e] to-[#a8842e]",
+    accent: "bg-gold-dark",
   },
 ];
 
@@ -125,7 +125,7 @@ export function NewVersionGuide() {
             className="relative z-10 w-full max-w-md overflow-hidden rounded-3xl bg-card shadow-2xl"
           >
             {/* header band */}
-            <div className={`flex flex-col items-center gap-2 bg-gradient-to-br ${slide.accent} px-6 pb-6 pt-8 text-center text-white`}>
+            <div className={`flex flex-col items-center gap-2 ${slide.accent} px-6 pb-6 pt-8 text-center text-white`}>
               <span className="text-5xl" aria-hidden="true">{slide.emoji}</span>
               <h2 id="new-version-guide-title" className="font-display text-2xl font-bold">{t(slide.title)}</h2>
             </div>

@@ -279,7 +279,7 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
             transition={{ delay: 0.15 }}
             className="mb-4 flex justify-center"
           >
-            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-full px-4 py-1.5">
+            <div className="inline-flex items-center gap-2 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 rounded-full px-4 py-1.5">
               <span className="text-sm">🔥</span>
               <span className="text-xs font-bold text-amber-700">+40 {profile.xpLabel} Bonus Giornaliero</span>
             </div>
@@ -376,7 +376,7 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
           {game.phase === "ready" && (
             <Button
               onClick={game.startGame}
-              className="rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-12 px-8 shadow-lg shadow-emerald/25"
+              className="rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-12 px-8 shadow-lg"
             >
               {t("Gioca la sfida")}
             </Button>
@@ -390,7 +390,7 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
               </Link>
               <Button
                 onClick={() => { xpSaved.current = false; game.startGame(); }}
-                className="rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-12 px-6 shadow-lg shadow-emerald/25"
+                className="rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-12 px-6 shadow-lg"
               >
                 {t("Rigioca")}
               </Button>
@@ -402,7 +402,7 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
               })() && (
                 <Button
                   onClick={() => { setBonusArmed(true); setShowBonus(true); }}
-                  className="rounded-xl bg-amber-600 hover:bg-amber-700 text-sm font-bold h-12 px-6 shadow-lg shadow-amber-500/25"
+                  className="rounded-xl bg-amber-600 hover:bg-amber-700 text-sm font-bold h-12 px-6 shadow-lg"
                 >
                   {t("Mano Bonus 2x")}
                 </Button>
@@ -424,8 +424,8 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
               <div
                 className={`card-elevated rounded-2xl p-6 text-center ${
                   game.result.result >= 0
-                    ? "bg-gradient-to-br from-emerald-50 to-emerald-100/50 border border-emerald-200 dark:from-emerald-950/40 dark:to-emerald-900/20 dark:border-emerald-900"
-                    : "bg-gradient-to-br from-red-50 to-red-100/50 border border-red-200 dark:from-red-950/40 dark:to-red-900/20 dark:border-red-900"
+                    ? "bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900"
+                    : "bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900"
                 }`}
               >
                 <div className="text-4xl mb-3">
@@ -480,16 +480,16 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
                 className="mt-4 mx-auto max-w-6xl"
               >
                 <Link href="/gioca/analisi">
-                  <div className="card-elevated rounded-2xl bg-gradient-to-r from-violet-50 to-indigo-50 border border-violet-200 dark:from-violet-950/40 dark:to-indigo-950/30 dark:border-violet-900 p-4 cursor-pointer hover:translate-y-[-1px] hover:shadow-md transition-all">
+                  <div className="card-elevated rounded-2xl bg-card border border-primary/20 dark:border-primary/20 p-4 cursor-pointer hover:translate-y-[-1px] hover:shadow-md transition-all">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100 border border-violet-200 dark:bg-violet-950/40 dark:border-violet-900">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 border border-primary/20 dark:bg-primary/15 dark:border-primary/20">
                         <span className="text-lg">🤖</span>
                       </div>
                       <div className="flex-1">
                         <p className="text-sm font-bold text-foreground">{t("Analizza con l'AI")}</p>
                         <p className="text-[12px] text-muted-foreground">{t("Scopri dove potevi migliorare")}</p>
                       </div>
-                      <svg className="h-5 w-5 text-violet-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                      <svg className="h-5 w-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                         <polyline points="9,6 15,12 9,18" />
                       </svg>
                     </div>
@@ -538,7 +538,7 @@ function SfidaContent({ smazzata }: { smazzata: Smazzata }) {
                 >
                   <div className="card-elevated rounded-2xl bg-card p-5">
                     <div className="flex items-start gap-3.5">
-                      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald to-emerald-dark text-white font-bold text-sm shadow-md shadow-emerald/30">
+                      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-emerald-700 text-white font-bold text-sm shadow-md">
                         M
                       </div>
                       <div className="flex-1">

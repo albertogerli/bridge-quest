@@ -189,9 +189,9 @@ export default function ImpostazioniPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="bg-gradient-to-br from-figb-dark via-figb to-figb-light px-4 pt-12 pb-8">
-        <div className="max-w-lg mx-auto">
-          <Link href="/" className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-4 transition-colors">
+      <div className="border-b border-border bg-card px-4 pt-12 pb-8">
+        <div className="max-w-3xl mx-auto">
+          <Link href="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground mb-4 transition-colors">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M15 18l-6-6 6-6" />
             </svg>
@@ -201,7 +201,7 @@ export default function ImpostazioniPage() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="text-3xl font-bold text-white tracking-tight font-display"
+            className="text-3xl font-bold text-foreground tracking-tight font-display"
           >
             {t("Impostazioni")}
           </motion.h1>
@@ -209,14 +209,14 @@ export default function ImpostazioniPage() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.1 }}
-            className="text-white/80 mt-1 text-sm"
+            className="text-muted-foreground mt-1 text-sm"
           >
             {t("Personalizza la tua esperienza Bridge LAB")}
           </motion.p>
         </div>
       </div>
 
-      <div className="max-w-lg mx-auto px-4 -mt-4 pb-24 space-y-4">
+      <div className="max-w-3xl mx-auto px-4 -mt-4 pb-24 space-y-4">
         {/* LA LINGUA PER PRIMA: chi arriva qui perché non capisce la lingua
             della pagina non deve leggere sei sezioni per trovarla. I due nomi
             sono scritti ciascuno nella propria lingua — «Italiano» e
@@ -293,8 +293,8 @@ export default function ImpostazioniPage() {
           className="card-clean bg-card rounded-2xl p-5 shadow-sm border border-border"
         >
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-950/50 flex items-center justify-center">
-              <span className="text-purple-600 text-xl">✦</span>
+            <div className="w-10 h-10 rounded-xl bg-primary/10 dark:bg-primary/15 flex items-center justify-center">
+              <span className="text-primary text-xl">✦</span>
             </div>
             <div>
               <h2 className="font-semibold text-foreground text-base">{t("Velocità Animazioni")}</h2>

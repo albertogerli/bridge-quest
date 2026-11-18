@@ -29,7 +29,7 @@ export function DailyCountdownCard({
               {mounted ? countdown : "--:--:--"}
             </p>
           </div>
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-100 to-orange-100 dark:from-amber-900/40 dark:to-orange-900/30">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-50 dark:bg-amber-950/30">
             <svg
               className="h-6 w-6 text-amber-600"
               viewBox="0 0 24 24"

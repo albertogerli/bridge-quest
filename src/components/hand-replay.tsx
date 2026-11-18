@@ -164,7 +164,7 @@ export function HandReplay({ hands, tricks, onTrickChange }: HandReplayProps) {
   };
 
   return (
-    <div className="w-full h-full flex flex-col bg-gradient-to-br from-green-700 via-green-600 to-green-700 rounded-2xl overflow-hidden">
+    <div className="w-full h-full flex flex-col bg-emerald-700 rounded-2xl overflow-hidden">
       {/* Table view */}
       <div className="flex-1 relative p-4">
         {/* Center playing area */}

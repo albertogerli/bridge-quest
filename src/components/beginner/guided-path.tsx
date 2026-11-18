@@ -17,7 +17,7 @@ const STEPS = [
     sub: "Impara i fondamenti del bridge",
     href: "/lezioni/0/intro",
     icon: BookOpen,
-    gradient: "from-blue-500 to-blue-600",
+    gradient: "bg-primary",
   },
   {
     step: 2,
@@ -25,7 +25,7 @@ const STEPS = [
     sub: "Metti in pratica con assistenza",
     href: "/gioca/mano-guidata",
     icon: Target,
-    gradient: "from-purple-500 to-purple-600",
+    gradient: "bg-primary",
   },
   {
     step: 3,
@@ -33,7 +33,7 @@ const STEPS = [
     sub: "Rafforza la memoria domani",
     href: "/ripasso",
     icon: Brain,
-    gradient: "from-amber-500 to-amber-600",
+    gradient: "bg-gold-dark",
   },
 ];
 
@@ -100,7 +100,7 @@ export function GuidedPath({ variant = "compact" }: GuidedPathProps) {
                       isDone
                         ? "bg-emerald-100 dark:bg-emerald-900/40"
                         : isCurrent
-                          ? `bg-gradient-to-br ${s.gradient} shadow-md`
+                          ? `${s.gradient} shadow-md`
                           : "bg-muted"
                     }`}
                   >

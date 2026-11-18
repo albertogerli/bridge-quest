@@ -108,7 +108,7 @@ export default function ResetPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-primary/5 via-primary/3 to-background flex items-center justify-center p-4">
+    <div className="min-h-screen bg-card flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="bg-card rounded-2xl shadow-lg border border-border/50 p-8">
           <div className="text-center mb-8">
@@ -196,7 +196,7 @@ export default function ResetPasswordPage() {
               <Button
                 type="submit"
                 disabled={loading || !password || !confirmPassword}
-                className="w-full h-12 bg-gradient-to-r from-figb to-figb-light hover:shadow-lg text-white font-semibold rounded-xl active:scale-[0.98] transition-all"
+                className="w-full h-12 bg-primary hover:shadow-lg text-white font-semibold rounded-xl active:scale-[0.98] transition-all"
               >
                 {loading ? "Aggiornamento..." : "Aggiorna Password"}
               </Button>

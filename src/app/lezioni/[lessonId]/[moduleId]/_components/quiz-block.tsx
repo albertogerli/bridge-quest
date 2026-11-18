@@ -68,7 +68,7 @@ export function QuizBlock({ block, blockIndex, delay, ctx }: ContentBlockProps) 
 
       <div className="flex items-center gap-2 mb-3">
         <div className={`flex items-center justify-center rounded-xl ${
-          isJunior ? "h-10 w-10 bg-gradient-to-br from-pink-400 to-purple-500 text-lg" : "h-8 w-8 bg-violet-100 text-violet-600 dark:bg-violet-900/40 dark:text-violet-400"
+          isJunior ? "h-10 w-10 bg-primary text-lg" : "h-8 w-8 bg-primary/10 text-primary dark:bg-primary/15 dark:text-primary"
         }`}>
           {isJunior ? "🧠" : <BrainIcon className="h-4 w-4" />}
         </div>
@@ -94,7 +94,7 @@ export function QuizBlock({ block, blockIndex, delay, ctx }: ContentBlockProps) 
             <motion.button
               whileTap={{ scale: 0.9 }}
               onClick={() => consumeFiftyFifty(blockIndex)}
-              className="flex items-center gap-1.5 rounded-xl bg-violet-100 border border-violet-200 px-3 py-2 text-xs font-bold text-violet-700 hover:bg-violet-200 dark:bg-violet-900/40 dark:border-violet-800 dark:text-violet-300 dark:hover:bg-violet-900/60 transition-all"
+              className="flex items-center gap-1.5 rounded-xl bg-primary/10 border border-primary/20 px-3 py-2 text-xs font-bold text-primary hover:bg-primary/20 dark:bg-primary/15 dark:border-primary/20 dark:text-primary dark:hover:bg-primary/15 transition-all"
             >
               <span className="text-sm">✂️</span> 50/50
             </motion.button>
@@ -176,7 +176,7 @@ export function QuizBlock({ block, blockIndex, delay, ctx }: ContentBlockProps) 
               } ${
                 !answered
                   ? isJunior
-                    ? "hover:border-purple-400 hover:bg-purple-50/50 dark:hover:bg-purple-950/30 hover:scale-[1.01] cursor-pointer"
+                    ? "hover:border-primary/60 hover:bg-primary/10 dark:hover:bg-primary/15 hover:scale-[1.01] cursor-pointer"
                     : "hover:border-emerald/50 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/30 cursor-pointer"
                   : ""
               }`}

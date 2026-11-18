@@ -207,7 +207,7 @@ export function StreakFreezeCard({ streak, xp, onFreeze }: StreakFreezeCardProps
                 disabled={!canFreeze}
                 className={`w-full py-4 px-6 rounded-xl font-bold text-lg transition-all duration-300 flex items-center justify-center gap-3 ${
                   canFreeze
-                    ? "bg-gradient-to-r from-orange-500 to-amber-500 text-white hover:from-orange-600 hover:to-amber-600 hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
+                    ? "bg-gold-dark text-white hover:from-orange-600 hover:to-amber-600 hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
                     : "bg-muted text-muted-foreground cursor-not-allowed"
                 }`}
               >

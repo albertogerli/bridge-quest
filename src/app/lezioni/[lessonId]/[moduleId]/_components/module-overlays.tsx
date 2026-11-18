@@ -64,7 +64,7 @@ export function ModuleEffects({
               animate={{ y: 0, rotate: 0 }}
               exit={{ y: 50 }}
               transition={{ type: "spring", stiffness: 300, damping: 20 }}
-              className="bg-gradient-to-br from-amber-400 via-amber-300 to-yellow-300 rounded-3xl p-8 text-center shadow-2xl shadow-amber-500/40 mx-6 max-w-sm"
+              className="bg-gold-dark rounded-3xl p-8 text-center shadow-2xl mx-6 max-w-sm"
             >
               <motion.div
                 animate={{ rotate: [0, 10, -10, 10, 0], scale: [1, 1.2, 1] }}

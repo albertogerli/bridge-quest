@@ -52,7 +52,7 @@ export function WeeklyChallengeBanner({ compact = false }: WeeklyChallengeBanner
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className={`card-clean rounded-2xl p-4 bg-gradient-to-r ${challenge.gradient} text-white hover:shadow-lg transition-shadow cursor-pointer`}
+          className={`card-clean rounded-2xl p-4 bg-primary text-white hover:shadow-lg transition-shadow cursor-pointer`}
         >
           <div className="flex items-center justify-between gap-4">
             {/* Icon + Title */}
@@ -97,7 +97,7 @@ export function WeeklyChallengeBanner({ compact = false }: WeeklyChallengeBanner
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`card-clean rounded-2xl p-6 bg-gradient-to-br ${challenge.gradient} text-white`}
+      className={`card-clean rounded-2xl p-6 bg-primary text-white`}
     >
       {/* Header */}
       <div className="flex items-start justify-between gap-4 mb-4">

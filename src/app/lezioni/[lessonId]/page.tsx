@@ -104,33 +104,32 @@ export default function LessonDetailPage({
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative overflow-hidden rounded-3xl hero-gradient p-6 mb-6"
+          className="relative overflow-hidden rounded-2xl border border-border bg-card p-6 mb-6"
         >
-          <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-white/5 blur-2xl" />
           <div className="relative">
             <div className="text-4xl mb-3">{lesson.icon}</div>
             <div className="flex items-center gap-2 mb-2">
-              <Badge className="bg-white/20 text-white text-[12px] font-bold border-0">
+              <Badge className="bg-primary/10 text-foreground text-[12px] font-bold border-0">
                 Lezione {lessonNumber}
               </Badge>
-              <Badge className="bg-white/10 text-white/70 text-[12px] font-bold border-0">
+              <Badge className="bg-primary/10 text-muted-foreground text-[12px] font-bold border-0">
                 {totalDuration} min
               </Badge>
             </div>
-            <h1 className="font-display text-2xl font-bold text-white">{lesson.title}</h1>
-            <p className="text-sm text-white/70 mt-1">{lesson.subtitle}</p>
-            <p className="text-xs font-semibold text-white/85 mt-2">
+            <h1 className="font-display text-2xl font-bold text-foreground">{lesson.title}</h1>
+            <p className="text-sm text-muted-foreground mt-1">{lesson.subtitle}</p>
+            <p className="text-xs font-semibold text-muted-foreground mt-2">
               {t("Contenuti tecnici a cura della Commissione del Settore Insegnamento FIGB")}
             </p>
 
             <div className="mt-4 flex items-center gap-3">
-              <div className="flex-1 h-2 rounded-full bg-white/15 overflow-hidden">
+              <div className="flex-1 h-2 rounded-full bg-muted overflow-hidden">
                 <div
-                  className="h-full rounded-full bg-white/80 transition-all"
+                  className="h-full rounded-full bg-primary transition-all"
                   style={{ width: `${progress}%` }}
                 />
               </div>
-              <span className="text-sm font-bold text-white/80">
+              <span className="text-sm font-bold text-muted-foreground">
                 {completedModules}/{totalModules}
               </span>
             </div>
@@ -209,7 +208,7 @@ export default function LessonDetailPage({
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="card-clean rounded-2xl bg-gradient-to-r from-amber-50 to-amber-100/50 dark:from-amber-950/40 dark:to-amber-900/20 border border-amber-100 dark:border-amber-900 p-4 mb-6"
+          className="card-clean rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-100 dark:border-amber-900 p-4 mb-6"
         >
           <div className="flex items-center gap-3">
             <span className="text-2xl">⚡</span>
@@ -233,7 +232,7 @@ export default function LessonDetailPage({
 
             const typeConfig = {
               theory: { label: "Teoria", color: "bg-blue-50 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400", icon: "📖" },
-              exercise: { label: "Esercizio", color: "bg-purple-50 text-purple-600 dark:bg-purple-950/40 dark:text-purple-400", icon: "✏️" },
+              exercise: { label: "Esercizio", color: "bg-primary/10 text-primary dark:bg-primary/15 dark:text-primary", icon: "✏️" },
               quiz: { label: "Quiz", color: "bg-amber-50 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400", icon: "❓" },
               practice: { label: "Pratica", color: "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300", icon: "🃏" },
             };
@@ -354,7 +353,7 @@ export default function LessonDetailPage({
             <Link
               href={`/gioca/smazzata?lesson=${lesson.id}${course ? `&course=${course.id}` : ""}`}
             >
-              <div className="group card-clean card-interactive cursor-pointer rounded-2xl bg-gradient-to-r from-emerald-50 to-emerald-100/50 dark:from-emerald-950/40 dark:to-emerald-900/20 border border-emerald-100 dark:border-emerald-900 p-4">
+              <div className="group card-clean card-interactive cursor-pointer rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900 p-4">
                 <div className="flex items-center gap-4">
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald text-white text-xl">
                     🃏

@@ -157,7 +157,7 @@ export function TreasureChests({ modulesCompleted }: { modulesCompleted: number 
           </div>
           <div className="h-3 rounded-full bg-muted border border-border overflow-hidden">
             <motion.div
-              className="h-full rounded-full bg-gradient-to-r from-amber-400 to-amber-500"
+              className="h-full rounded-full bg-gold-dark"
               initial={{ width: 0 }}
               animate={{ width: `${Math.min((modulesCompleted / nextChest.modules) * 100, 100)}%` }}
               transition={{ delay: 0.5, duration: 0.8 }}

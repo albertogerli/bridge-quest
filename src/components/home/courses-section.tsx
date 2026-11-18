@@ -58,7 +58,7 @@ export function CoursesSection({ completedModules }: CoursesSectionProps) {
                 <Link href={`/lezioni?corso=${course.id}`}>
                   <div className="btn-squishy rounded-2xl bg-card p-4 cursor-pointer border border-border">
                     <div className="flex items-center gap-2 mb-3">
-                      <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${course.gradient} text-white font-bold text-lg`}>
+                      <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-white font-bold text-lg`}>
                         {course.icon}
                       </div>
                       <span className={`text-[12px] font-bold px-1.5 py-0.5 rounded-full ${info.bg} ${info.color}`}>
@@ -74,7 +74,7 @@ export function CoursesSection({ completedModules }: CoursesSectionProps) {
                     <div className="mt-2.5 flex items-center gap-2">
                       <div className="flex-1 h-2 rounded-full bg-muted overflow-hidden">
                         <div
-                          className={`h-full rounded-full bg-gradient-to-r ${course.gradient}`}
+                          className={`h-full rounded-full bg-primary`}
                           style={{ width: `${stats.progress}%` }}
                         />
                       </div>

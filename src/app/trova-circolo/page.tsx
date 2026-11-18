@@ -106,16 +106,16 @@ export default function TrovaCircoloPage() {
   return (
     <div className="min-h-screen bg-background pb-24">
       {/* Hero */}
-      <div className="bg-gradient-to-br from-figb to-figb-light text-white px-4 pt-8 pb-10">
+      <div className="border-b border-border bg-card px-4 pt-8 pb-10">
         <div className="mx-auto max-w-6xl">
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-            <div className="flex items-center gap-2 text-xs text-white/60 mb-3">
-              <Link href="/" className="hover:text-white/80 transition-colors">{t("Home")}</Link>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
+              <Link href="/" className="hover:text-foreground transition-colors">{t("Home")}</Link>
               <span>/</span>
-              <span className="text-white/90 font-semibold">{t("Trova la tua ASD")}</span>
+              <span className="text-muted-foreground font-semibold">{t("Trova la tua ASD")}</span>
             </div>
             <h1 className="text-3xl font-bold font-display mb-2">{t("Trova la tua ASD")}</h1>
-            <p className="text-white/80 text-base">
+            <p className="text-muted-foreground text-base">
               {filteredClubs.length} associazioni FIGB in tutta Italia{filter === "scuola" ? " con scuola bridge" : ""}
             </p>
           </motion.div>
@@ -128,18 +128,18 @@ export default function TrovaCircoloPage() {
             className="mt-5"
           >
             {geoLoading ? (
-              <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-xl px-4 py-3">
-                <div className="w-5 h-5 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+              <div className="flex items-center gap-3 bg-primary/10 backdrop-blur-sm rounded-xl px-4 py-3">
+                <div className="w-5 h-5 border-2 border-border border-t-white rounded-full animate-spin" />
                 <span className="text-sm">{t("Ricerca posizione...")}</span>
               </div>
             ) : userPos ? (
-              <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-xl px-4 py-3">
+              <div className="flex items-center gap-3 bg-primary/10 backdrop-blur-sm rounded-xl px-4 py-3">
                 <Navigation className="w-4 h-4 text-emerald-300 flex-shrink-0" />
-                <span className="text-sm text-white/90">{t("Posizione trovata! Associazioni ordinate per distanza.")}</span>
+                <span className="text-sm text-muted-foreground">{t("Posizione trovata! Associazioni ordinate per distanza.")}</span>
               </div>
             ) : geoError ? (
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl px-4 py-3">
-                <p className="text-sm text-white/80 mb-2">
+              <div className="bg-primary/10 backdrop-blur-sm rounded-xl px-4 py-3">
+                <p className="text-sm text-muted-foreground mb-2">
                   {geoError === "non-supportata" && t("Il tuo browser non supporta la geolocalizzazione")}
                   {geoError === "negata" && t("Permesso di geolocalizzazione negato. Abilita la posizione nelle impostazioni del browser.")}
                   {geoError === "non-disponibile" && t("Posizione non disponibile. Riprova.")}
@@ -147,7 +147,7 @@ export default function TrovaCircoloPage() {
                 </p>
                 <button
                   onClick={requestLocation}
-                  className="text-sm font-bold text-white bg-white/20 px-4 py-2 rounded-lg hover:bg-white/30 transition-colors"
+                  className="text-sm font-bold text-foreground bg-primary/10 px-4 py-2 rounded-lg hover:bg-white/30 transition-colors"
                 >
                   {t("Riprova")}
                 </button>
@@ -155,7 +155,7 @@ export default function TrovaCircoloPage() {
             ) : (
               <button
                 onClick={requestLocation}
-                className="flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-xl px-4 py-3 text-sm font-bold hover:bg-white/30 transition-colors w-full"
+                className="flex items-center gap-2 bg-primary/10 backdrop-blur-sm rounded-xl px-4 py-3 text-sm font-bold hover:bg-white/30 transition-colors w-full"
               >
                 <MapPin className="w-4 h-4" />
                 {t("Condividi posizione per trovare le ASD vicine")}
@@ -196,7 +196,7 @@ export default function TrovaCircoloPage() {
                 onClick={() => setFilter("tutti")}
                 className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl text-sm font-bold transition-all ${
                   filter === "tutti"
-                    ? "bg-figb text-white shadow-lg shadow-figb/20"
+                    ? "bg-figb text-white shadow-lg"
                     : "bg-muted/50 text-muted-foreground hover:bg-muted"
                 }`}
               >
@@ -207,7 +207,7 @@ export default function TrovaCircoloPage() {
                 onClick={() => setFilter("scuola")}
                 className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl text-sm font-bold transition-all ${
                   filter === "scuola"
-                    ? "bg-emerald-600 text-white shadow-lg shadow-emerald-600/20"
+                    ? "bg-emerald-600 text-white shadow-lg"
                     : "bg-muted/50 text-muted-foreground hover:bg-muted"
                 }`}
               >

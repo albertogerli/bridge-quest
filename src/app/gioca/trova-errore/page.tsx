@@ -24,24 +24,24 @@ const difficultyConfig = {
     label: "Facile",
     desc: "Errori di regole base",
     xpMult: 0.8,
-    color: "from-green-500 to-emerald-500",
-    shadow: "shadow-green-400/30",
+    color: "bg-emerald-700",
+    shadow: "",
     accent: "emerald",
   },
   medio: {
     label: "Medio",
     desc: "Errori in licita e gioco",
     xpMult: 1,
-    color: "from-amber-500 to-orange-500",
-    shadow: "shadow-amber-400/30",
+    color: "bg-gold-dark",
+    shadow: "",
     accent: "amber",
   },
   difficile: {
     label: "Difficile",
     desc: "Difesa avanzata e slam",
     xpMult: 1.5,
-    color: "from-red-500 to-rose-500",
-    shadow: "shadow-red-400/30",
+    color: "bg-red-600",
+    shadow: "",
     accent: "red",
   },
 };
@@ -290,7 +290,7 @@ export default function TrovaErrorePage() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mt-8"
           >
-            <div className="inline-flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br from-rose-500 to-red-600 text-white text-5xl shadow-xl shadow-rose-400/30 mb-6">
+            <div className="inline-flex h-24 w-24 items-center justify-center rounded-3xl bg-red-600 text-white text-5xl shadow-xl mb-6">
               🔍
             </div>
             <h1
@@ -353,7 +353,7 @@ export default function TrovaErrorePage() {
                 <button
                   key={key}
                   onClick={() => startGame(key)}
-                  className={`w-full flex items-center justify-between p-4 rounded-xl bg-gradient-to-r ${cfg.color} text-white shadow-lg ${cfg.shadow} active:scale-[0.97] transition-transform ${isSenior ? "text-lg" : ""}`}
+                  className={`w-full flex items-center justify-between p-4 rounded-xl ${cfg.color} text-white shadow-lg ${cfg.shadow} active:scale-[0.97] transition-transform ${isSenior ? "text-lg" : ""}`}
                 >
                   <div className="text-left">
                     <p className="font-semibold">{cfg.label}</p>
@@ -557,7 +557,7 @@ export default function TrovaErrorePage() {
               </Link>
               <Button
                 onClick={() => startGame()}
-                className="flex-1 h-12 rounded-xl bg-gradient-to-r from-rose-500 to-red-600 font-bold shadow-lg shadow-rose-400/30"
+                className="flex-1 h-12 rounded-xl bg-red-600 font-bold shadow-lg"
               >
                 {t("Rigioca")}
               </Button>
@@ -600,7 +600,7 @@ export default function TrovaErrorePage() {
           <div className="flex-1 mx-3">
             <div className="h-2 rounded-full bg-muted overflow-hidden">
               <motion.div
-                className="h-full rounded-full bg-gradient-to-r from-rose-400 to-red-500"
+                className="h-full rounded-full bg-red-600"
                 animate={{
                   width: `${((round + 1) / TOTAL_ROUNDS) * 100}%`,
                 }}
@@ -916,7 +916,7 @@ export default function TrovaErrorePage() {
                 <div className="mt-6 space-y-2">
                   <Button
                     onClick={resumeFromPause}
-                    className="w-full h-12 rounded-xl bg-gradient-to-r from-rose-500 to-red-600 font-semibold shadow-lg"
+                    className="w-full h-12 rounded-xl bg-red-600 font-semibold shadow-lg"
                   >
                     {t("Riprendi")}
                   </Button>

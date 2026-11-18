@@ -422,7 +422,7 @@ export default function PostDetailPage() {
             <div
               className={`${
                 isReply ? "h-6 w-6 text-[12px]" : "h-7 w-7 text-[12px]"
-              } rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white font-bold overflow-hidden flex-shrink-0`}
+              } rounded-full bg-emerald-700 flex items-center justify-center text-white font-bold overflow-hidden flex-shrink-0`}
             >
               {comment.profiles?.avatar_url ? (
                 <Image
@@ -584,7 +584,7 @@ export default function PostDetailPage() {
                 <Button
                   onClick={() => handleReply(comment.id)}
                   disabled={!replyText.trim() || submitting}
-                  className="h-7 px-3 rounded-lg bg-gradient-to-r from-emerald-500 to-emerald-700 font-bold text-xs disabled:opacity-40"
+                  className="h-7 px-3 rounded-lg bg-emerald-700 font-bold text-xs disabled:opacity-40"
                 >
                   {submitting ? "Invio..." : "Rispondi"}
                 </Button>
@@ -676,7 +676,7 @@ export default function PostDetailPage() {
         >
           {/* Author */}
           <div className="flex items-center gap-3 mb-4">
-            <div className="h-10 w-10 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white font-bold overflow-hidden">
+            <div className="h-10 w-10 rounded-full bg-emerald-700 flex items-center justify-center text-white font-bold overflow-hidden">
               {post.profiles?.avatar_url ? (
                 <Image src={post.profiles.avatar_url} alt={t("Avatar utente")} width={40} height={40} className="h-full w-full object-cover" />
               ) : (
@@ -711,10 +711,10 @@ export default function PostDetailPage() {
           {post.poll_options && post.poll_options.length > 0 && (
             <div className="mt-5 space-y-2">
               <div className="flex items-center gap-2 mb-3">
-                <svg className="w-4 h-4 text-purple-600 dark:text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                <svg className="w-4 h-4 text-primary dark:text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                   <path d="M18 20V10M12 20V4M6 20v-6" />
                 </svg>
-                <span className="text-sm font-bold text-purple-700 dark:text-purple-300">{t("Sondaggio")}</span>
+                <span className="text-sm font-bold text-primary dark:text-primary">{t("Sondaggio")}</span>
                 <span className="text-[12px] text-muted-foreground">{pollTotalVotes} {pollTotalVotes === 1 ? "voto" : "voti"}</span>
               </div>
               {post.poll_options.map((option, idx) => {
@@ -731,10 +731,10 @@ export default function PostDetailPage() {
                     disabled={hasVoted || !user}
                     className={`w-full text-left relative rounded-xl border-2 overflow-hidden transition-all ${
                       isMyVote
-                        ? "border-purple-400 dark:border-purple-700 bg-purple-50 dark:bg-purple-950/40"
+                        ? "border-primary/60 dark:border-primary/60 bg-primary/10 dark:bg-primary/15"
                         : hasVoted
                           ? "border-border/60 bg-muted/50"
-                          : "border-border bg-card hover:border-purple-300 dark:hover:border-purple-700 hover:bg-purple-50/50 dark:hover:bg-purple-950/30 cursor-pointer"
+                          : "border-border bg-card hover:border-primary/20 dark:hover:border-primary/60 hover:bg-primary/10 dark:hover:bg-primary/15 cursor-pointer"
                     } ${!user ? "cursor-not-allowed opacity-60" : ""}`}
                     whileTap={!hasVoted && user ? { scale: 0.98 } : undefined}
                   >
@@ -745,23 +745,23 @@ export default function PostDetailPage() {
                         animate={{ width: `${pct}%` }}
                         transition={{ duration: 0.5, ease: "easeOut" }}
                         className={`absolute inset-y-0 left-0 ${
-                          isWinning ? "bg-purple-100 dark:bg-purple-900/40" : "bg-muted"
+                          isWinning ? "bg-primary/10 dark:bg-primary/15" : "bg-muted"
                         }`}
                       />
                     )}
                     <div className="relative flex items-center justify-between px-4 py-3">
                       <div className="flex items-center gap-2">
                         {isMyVote && (
-                          <svg className="w-4 h-4 text-purple-600 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3}>
+                          <svg className="w-4 h-4 text-primary flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3}>
                             <polyline points="20 6 9 17 4 12" />
                           </svg>
                         )}
-                        <span className={`text-sm font-medium ${isMyVote ? "text-purple-700 dark:text-purple-300 font-bold" : "text-foreground/80"}`}>
+                        <span className={`text-sm font-medium ${isMyVote ? "text-primary dark:text-primary font-bold" : "text-foreground/80"}`}>
                           {option}
                         </span>
                       </div>
                       {hasVoted && (
-                        <span className={`text-sm font-bold flex-shrink-0 ml-2 ${isWinning ? "text-purple-700 dark:text-purple-300" : "text-muted-foreground"}`}>
+                        <span className={`text-sm font-bold flex-shrink-0 ml-2 ${isWinning ? "text-primary dark:text-primary" : "text-muted-foreground"}`}>
                           {pct}%
                         </span>
                       )}
@@ -771,7 +771,7 @@ export default function PostDetailPage() {
               })}
               {!user && (
                 <p className="text-[12px] text-muted-foreground text-center mt-1">
-                  <Link href="/login" className="text-purple-600 dark:text-purple-400 font-bold hover:underline">{t("Accedi")}</Link> per votare
+                  <Link href="/login" className="text-primary dark:text-primary font-bold hover:underline">{t("Accedi")}</Link> per votare
                 </p>
               )}
             </div>
@@ -863,7 +863,7 @@ export default function PostDetailPage() {
                 <Button
                   onClick={handleComment}
                   disabled={!commentText.trim() || submitting}
-                  className="h-9 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-700 font-bold text-xs disabled:opacity-40"
+                  className="h-9 px-4 rounded-xl bg-emerald-700 font-bold text-xs disabled:opacity-40"
                 >
                   {submitting ? "Invio..." : "Commenta"}
                 </Button>

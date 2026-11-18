@@ -139,7 +139,7 @@ export function AchievementPopup({
             {/* Badge icon with glow */}
             <div className="relative" aria-hidden="true">
               <div className="absolute inset-0 bg-amber-400/30 rounded-full blur-md" />
-              <div className="relative flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-amber-100 to-amber-200 text-2xl">
+              <div className="relative flex h-12 w-12 items-center justify-center rounded-full bg-amber-50 dark:bg-amber-950/30 text-2xl">
                 {badge.icon}
               </div>
             </div>

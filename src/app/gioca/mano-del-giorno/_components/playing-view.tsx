@@ -131,7 +131,7 @@ export function PlayingView({
             transition={{ delay: 0.15 }}
             className="mb-3 flex justify-center"
           >
-            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-full px-4 py-1.5">
+            <div className="inline-flex items-center gap-2 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 rounded-full px-4 py-1.5">
               <span className="text-xs font-bold text-amber-700">
                 +50 {profile.xpLabel} Bonus Giornaliero
               </span>
@@ -144,7 +144,7 @@ export function PlayingView({
           <div className="mb-3 flex justify-center">
             <Button
               onClick={game.startGame}
-              className="rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-11 px-8 shadow-lg shadow-emerald/25"
+              className="rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-11 px-8 shadow-lg"
             >
               {t("Inizia a giocare")}
             </Button>
@@ -276,7 +276,7 @@ export function PlayingView({
           {game.phase === "ready" && !isMobile && (
             <Button
               onClick={game.startGame}
-              className="rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-12 px-8 shadow-lg shadow-emerald/25"
+              className="rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-12 px-8 shadow-lg"
             >
               {t("Inizia a giocare")}
             </Button>
@@ -292,7 +292,7 @@ export function PlayingView({
               </Button>
               <Button
                 onClick={replay}
-                className="rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-12 px-6 shadow-lg shadow-emerald/25"
+                className="rounded-xl bg-emerald hover:bg-emerald-dark text-sm font-bold h-12 px-6 shadow-lg"
               >
                 {t("Rigioca")}
               </Button>

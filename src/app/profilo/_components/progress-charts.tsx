@@ -102,7 +102,7 @@ export function ProgressCharts({
             <p className="text-[12px] text-muted-foreground font-medium">{t("Streak attuale")}</p>
           </div>
           <div className="rounded-xl bg-muted p-3 text-center">
-            <Clock className="w-5 h-5 text-indigo-500 mx-auto mb-1" />
+            <Clock className="w-5 h-5 text-primary mx-auto mb-1" />
             <p className="text-xl font-bold text-foreground">{gamePerformanceStats.timeDisplay}</p>
             <p className="text-[12px] text-muted-foreground font-medium">{t("Tempo di gioco")}</p>
           </div>

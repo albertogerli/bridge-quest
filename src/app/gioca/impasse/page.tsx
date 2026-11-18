@@ -20,24 +20,24 @@ const diffConfig = {
     label: "Facile",
     desc: "8 secondi per decidere",
     xpMult: 0.8,
-    color: "from-green-500 to-emerald-500",
-    shadow: "shadow-green-400/30",
+    color: "bg-emerald-700",
+    shadow: "",
   },
   medio: {
     time: 5000,
     label: "Medio",
     desc: "5 secondi per decidere",
     xpMult: 1,
-    color: "from-amber-500 to-orange-500",
-    shadow: "shadow-amber-400/30",
+    color: "bg-gold-dark",
+    shadow: "",
   },
   difficile: {
     time: 3000,
     label: "Difficile",
     desc: "3 secondi per decidere",
     xpMult: 1.5,
-    color: "from-red-500 to-rose-500",
-    shadow: "shadow-red-400/30",
+    color: "bg-red-600",
+    shadow: "",
   },
 };
 
@@ -319,7 +319,7 @@ export default function ImpassePage() {
             className="text-center mt-8"
           >
             {/* Icon */}
-            <div className="inline-flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br from-blue-500 to-cyan-500 text-white text-5xl shadow-xl shadow-blue-400/30 mb-6">
+            <div className="inline-flex h-24 w-24 items-center justify-center rounded-3xl bg-primary text-white text-5xl shadow-xl mb-6">
               <svg
                 viewBox="0 0 48 48"
                 className="h-14 w-14"
@@ -409,7 +409,7 @@ export default function ImpassePage() {
                 <button
                   key={key}
                   onClick={() => startGame(key)}
-                  className={`w-full flex items-center justify-between p-4 rounded-xl bg-gradient-to-r ${c.color} text-white shadow-lg ${c.shadow} active:scale-[0.97] transition-transform`}
+                  className={`w-full flex items-center justify-between p-4 rounded-xl ${c.color} text-white shadow-lg ${c.shadow} active:scale-[0.97] transition-transform`}
                 >
                   <div className="text-left">
                     <p className="font-semibold">{c.label}</p>
@@ -529,7 +529,7 @@ export default function ImpassePage() {
               </Link>
               <Button
                 onClick={() => startGame()}
-                className="flex-1 h-12 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 font-bold shadow-lg"
+                className="flex-1 h-12 rounded-xl bg-primary font-bold shadow-lg"
               >
                 {t("Rigioca")}
               </Button>
@@ -567,7 +567,7 @@ export default function ImpassePage() {
           <div className="flex-1 mx-3">
             <div className="h-2 rounded-full bg-muted overflow-hidden">
               <motion.div
-                className="h-full rounded-full bg-gradient-to-r from-blue-400 to-cyan-500"
+                className="h-full rounded-full bg-primary"
                 animate={{ width: `${((round + 1) / TOTAL_ROUNDS) * 100}%` }}
               />
             </div>
@@ -603,10 +603,10 @@ export default function ImpassePage() {
             <motion.div
               className={`h-full rounded-full transition-colors duration-300 ${
                 timerDanger
-                  ? "bg-gradient-to-r from-red-500 to-rose-500"
+                  ? "bg-red-600"
                   : timerWarn
-                    ? "bg-gradient-to-r from-amber-400 to-orange-500"
-                    : "bg-gradient-to-r from-blue-400 to-cyan-500"
+                    ? "bg-gold-dark"
+                    : "bg-primary"
               }`}
               style={{ width: `${timerPercent}%` }}
               transition={{ duration: 0.05, ease: "linear" }}
@@ -651,7 +651,7 @@ export default function ImpassePage() {
               <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-2">
                 {t("La tua mano")}
               </p>
-              <div className="bg-gradient-to-b from-blue-50 to-white dark:from-blue-950/40 dark:to-card rounded-xl p-3 border border-blue-100 dark:border-blue-900">
+              <div className="bg-card rounded-xl p-3 border border-blue-100 dark:border-blue-900">
                 <p className="text-2xl sm:text-3xl tracking-wider leading-relaxed">
                   {colorizeCards(scenario.yourHand)}
                 </p>
@@ -663,7 +663,7 @@ export default function ImpassePage() {
               <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-2">
                 {t("Il morto")}
               </p>
-              <div className="bg-gradient-to-b from-amber-50 to-white dark:from-amber-950/40 dark:to-card rounded-xl p-3 border border-amber-100 dark:border-amber-900">
+              <div className="bg-amber-50 dark:bg-amber-950/30 rounded-xl p-3 border border-amber-100 dark:border-amber-900">
                 <p className="text-2xl sm:text-3xl tracking-wider leading-relaxed">
                   {colorizeCards(scenario.dummy)}
                 </p>
@@ -693,7 +693,7 @@ export default function ImpassePage() {
             {/* IMPASSE button */}
             <button
               onClick={() => handleAnswer("impasse")}
-              className="relative overflow-hidden rounded-2xl p-5 text-center bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-400/30 active:scale-95 transition-transform"
+              className="relative overflow-hidden rounded-2xl p-5 text-center bg-primary text-white shadow-lg active:scale-95 transition-transform"
             >
               <div className="absolute inset-0 bg-white/10 opacity-0 hover:opacity-100 transition-opacity" />
               <svg
@@ -716,7 +716,7 @@ export default function ImpassePage() {
             {/* DROP button */}
             <button
               onClick={() => handleAnswer("drop")}
-              className="relative overflow-hidden rounded-2xl p-5 text-center bg-gradient-to-br from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-400/30 active:scale-95 transition-transform"
+              className="relative overflow-hidden rounded-2xl p-5 text-center bg-gold-dark text-white shadow-lg active:scale-95 transition-transform"
             >
               <div className="absolute inset-0 bg-white/10 opacity-0 hover:opacity-100 transition-opacity" />
               <svg

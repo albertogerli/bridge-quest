@@ -152,10 +152,10 @@ describe("mano del giorno: fine partita e tema scuro", () => {
     // sopra testo chiaro (il resto della pagina le aveva già).
     const src = source(file);
     expect(src).toContain(
-      "from-emerald-50 to-emerald-100/50 dark:from-emerald-950/40 dark:to-emerald-900/20 border border-emerald-200 dark:border-emerald-900"
+      "bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900"
     );
     expect(src).toContain(
-      "from-red-50 to-red-100/50 dark:from-red-950/40 dark:to-red-900/20 border border-red-200 dark:border-red-900"
+      "bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900"
     );
   });
 

@@ -61,7 +61,7 @@ export function ProgressSidebar({
 
       <div className="mt-8 h-2 rounded-full bg-white/10">
         <motion.div
-          className="h-full rounded-full bg-gradient-to-r from-[#c8a44e] to-[#f0d37a]"
+          className="h-full rounded-full bg-gold-dark"
           initial={{ width: 0 }}
           animate={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
         />

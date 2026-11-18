@@ -110,7 +110,7 @@ export function ShareResult(props: ShareResultProps) {
       {/* Card Preview */}
       <div className="rounded-2xl overflow-hidden border border-gray-200 shadow-sm">
         {/* Gradient header */}
-        <div className="bg-gradient-to-r from-[#003DA5] to-[#002E7A] px-5 py-4 text-white">
+        <div className="bg-primary px-5 py-4 text-white">
           <div className="flex items-center gap-2 mb-1">
             <span className="text-lg">{"\uD83C\uDCCF"}</span>
             <span className="text-sm font-bold tracking-wide">{t("FIGB Bridge LAB")}</span>

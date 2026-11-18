@@ -101,7 +101,7 @@ export function ComprehensionQuiz({ lessonId, onComplete, onSkip }: Comprehensio
         </div>
         <Button
           onClick={() => onComplete(score, total)}
-          className="mt-5 w-full h-11 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-700 font-bold text-sm"
+          className="mt-5 w-full h-11 rounded-xl bg-emerald-700 font-bold text-sm"
         >
           {t("Continua")}
         </Button>

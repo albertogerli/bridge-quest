@@ -23,7 +23,7 @@ const avatarColors = [
   "bg-rose-100 text-rose-800 dark:bg-rose-950/40 dark:text-rose-300",
   "bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300",
   "bg-cyan-100 text-cyan-800 dark:bg-cyan-950/40 dark:text-cyan-300",
-  "bg-purple-100 text-purple-800 dark:bg-purple-950/40 dark:text-purple-300",
+  "bg-primary/10 text-primary dark:bg-primary/15 dark:text-primary",
   "bg-orange-100 text-orange-800 dark:bg-orange-950/40 dark:text-orange-300",
   "bg-teal-100 text-teal-800 dark:bg-teal-950/40 dark:text-teal-300",
   "bg-sky-100 text-sky-800 dark:bg-sky-950/40 dark:text-sky-300",
@@ -40,11 +40,11 @@ function getLevel(xp: number) {
 }
 
 const leagues = [
-  { name: "Lega Fiori", icon: "♣", minXp: 0, color: "from-emerald-50 to-emerald-100/50 dark:from-emerald-950/40 dark:to-emerald-900/20", border: "border-emerald-100 dark:border-emerald-900", textColor: "text-emerald-700 dark:text-emerald-300", iconBg: "bg-emerald-600", next: "Lega Quadri ♦" },
-  { name: "Lega Quadri", icon: "♦", minXp: 1000, color: "from-orange-50 to-orange-100/50 dark:from-orange-950/40 dark:to-orange-900/20", border: "border-orange-100 dark:border-orange-900", textColor: "text-orange-700 dark:text-orange-300", iconBg: "bg-orange-500", next: "Lega Cuori ♥" },
-  { name: "Lega Cuori", icon: "♥", minXp: 3000, color: "from-rose-50 to-rose-100/50 dark:from-rose-950/40 dark:to-rose-900/20", border: "border-rose-100 dark:border-rose-900", textColor: "text-rose-700 dark:text-rose-300", iconBg: "bg-rose-500", next: "Lega Picche ♠" },
-  { name: "Lega Picche", icon: "♠", minXp: 6000, color: "from-indigo-50 to-indigo-100/50 dark:from-indigo-950/40 dark:to-indigo-900/20", border: "border-indigo-100 dark:border-indigo-900", textColor: "text-indigo-700 dark:text-indigo-300", iconBg: "bg-indigo-600", next: "Lega SA" },
-  { name: "Lega SA", icon: "NT", minXp: 10000, color: "from-slate-100 to-slate-200/50 dark:from-slate-800/40 dark:to-slate-700/20", border: "border-slate-200 dark:border-slate-700", textColor: "text-slate-800 dark:text-slate-200", iconBg: "bg-slate-800", next: null },
+  { name: "Lega Fiori", icon: "♣", minXp: 0, color: "bg-emerald-50 dark:bg-emerald-950/30", border: "border-emerald-100 dark:border-emerald-900", textColor: "text-emerald-700 dark:text-emerald-300", iconBg: "bg-emerald-600", next: "Lega Quadri ♦" },
+  { name: "Lega Quadri", icon: "♦", minXp: 1000, color: "bg-amber-50 dark:bg-amber-950/30", border: "border-orange-100 dark:border-orange-900", textColor: "text-orange-700 dark:text-orange-300", iconBg: "bg-orange-500", next: "Lega Cuori ♥" },
+  { name: "Lega Cuori", icon: "♥", minXp: 3000, color: "bg-red-50 dark:bg-red-950/30", border: "border-rose-100 dark:border-rose-900", textColor: "text-rose-700 dark:text-rose-300", iconBg: "bg-rose-500", next: "Lega Picche ♠" },
+  { name: "Lega Picche", icon: "♠", minXp: 6000, color: "bg-card", border: "border-primary/20 dark:border-primary/20", textColor: "text-primary dark:text-primary", iconBg: "bg-primary", next: "Lega SA" },
+  { name: "Lega SA", icon: "NT", minXp: 10000, color: "bg-card", border: "border-slate-200 dark:border-slate-700", textColor: "text-slate-800 dark:text-slate-200", iconBg: "bg-slate-800", next: null },
 ];
 
 function getLeague(xp: number) {
@@ -103,10 +103,10 @@ const gameFilters: { id: GameTypeFilter; label: string; icon: string; color: str
   { id: "sfida", label: "Sfida", icon: "⚔️", color: "text-red-600", activeColor: "bg-red-600 text-white" },
   { id: "quiz-lampo", label: "Quiz", icon: "⚡", color: "text-yellow-600", activeColor: "bg-yellow-500 text-white" },
   { id: "conta-veloce", label: "Conta", icon: "🔢", color: "text-blue-600", activeColor: "bg-blue-600 text-white" },
-  { id: "impasse", label: "Impasse", icon: "🤔", color: "text-purple-600", activeColor: "bg-purple-600 text-white" },
+  { id: "impasse", label: "Impasse", icon: "🤔", color: "text-primary", activeColor: "bg-primary text-white" },
   { id: "memory", label: "Memoria", icon: "🧠", color: "text-pink-600", activeColor: "bg-pink-500 text-white" },
   { id: "trova-errore", label: "Errori", icon: "🔍", color: "text-teal-600", activeColor: "bg-teal-600 text-white" },
-  { id: "mano-del-giorno", label: "Mano", icon: "🃏", color: "text-indigo-600", activeColor: "bg-indigo-600 text-white" },
+  { id: "mano-del-giorno", label: "Mano", icon: "🃏", color: "text-primary", activeColor: "bg-primary text-white" },
   { id: "dichiara", label: "Dichiara", icon: "📢", color: "text-orange-600", activeColor: "bg-orange-500 text-white" },
   { id: "pratica-licita", label: "Licita", icon: "🗣️", color: "text-cyan-600", activeColor: "bg-cyan-600 text-white" },
 ];
@@ -377,7 +377,7 @@ export default function ClassificaPage() {
             transition={{ delay: 0.05 }}
             className="sticky top-2 z-20 mt-4"
           >
-            <div className="bg-gradient-to-r from-amber-50 via-white to-amber-50 dark:from-amber-950/40 dark:via-card dark:to-amber-950/40 card-clean rounded-2xl border-2 border-amber-200/60 dark:border-amber-900 p-4 shadow-lg shadow-amber-100/40 dark:shadow-none">
+            <div className="bg-amber-50 dark:bg-amber-950/30 card-clean rounded-2xl border-2 border-amber-200/60 dark:border-amber-900 p-4 shadow-lg dark:shadow-none">
               <div className="flex items-center gap-3">
                 {/* Rank badge */}
                 <div className="flex flex-col items-center justify-center min-w-[48px]">
@@ -400,7 +400,7 @@ export default function ClassificaPage() {
 
                 {/* Avatar */}
                 <Avatar className="h-12 w-12 ring-2 ring-amber-300/50">
-                  <AvatarFallback className="bg-gradient-to-br from-amber-400 to-amber-600 text-white text-sm font-bold">
+                  <AvatarFallback className="bg-gold-dark text-white text-sm font-bold">
                     TU
                   </AvatarFallback>
                 </Avatar>
@@ -414,7 +414,7 @@ export default function ClassificaPage() {
                     Lv.{getLevel(currentPlayer.xp).level} · {getLevel(currentPlayer.xp).name}
                   </p>
                   {currentPlayer.asd_name && (
-                    <span className="inline-flex items-center gap-1 mt-0.5 text-[12px] text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/40 rounded-full px-2 py-0.5 font-medium">
+                    <span className="inline-flex items-center gap-1 mt-0.5 text-[12px] text-primary dark:text-primary bg-primary/10 dark:bg-primary/15 rounded-full px-2 py-0.5 font-medium">
                       <Landmark className="w-2.5 h-2.5" />
                       {currentPlayer.asd_name}
                     </span>
@@ -549,7 +549,7 @@ export default function ClassificaPage() {
                   aria-label={`Classifica ${tab.label}`}
                   className={`relative flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors flex-shrink-0 ${
                     isActive
-                      ? "bg-indigo-600 text-white shadow-md shadow-indigo-200"
+                      ? "bg-primary text-white shadow-md shadow-indigo-200"
                       : "bg-card text-foreground/80 card-clean hover:bg-muted/50"
                   }`}
                   whileTap={{ scale: 0.96 }}
@@ -559,7 +559,7 @@ export default function ClassificaPage() {
                   {isActive && (
                     <motion.div
                       layoutId="activeTabIndicator"
-                      className="absolute inset-0 bg-indigo-600 rounded-full -z-10"
+                      className="absolute inset-0 bg-primary rounded-full -z-10"
                       transition={{ type: "spring", bounce: 0.2, duration: 0.5 }}
                     />
                   )}
@@ -694,9 +694,9 @@ export default function ClassificaPage() {
                     <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      className="mb-4 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-950/40 dark:to-purple-950/30 card-clean rounded-xl p-3"
+                      className="mb-4 bg-card card-clean rounded-xl p-3"
                     >
-                      <p className="text-xs text-indigo-700 dark:text-indigo-300 font-medium">
+                      <p className="text-xs text-primary dark:text-primary font-medium">
                         {t("Chi ha giocato più mani negli ultimi 7 giorni. Si riparte ogni settimana: gli XP di sempre qui non contano.")}
                       </p>
                     </motion.div>
@@ -948,7 +948,7 @@ function PerCorsoView({
                       : <span className="text-muted-foreground text-sm">{rank}</span>}
                   </span>
                   <Avatar className="h-10 w-10">
-                    <AvatarFallback className={`text-xs font-bold ${isCurrentUser ? "bg-gradient-to-br from-amber-400 to-amber-600 text-white" : avatarColors[index % avatarColors.length]}`}>
+                    <AvatarFallback className={`text-xs font-bold ${isCurrentUser ? "bg-gold-dark text-white" : avatarColors[index % avatarColors.length]}`}>
                       {isCurrentUser ? "TU" : player.name.slice(0, 2).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
@@ -961,7 +961,7 @@ function PerCorsoView({
                         {formatNumber(player.courseXp)} XP corso
                       </p>
                       {player.asd_name && (
-                        <span className="inline-flex items-center text-[12px] text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/40 rounded-full px-1.5 py-0.5 font-medium">
+                        <span className="inline-flex items-center text-[12px] text-primary dark:text-primary bg-primary/10 dark:bg-primary/15 rounded-full px-1.5 py-0.5 font-medium">
                           {player.asd_name}
                         </span>
                       )}
@@ -1043,7 +1043,7 @@ function PerGiocoView({
         className="card-clean rounded-2xl bg-card p-4 mb-4"
       >
         <div className="flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white text-2xl shadow-md">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary text-white text-2xl shadow-md">
             {gameFilters.find(g => g.id === gameType)?.icon || "🎮"}
           </div>
           <div className="flex-1">
@@ -1079,7 +1079,7 @@ function PerGiocoView({
                       : <span className="text-muted-foreground text-sm">{rank}</span>}
                   </span>
                   <Avatar className="h-10 w-10">
-                    <AvatarFallback className={`text-xs font-bold ${isCurrentUser ? "bg-gradient-to-br from-amber-400 to-amber-600 text-white" : avatarColors[index % avatarColors.length]}`}>
+                    <AvatarFallback className={`text-xs font-bold ${isCurrentUser ? "bg-gold-dark text-white" : avatarColors[index % avatarColors.length]}`}>
                       {isCurrentUser ? "TU" : player.display_name.slice(0, 2).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
@@ -1166,7 +1166,7 @@ function LeaderboardList({
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className={`card-clean rounded-2xl bg-gradient-to-r ${league.color} border ${league.border} p-4 mb-4`}
+        className={`card-clean rounded-2xl ${league.color} border ${league.border} p-4 mb-4`}
       >
         <div className="flex items-center gap-3">
           <div className={`flex h-12 w-12 items-center justify-center rounded-2xl ${league.iconBg} text-white text-2xl font-bold shadow-md`}>
@@ -1231,7 +1231,7 @@ function LeaderboardList({
                       : <span className="text-muted-foreground text-sm">{player.rank}</span>}
                   </span>
                   <Avatar className="h-10 w-10">
-                    <AvatarFallback className={`text-xs font-bold ${isCurrentUser ? "bg-gradient-to-br from-amber-400 to-amber-600 text-white" : avatarColors[index % avatarColors.length]}`}>
+                    <AvatarFallback className={`text-xs font-bold ${isCurrentUser ? "bg-gold-dark text-white" : avatarColors[index % avatarColors.length]}`}>
                       {isCurrentUser ? "TU" : player.name.slice(0, 2).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
@@ -1244,7 +1244,7 @@ function LeaderboardList({
                         Lv.{pl.level} · {pl.name}
                       </p>
                       {player.asd_name && (
-                        <span className="inline-flex items-center text-[12px] text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/40 rounded-full px-1.5 py-0.5 font-medium">
+                        <span className="inline-flex items-center text-[12px] text-primary dark:text-primary bg-primary/10 dark:bg-primary/15 rounded-full px-1.5 py-0.5 font-medium">
                           {player.asd_name}
                         </span>
                       )}
@@ -1269,17 +1269,17 @@ function LeaderboardList({
                   return (
                     <div className="mt-2.5 pt-2 border-t border-border">
                       <div className="flex items-center gap-2">
-                        <Target className="w-3.5 h-3.5 text-purple-500 flex-shrink-0" />
+                        <Target className="w-3.5 h-3.5 text-primary flex-shrink-0" />
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between mb-1">
                             <p className="text-[12px] text-muted-foreground">
-                              {t("Prossimo traguardo:")} <span className="font-bold text-purple-600 dark:text-purple-400">{formatNumber(milestone)} XP</span>
+                              {t("Prossimo traguardo:")} <span className="font-bold text-primary dark:text-primary">{formatNumber(milestone)} XP</span>
                             </p>
                             <p className="text-[12px] font-medium text-muted-foreground">-{formatNumber(remaining)}</p>
                           </div>
                           <div className="h-1 rounded-full bg-muted overflow-hidden">
                             <div
-                              className="h-full rounded-full bg-gradient-to-r from-purple-400 to-purple-600"
+                              className="h-full rounded-full bg-primary"
                               style={{ width: `${Math.min(progress, 100)}%` }}
                             />
                           </div>
@@ -1318,10 +1318,10 @@ function LeaderboardList({
 function EmptyState({ message, showCta = false }: { message: string; showCta?: boolean }) {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-10">
-      <div className="card-clean rounded-2xl bg-gradient-to-br from-amber-50 via-white to-orange-50 dark:from-amber-950/40 dark:via-card dark:to-orange-950/30 border border-amber-100/60 dark:border-amber-900 p-8 mx-auto max-w-sm">
+      <div className="card-clean rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-100/60 dark:border-amber-900 p-8 mx-auto max-w-sm">
         <div className="flex justify-center mb-4">
           <div className="relative">
-            <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-lg shadow-amber-200/50">
+            <div className="h-16 w-16 rounded-2xl bg-gold-dark flex items-center justify-center shadow-lg">
               <Trophy className="w-8 h-8 text-white" />
             </div>
             <span className="absolute -top-1 -right-1 text-lg">🏅</span>
@@ -1338,7 +1338,7 @@ function EmptyState({ message, showCta = false }: { message: string; showCta?: b
             <motion.div
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
-              className="mt-5 inline-flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold text-sm px-6 py-2.5 rounded-full shadow-md shadow-indigo-200/50 hover:shadow-lg transition-shadow"
+              className="mt-5 inline-flex items-center gap-2 bg-primary text-white font-bold text-sm px-6 py-2.5 rounded-full shadow-md hover:shadow-lg transition-shadow"
             >
               🃏 Inizia a giocare
             </motion.div>
@@ -1358,7 +1358,7 @@ function LocalXpCard() {
   const milestone = getNextMilestone(localXp);
 
   return (
-    <div className="card-clean rounded-2xl bg-gradient-to-r from-slate-50 via-white to-indigo-50/30 dark:from-slate-900/40 dark:via-card dark:to-indigo-950/30 border border-slate-200/60 dark:border-slate-700 p-4 shadow-sm">
+    <div className="card-clean rounded-2xl bg-card border border-slate-200/60 dark:border-slate-700 p-4 shadow-sm">
       <div className="flex items-center gap-3">
         {/* League icon */}
         <div className={`flex h-12 w-12 items-center justify-center rounded-2xl ${league.iconBg} text-white text-xl font-bold shadow-md`}>
@@ -1395,7 +1395,7 @@ function LocalXpCard() {
           </div>
           <div className="h-1.5 rounded-full bg-muted overflow-hidden">
             <div
-              className="h-full rounded-full bg-gradient-to-r from-indigo-400 to-purple-500"
+              className="h-full rounded-full bg-primary"
               style={{ width: `${Math.min((localXp / nextLeague.minXp) * 100, 100)}%` }}
             />
           </div>
@@ -1407,7 +1407,7 @@ function LocalXpCard() {
         <Link href="/login">
           <motion.div
             whileTap={{ scale: 0.97 }}
-            className="flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-md shadow-indigo-200/40 hover:shadow-lg transition-shadow w-full"
+            className="flex items-center justify-center gap-2 bg-primary text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-md hover:shadow-lg transition-shadow w-full"
           >
             {t("Accedi per entrare in classifica")}
           </motion.div>

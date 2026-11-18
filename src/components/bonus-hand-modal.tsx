@@ -34,7 +34,7 @@ export function BonusHandModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="border-amber-300 bg-gradient-to-b from-amber-50 to-white dark:from-amber-950/40 dark:to-gray-950 dark:border-amber-700 sm:max-w-md overflow-hidden"
+        className="border-amber-300 bg-amber-50 dark:bg-amber-950/30 dark:border-amber-700 sm:max-w-md overflow-hidden"
       >
         <AnimatePresence>
           {open && (
@@ -47,7 +47,6 @@ export function BonusHandModal({
               {/* Golden card visual */}
               <div className="relative mb-4">
                 {/* Glow behind the card */}
-                <div className="absolute inset-0 bg-amber-400/30 dark:bg-amber-500/20 rounded-full blur-2xl scale-150" />
 
                 {/* Card stack */}
                 <div className="relative">
@@ -56,7 +55,7 @@ export function BonusHandModal({
                   <div className="absolute -right-3 -top-1 w-16 h-22 rounded-lg bg-amber-200/60 dark:bg-amber-700/40 rotate-[8deg] border border-amber-300/50 dark:border-amber-600/50" />
 
                   {/* Main card */}
-                  <div className="relative w-20 h-28 rounded-xl bg-gradient-to-br from-amber-300 via-yellow-400 to-amber-500 dark:from-amber-500 dark:via-yellow-500 dark:to-amber-600 border-2 border-amber-400 dark:border-amber-500 shadow-lg shadow-amber-300/40 dark:shadow-amber-600/30 flex items-center justify-center">
+                  <div className="relative w-20 h-28 rounded-xl bg-gold-dark border-2 border-amber-400 dark:border-amber-500 shadow-lg dark: flex items-center justify-center">
                     <span className="text-3xl" aria-hidden="true">
                       🃏
                     </span>
@@ -77,7 +76,7 @@ export function BonusHandModal({
                 >
                   <div className="relative">
                     <div className="absolute inset-0 bg-red-500/30 rounded-full blur-md" />
-                    <div className="relative px-3 py-1.5 rounded-full bg-gradient-to-r from-red-500 to-red-600 dark:from-red-600 dark:to-red-700 text-white text-xs font-extrabold tracking-wider shadow-lg shadow-red-500/30 border border-red-400/50">
+                    <div className="relative px-3 py-1.5 rounded-full bg-red-600 text-white text-xs font-extrabold tracking-wider shadow-lg border border-red-400/50">
                       2x XP
                     </div>
                   </div>
@@ -96,7 +95,7 @@ export function BonusHandModal({
               <DialogFooter className="flex-col gap-2 w-full mt-6 sm:flex-col">
                 <button
                   onClick={handlePlay}
-                  className="w-full py-3 rounded-xl text-white text-sm font-bold transition-all hover:opacity-90 active:scale-[0.98] shadow-lg shadow-amber-500/30 dark:shadow-amber-600/20 cursor-pointer"
+                  className="w-full py-3 rounded-xl text-white text-sm font-bold transition-all hover:opacity-90 active:scale-[0.98] shadow-lg dark: cursor-pointer"
                   style={{
                     background:
                       "linear-gradient(135deg, #D97706, #B45309)",

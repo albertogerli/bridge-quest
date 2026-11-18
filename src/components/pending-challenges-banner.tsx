@@ -231,11 +231,11 @@ export function PendingChallengesBanner() {
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-2 mb-1">
-        <Swords className="w-4 h-4 text-violet-600 dark:text-violet-400" />
+        <Swords className="w-4 h-4 text-primary dark:text-primary" />
         <h3 className="text-sm font-bold text-foreground">
           {t("Sfide in corso")}
         </h3>
-        <Badge className="bg-violet-100 text-violet-700 dark:bg-violet-950/40 dark:text-violet-300 text-[12px] font-bold border-0">
+        <Badge className="bg-primary/10 text-primary dark:bg-primary/15 dark:text-primary text-[12px] font-bold border-0">
           {challenges.length}
         </Badge>
       </div>
@@ -266,10 +266,10 @@ export function PendingChallengesBanner() {
               transition={{ delay: index * 0.05 }}
               layout
             >
-              <div className="rounded-2xl border border-violet-200 dark:border-violet-800 bg-gradient-to-r from-violet-50 to-indigo-50 dark:from-violet-950/30 dark:to-indigo-950/30 p-4">
+              <div className="rounded-2xl border border-primary/20 dark:border-primary/20 bg-card p-4">
                 <div className="flex items-center gap-3">
                   {/* Icon */}
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600 shadow-md">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary shadow-md">
                     <Swords className="w-5 h-5 text-white" />
                   </div>
 
@@ -285,7 +285,7 @@ export function PendingChallengesBanner() {
                               ? `In attesa di ${opponentName}`
                               : `Sfida con ${opponentName}`}
                       </p>
-                      <Badge className="bg-violet-100 dark:bg-violet-900/50 text-violet-700 dark:text-violet-300 text-[12px] font-bold border-0 shrink-0">
+                      <Badge className="bg-primary/10 dark:bg-primary/15 text-primary dark:text-primary text-[12px] font-bold border-0 shrink-0">
                         {challenge.board_count} mani
                       </Badge>
                     </div>
@@ -342,7 +342,7 @@ export function PendingChallengesBanner() {
                       <Link
                         href={`/gioca/sfida-imp?challengeId=${challenge.id}`}
                       >
-                        <button className="rounded-xl bg-violet-500 hover:bg-violet-600 text-white px-3 py-1.5 text-xs font-bold transition-colors flex items-center gap-1">
+                        <button className="rounded-xl bg-primary hover:bg-primary text-white px-3 py-1.5 text-xs font-bold transition-colors flex items-center gap-1">
                           {t("Continua")}
                           <ChevronRight className="w-3 h-3" />
                         </button>

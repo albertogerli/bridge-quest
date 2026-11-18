@@ -16,7 +16,7 @@ export function HeadingBlock({ block, ctx }: ContentBlockProps) {
       <h2 className={`font-display font-bold text-foreground leading-tight ${isJunior ? "text-[24px]" : "text-[22px]"}`}>
         {isJunior && "🎯 "}{block.content}
       </h2>
-      <div className={`mt-2 h-1 rounded-full bg-gradient-to-r ${isJunior ? "w-20 from-pink-400 via-purple-400 to-indigo-400" : "w-12 from-emerald to-emerald-light"}`} />
+      <div className={`mt-2 h-1 rounded-full ${isJunior ? "w-20 from-pink-400 via-primary to-primary" : "w-12 from-emerald to-emerald-light"}`} />
     </motion.div>
   );
 }

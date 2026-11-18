@@ -493,7 +493,7 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
             exit={{ opacity: 0, y: -30 }}
             className="fixed top-4 left-1/2 -translate-x-1/2 z-[60]"
           >
-            <div className="flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-5 py-3 rounded-2xl shadow-xl shadow-emerald-500/30">
+            <div className="flex items-center gap-2 bg-emerald-700 text-white px-5 py-3 rounded-2xl shadow-xl">
               <Zap className="w-5 h-5" aria-hidden="true" />
               <span className="text-sm font-bold">{t("Bonus +50 XP dal tuo amico!")}</span>
             </div>
@@ -650,7 +650,7 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
             transition={{ delay: 1, type: "spring", stiffness: 300, damping: 25 }}
             className="fixed top-4 left-1/2 -translate-x-1/2 z-50"
           >
-            <div className="flex items-center gap-2 bg-gradient-to-r from-amber-400 to-amber-500 text-white font-bold text-sm px-5 py-3 rounded-2xl shadow-xl shadow-amber/30" role="status" aria-label={`Login giornaliero: bonus ${10 + Math.min(stats.streak * 5, 50)} XP`}>
+            <div className="flex items-center gap-2 bg-gold-dark text-white font-bold text-sm px-5 py-3 rounded-2xl shadow-xl" role="status" aria-label={`Login giornaliero: bonus ${10 + Math.min(stats.streak * 5, 50)} XP`}>
               <Zap className="w-5 h-5" aria-hidden="true" />
               Login giornaliero: +{10 + Math.min(stats.streak * 5, 50)} {profile.xpLabel}
               {stats.streak > 1 && <span className="ml-1 text-amber-100">(streak x{stats.streak})</span>}

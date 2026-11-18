@@ -493,7 +493,7 @@ export default function NegozioPage() {
           className="flex items-center justify-between mb-6"
         >
           <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 text-white shadow-lg shadow-amber-500/25">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gold-dark text-white shadow-lg">
               <ShoppingBag className="w-6 h-6" />
             </div>
             <div>
@@ -502,7 +502,7 @@ export default function NegozioPage() {
             </div>
           </div>
           <Link href="/profilo">
-            <div className="flex items-center gap-2 bg-gradient-to-r from-amber-50 to-amber-100/60 dark:from-amber-950/40 dark:to-amber-900/30 border-2 border-amber-300 dark:border-amber-800 rounded-2xl px-4 py-2.5 shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex items-center gap-2 bg-amber-50 dark:bg-amber-950/30 border-2 border-amber-300 dark:border-amber-800 rounded-2xl px-4 py-2.5 shadow-sm hover:shadow-md transition-shadow">
               <Coins className="w-5 h-5 text-amber-600" />
               <span className="text-lg font-bold text-amber-700 dark:text-amber-300">{fiches}</span>
             </div>
@@ -524,7 +524,7 @@ export default function NegozioPage() {
                 onClick={() => setSelectedCategory(cat.id)}
                 className={`flex-1 flex items-center justify-center gap-1 py-3 rounded-xl text-[12px] font-bold transition-all active:scale-95 whitespace-nowrap ${
                   isSelected
-                    ? "bg-figb text-white shadow-md shadow-figb/20"
+                    ? "bg-figb text-white shadow-md"
                     : "bg-card text-muted-foreground border-2 border-border shadow-sm hover:border-figb/30 dark:hover:border-primary/40"
                 }`}
               >
@@ -572,7 +572,7 @@ export default function NegozioPage() {
                   <div
                     className={`card-clean rounded-2xl bg-card overflow-hidden transition-all ${
                       isActive
-                        ? "border-[3px] border-figb dark:border-primary shadow-md shadow-figb/10"
+                        ? "border-[3px] border-figb dark:border-primary shadow-md"
                         : "border-2 border-border shadow-sm"
                     }`}
                   >
@@ -715,7 +715,7 @@ export default function NegozioPage() {
                           className={`w-full h-9 rounded-xl text-xs font-bold shadow-sm transition-all ${
                             fiches < item.price
                               ? "bg-muted text-muted-foreground cursor-not-allowed shadow-none"
-                              : "bg-figb hover:bg-figb-dark text-white shadow-md shadow-figb/20"
+                              : "bg-figb hover:bg-figb-dark text-white shadow-md"
                           }`}
                         >
                           {isPurchasing ? (
@@ -786,7 +786,7 @@ export default function NegozioPage() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.35 }}
-          className="rounded-2xl bg-gradient-to-r from-amber-50 to-amber-100/50 dark:from-amber-950/40 dark:to-amber-900/20 border-2 border-amber-200 dark:border-amber-900 p-4 mb-6"
+          className="rounded-2xl bg-amber-50 dark:bg-amber-950/30 border-2 border-amber-200 dark:border-amber-900 p-4 mb-6"
         >
           <div className="flex items-start gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-200/50 dark:bg-amber-900/40 shrink-0">
@@ -814,8 +814,8 @@ export default function NegozioPage() {
             <div
               className={`flex items-center gap-2 px-5 py-3 rounded-2xl shadow-xl text-sm font-bold ${
                 toast.type === "success"
-                  ? "bg-emerald-600 text-white shadow-emerald-500/30"
-                  : "bg-rose-600 text-white shadow-rose-500/30"
+                  ? "bg-emerald-600 text-white"
+                  : "bg-rose-600 text-white"
               }`}
             >
               {toast.type === "success" ? (

@@ -69,7 +69,7 @@ export function CompletionCard({
       </div>
 
       {/* Main completion card */}
-      <div className="rounded-2xl bg-gradient-to-br from-emerald-50 via-card to-amber-50/30 dark:from-emerald-950/40 dark:via-card dark:to-amber-950/20 border border-emerald-200 dark:border-emerald-900 p-6 text-center relative overflow-hidden">
+      <div className="rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900 p-6 text-center relative overflow-hidden">
         {/* Sparkle ring */}
         {[...Array(12)].map((_, i) => (
           <motion.div
@@ -161,10 +161,10 @@ export function CompletionCard({
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.5, type: "spring" }}
-              className="inline-flex items-center gap-1 bg-violet-50 dark:bg-violet-950/40 border border-violet-200 dark:border-violet-900 rounded-full px-3 py-1"
+              className="inline-flex items-center gap-1 bg-primary/10 dark:bg-primary/15 border border-primary/20 dark:border-primary/20 rounded-full px-3 py-1"
             >
               <span>🎯</span>
-              <span className="text-xs font-bold text-violet-700 dark:text-violet-300">{t("Punteggio Perfetto")}</span>
+              <span className="text-xs font-bold text-primary dark:text-primary">{t("Punteggio Perfetto")}</span>
             </motion.div>
           )}
           {bestStreak >= 3 && (

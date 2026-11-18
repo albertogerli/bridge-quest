@@ -129,7 +129,7 @@ export function StepVittoria({
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 1.5, type: "spring", stiffness: 200 }}
-        className="mt-6 rounded-[28px] border border-[#c8a44e]/30 bg-gradient-to-br from-[#fffdf5] to-[#fff8e1] p-6 text-center shadow-[0_10px_40px_rgba(200,164,78,0.15)]"
+        className="mt-6 rounded-[28px] border border-[#c8a44e]/30 bg-gold-dark p-6 text-center shadow-[0_10px_40px_rgba(200,164,78,0.15)]"
       >
         <p className="text-[12px] font-bold uppercase tracking-[0.18em] text-[#8f6b16]">
           {t("XP Totali Guadagnati")}
@@ -172,9 +172,9 @@ export function StepVittoria({
           {t("Il prossimo passo")}
         </p>
         <Link href="/gioca/minibridge" className="block">
-          <div className="relative overflow-hidden rounded-[24px] border border-emerald-200 bg-gradient-to-br from-emerald-50 to-green-50 p-5 transition-all hover:shadow-lg">
+          <div className="relative overflow-hidden rounded-[24px] border border-emerald-200 bg-emerald-50 dark:bg-emerald-950/30 p-5 transition-all hover:shadow-lg">
             <div className="flex items-center gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-green-600 text-2xl shadow-md">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-700 text-2xl shadow-md">
                 🎓
               </div>
               <div className="flex-1">

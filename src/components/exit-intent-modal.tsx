@@ -45,7 +45,7 @@ export function ExitIntentModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="border-blue-200 bg-gradient-to-b from-blue-50/80 to-white dark:from-blue-950/30 dark:to-gray-950 dark:border-blue-800 sm:max-w-md overflow-hidden"
+        className="border-blue-200 bg-card dark:border-blue-800 sm:max-w-md overflow-hidden"
       >
         <AnimatePresence>
           {open && (

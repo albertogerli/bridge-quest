@@ -546,3 +546,11 @@
     display: none;
   }
 }
+
+/* Sul telefono un tocco su un link o un pulsante non aspetta il doppio tocco
+   per lo zoom (18/11/2026, giro mobile). Lo zoom con due dita resta. */
+@layer base {
+  a, button, [role="button"], [role="tab"], input, label, select, summary, textarea {
+    touch-action: manipulation;
+  }
+}

@@ -128,7 +128,7 @@ export function BadgesSection({
           <div className="grid grid-cols-5 gap-2">
             {earnedSecretAchievements.map((a) => (
               <div key={a.id} className="flex flex-col items-center gap-1">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-amber-100 to-yellow-100 dark:from-amber-950/40 dark:to-yellow-950/30 border border-amber-200 dark:border-amber-900 text-xl">
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900 text-xl">
                   {a.icon}
                 </div>
                 <span className="text-[12px] text-center text-amber-700 dark:text-amber-300 font-semibold leading-tight">{a.name}</span>

@@ -58,16 +58,14 @@ export function TournamentHero({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.05 }}
     >
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-950/40 dark:to-purple-950/30 border border-indigo-200/60 dark:border-indigo-900 p-6">
+      <div className="relative overflow-hidden rounded-3xl bg-card border border-primary/20 dark:border-primary/20 p-6">
         {/* Decorative circles */}
-        <div className="absolute -top-16 -right-16 h-48 w-48 rounded-full bg-indigo-200/20 blur-3xl" />
-        <div className="absolute -bottom-12 -left-12 h-36 w-36 rounded-full bg-purple-200/15 blur-2xl" />
 
         <div className="relative">
           {/* Title row */}
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <div className="flex flex-col items-center justify-center h-14 w-14 rounded-2xl bg-card shadow-md shadow-indigo-200/50 dark:shadow-none border border-indigo-100 dark:border-indigo-900">
+              <div className="flex flex-col items-center justify-center h-14 w-14 rounded-2xl bg-card shadow-md dark:shadow-none border border-primary/20 dark:border-primary/20">
                 <span className="text-2xl">🏆</span>
               </div>
               <div>
@@ -90,16 +88,16 @@ export function TournamentHero({
 
           {/* Tournament info */}
           <div className="space-y-3 mt-2">
-            <div className="inline-flex items-center gap-3 bg-card/80 backdrop-blur-sm rounded-xl px-4 py-3 border border-indigo-100 dark:border-indigo-900 w-full">
+            <div className="inline-flex items-center gap-3 bg-card/80 backdrop-blur-sm rounded-xl px-4 py-3 border border-primary/20 dark:border-primary/20 w-full">
               <div className="text-center flex-1">
                 <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
                   {t("Mani")}
                 </p>
-                <p className="text-lg font-bold text-indigo-600 leading-tight">
+                <p className="text-lg font-bold text-primary leading-tight">
                   {displayCount}
                 </p>
               </div>
-              <div className="h-8 w-px bg-indigo-200/60" />
+              <div className="h-8 w-px bg-primary/20" />
               <div className="text-center flex-1">
                 <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
                   {t("Prese necessarie")}
@@ -108,12 +106,12 @@ export function TournamentHero({
                   {totalNeeded}
                 </p>
               </div>
-              <div className="h-8 w-px bg-indigo-200/60" />
+              <div className="h-8 w-px bg-primary/20" />
               <div className="text-center flex-1">
                 <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
                   {t("Tempo rimasto")}
                 </p>
-                <p className="text-sm font-bold text-purple-600 leading-tight tabular-nums">
+                <p className="text-sm font-bold text-primary leading-tight tabular-nums">
                   {mounted ? countdown : "--"}
                 </p>
               </div>
@@ -147,7 +145,7 @@ export function TournamentHero({
                         ? handResult.result >= 0
                           ? "bg-emerald-50 border-emerald-200 dark:bg-emerald-950/40 dark:border-emerald-900"
                           : "bg-red-50 border-red-200 dark:bg-red-950/40 dark:border-red-900"
-                        : "bg-card/70 border-indigo-100 dark:border-indigo-900"
+                        : "bg-card/70 border-primary/20 dark:border-primary/20"
                     }`}
                   >
                     <p className="text-[12px] font-bold text-muted-foreground">
@@ -184,9 +182,9 @@ export function TournamentHero({
               transition={{ delay: 0.3 }}
               className="mt-4 flex items-center gap-2"
             >
-              <div className="inline-flex items-center gap-1.5 bg-indigo-100/80 rounded-full px-3 py-1">
+              <div className="inline-flex items-center gap-1.5 bg-primary/10 rounded-full px-3 py-1">
                 <span className="text-xs">+150 {xpLabel}</span>
-                <span className="text-[12px] font-bold text-indigo-700">
+                <span className="text-[12px] font-bold text-primary">
                   {t("Bonus Torneo")}
                 </span>
               </div>
@@ -199,7 +197,7 @@ export function TournamentHero({
               <Button
                 onClick={onPlay}
                 disabled={tournamentHands.length === 0}
-                className="w-full rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-base font-bold h-14 shadow-lg shadow-indigo-600/25 transition-all hover:shadow-xl hover:shadow-indigo-600/30"
+                className="w-full rounded-2xl bg-primary hover:bg-primary text-base font-bold h-14 shadow-lg transition-all hover:shadow-xl"
               >
                 {inProgressCount > 0 ? t("Riprendi il Torneo (mano {n}/{total})", { n: inProgressCount + 1, total: displayCount }) : t("Gioca il Torneo")}
               </Button>
@@ -207,7 +205,7 @@ export function TournamentHero({
               <Button
                 onClick={onPlay}
                 variant="outline"
-                className="w-full rounded-2xl text-sm font-bold h-12 border-indigo-300 text-indigo-600 hover:bg-indigo-50"
+                className="w-full rounded-2xl text-sm font-bold h-12 border-primary/20 text-primary hover:bg-primary/10"
               >
                 {t("Rigioca il torneo (senza punti)")}
               </Button>

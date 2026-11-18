@@ -37,7 +37,7 @@ export default function ScopriPage() {
           className="mb-8"
         >
           <div className="flex items-center gap-3 mb-2">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-figb to-figb-light shadow-lg shadow-figb/20">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary shadow-lg">
               <Globe className="w-6 h-6 text-white" />
             </div>
             <div>
@@ -59,10 +59,10 @@ export default function ScopriPage() {
         >
           <div className="rounded-2xl bg-card border border-border shadow-sm overflow-hidden">
             {/* FIGB Header */}
-            <div className="bg-gradient-to-r from-figb to-figb-light px-5 py-4">
+            <div className="border-b border-border px-5 py-4">
               <div className="flex items-center gap-3">
-                <Landmark className="w-5 h-5 text-white/80" />
-                <h2 className="text-lg font-bold text-white">{t("La FIGB")}</h2>
+                <Landmark className="w-5 h-5 text-muted-foreground" />
+                <h2 className="text-lg font-bold text-foreground">{t("La FIGB")}</h2>
               </div>
             </div>
 
@@ -144,10 +144,10 @@ export default function ScopriPage() {
         >
           <div className="rounded-2xl bg-card border border-border shadow-sm overflow-hidden">
             {/* History Header */}
-            <div className="bg-gradient-to-r from-amber-500 to-amber-600 px-5 py-4">
+            <div className="border-b border-border px-5 py-4">
               <div className="flex items-center gap-3">
-                <BookOpen className="w-5 h-5 text-white/80" />
-                <h2 className="text-lg font-bold text-white">{t("Storia del Bridge")}</h2>
+                <BookOpen className="w-5 h-5 text-muted-foreground" />
+                <h2 className="text-lg font-bold text-foreground">{t("Storia del Bridge")}</h2>
               </div>
             </div>
 
@@ -259,8 +259,8 @@ export default function ScopriPage() {
               description={t("Esistono 635.013.559.600 diverse distribuzioni possibili delle carte a bridge.")}
             />
             <FunFactCard
-              icon={<Brain className="w-5 h-5 text-purple-500" />}
-              iconBg="bg-purple-100 dark:bg-purple-900/30"
+              icon={<Brain className="w-5 h-5 text-primary" />}
+              iconBg="bg-primary/10 dark:bg-primary/15"
               title={t("Benefici cognitivi")}
               description={t("Studi scientifici hanno dimostrato che giocare a bridge aiuta a prevenire il declino cognitivo.")}
             />
@@ -274,10 +274,10 @@ export default function ScopriPage() {
           className="mb-6"
         >
           <div className="rounded-2xl bg-card border border-border shadow-sm overflow-hidden">
-            <div className="bg-gradient-to-r from-indigo-500 to-indigo-600 px-5 py-4">
+            <div className="border-b border-border px-5 py-4">
               <div className="flex items-center gap-3">
-                <ExternalLink className="w-5 h-5 text-white/80" />
-                <h2 className="text-lg font-bold text-white">{t("Link utili")}</h2>
+                <ExternalLink className="w-5 h-5 text-muted-foreground" />
+                <h2 className="text-lg font-bold text-foreground">{t("Link utili")}</h2>
               </div>
             </div>
 

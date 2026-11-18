@@ -133,7 +133,7 @@ export default function SfidaSettimanale() {
   return (
     <div className="min-h-screen bg-background pb-24">
       {/* Header */}
-      <div className={`bg-gradient-to-br ${challenge.gradient} text-white px-4 pt-6 pb-10`}>
+      <div className={`bg-primary text-white px-4 pt-6 pb-10`}>
         <div className="mx-auto max-w-6xl">
           <Link href="/gioca" className="inline-flex items-center gap-2 text-white/70 hover:text-white text-sm mb-4 transition-colors">
             <ArrowLeft className="w-4 h-4" />
@@ -204,7 +204,7 @@ export default function SfidaSettimanale() {
                     isPlayed
                       ? "bg-emerald-100 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400"
                       : isNext
-                        ? `bg-gradient-to-br ${challenge.gradient} text-white`
+                        ? `bg-primary text-white`
                         : "bg-muted text-muted-foreground"
                   }`}>
                     {isPlayed ? (
@@ -279,7 +279,7 @@ export default function SfidaSettimanale() {
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className={`rounded-2xl p-6 text-center bg-gradient-to-br ${challenge.gradient} text-white`}
+              className={`rounded-2xl p-6 text-center bg-primary text-white`}
             >
               <Trophy className="h-12 w-12 mx-auto mb-3 text-yellow-300" />
               <h2 className="text-xl font-bold mb-1">{t("Sfida Completata!")}</h2>
@@ -568,7 +568,7 @@ function WeeklyHandGame({ smazzata, handNumber, challenge, onFinish, onBack }: W
           {game.phase === "ready" && (
             <Button
               onClick={game.startGame}
-              className={`rounded-xl bg-gradient-to-r ${challenge.gradient} text-white text-sm font-bold h-12 px-8 shadow-lg`}
+              className={`rounded-xl bg-primary text-white text-sm font-bold h-12 px-8 shadow-lg`}
             >
               <Play className="w-4 h-4 mr-2" />
               Gioca Mano {handNumber}
@@ -601,8 +601,8 @@ function WeeklyHandGame({ smazzata, handNumber, challenge, onFinish, onBack }: W
               <CelebrationCombo trigger={showCelebration} type={game.result.result >= 0 ? (game.result.result >= 2 ? "epic" : "medium") : "small"} />
               <div className={`card-elevated rounded-2xl p-6 text-center ${
                 game.result.result >= 0
-                  ? "bg-gradient-to-br from-emerald-50 to-emerald-100/50 border border-emerald-200 dark:from-emerald-950/40 dark:to-emerald-900/20 dark:border-emerald-900"
-                  : "bg-gradient-to-br from-red-50 to-red-100/50 border border-red-200 dark:from-red-950/40 dark:to-red-900/20 dark:border-red-900"
+                  ? "bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900"
+                  : "bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900"
               }`}>
                 <div className="text-4xl mb-3">{game.result.result >= 0 ? "🎉" : "😔"}</div>
                 <h3 className={`text-xl font-bold ${game.result.result >= 0 ? "text-emerald-700 dark:text-emerald-300" : "text-red-600 dark:text-red-400"}`}>

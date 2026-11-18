@@ -76,7 +76,7 @@ export function SingleHandView({
             </button>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
-                <Badge className="bg-indigo-50 text-indigo-700 text-[12px] font-bold border-0 shrink-0">
+                <Badge className="bg-primary/10 text-primary text-[12px] font-bold border-0 shrink-0">
                   Torneo · Mano {handNumber}/{totalHands}
                 </Badge>
                 <BenStatus available={game.benAvailable} />
@@ -100,7 +100,7 @@ export function SingleHandView({
                       ? "bg-emerald-400"
                       : "bg-red-400"
                     : i === handNumber - 1
-                      ? "bg-indigo-500"
+                      ? "bg-primary"
                       : "bg-muted"
                 }`}
               />
@@ -160,7 +160,7 @@ export function SingleHandView({
           <div className="mb-3 flex justify-center">
             <Button
               onClick={game.startGame}
-              className="rounded-xl bg-indigo-600 hover:bg-indigo-700 text-sm font-bold h-11 px-8 shadow-lg shadow-indigo-600/25"
+              className="rounded-xl bg-primary hover:bg-primary text-sm font-bold h-11 px-8 shadow-lg"
             >
               Inizia Mano #{handNumber}
             </Button>
@@ -277,7 +277,7 @@ export function SingleHandView({
           {game.phase === "ready" && !isMobile && (
             <Button
               onClick={game.startGame}
-              className="rounded-xl bg-indigo-600 hover:bg-indigo-700 text-sm font-bold h-12 px-8 shadow-lg shadow-indigo-600/25"
+              className="rounded-xl bg-primary hover:bg-primary text-sm font-bold h-12 px-8 shadow-lg"
             >
               Inizia Mano #{handNumber}
             </Button>
@@ -296,8 +296,8 @@ export function SingleHandView({
               <div
                 className={`card-elevated rounded-2xl p-5 text-center ${
                   game.result.result >= 0
-                    ? "bg-gradient-to-br from-emerald-50 to-emerald-100/50 border border-emerald-200 dark:from-emerald-950/40 dark:to-emerald-900/20 dark:border-emerald-900"
-                    : "bg-gradient-to-br from-red-50 to-red-100/50 border border-red-200 dark:from-red-950/40 dark:to-red-900/20 dark:border-red-900"
+                    ? "bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900"
+                    : "bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900"
                 }`}
               >
                 <h3

@@ -34,8 +34,8 @@ export function ChallengeHistorySection({
         onClick={onToggle}
       >
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-50 dark:bg-violet-950/40 border border-violet-200 dark:border-violet-900">
-            <Swords className="w-5 h-5 text-violet-600 dark:text-violet-400" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 dark:bg-primary/15 border border-primary/20 dark:border-primary/20">
+            <Swords className="w-5 h-5 text-primary dark:text-primary" />
           </div>
           <div className="flex-1">
             <p className="text-sm font-bold text-foreground">{t("Sfide IMP")}</p>
@@ -68,7 +68,7 @@ export function ChallengeHistorySection({
             <div className="mt-2 space-y-2">
               {/* Stats summary */}
               {challengeStats && challengeStats.played > 0 && (
-                <div className="grid grid-cols-4 gap-2 rounded-xl bg-violet-50 dark:bg-violet-950/40 border border-violet-200 dark:border-violet-900 p-3">
+                <div className="grid grid-cols-4 gap-2 rounded-xl bg-primary/10 dark:bg-primary/15 border border-primary/20 dark:border-primary/20 p-3">
                   <div className="text-center">
                     <p className="text-lg font-bold text-foreground">{challengeStats.played}</p>
                     <p className="text-[12px] text-muted-foreground">{t("Giocate")}</p>

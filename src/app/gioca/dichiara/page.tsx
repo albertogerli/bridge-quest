@@ -18,9 +18,9 @@ const TOTAL_ROUNDS = 10;
 
 type DichiaraDifficulty = "facile" | "medio" | "difficile";
 const dichiaraDiffConfig = {
-  facile: { showHCP: true, showDist: true, label: "Facile", desc: "Vedi HCP e distribuzione", xpMult: 0.8, color: "from-green-500 to-emerald-500", shadow: "shadow-green-400/30" },
-  medio: { showHCP: true, showDist: false, label: "Medio", desc: "Vedi solo i HCP", xpMult: 1, color: "from-amber-500 to-orange-500", shadow: "shadow-amber-400/30" },
-  difficile: { showHCP: false, showDist: false, label: "Difficile", desc: "Conta tutto da solo!", xpMult: 1.5, color: "from-red-500 to-rose-500", shadow: "shadow-red-400/30" },
+  facile: { showHCP: true, showDist: true, label: "Facile", desc: "Vedi HCP e distribuzione", xpMult: 0.8, color: "bg-emerald-700", shadow: "" },
+  medio: { showHCP: true, showDist: false, label: "Medio", desc: "Vedi solo i HCP", xpMult: 1, color: "bg-gold-dark", shadow: "" },
+  difficile: { showHCP: false, showDist: false, label: "Difficile", desc: "Conta tutto da solo!", xpMult: 1.5, color: "bg-red-600", shadow: "" },
 };
 
 export default function DichiaraPage() {
@@ -161,7 +161,7 @@ export default function DichiaraPage() {
           </div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mt-8">
-            <div className="inline-flex h-24 w-24 items-center justify-center rounded-3xl bg-figb text-white text-5xl shadow-xl shadow-figb/20 mb-6">
+            <div className="inline-flex h-24 w-24 items-center justify-center rounded-3xl bg-figb text-white text-5xl shadow-xl mb-6">
               🗣️
             </div>
             <h1 className="text-2xl sm:text-3xl font-bold text-foreground font-display">{t("Dichiara!")}</h1>
@@ -191,7 +191,7 @@ export default function DichiaraPage() {
                 <button
                   key={key}
                   onClick={() => startGame(key)}
-                  className={`w-full flex items-center justify-between p-4 rounded-xl bg-gradient-to-r ${cfg.color} text-white shadow-lg ${cfg.shadow} active:scale-[0.97] transition-transform`}
+                  className={`w-full flex items-center justify-between p-4 rounded-xl ${cfg.color} text-white shadow-lg ${cfg.shadow} active:scale-[0.97] transition-transform`}
                 >
                   <div className="text-left">
                     <p className="font-semibold">{t(cfg.label)}</p>
@@ -352,9 +352,9 @@ export default function DichiaraPage() {
         <div className="flex items-center justify-between mb-4">
           <span className="text-sm font-bold tabular-nums text-muted-foreground">{(timer / 10).toFixed(1)}s</span>
           {streak > 0 && (
-            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="flex items-center gap-1 bg-purple-50 dark:bg-purple-950/40 rounded-full px-3 py-1">
+            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="flex items-center gap-1 bg-primary/10 dark:bg-primary/15 rounded-full px-3 py-1">
               <span className="text-sm">🔥</span>
-              <span className="text-xs font-bold text-purple-600 dark:text-purple-400">x{streak}</span>
+              <span className="text-xs font-bold text-primary dark:text-primary">x{streak}</span>
             </motion.div>
           )}
           <span className="text-sm font-bold text-figb dark:text-primary">{score} pts</span>

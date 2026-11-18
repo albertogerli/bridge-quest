@@ -39,7 +39,7 @@ export function BidSelectBlock({ block, blockIndex, delay, ctx }: ContentBlockPr
       className="rounded-2xl bg-card card-clean p-5 mb-5"
     >
       <div className="flex items-center gap-2 mb-3">
-        <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-purple-100 text-purple-600 dark:bg-purple-900/40 dark:text-purple-400">
+        <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary/10 text-primary dark:bg-primary/15 dark:text-primary">
           <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
             <rect x="3" y="3" width="18" height="18" rx="2" />
             <path d="M9 8h6M9 12h6M9 16h4" />
@@ -63,7 +63,7 @@ export function BidSelectBlock({ block, blockIndex, delay, ctx }: ContentBlockPr
           const bidLevel = bid[0];
           const bidSuit = bid.slice(1).toUpperCase();
           const suitInfo = suitSymbols[bidSuit];
-          let bidCls = "bg-card border-border hover:border-purple-400 hover:bg-purple-50 dark:hover:bg-purple-950/30";
+          let bidCls = "bg-card border-border hover:border-primary/60 hover:bg-primary/10 dark:hover:bg-primary/15";
           if (bsAnswered) {
             if (isCorrectBid) bidCls = "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-400 ring-2 ring-emerald/30";
             else if (isSelected && !bsCorrect) bidCls = "bg-red-50 dark:bg-red-950/40 border-red-400";

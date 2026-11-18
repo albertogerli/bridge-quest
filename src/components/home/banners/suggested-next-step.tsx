@@ -66,15 +66,15 @@ export function SuggestedNextStep({ nextModule }: SuggestedNextStepProps) {
                 <Link href={`/gioca/smazzata?lesson=${manoPertinente.lessonId}`}>
                   <div className="rounded-2xl border border-border bg-card p-4 hover:shadow-md transition-all">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100 border border-violet-200 dark:bg-violet-900/40 dark:border-violet-800">
-                        <Gamepad2 className="w-5 h-5 text-violet-600 dark:text-violet-400" />
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 border border-primary/20 dark:bg-primary/15 dark:border-primary/20">
+                        <Gamepad2 className="w-5 h-5 text-primary dark:text-primary" />
                       </div>
                       <div className="flex-1">
-                        <p className="text-[12px] font-bold text-violet-500 dark:text-violet-400 uppercase tracking-wider">{t("Prossimo passo")}</p>
+                        <p className="text-[12px] font-bold text-primary dark:text-primary uppercase tracking-wider">{t("Prossimo passo")}</p>
                         <p className="text-sm font-bold text-foreground truncate">{manoPertinente.lessonTitle}</p>
                         <p className="text-xs text-muted-foreground">{t("Gioca una mano su quello che hai appena studiato")}</p>
                       </div>
-                      <svg className="w-4 h-4 text-violet-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><path d="M9 18l6-6-6-6" /></svg>
+                      <svg className="w-4 h-4 text-primary shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><path d="M9 18l6-6-6-6" /></svg>
                     </div>
                   </div>
                 </Link>

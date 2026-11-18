@@ -42,7 +42,7 @@ export function DailyQuests({ modulesCompleted, handsPlayed, dailyDone }: DailyQ
   const quests = [
     {
       id: "study",
-      icon: <BookOpen className="w-5 h-5 text-indigo-500" />,
+      icon: <BookOpen className="w-5 h-5 text-primary" />,
       label: "Completa 2 moduli",
       progress: Math.min(dailyModules, 2),
       target: 2,
@@ -119,7 +119,7 @@ export function DailyQuests({ modulesCompleted, handsPlayed, dailyDone }: DailyQ
         transition={{ delay: 1.1 }}
         className={`flex items-center justify-center gap-2 p-2.5 rounded-xl text-center ${
           allDone
-            ? "bg-gradient-to-r from-[#c8a44e]/10 to-[#c8a44e]/5 border border-[#c8a44e]/20"
+            ? "bg-gold-dark border border-[#c8a44e]/20"
             : "bg-muted border border-border"
         }`}
       >

@@ -26,7 +26,7 @@ export function WorldCard({ world, completedModules, href }: WorldCardProps) {
   return (
     <Link href={href}>
       <div className="btn-squishy group relative overflow-hidden rounded-2xl bg-card transition-colors border border-border cursor-pointer">
-        <div className={`absolute left-0 top-0 bottom-0 w-2 rounded-l-2xl bg-gradient-to-b ${world.gradient}`} />
+        <div className={`absolute left-0 top-0 bottom-0 w-2 rounded-l-2xl bg-primary`} />
 
         <div className="flex items-center gap-4 p-4 pl-5">
           <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl text-2xl font-bold ${world.iconBg}`}>
@@ -46,7 +46,7 @@ export function WorldCard({ world, completedModules, href }: WorldCardProps) {
             <div className="mt-2.5 flex items-center gap-3">
               <div className="flex-1 h-2 rounded-full bg-muted overflow-hidden">
                 <motion.div
-                  className={`h-full rounded-full bg-gradient-to-r ${world.gradient}`}
+                  className={`h-full rounded-full bg-primary`}
                   initial={{ width: 0 }}
                   animate={{ width: `${progress}%` }}
                   transition={{ delay: 1, duration: 0.8 }}

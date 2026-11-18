@@ -75,8 +75,8 @@ export function TournamentSummary({
           <div
             className={`card-elevated rounded-3xl p-7 text-center ${
               totalDelta >= 0
-                ? "bg-gradient-to-br from-emerald-50 to-emerald-100/50 border border-emerald-200"
-                : "bg-gradient-to-br from-red-50 to-red-100/50 border border-red-200"
+                ? "bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200"
+                : "bg-red-50 dark:bg-red-950/30 border border-red-200"
             }`}
           >
             {/* Trophy / emoji */}
@@ -149,8 +149,8 @@ export function TournamentSummary({
                   transition={{ delay: 0.6, duration: 1 }}
                   className={`h-full rounded-full ${
                     totalDelta >= 0
-                      ? "bg-gradient-to-r from-emerald-400 to-emerald-500"
-                      : "bg-gradient-to-r from-red-400 to-red-500"
+                      ? "bg-emerald-700"
+                      : "bg-red-600"
                   }`}
                 />
               </div>
@@ -218,8 +218,8 @@ export function TournamentSummary({
                 transition={{ delay: 1.3 }}
                 className="mt-6 space-y-2"
               >
-                <div className="inline-flex items-center gap-2 bg-indigo-50 dark:bg-indigo-950/40 rounded-xl px-5 py-2.5">
-                  <span className="text-base font-bold text-indigo-700 dark:text-indigo-300">
+                <div className="inline-flex items-center gap-2 bg-primary/10 dark:bg-primary/15 rounded-xl px-5 py-2.5">
+                  <span className="text-base font-bold text-primary dark:text-primary">
                     +{xpEarned} {xpLabel}
                   </span>
                 </div>
@@ -240,7 +240,7 @@ export function TournamentSummary({
         >
           <Button
             onClick={onBack}
-            className="rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-sm font-bold h-12 px-8 shadow-lg shadow-indigo-600/25"
+            className="rounded-2xl bg-primary hover:bg-primary text-sm font-bold h-12 px-8 shadow-lg"
           >
             {t("Torna al Torneo")}
           </Button>

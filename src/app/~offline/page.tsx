@@ -5,8 +5,8 @@ import { useT } from "@/contexts/traduzioni-provider";
 export default function OfflinePage() {
   const t = useT();
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-figb/5 dark:from-primary/10 to-background px-6 text-center">
-      <div className="inline-flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-figb to-figb-dark text-white text-4xl font-bold shadow-lg shadow-figb/20 mb-6">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-card px-6 text-center">
+      <div className="inline-flex h-20 w-20 items-center justify-center rounded-3xl bg-primary text-white text-4xl font-bold shadow-lg mb-6">
         BL
       </div>
       <div className="flex gap-2 text-3xl mb-6 opacity-60">
@@ -23,7 +23,7 @@ export default function OfflinePage() {
       </p>
       <button
         onClick={() => window.location.reload()}
-        className="px-8 py-3 rounded-2xl bg-figb hover:bg-figb-dark text-white font-semibold shadow-lg shadow-figb/20 hover:shadow-xl transition-all active:scale-95"
+        className="px-8 py-3 rounded-2xl bg-figb hover:bg-figb-dark text-white font-semibold shadow-lg hover:shadow-xl transition-all active:scale-95"
       >
         {t("Riprova")}
       </button>

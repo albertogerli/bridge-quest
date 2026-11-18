@@ -115,8 +115,8 @@ function Last10Chart({ stats }: { stats: GameStats }) {
               transition={{ delay: 0.2 + i * 0.06, duration: 0.4 }}
               className={`w-full rounded-t-sm ${
                 won
-                  ? "bg-gradient-to-t from-emerald-500 to-emerald-400"
-                  : "bg-gradient-to-t from-red-400 to-red-300"
+                  ? "bg-emerald-700"
+                  : "bg-red-600"
               }`}
               style={{ minHeight: 4 }}
             />

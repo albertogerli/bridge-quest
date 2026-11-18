@@ -186,7 +186,7 @@ export default function RipassoPage() {
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
             className="fixed top-4 left-1/2 -translate-x-1/2 z-50"
           >
-            <div className="flex items-center gap-2 bg-gradient-to-r from-emerald-400 to-emerald-500 text-white font-bold text-sm px-5 py-3 rounded-2xl shadow-xl shadow-emerald/30">
+            <div className="flex items-center gap-2 bg-emerald-700 text-white font-bold text-sm px-5 py-3 rounded-2xl shadow-xl">
               <Zap className="w-5 h-5" />
               Ripasso completato: +{REVIEW_XP_BONUS} XP
             </div>
@@ -207,7 +207,7 @@ export default function RipassoPage() {
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <Brain className="w-5 h-5 text-indigo-500" />
+            <Brain className="w-5 h-5 text-primary" />
             {dueCount > 0 && (
               <Badge className="bg-figb text-white text-xs font-bold hover:bg-figb">
                 {dueCount}
@@ -233,7 +233,7 @@ export default function RipassoPage() {
             <p className="text-[12px] font-medium text-muted-foreground mt-0.5">{t("Oggi")}</p>
           </div>
           <div className="rounded-2xl bg-card border border-border shadow-sm p-3.5 text-center">
-            <p className="text-2xl font-bold text-indigo-500">{totalCount}</p>
+            <p className="text-2xl font-bold text-primary">{totalCount}</p>
             <p className="text-[12px] font-medium text-muted-foreground mt-0.5">{t("Totale")}</p>
           </div>
         </motion.div>
@@ -267,15 +267,15 @@ export default function RipassoPage() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="rounded-2xl bg-indigo-50 dark:bg-indigo-950/20 border border-indigo-200 dark:border-indigo-800 p-4"
+          className="rounded-2xl bg-primary/10 dark:bg-primary/15 border border-primary/20 dark:border-primary/20 p-4"
         >
           <div className="flex items-start gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-100 dark:bg-indigo-900 shrink-0 mt-0.5">
-              <Brain className="w-5 h-5 text-indigo-700 dark:text-indigo-300" />
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 dark:bg-primary/15 shrink-0 mt-0.5">
+              <Brain className="w-5 h-5 text-primary dark:text-primary" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-indigo-900 dark:text-indigo-200">{t("Come funziona")}</p>
-              <p className="text-xs text-indigo-700 dark:text-indigo-300 mt-1 leading-relaxed">
+              <p className="text-sm font-semibold text-primary dark:text-primary">{t("Come funziona")}</p>
+              <p className="text-xs text-primary dark:text-primary mt-1 leading-relaxed">
                 {t("Quando sbagli una domanda nei quiz, viene aggiunta qui per il ripasso. La ripetizione spaziata ti aiuta a memorizzare meglio: ogni risposta giusta allontana il ripasso successivo (1, 3, 7, 14 e poi 30 giorni), una sbagliata lo riporta a domani. Segna come padroneggiato quando sei sicuro!")}
               </p>
             </div>

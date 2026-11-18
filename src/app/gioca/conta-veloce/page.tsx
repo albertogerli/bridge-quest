@@ -53,9 +53,9 @@ function countHCP(hand: Card[]): number {
 
 type Difficulty = "facile" | "medio" | "difficile";
 const difficultyConfig = {
-  facile: { rounds: 8, options: 4, spread: 5, label: "Facile", xpMult: 0.8, color: "from-green-500 to-emerald-500", shadow: "shadow-green-400/30" },
-  medio: { rounds: 10, options: 4, spread: 3, label: "Medio", xpMult: 1, color: "from-amber-500 to-orange-500", shadow: "shadow-amber-400/30" },
-  difficile: { rounds: 12, options: 6, spread: 2, label: "Difficile", xpMult: 1.5, color: "from-red-500 to-rose-500", shadow: "shadow-red-400/30" },
+  facile: { rounds: 8, options: 4, spread: 5, label: "Facile", xpMult: 0.8, color: "bg-emerald-700", shadow: "" },
+  medio: { rounds: 10, options: 4, spread: 3, label: "Medio", xpMult: 1, color: "bg-gold-dark", shadow: "" },
+  difficile: { rounds: 12, options: 6, spread: 2, label: "Difficile", xpMult: 1.5, color: "bg-red-600", shadow: "" },
 };
 
 export default function ContaVelocePage() {
@@ -240,7 +240,7 @@ export default function ContaVelocePage() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mt-8"
           >
-            <div className="inline-flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br from-amber-400 to-orange-500 text-white text-5xl shadow-xl shadow-amber-400/30 mb-6">
+            <div className="inline-flex h-24 w-24 items-center justify-center rounded-3xl bg-gold-dark text-white text-5xl shadow-xl mb-6">
               🧮
             </div>
             <h1 className="text-2xl sm:text-3xl font-bold text-foreground font-display">{t("Conta Veloce")}</h1>
@@ -263,7 +263,7 @@ export default function ContaVelocePage() {
                 <button
                   key={key}
                   onClick={() => startGame(key)}
-                  className={`w-full flex items-center justify-between p-4 rounded-xl bg-gradient-to-r ${cfg.color} text-white shadow-lg ${cfg.shadow} active:scale-[0.97] transition-transform`}
+                  className={`w-full flex items-center justify-between p-4 rounded-xl ${cfg.color} text-white shadow-lg ${cfg.shadow} active:scale-[0.97] transition-transform`}
                 >
                   <div className="text-left">
                     <p className="font-semibold">{cfg.label}</p>
@@ -385,7 +385,7 @@ export default function ContaVelocePage() {
               </Link>
               <Button
                 onClick={() => startGame()}
-                className="flex-1 h-12 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 font-bold shadow-lg"
+                className="flex-1 h-12 rounded-xl bg-gold-dark font-bold shadow-lg"
               >
                 {t("Rigioca")}
               </Button>
@@ -417,7 +417,7 @@ export default function ContaVelocePage() {
           <div className="flex-1 mx-3">
             <div className="h-2 rounded-full bg-muted overflow-hidden">
               <motion.div
-                className="h-full rounded-full bg-gradient-to-r from-amber-400 to-orange-500"
+                className="h-full rounded-full bg-gold-dark"
                 animate={{ width: `${(round / config.rounds) * 100}%` }}
               />
             </div>
@@ -556,7 +556,7 @@ export default function ContaVelocePage() {
                 <div className="mt-6 space-y-2">
                   <Button
                     onClick={resumeFromPause}
-                    className="w-full h-12 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 font-semibold shadow-lg"
+                    className="w-full h-12 rounded-xl bg-gold-dark font-semibold shadow-lg"
                   >
                     {t("Riprendi")}
                   </Button>

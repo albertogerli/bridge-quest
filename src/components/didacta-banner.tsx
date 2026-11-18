@@ -62,11 +62,11 @@ export function DidactaBanner() {
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="relative overflow-hidden rounded-2xl border-2 border-amber-400/60 bg-gradient-to-r from-amber-50 via-yellow-50 to-orange-50 dark:from-amber-950/40 dark:via-yellow-950/30 dark:to-orange-950/40 dark:border-amber-500/40 p-4 cursor-pointer group"
+        className="relative overflow-hidden rounded-2xl border-2 border-amber-400/60 bg-amber-50 dark:bg-amber-950/30 dark:border-amber-500/40 p-4 cursor-pointer group"
         onClick={() => setModalOpen(true)}
       >
         {/* Shimmer effect */}
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+        <div className="absolute inset-0  -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
 
         <button
           onClick={(e) => { e.stopPropagation(); handleDismiss(); }}
@@ -77,7 +77,7 @@ export function DidactaBanner() {
         </button>
 
         <div className="flex items-center gap-3">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 text-white text-2xl shadow-lg shadow-amber-400/30">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gold-dark text-white text-2xl shadow-lg">
             <Camera className="w-6 h-6" />
           </div>
           <div className="flex-1 min-w-0">
@@ -124,7 +124,7 @@ export function DidactaBanner() {
               className="w-full max-w-md mx-4 mb-4 sm:mb-0 bg-card rounded-3xl shadow-2xl overflow-hidden"
             >
               {/* Header */}
-              <div className="relative bg-gradient-to-br from-amber-400 via-orange-400 to-red-400 p-6 text-white text-center">
+              <div className="relative bg-gold-dark p-6 text-white text-center">
                 <div className="absolute inset-0 opacity-20" aria-hidden="true">
                   <div className="absolute top-2 left-4 text-4xl opacity-30">&#9824;</div>
                   <div className="absolute top-6 right-8 text-3xl opacity-30">&#9829;</div>
@@ -184,7 +184,7 @@ export function DidactaBanner() {
                     href={`https://www.instagram.com/`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs font-bold hover:opacity-90 transition-opacity"
+                    className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-primary text-white text-xs font-bold hover:opacity-90 transition-opacity"
                   >
                     {t("Instagram")} <ExternalLink className="w-3 h-3" />
                   </a>
@@ -217,7 +217,7 @@ export function DidactaBanner() {
                 ) : (
                   <button
                     onClick={handleClaim}
-                    className="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white font-black text-base shadow-lg shadow-amber-500/30 active:scale-[0.98] transition-transform"
+                    className="w-full py-3.5 rounded-xl bg-gold-dark text-white font-black text-base shadow-lg active:scale-[0.98] transition-transform"
                   >
                     Ho pubblicato! Riscuoti +{XP_REWARD} XP
                   </button>
@@ -237,7 +237,7 @@ export function DidactaBanner() {
             exit={{ opacity: 0, y: -30 }}
             className="fixed top-4 left-1/2 -translate-x-1/2 z-[60]"
           >
-            <div className="flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-5 py-3 rounded-2xl shadow-xl shadow-amber-500/30">
+            <div className="flex items-center gap-2 bg-gold-dark text-white px-5 py-3 rounded-2xl shadow-xl">
               <Camera className="w-5 h-5" />
               <span className="text-sm font-bold">+{XP_REWARD} XP! Grazie per il post!</span>
             </div>

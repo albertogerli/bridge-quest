@@ -57,7 +57,7 @@ export function CourseProgressSection({
                           </div>
                           <div className="h-2.5 rounded-full bg-muted border border-border overflow-hidden">
                             <div
-                              className={`h-full rounded-full bg-gradient-to-r ${w.gradient}`}
+                              className={`h-full rounded-full bg-primary`}
                               style={{ width: `${wPercent}%` }}
                             />
                           </div>

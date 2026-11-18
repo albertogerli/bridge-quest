@@ -128,7 +128,7 @@ export default function ForumPage() {
             <p className="text-sm text-muted-foreground mt-0.5">{t("La community dei bridgisti")}</p>
           </div>
           <Link href="/forum/nuovo">
-            <Button className="h-10 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-700 font-bold text-sm shadow-lg shadow-emerald-500/20">
+            <Button className="h-10 px-4 rounded-xl bg-emerald-700 font-bold text-sm shadow-lg">
               <svg className="w-4 h-4 mr-1.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                 <path d="M12 5v14M5 12h14" />
               </svg>
@@ -196,7 +196,7 @@ export default function ForumPage() {
             <p className="text-lg font-bold text-foreground">{t("Nessun post ancora")}</p>
             <p className="text-sm text-muted-foreground mt-1">{t("Sii il primo a scrivere!")}</p>
             <Link href="/forum/nuovo">
-              <Button className="mt-4 h-10 px-6 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-700 font-bold text-sm">
+              <Button className="mt-4 h-10 px-6 rounded-xl bg-emerald-700 font-bold text-sm">
                 {t("Scrivi il primo post")}
               </Button>
             </Link>
@@ -217,7 +217,7 @@ export default function ForumPage() {
                     }`}>
                       <div className="flex items-start gap-3">
                         {/* Avatar */}
-                        <div className="h-9 w-9 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white text-sm font-bold flex-shrink-0 overflow-hidden">
+                        <div className="h-9 w-9 rounded-full bg-emerald-700 flex items-center justify-center text-white text-sm font-bold flex-shrink-0 overflow-hidden">
                           {post.profiles?.avatar_url ? (
                             <Image src={post.profiles.avatar_url} alt={t("Avatar utente")} width={36} height={36} className="h-full w-full object-cover" />
                           ) : (
@@ -234,7 +234,7 @@ export default function ForumPage() {
                               </span>
                             )}
                             {post.poll_options && post.poll_options.length > 0 && (
-                              <span className="text-[12px] font-bold text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/40 px-1.5 py-0.5 rounded flex items-center gap-0.5">
+                              <span className="text-[12px] font-bold text-primary dark:text-primary bg-primary/10 dark:bg-primary/15 px-1.5 py-0.5 rounded flex items-center gap-0.5">
                                 <svg className="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                                   <path d="M18 20V10M12 20V4M6 20v-6" />
                                 </svg>

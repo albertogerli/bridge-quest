@@ -25,13 +25,6 @@ const courseColors: Record<CourseId, { active: string; inactive: string; border:
   "cuori-licita": { active: "bg-rose-500 text-white", inactive: "text-rose-700 dark:text-rose-300", border: "border-rose-200 dark:border-rose-900" },
 };
 
-const courseGradients: Record<CourseId, string> = {
-  fiori: "from-emerald-500 to-emerald-700",
-  quadri: "from-orange-500 to-orange-700",
-  "cuori-gioco": "from-red-500 to-red-700",
-  "cuori-licita": "from-rose-500 to-rose-700",
-};
-
 /**
  * L'indirizzo porta il corso: `?corso=quadri`.
  *
@@ -180,7 +173,7 @@ function Dispense() {
                 onClick={() => setSelectedCourse(course.id)}
                 className={`shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm transition-all active:scale-[0.97] ${
                   isActive
-                    ? `${colors.active} shadow-[0_3px_0_rgba(0,0,0,0.15)]`
+                    ? `${colors.active}`
                     : `bg-card border-2 ${colors.border} ${colors.inactive} shadow-sm`
                 }`}
               >
@@ -209,16 +202,16 @@ function Dispense() {
             transition={{ duration: 0.2 }}
           >
             {/* Course info + full PDF */}
-            <div className={`rounded-2xl bg-gradient-to-r ${courseGradients[selectedCourse]} p-5 mb-5`}>
+            <div className={`rounded-2xl border border-border bg-card p-5 mb-5`}>
               <div className="flex items-center justify-between">
                 <div>
-                  <Badge className="bg-white/20 text-white text-[12px] font-bold border-0 mb-2">
+                  <Badge className="bg-primary/10 text-foreground text-[12px] font-bold border-0 mb-2">
                     {levelInfo[currentCourse.level].label}
                   </Badge>
-                  <h2 className="text-lg font-bold text-white">
+                  <h2 className="text-lg font-bold text-foreground">
                     {currentCourse.name}
                   </h2>
-                  <p className="text-sm text-white/70 mt-0.5">
+                  <p className="text-sm text-muted-foreground mt-0.5">
                     {diClasse
                       ? t("{n} dispense rilasciate dal tuo insegnante", { n: infographics.length })
                       : t("{n} dispense disponibili", { n: currentCourse.lessonCount })}
@@ -227,7 +220,7 @@ function Dispense() {
                 {diClasse ? null : coursePdf && isCourseCompleted ? (
                   <button
                     onClick={() => downloadPdf(coursePdf)}
-                    className="flex items-center gap-2 rounded-xl bg-white/20 backdrop-blur-sm px-4 py-2.5 text-sm font-bold text-white hover:bg-white/30 transition-colors active:scale-95"
+                    className="flex items-center gap-2 rounded-xl bg-primary/10 backdrop-blur-sm px-4 py-2.5 text-sm font-bold text-foreground hover:bg-white/30 transition-colors active:scale-95"
                     title={t("Scarica il corso intero in PDF")}
                   >
                     <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
@@ -239,7 +232,7 @@ function Dispense() {
                   </button>
                 ) : coursePdf ? (
                   <div
-                    className="flex items-center gap-2 rounded-xl bg-white/10 backdrop-blur-sm px-4 py-2.5 text-sm font-bold text-white/70 cursor-not-allowed select-none"
+                    className="flex items-center gap-2 rounded-xl bg-primary/10 backdrop-blur-sm px-4 py-2.5 text-sm font-bold text-muted-foreground cursor-not-allowed select-none"
                     title={t("Completa tutte le lezioni per scaricare il corso intero")}
                   >
                     <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
@@ -247,7 +240,7 @@ function Dispense() {
                     </svg>
                     <div className="flex flex-col items-start leading-tight">
                       <span>{t("Tutte")}</span>
-                      <span className="text-[12px] font-medium text-white/60">
+                      <span className="text-[12px] font-medium text-muted-foreground">
                         {completedModulesCount}/{totalModules} moduli
                       </span>
                     </div>

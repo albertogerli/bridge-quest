@@ -205,8 +205,8 @@ const difficultyConfig: Record<
     label: "Facile",
     sub: "Solo gradimento",
     xpMult: 0.8,
-    color: "from-green-500 to-emerald-500",
-    shadow: "shadow-green-400/30",
+    color: "bg-emerald-700",
+    shadow: "",
   },
   medio: {
     rounds: 10,
@@ -214,8 +214,8 @@ const difficultyConfig: Record<
     label: "Medio",
     sub: "Gradimento + conto",
     xpMult: 1,
-    color: "from-amber-500 to-orange-500",
-    shadow: "shadow-amber-400/30",
+    color: "bg-gold-dark",
+    shadow: "",
   },
   difficile: {
     rounds: 12,
@@ -223,8 +223,8 @@ const difficultyConfig: Record<
     label: "Difficile",
     sub: "Anche leggere i segnali del compagno",
     xpMult: 1.5,
-    color: "from-red-500 to-rose-500",
-    shadow: "shadow-red-400/30",
+    color: "bg-red-600",
+    shadow: "",
   },
 };
 
@@ -361,7 +361,7 @@ export default function SegnaliPage() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mt-8"
           >
-            <div className="inline-flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br from-violet-500 to-fuchsia-600 text-white text-5xl shadow-xl shadow-violet-400/30 mb-6">
+            <div className="inline-flex h-24 w-24 items-center justify-center rounded-3xl bg-primary text-white text-5xl shadow-xl mb-6">
               📡
             </div>
             <h1 className="text-2xl sm:text-3xl font-bold text-foreground font-display">{t("Segnali in Difesa")}</h1>
@@ -390,7 +390,7 @@ export default function SegnaliPage() {
                   <button
                     key={key}
                     onClick={() => startGame(key)}
-                    className={`w-full flex items-center justify-between p-4 rounded-xl bg-gradient-to-r ${cfg.color} text-white shadow-lg ${cfg.shadow} active:scale-[0.97] transition-transform`}
+                    className={`w-full flex items-center justify-between p-4 rounded-xl ${cfg.color} text-white shadow-lg ${cfg.shadow} active:scale-[0.97] transition-transform`}
                   >
                     <div className="text-left">
                       <p className="font-semibold">{cfg.label}</p>
@@ -437,7 +437,7 @@ export default function SegnaliPage() {
             <h1 className="text-2xl sm:text-3xl font-bold text-foreground font-display">
               {stars === 3 ? "Difensore d'élite!" : stars === 2 ? "Ottima intesa!" : stars === 1 ? "Buon inizio!" : "Riprova!"}
             </h1>
-            <p className="text-xl sm:text-2xl font-bold text-violet-500 mt-2">{score} punti</p>
+            <p className="text-xl sm:text-2xl font-bold text-primary mt-2">{score} punti</p>
 
             <div className="grid grid-cols-3 gap-3 mt-6">
               <div className="card-clean rounded-xl bg-card p-3">
@@ -451,7 +451,7 @@ export default function SegnaliPage() {
                 <p className="text-[12px] text-muted-foreground font-bold">{t("Streak max")}</p>
               </div>
               <div className="card-clean rounded-xl bg-card p-3">
-                <p className="text-lg font-bold text-violet-500">+{xpEarned}</p>
+                <p className="text-lg font-bold text-primary">+{xpEarned}</p>
                 <p className="text-[12px] text-muted-foreground font-bold">{profileConfig.xpLabel}</p>
               </div>
             </div>
@@ -464,7 +464,7 @@ export default function SegnaliPage() {
               </Link>
               <Button
                 onClick={() => startGame(difficulty)}
-                className="flex-1 h-12 rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-600 font-bold shadow-lg"
+                className="flex-1 h-12 rounded-xl bg-primary font-bold shadow-lg"
               >
                 {t("Rigioca")}
               </Button>
@@ -494,7 +494,7 @@ export default function SegnaliPage() {
           <div className="flex-1 mx-3">
             <div className="h-2 rounded-full bg-muted overflow-hidden">
               <motion.div
-                className="h-full rounded-full bg-gradient-to-r from-violet-400 to-fuchsia-500"
+                className="h-full rounded-full bg-primary"
                 animate={{ width: `${(round / config.rounds) * 100}%` }}
               />
             </div>
@@ -506,7 +506,7 @@ export default function SegnaliPage() {
 
         {/* Streak + score */}
         <div className="flex items-center justify-between mb-4">
-          <span className="inline-flex items-center rounded-full bg-violet-50 dark:bg-violet-950/40 px-3 py-1 text-[12px] font-bold text-violet-600 dark:text-violet-400">
+          <span className="inline-flex items-center rounded-full bg-primary/10 dark:bg-primary/15 px-3 py-1 text-[12px] font-bold text-primary dark:text-primary">
             {KIND_LABELS[current.kind]}
           </span>
           {streak > 0 && (
@@ -519,7 +519,7 @@ export default function SegnaliPage() {
               <span className="text-xs font-bold text-orange-600 dark:text-orange-400">x{streak}</span>
             </motion.div>
           )}
-          <div className="text-sm font-bold text-violet-500">{score} pts</div>
+          <div className="text-sm font-bold text-primary">{score} pts</div>
         </div>
 
         {/* Scenario card */}
