@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { ChevronRight } from "lucide-react";
 import Link from "@/components/link";
-import { PlayingCard } from "@/components/bridge/playing-card";
+import { Ventaglio } from "@/components/bridge/ventaglio";
 import { getSmazzataById } from "@/lib/catalog";
 import { ordinaManoAlternata } from "@/lib/ordine-semi";
 import { reportError } from "@/lib/report-error";
@@ -51,13 +51,15 @@ export function CompitoInEvidenza({
     : null;
 
   return (
-    <section className="overflow-hidden rounded-3xl bg-card shadow-md">
-      <div className="panno-bg px-5 pt-5 text-white">
-        <p className="text-xs font-semibold uppercase tracking-wider text-white/75">
+    <section className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+      {/* Il panno solo dove ci sono carte (18/11/2026): un compito di sole
+          domande aveva un rettangolo verde vuoto al posto della mano. */}
+      <div className={soloDomande ? "border-b border-border px-5 pt-5 pb-4" : "panno-bg px-5 pt-5 text-white"}>
+        <p className={`text-xs font-semibold uppercase tracking-wider ${soloDomande ? "text-muted-foreground" : "text-white/75"}`}>
           {conClasse ? `${classe.name} · ` : ""}{t("Da fare adesso")}
         </p>
         <h2 className="mt-1 font-display text-2xl font-bold text-balance">{assignment.title}</h2>
-        <Ventaglio carte={carte} />
+        {!soloDomande && <Ventaglio carte={carte} etichetta={t("Le tue carte della prossima mano")} />}
       </div>
       <div className="grid grid-cols-[minmax(0,1fr)] gap-4 p-5">
         {totale > 0 && (
@@ -75,7 +77,7 @@ export function CompitoInEvidenza({
         )}
         <Link
           href={`/classi/${classe.id}/compito/${assignment.id}`}
-          className="flex min-h-14 items-center justify-center gap-2 rounded-2xl bg-primary px-5 text-[17px] font-bold text-primary-foreground transition-colors hover:bg-primary/90"
+          className="flex min-h-14 items-center justify-center gap-2 rounded-xl bg-primary px-5 text-[17px] font-bold text-primary-foreground transition-colors hover:bg-primary/90"
         >
           {totale === 0
             ? t("Apri il compito")
@@ -116,22 +118,4 @@ function useManoDaGiocare(assignment: Assignment, prossima: string | null): Card
     return () => { vivo = false; };
   }, [assignment, prossima]);
   return carte;
-}
-
-/** Tredici carte a ventaglio. Lo spazio c'è anche prima che arrivino: niente salti. */
-function Ventaglio({ carte }: { carte: Card[] | null }) {
-  const t = useT();
-  return (
-    <div className="flex h-24 justify-center overflow-hidden pt-4 sm:h-28" aria-hidden={!carte} aria-label={carte ? t("Le tue carte della prossima mano") : undefined} role={carte ? "img" : undefined}>
-      {carte?.map((c, i) => (
-        <div
-          key={`${c.suit}${c.rank}`}
-          className="-ml-8 origin-[50%_150%] first:ml-0 sm:-ml-7"
-          style={{ transform: `rotate(${(i - (carte.length - 1) / 2) * 3}deg)` }}
-        >
-          <PlayingCard card={c} cardWidth={44} angolo noHover />
-        </div>
-      ))}
-    </div>
-  );
 }

@@ -27,7 +27,7 @@ export function BenvenutoCorso({ classe }: { classe: ClassRoom }) {
   const corso = classe.livello?.trim() || classe.name;
 
   return (
-    <section className="mb-6 rounded-2xl border border-figb/20 bg-figb/5 p-4" aria-labelledby="benvenuto-corso">
+    <section className="mb-6 rounded-2xl border border-border bg-card p-4" aria-labelledby="benvenuto-corso">
       <h2 id="benvenuto-corso" className="font-display text-lg font-bold text-foreground">
         {t("Ti diamo il benvenuto: {corso}", { corso })}
       </h2>

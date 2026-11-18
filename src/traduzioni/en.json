@@ -3228,5 +3228,22 @@
   "Solo chi ha creato la classe può aggiungere insegnanti.": "Only the person who created the class can add teachers.",
   "Togliere {nome} dagli insegnanti?": "Remove {nome} from the teachers?",
   "email del collega": "colleague's email",
-  "È l'email di chi ha creato la classe: insegna già qui.": "That's the email of the person who created the class: they already teach here."
+  "È l'email di chi ha creato la classe: insegna già qui.": "That's the email of the person who created the class: they already teach here.",
+  "5 mani, stessa sfida per tutti. Entra in classifica!": "5 hands, the same challenge for everyone. Get on the leaderboard!",
+  "8 mani al giorno, 24 a settimana: stesse smazzate per tutti": "8 hands a day, 24 a week: the same deals for everyone",
+  "Con gli amici": "With friends",
+  "Dichiarante {posto}. Una mano al giorno, uguale per tutti, con la classifica.": "Declarer {posto}. One hand a day, the same for everyone, with a leaderboard.",
+  "Fatta": "Done",
+  "Gioco della carta": "Card play",
+  "Torneo completato! Nuove mani la prossima settimana.": "Tournament complete! New hands next week.",
+  "Una mano al giorno, uguale per tutti": "One hand a day, the same for everyone",
+  "Una nuova mano ogni giorno.": "A new hand every day.",
+  "Il {corso} sarà disponibile presto. Intanto continua con il Corso di Primo Livello!": "The {corso} is coming soon. In the meantime, keep going with the First Level Course!",
+  "Lez. {n}": "Lesson {n}",
+  "Lezione {n}: {titolo}, {fatti} di {totale} moduli completati": "Lesson {n}: {titolo}, {fatti} of {totale} modules completed",
+  "Mondi del corso": "Course worlds",
+  "Non ancora aperto": "Not open yet",
+  "Si apre quando hai completato metà di «{mondo}».": "Opens when you have completed half of “{mondo}”.",
+  "{fatti} di {totale} moduli": "{fatti} of {totale} modules",
+  "{n} mani pratiche disponibili": "{n} practice hands available"
 }

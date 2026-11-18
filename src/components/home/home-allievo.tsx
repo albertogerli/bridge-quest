@@ -155,9 +155,9 @@ export function HomeAllievo({ nome, onVaiAllaBacheca }: { nome: string | null; o
    * cambia: cosa fare, dove sei, i materiali, la classe.
    */
   return (
-    <div className="mx-auto max-w-5xl px-4 pb-24 pt-6 lg:px-8 lg:pt-10">
+    <div className="px-4 pb-24 pt-6 sm:px-6 lg:px-8 lg:pt-10">
       <header className="mb-6">
-        <h1 className="font-display text-3xl font-extrabold tracking-tight">
+        <h1 className="font-display text-3xl font-extrabold tracking-tight text-balance lg:text-4xl">
           {nome ? t("Ciao {nome}", { nome }) : t("Ciao")}
         </h1>
         <p className="mt-1 text-muted-foreground">
@@ -175,7 +175,7 @@ export function HomeAllievo({ nome, onVaiAllaBacheca }: { nome: string | null; o
         <div className="grid grid-cols-[minmax(0,1fr)] gap-4">
           <AvvisoInsegnante compiti={compiti} novita={novita} classi={piuCorsi ? attivi : []} />
           {!primo ? (
-            <section className="rounded-3xl bg-card p-6 shadow-sm">
+            <section className="rounded-2xl border border-border bg-card p-6">
               <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t("Da fare adesso")}</p>
               <p className="mt-2 text-muted-foreground">{t("Niente da fare in questo momento. Te lo diremo quando arriva.")}</p>
             </section>
@@ -345,7 +345,7 @@ function AvvisoInsegnante({
   );
   if (righe.length === 0) return null;
   return (
-    <section className="rounded-3xl border border-primary/30 bg-primary/5 p-5" aria-live="polite">
+    <section className="rounded-2xl border border-primary/30 bg-primary/5 p-5" aria-live="polite">
       <p className="flex items-center gap-2 font-display text-lg font-bold">
         <MessageSquareText className="h-5 w-5 text-primary" aria-hidden="true" />
         {t("Il tuo insegnante ti ha scritto")}

@@ -1,16 +1,45 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion } from "motion/react";
-import { Badge } from "@/components/ui/badge";
+import { useState, useEffect, useMemo } from "react";
+import type { LucideIcon } from "lucide-react";
 import { useT } from "@/contexts/traduzioni-provider";
 import { AvvisoRichiesteAmicizia } from "@/components/avviso-richieste-amicizia";
 import Link from "@/components/link";
 import { useSmazzate } from "@/store/use-smazzate-store";
 import { useProfile } from "@/hooks/use-profile";
+import { useLingua } from "@/hooks/use-lingua";
 import { getWeekNum } from "@/lib/tournament-stats";
+import { getSmazzataForDate, getTodayString } from "@/lib/daily-hand";
+import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 import { CollegamentiSezione } from "@/components/collegamenti-sezione";
-import { BarChart3, BookOpen, Brain, Calculator, CalendarDays, CheckCircle2, Flame, Gavel, Handshake, Hash, Link2, Megaphone, MessageCircle, MessagesSquare, Radio, Search, Spade, Swords, Target, Trophy, Users, Zap } from "lucide-react";
+import { Ventaglio } from "@/components/bridge/ventaglio";
+import { ordinaManoAlternata } from "@/lib/ordine-semi";
+import { BarChart3, BookOpen, Brain, Calculator, CalendarDays, CheckCircle2, ChevronRight, Flame, Gavel, GraduationCap, Handshake, Hash, Link2, Megaphone, MessageCircle, MessagesSquare, Radio, Search, Spade, Swords, Target, Trophy, Users, Zap } from "lucide-react";
+
+/**
+ * GIOCA, RIDISEGNATA IL 18/11/2026.
+ *
+ * Prima erano trenta voci in una colonna sola: tre bande blu a gradiente per le
+ * sfide, poi una fila di righe larghe quanto lo schermo. Sul computer ogni riga
+ * aveva il titolo a sinistra e la freccia a un metro di distanza, e niente
+ * diceva da dove cominciare.
+ *
+ * Adesso: la Mano del giorno in grande, con le carte vere sul panno (il panno
+ * solo dove ci sono carte), poi le voci in griglia, raggruppate per quello che
+ * alleni — il gioco della carta, la licita, il gioco libero, gli amici. Tutte le
+ * tessere sono uguali; il blu pieno resta al solo pulsante della Mano del giorno.
+ */
+
+interface Voce {
+  href: string;
+  titolo: string;
+  descrizione: string;
+  Icona: LucideIcon;
+  nuovo?: boolean;
+  /** Un'etichetta a destra (XP, «Fatta»...). */
+  etichetta?: string;
+  fatta?: boolean;
+}
 
 export default function GiocaPage() {
   const t = useT();
@@ -42,649 +71,84 @@ export default function GiocaPage() {
     } catch {}
   }, [isLoaded, allSmazzate, playableSmazzate]);
 
+  const xp = profile.xpLabel;
+
+  const sfide: Voce[] = [
+    {
+      href: "/gioca/sfida", Icona: dailyDone ? CheckCircle2 : Flame, titolo: t("Sfida del Giorno"),
+      descrizione: dailyDone ? t("Sfida completata! Torna domani per una nuova mano.") : t("Una nuova mano ogni giorno."),
+      etichetta: dailyDone ? t("Fatta") : `+40 ${xp}`, fatta: dailyDone,
+    },
+    {
+      href: "/gioca/torneo", Icona: tournamentDone ? CheckCircle2 : Trophy, titolo: t("Torneo Settimanale"),
+      descrizione: tournamentDone ? t("Torneo completato! Nuove mani la prossima settimana.") : t("5 mani, stessa sfida per tutti. Entra in classifica!"),
+      etichetta: tournamentDone ? t("Fatta") : `+150 ${xp}`, fatta: tournamentDone,
+    },
+    { href: "/amici", Icona: Swords, titolo: t("Sfida IMP"), descrizione: t("Sfida un amico a 1, 4 o 8 mani con punteggio IMP") },
+  ];
+
+  const carta: Voce[] = [
+    { href: "/gioca/quiz-prese", Icona: Calculator, titolo: t("Quante prese?"), descrizione: t("Vedi tutte le mani e conta le prese di Nord-Sud"), nuovo: true },
+    { href: "/gioca/impasse", Icona: Target, titolo: t("Impasse o Drop?"), descrizione: t("Decidi in 5 secondi: impasse o caduta?") },
+    { href: "/gioca/segnali", Icona: Radio, titolo: t("Segnali in Difesa"), descrizione: t("In difesa si parla con le carte: dai e leggi i segnali") },
+    { href: "/gioca/trova-errore", Icona: Search, titolo: t("Trova l'Errore"), descrizione: t("Trova l'errore nella dichiarazione o giocata") },
+    { href: "/gioca/conta-veloce", Icona: Hash, titolo: t("Conta Veloce"), descrizione: t("Conta i Punti Onore a tempo! Quanto sei veloce?") },
+    { href: "/gioca/quiz-lampo", Icona: Zap, titolo: t("Quiz Lampo"), descrizione: t("Raffica di domande, 30 secondi! Combo multiplier") },
+    { href: "/gioca/memory", Icona: Brain, titolo: t("Memory Bridge"), descrizione: t("Abbina carte e concetti. Allena la memoria!") },
+  ];
+
+  const licita: Voce[] = [
+    { href: "/gioca/cosa-apri", Icona: Gavel, titolo: t("Cosa apri?"), descrizione: t("Mani sempre nuove: scegli l'apertura giusta"), nuovo: true },
+    { href: "/gioca/quale-contratto", Icona: Target, titolo: t("Che contratto giocate?"), descrizione: t("Vedi le due mani: fin dove potete arrivare?"), nuovo: true },
+    { href: "/gioca/licita", Icona: Gavel, titolo: t("Licita e vediamo"), descrizione: t("Vedi solo la tua mano: dichiara col compagno e prendi le stelle"), nuovo: true },
+    { href: "/gioca/licita-amico", Icona: Users, titolo: t("Licita con un amico"), descrizione: t("Ognuno vede la sua mano e dichiara quando può"), nuovo: true },
+    { href: "/gioca/torneo-licita", Icona: Trophy, titolo: t("Tornei di licita"), descrizione: t("8 mani al giorno, 24 a settimana: stesse smazzate per tutti"), nuovo: true },
+    { href: "/gioca/dichiara", Icona: Megaphone, titolo: t("Dichiara!"), descrizione: t("Scegli l'apertura giusta per ogni mano") },
+    { href: "/gioca/pratica-licita", Icona: MessageCircle, titolo: t("Pratica Licita"), descrizione: t("Esercitati nella dichiarazione: Texas, Stayman e altro") },
+  ];
+
+  const libero: Voce[] = [
+    { href: `/gioca/smazzata?random=${randomIdx}`, Icona: Spade, titolo: t("Pratica Libera"), descrizione: t("Gioca una mano casuale dalle {n} disponibili", { n: allSmazzate.length }) },
+    { href: "/gioca/smazzata", Icona: BookOpen, titolo: t("Tutte le Smazzate"), descrizione: t("Sfoglia e gioca le {n} mani per lezione", { n: allSmazzate.length }) },
+    { href: "/gioca/analisi", Icona: BarChart3, titolo: t("Analisi AI"), descrizione: t("Rivedi le tue mani con commenti dell'AI carta per carta") },
+    { href: "/glossario", Icona: BookOpen, titolo: t("Glossario"), descrizione: t("Impara tutti i termini del bridge") },
+  ];
+
+  const amici: Voce[] = [
+    { href: "/gioca/sfida-coppie", Icona: Swords, titolo: t("Sfida 2 contro 2"), descrizione: t("Voi due contro un'altra coppia, sulle stesse smazzate"), nuovo: true },
+    { href: "/gioca/sfida-amico", Icona: Swords, titolo: t("Sfida un Amico"), descrizione: t("Gioca la stessa mano e confronta i risultati") },
+    { href: "/gioca/sfida-link", Icona: Link2, titolo: t("Sfida via Link"), descrizione: t("Condividi un link, giocate la stessa mano e confrontate!") },
+  ];
+
   return (
-    <div className="pt-6 px-5 pb-24">
-      <div className="mx-auto max-w-6xl">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -12 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-6"
-        >
-          <h1 className="text-3xl font-bold text-foreground font-display">{t("Gioca")}</h1>
-          <p className="text-sm text-muted-foreground mt-1">{t("Metti in pratica quello che hai imparato")}</p>
-        </motion.div>
+    <div className="px-4 pb-24 pt-6 sm:px-6 lg:px-8 lg:pt-10">
+      <header className="mb-6">
+        <h1 className="font-display text-3xl font-bold text-balance lg:text-4xl">{t("Gioca")}</h1>
+        <p className="mt-1 text-muted-foreground text-pretty">{t("Metti in pratica quello che hai imparato")}</p>
+      </header>
 
-        <AvvisoRichiesteAmicizia className="mb-6" />
+      <AvvisoRichiesteAmicizia className="mb-6" />
 
-        <h2 className="mb-3 text-xs font-bold uppercase tracking-wider text-muted-foreground">{t("Inizia da qui")}</h2>
-
-        {/* Mano Guidata card (after Prima Mano is done) */}
-        {onboarded && (
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.08 }}
-            className="mb-3"
-          >
-            <Link href="/gioca/mano-guidata" className="block" aria-label={t("Mano Guidata: pratica passo-passo")}>
-              <div className="relative overflow-hidden rounded-2xl border border-figb/20 bg-figb/5 px-4 py-3.5 hover:shadow-md transition-all">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-figb shadow-md">
-                    <Target className="w-5 h-5 text-white" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-bold text-foreground">{t("Mano Guidata")}</p>
-                    <p className="text-[12px] text-muted-foreground">{t("Pratica passo-passo con suggerimenti")}</p>
-                  </div>
-                  <Badge className="bg-muted text-muted-foreground text-[12px] font-bold border-0">
-                    +35 XP
-                  </Badge>
-                </div>
-              </div>
-            </Link>
-          </motion.div>
-        )}
-
-        {/* MiniBridge card (beginner method: from minibridge to bridge) */}
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.09 }}
-          className="mb-3"
-        >
-          <Link href="/gioca/minibridge" className="block" aria-label={t("MiniBridge: gioca senza licita, decidi col conteggio dei punti")}>
-            <div className="relative overflow-hidden rounded-2xl border border-emerald-200 bg-gradient-to-r from-emerald-50 to-green-50 px-4 py-3.5 hover:shadow-md transition-all dark:border-emerald-900 dark:from-emerald-950/40 dark:to-green-950/30">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-green-600 shadow-md">
-                  <span className="text-lg">🎓</span>
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <p className="text-sm font-bold text-foreground">{t("MiniBridge")}</p>
-                    <span className="rounded-full bg-[#c8a44e]/15 px-1.5 py-0.5 text-[12px] font-bold uppercase tracking-wider text-[#7a5a0f] dark:text-[#c8a44e]">{t("Beta")}</span>
-                  </div>
-                  <p className="text-[12px] text-muted-foreground">{t("Gioca senza licita: conta i punti e scegli il contratto")}</p>
-                </div>
-              </div>
-            </div>
-          </Link>
-        </motion.div>
-
-        <h2 className="mb-3 mt-7 text-xs font-bold uppercase tracking-wider text-muted-foreground">{t("Sfide")}</h2>
-
-        {/* Hero card: Sfida del Giorno */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-        >
-          <Link href="/gioca/sfida" className="block" aria-label={t("Sfida del Giorno: una nuova mano ogni giorno")}>
-            <div className={`relative overflow-hidden rounded-3xl p-6 cursor-pointer transition-all hover:shadow-xl ${
-              dailyDone
-                ? "bg-gradient-to-br from-green-50 to-emerald-50 dark:from-emerald-950/40 dark:to-green-950/30 border border-green-200 dark:border-emerald-900"
-                : "hero-gradient"
-            }`}>
-              {!dailyDone && (
-                <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-white/5 blur-2xl" />
-              )}
-              <div className="relative flex items-center gap-5">
-                <div className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl text-3xl ${
-                  dailyDone ? "bg-emerald/10" : "bg-white/15"
-                }`}>
-                  {dailyDone ? <CheckCircle2 className="w-7 h-7 text-emerald-600 dark:text-emerald-400" /> : <Flame className="w-7 h-7 text-white" />}
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <h2 className={`text-xl font-semibold ${dailyDone ? "text-emerald-dark dark:text-emerald-300" : "text-white"}`}>{t("Sfida del Giorno")}</h2>
-                    {!dailyDone && (
-                      <Badge className="bg-amber/20 text-amber-light text-[12px] font-bold border-0">
-                        +40 {profile.xpLabel}
-                      </Badge>
-                    )}
-                  </div>
-                  <p className={`text-sm ${dailyDone ? "text-emerald-dark/60 dark:text-emerald-400/80" : "text-white/70"}`}>
-                    {dailyDone
-                      ? t("Sfida completata! Torna domani per una nuova mano.")
-                      : t("Una nuova mano ogni giorno. Gioca e guadagna {xp} bonus!", { xp: profile.xpLabel })}
-                  </p>
-                </div>
-                <svg
-                  className={`h-6 w-6 shrink-0 ${dailyDone ? "text-emerald" : "text-white/60"}`}
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2.5}
-                >
-                  <polyline points="9,6 15,12 9,18" />
-                </svg>
-              </div>
-            </div>
-          </Link>
-        </motion.div>
-
-        {/* Torneo Settimanale */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.12 }}
-          className="mt-4"
-        >
-          <Link href="/gioca/torneo" className="block" aria-label={t("Torneo Settimanale: 5 mani, stessa sfida per tutti")}>
-            <div className={`relative overflow-hidden rounded-3xl p-5 cursor-pointer transition-all hover:shadow-xl ${
-              tournamentDone
-                ? "bg-primary/5 border border-primary/15"
-                : "bg-gradient-to-br from-figb to-figb-dark"
-            }`}>
-              {!tournamentDone && (
-                <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-white/5 blur-2xl" />
-              )}
-              <div className="relative flex items-center gap-4">
-                <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl text-2xl ${
-                  tournamentDone ? "bg-primary/10" : "bg-white/15"
-                }`}>
-                  {tournamentDone ? <CheckCircle2 className="w-6 h-6 text-primary" /> : <Trophy className="w-6 h-6 text-figb" />}
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <h2 className={`text-lg font-semibold ${tournamentDone ? "text-primary" : "text-white"}`}>{t("Torneo Settimanale")}</h2>
-                    {!tournamentDone && (
-                      <Badge className="bg-white/15 text-white/90 text-[12px] font-bold border-0">
-                        +150 {profile.xpLabel}
-                      </Badge>
-                    )}
-                  </div>
-                  <p className={`text-sm ${tournamentDone ? "text-primary/60" : "text-white/70"}`}>
-                    {tournamentDone
-                      ? "Torneo completato! Nuove mani la prossima settimana."
-                      : "5 mani, stessa sfida per tutti. Entra in classifica!"}
-                  </p>
-                </div>
-                <svg
-                  className={`h-6 w-6 shrink-0 ${tournamentDone ? "text-primary/60" : "text-white/60"}`}
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2.5}
-                >
-                  <polyline points="9,6 15,12 9,18" />
-                </svg>
-              </div>
-            </div>
-          </Link>
-        </motion.div>
-
-        {/* Sfida IMP - prominent card */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.13 }}
-          className="mt-4"
-        >
-          <Link href="/amici" className="block" aria-label={t("Sfida IMP: sfida un amico a 1, 4 o 8 mani con punteggio IMP")}>
-            <div className="relative overflow-hidden rounded-3xl p-5 cursor-pointer transition-all hover:shadow-xl bg-gradient-to-br from-figb-dark to-figb">
-              <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-white/5 blur-2xl" />
-              <div className="relative flex items-center gap-4">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/15 text-2xl">
-                  <Swords className="w-6 h-6 text-figb" />
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <h2 className="text-lg font-semibold text-white">{t("Sfida IMP")}</h2>
-                  </div>
-                  <p className="text-sm text-white/70">{t("Sfida un amico a 1, 4 o 8 mani con punteggio IMP")}</p>
-                </div>
-                <svg
-                  className="h-6 w-6 shrink-0 text-white/60"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2.5}
-                >
-                  <polyline points="9,6 15,12 9,18" />
-                </svg>
-              </div>
-            </div>
-          </Link>
-        </motion.div>
-
-        {/* Mini-Games Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.16 }}
-          className="mt-6"
-        >
-          <div className="flex items-center gap-2 mb-3">
-            <h2 className="text-lg font-semibold text-foreground font-display">{t("Pratica")}</h2>
-            <Badge className="bg-primary/10 text-primary text-[12px] font-bold border-0">
-              allenati su una mossa
-            </Badge>
-          </div>
-          <div className="space-y-2.5">
-            {/* Mano del Giorno */}
-            <Link href="/gioca/mano-del-giorno" className="block" aria-label={t("Mano del Giorno: una mano al giorno, uguale per tutti")}>
-              <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
-                  <CalendarDays className="w-6 h-6 text-figb" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground text-[15px]">{t("Mano del Giorno")}</h3>
-                  <p className="text-[12px] text-muted-foreground mt-0.5">{t("Una mano al giorno, uguale per tutti. Classifica!")}</p>
-                </div>
-                <div className="flex flex-col items-end gap-1 shrink-0">
-                  <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
-                </div>
-              </div>
-            </Link>
-
-            {/* Quiz Lampo */}
-            <Link href="/gioca/quiz-lampo" className="block" aria-label={t("Quiz Lampo: raffica di domande, 30 secondi")}>
-              <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
-                  <Zap className="w-6 h-6 text-figb" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground text-[15px]">{t("Quiz Lampo")}</h3>
-                  <p className="text-[12px] text-muted-foreground mt-0.5">{t("Raffica di domande, 30 secondi! Combo multiplier")}</p>
-                </div>
-                <div className="flex flex-col items-end gap-1 shrink-0">
-                  <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
-                </div>
-              </div>
-            </Link>
-
-            {/* Quante prese — mani generate, risposta dal double dummy */}
-            <Link href="/gioca/quiz-prese" className="block" aria-label={t("Quante prese: conta le prese di Nord-Sud")}>
-              <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
-                  <Calculator className="w-6 h-6 text-figb" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground text-[15px]">{t("Quante prese?")}</h3>
-                  <p className="text-[12px] text-muted-foreground mt-0.5">{t("Vedi tutte le mani e conta le prese di Nord-Sud")}</p>
-                </div>
-                <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[12px] font-bold text-foreground bg-gold/25 rounded-full px-2 py-0.5">{t("Nuovo")}</span>
-                  <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
-                </div>
-              </div>
-            </Link>
-
-            {/* Cosa apri — licita su mani generate, risposta dedotta dalla mano */}
-            <Link href="/gioca/cosa-apri" className="block" aria-label={t("Cosa apri: scegli l'apertura giusta")}>
-              <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
-                  <Gavel className="w-6 h-6 text-figb" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground text-[15px]">{t("Cosa apri?")}</h3>
-                  <p className="text-[12px] text-muted-foreground mt-0.5">{t("Mani sempre nuove: scegli l'apertura giusta")}</p>
-                </div>
-                <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[12px] font-bold text-foreground bg-gold/25 rounded-full px-2 py-0.5">{t("Nuovo")}</span>
-                  <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
-                </div>
-              </div>
-            </Link>
-
-            {/* Che contratto giocate — valutazione della mano, metro = double dummy */}
-            <Link href="/gioca/quale-contratto" className="block" aria-label={t("Che contratto giocate: scegli fin dove arrivare")}>
-              <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
-                  <Target className="w-6 h-6 text-figb" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground text-[15px]">{t("Che contratto giocate?")}</h3>
-                  <p className="text-[12px] text-muted-foreground mt-0.5">{t("Vedi le due mani: fin dove potete arrivare?")}</p>
-                </div>
-                <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[12px] font-bold text-foreground bg-gold/25 rounded-full px-2 py-0.5">{t("Nuovo")}</span>
-                  <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
-                </div>
-              </div>
-            </Link>
-
-            {/* Licita e vediamo — dichiari vedendo solo la tua mano, voto sul par */}
-            <Link href="/gioca/licita" className="block" aria-label={t("Licita e vediamo: dichiara e ricevi le stelle")}>
-              <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
-                  <Gavel className="w-6 h-6 text-figb" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground text-[15px]">{t("Licita e vediamo")}</h3>
-                  <p className="text-[12px] text-muted-foreground mt-0.5">{t("Vedi solo la tua mano: dichiara col compagno e prendi le stelle")}</p>
-                </div>
-                <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[12px] font-bold text-foreground bg-gold/25 rounded-full px-2 py-0.5">{t("Nuovo")}</span>
-                  <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
-                </div>
-              </div>
-            </Link>
-
-            {/* Licita con un amico — asincrona, avversari BEN */}
-            <Link href="/gioca/licita-amico" className="block" aria-label={t("Licita con un amico")}>
-              <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
-                  <Users className="w-6 h-6 text-figb" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground text-[15px]">{t("Licita con un amico")}</h3>
-                  <p className="text-[12px] text-muted-foreground mt-0.5">{t("Ognuno vede la sua mano e dichiara quando può")}</p>
-                </div>
-                <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[12px] font-bold text-foreground bg-gold/25 rounded-full px-2 py-0.5">{t("Nuovo")}</span>
-                  <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
-                </div>
-              </div>
-            </Link>
-
-            {/* Tornei di licita — stesse smazzate per tutti, con classifica */}
-            <Link href="/gioca/torneo-licita" className="block" aria-label={t("Tornei di licita con classifica")}>
-              <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gold/15 text-gold">
-                  <Trophy className="w-6 h-6" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground text-[15px]">{t("Tornei di licita")}</h3>
-                  <p className="text-[12px] text-muted-foreground mt-0.5">8 mani al giorno, 24 a settimana: stesse smazzate per tutti</p>
-                </div>
-                <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[12px] font-bold text-foreground bg-gold/25 rounded-full px-2 py-0.5">{t("Nuovo")}</span>
-                  <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
-                </div>
-              </div>
-            </Link>
-
-            {/* Sfida 2 contro 2 — due coppie sulle stesse smazzate */}
-            <Link href="/gioca/sfida-coppie" className="block" aria-label={t("Sfida 2 contro 2 fra due coppie")}>
-              <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
-                  <Swords className="w-6 h-6 text-figb" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground text-[15px]">{t("Sfida 2 contro 2")}</h3>
-                  <p className="text-[12px] text-muted-foreground mt-0.5">{t("Voi due contro un'altra coppia, sulle stesse smazzate")}</p>
-                </div>
-                <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[12px] font-bold text-foreground bg-gold/25 rounded-full px-2 py-0.5">{t("Nuovo")}</span>
-                  <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
-                </div>
-              </div>
-            </Link>
-
-            {/* Trova l'Errore */}
-            <Link href="/gioca/trova-errore" className="block" aria-label={t("Trova l'Errore: trova l'errore nella dichiarazione o giocata")}>
-              <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
-                  <Search className="w-6 h-6 text-figb" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground text-[15px]">{t("Trova l'Errore")}</h3>
-                  <p className="text-[12px] text-muted-foreground mt-0.5">{t("Trova l'errore nella dichiarazione o giocata")}</p>
-                </div>
-                <div className="flex flex-col items-end gap-1 shrink-0">
-                  <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
-                </div>
-              </div>
-            </Link>
-
-            {/* Impasse o Drop */}
-            <Link href="/gioca/impasse" className="block" aria-label={t("Impasse o Drop: decidi in 5 secondi")}>
-              <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
-                  <Target className="w-6 h-6 text-figb" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground text-[15px]">{t("Impasse o Drop?")}</h3>
-                  <p className="text-[12px] text-muted-foreground mt-0.5">{t("Decidi in 5 secondi: impasse o caduta?")}</p>
-                </div>
-                <div className="flex flex-col items-end gap-1 shrink-0">
-                  <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
-                </div>
-              </div>
-            </Link>
-
-            {/* Conta Veloce */}
-            <Link href="/gioca/conta-veloce" className="block" aria-label={t("Conta Veloce: conta i punti onore a tempo")}>
-              <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
-                  <Hash className="w-6 h-6 text-figb" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground text-[15px]">{t("Conta Veloce")}</h3>
-                  <p className="text-[12px] text-muted-foreground mt-0.5">{t("Conta i Punti Onore a tempo! Quanto sei veloce?")}</p>
-                </div>
-                <div className="flex flex-col items-end gap-1 shrink-0">
-                  <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
-                </div>
-              </div>
-            </Link>
-
-            {/* Segnali in Difesa */}
-            <Link href="/gioca/segnali" className="block" aria-label={t("Segnali in Difesa: dai e leggi i segnali del compagno")}>
-              <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
-                  <Radio className="w-6 h-6 text-figb" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground text-[15px]">{t("Segnali in Difesa")}</h3>
-                  <p className="text-[12px] text-muted-foreground mt-0.5">{t("In difesa si parla con le carte: dai e leggi i segnali")}</p>
-                </div>
-                <div className="flex flex-col items-end gap-1 shrink-0">
-                  <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
-                </div>
-              </div>
-            </Link>
-
-            {/* Dichiara! */}
-            <Link href="/gioca/dichiara" className="block" aria-label={t("Dichiara: scegli l'apertura giusta per ogni mano")}>
-              <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
-                  <Megaphone className="w-6 h-6 text-figb" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground text-[15px]">{t("Dichiara!")}</h3>
-                  <p className="text-[12px] text-muted-foreground mt-0.5">{t("Scegli l'apertura giusta per ogni mano")}</p>
-                </div>
-                <div className="flex flex-col items-end gap-1 shrink-0">
-                  <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
-                </div>
-              </div>
-            </Link>
-
-            {/* Pratica Licita */}
-            <Link href="/gioca/pratica-licita" className="block" aria-label={t("Pratica Licita: esercitati nella dichiarazione")}>
-              <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
-                  <MessageCircle className="w-6 h-6 text-figb" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground text-[15px]">{t("Pratica Licita")}</h3>
-                  <p className="text-[12px] text-muted-foreground mt-0.5">{t("Esercitati nella dichiarazione: Texas, Stayman e altro")}</p>
-                </div>
-                <div className="flex flex-col items-end gap-1 shrink-0">
-                  <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
-                </div>
-              </div>
-            </Link>
-
-            {/* Memory Bridge */}
-            <Link href="/gioca/memory" className="block" aria-label={t("Memory Bridge: abbina carte e concetti")}>
-              <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
-                  <Brain className="w-6 h-6 text-figb" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground text-[15px]">{t("Memory Bridge")}</h3>
-                  <p className="text-[12px] text-muted-foreground mt-0.5">{t("Abbina carte e concetti. Allena la memoria!")}</p>
-                </div>
-                <div className="flex flex-col items-end gap-1 shrink-0">
-                  <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
-                </div>
-              </div>
-            </Link>
-
-            {/* Sfida un Amico */}
-            <Link href="/gioca/sfida-amico" className="block" aria-label={t("Sfida un Amico: gioca la stessa mano e confronta i risultati")}>
-              <div className="card-clean card-interactive rounded-2xl bg-card p-4 cursor-pointer flex items-center gap-4">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-figb/10 text-figb">
-                  <Swords className="w-6 h-6 text-figb" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground text-[15px]">{t("Sfida un Amico")}</h3>
-                  <p className="text-[12px] text-muted-foreground mt-0.5">{t("Gioca la stessa mano e confronta i risultati")}</p>
-                </div>
-                <div className="flex flex-col items-end gap-1 shrink-0">
-                  <svg className="h-5 w-5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><polyline points="9,6 15,12 9,18"/></svg>
-                </div>
-              </div>
-            </Link>
-
-          </div>
-        </motion.div>
-
-        <h2 className="mb-3 mt-7 text-xs font-bold uppercase tracking-wider text-muted-foreground">{t("Gioco libero")}</h2>
-
-        {/* Two-column cards */}
-        <div className="grid grid-cols-2 gap-3 mt-6">
-          {/* Pratica Libera */}
-          <motion.div
-            initial={{ opacity: 0, x: -16 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.25 }}
-          >
-            <Link href={`/gioca/smazzata?random=${randomIdx}`} className="block" aria-label={t("Pratica Libera: gioca una mano casuale")}>
-              <div className="card-clean card-interactive rounded-2xl bg-card p-5 cursor-pointer h-full">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-figb/10 mb-3">
-                  <Spade className="w-6 h-6 text-figb" />
-                </div>
-                <h3 className="font-semibold text-foreground text-[15px]">{t("Pratica Libera")}</h3>
-                <p className="text-[12px] text-muted-foreground mt-1 leading-snug">
-                  {t("Gioca una mano casuale dalle {n} disponibili", { n: allSmazzate.length })}
-                </p>
-                <div className="mt-3 flex items-center gap-1.5">
-                </div>
-              </div>
-            </Link>
-          </motion.div>
-
-          {/* Sfoglia Smazzate */}
-          <motion.div
-            initial={{ opacity: 0, x: 16 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3 }}
-          >
-            <Link href="/gioca/smazzata" className="block" aria-label={t("Tutte le Smazzate: sfoglia e gioca le mani per lezione")}>
-              <div className="card-clean card-interactive rounded-2xl bg-card p-5 cursor-pointer h-full">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-50 dark:bg-amber-950/40 mb-3">
-                  <BookOpen className="w-6 h-6 text-amber-600 dark:text-amber-400" />
-                </div>
-                <h3 className="font-semibold text-foreground text-[15px]">{t("Tutte le Smazzate")}</h3>
-                <p className="text-[12px] text-muted-foreground mt-1 leading-snug">
-                  {t("Sfoglia e gioca le {n} mani per lezione", { n: allSmazzate.length })}
-                </p>
-                <div className="mt-3 flex items-center gap-1.5">
-                  <span className="text-[12px] font-bold text-amber-700 bg-amber-50 dark:text-amber-400 dark:bg-amber-950/40 rounded-full px-2 py-0.5">
-                    {allSmazzate.length} mani
-                  </span>
-                </div>
-              </div>
-            </Link>
-          </motion.div>
-
-          {/* Sfida via Link */}
-          <motion.div
-            initial={{ opacity: 0, x: -16 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.32 }}
-          >
-            <Link href="/gioca/sfida-link" className="block" aria-label={t("Sfida via Link: condividi una mano e sfida un amico")}>
-              <div className="card-clean card-interactive rounded-2xl bg-card p-5 cursor-pointer h-full">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-figb/10 mb-3">
-                  <Link2 className="w-6 h-6 text-figb" />
-                </div>
-                <h3 className="font-semibold text-foreground text-[15px]">{t("Sfida via Link")}</h3>
-                <p className="text-[12px] text-muted-foreground mt-1 leading-snug">{t("Condividi un link, giocate la stessa mano e confrontate!")}</p>
-                <div className="mt-3 flex items-center gap-1.5">
-                </div>
-              </div>
-            </Link>
-          </motion.div>
-
-          {/* Analisi AI */}
-          <motion.div
-            initial={{ opacity: 0, x: 16 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.34 }}
-          >
-            <Link href="/gioca/analisi" className="block" aria-label={t("Analisi AI: rivedi le tue mani con commenti dell'intelligenza artificiale")}>
-              <div className="card-clean card-interactive rounded-2xl bg-card p-5 cursor-pointer h-full">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50 dark:bg-emerald-950/40 mb-3">
-                  <BarChart3 className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
-                </div>
-                <h3 className="font-semibold text-foreground text-[15px]">{t("Analisi AI")}</h3>
-                <p className="text-[12px] text-muted-foreground mt-1 leading-snug">
-                  {t("Rivedi le tue mani con commenti dell'AI carta per carta")}
-                </p>
-                <div className="mt-3 flex items-center gap-1.5">
-                  <span className="text-[12px] font-bold text-emerald-700 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-950/40 rounded-full px-2 py-0.5">{t("Post-partita")}</span>
-                </div>
-              </div>
-            </Link>
-          </motion.div>
-
-          {/* Glossario */}
-          <motion.div
-            initial={{ opacity: 0, x: -16 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.36 }}
-          >
-            <Link href="/glossario" className="block" aria-label={t("Glossario: impara tutti i termini del bridge")}>
-              <div className="card-clean card-interactive rounded-2xl bg-card p-5 cursor-pointer h-full">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-figb/10 mb-3">
-                  <span className="text-xl">📖</span>
-                </div>
-                <h3 className="font-semibold text-foreground text-[15px]">{t("Glossario")}</h3>
-                <p className="text-[12px] text-muted-foreground mt-1 leading-snug">{t("Impara tutti i termini del bridge")}</p>
-                <div className="mt-3 flex items-center gap-1.5">
-                  <span className="text-[12px] font-bold text-muted-foreground bg-muted rounded-full px-2 py-0.5">
-                    A-Z
-                  </span>
-                </div>
-              </div>
-            </Link>
-          </motion.div>
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+        <ManoDelGiorno pool={playableSmazzate} />
+        <div className="grid content-start gap-4">
+          {onboarded && (
+            <Tessera voce={{ href: "/gioca/mano-guidata", Icona: Target, titolo: t("Mano Guidata"), descrizione: t("Pratica passo-passo con suggerimenti"), etichetta: `+35 ${xp}` }} />
+          )}
+          <Tessera voce={{ href: "/gioca/minibridge", Icona: GraduationCap, titolo: t("MiniBridge"), descrizione: t("Gioca senza licita: conta i punti e scegli il contratto"), etichetta: t("Beta") }} />
         </div>
+      </div>
 
-        {/* Maestro Fiori tip */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.55 }}
-          className="mt-4 mb-6"
-        >
-          <div className="card-clean rounded-2xl bg-card p-5">
-            <div className="flex items-start gap-3.5">
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-figb text-white font-bold text-sm shadow-md shadow-figb/20">
-                M
-              </div>
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-1.5">
-                  <p className="font-bold text-sm text-foreground">{t("Maestro Fiori")}</p>
-                  <Badge className="bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400 text-[12px] font-bold border-0">{t("Consiglio")}</Badge>
-                </div>
-                <p className="text-[13px] text-muted-foreground leading-relaxed">
-                  {t("La pratica rende perfetti! Gioca le mani delle lezioni che hai completato per consolidare i concetti. Prova i mini-giochi per allenare velocità e memoria!")}
-                </p>
-              </div>
-            </div>
-          </div>
-        </motion.div>
+      <Gruppo titolo={t("Sfide")} voci={sfide} />
+      <Gruppo titolo={t("Gioco della carta")} voci={carta} />
+      <Gruppo titolo={t("Licita")} voci={licita} />
+      <Gruppo titolo={t("Gioco libero")} voci={libero} />
+      <Gruppo titolo={t("Con gli amici")} voci={amici} />
 
-        {/* Qui e non in un cassetto: classifiche, amici e forum si cercano
-            quando si sta giocando, non quando si stanno cercando le
-            impostazioni. */}
+      {/* Qui e non in un cassetto: classifiche, amici e forum si cercano
+          quando si sta giocando, non quando si stanno cercando le
+          impostazioni. */}
+      <div className="mt-10">
         <CollegamentiSezione
           titolo="Con gli altri"
           voci={[
@@ -696,5 +160,102 @@ export default function GiocaPage() {
         />
       </div>
     </div>
+  );
+}
+
+/**
+ * La Mano del giorno, con le carte di Sud sul panno. È la stessa mano che la
+ * pagina della Mano del giorno sceglie (stessa funzione, stessa pool), così chi
+ * tocca «Gioca la mano» ritrova le carte che ha appena visto.
+ */
+function ManoDelGiorno({ pool }: { pool: Parameters<typeof getSmazzataForDate>[1] }) {
+  const t = useT();
+  const { lingua } = useLingua();
+  // La data si legge dopo il primo disegno: sul server sarebbe un altro giorno.
+  const [oggi, setOggi] = useState<string | null>(null);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- data locale letta dopo il mount: sul server il giorno può essere un altro, e il disegno non deve divergere
+    setOggi(getTodayString(Date.now()));
+  }, []);
+  const mano = useMemo(() => (oggi ? getSmazzataForDate(oggi, pool) : null), [oggi, pool]);
+  const contratto = mano ? contrattoLeggibile(mano.contract) : "";
+  const contrattoMostrato = lingua === "en" ? contratto.replace("SA", "NT") : contratto;
+  const giorno = oggi
+    ? new Date(`${oggi}T12:00:00`).toLocaleDateString(lingua === "en" ? "en-US" : "it-IT", { weekday: "long", day: "numeric", month: "long" })
+    : "";
+  const posti: Record<string, string> = { north: t("Nord"), south: t("Sud"), east: t("Est"), west: t("Ovest") };
+
+  return (
+    <section className="grid overflow-hidden rounded-2xl border border-border bg-card sm:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
+      <div className="panno-bg flex min-h-52 flex-col items-center justify-center gap-3 px-5 py-6 text-white">
+        <p className="text-xs font-semibold uppercase tracking-wider text-white/75">{giorno}</p>
+        {mano ? (
+          <>
+            <p className="font-display text-5xl font-extrabold tabular-nums" aria-label={t("Contratto {c}", { c: contrattoMostrato })}>{contrattoMostrato}</p>
+            <Ventaglio carte={ordinaManoAlternata(mano.hands.south)} larghezza={44} etichetta={t("La tua mano (Sud)")} />
+          </>
+        ) : (
+          <div className="h-32" aria-hidden="true" />
+        )}
+      </div>
+      <div className="flex flex-col gap-2 p-5">
+        <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          <CalendarDays className="size-4" aria-hidden="true" />
+          {t("Mano del Giorno")}
+        </p>
+        <h2 className="font-display text-xl font-bold text-balance">{mano?.title ?? t("Una mano al giorno, uguale per tutti")}</h2>
+        <p className="text-sm text-muted-foreground text-pretty">
+          {mano ? t("Dichiarante {posto}. Una mano al giorno, uguale per tutti, con la classifica.", { posto: posti[mano.declarer] ?? mano.declarer }) : t("Una mano al giorno, uguale per tutti. Classifica!")}
+        </p>
+        <Link
+          href="/gioca/mano-del-giorno"
+          className="mt-auto inline-flex min-h-12 items-center justify-center gap-2 self-start rounded-xl bg-primary px-5 font-bold text-primary-foreground transition-colors hover:bg-primary/90"
+        >
+          {t("Gioca la mano")}
+          <ChevronRight className="size-5" aria-hidden="true" />
+        </Link>
+      </div>
+    </section>
+  );
+}
+
+function Gruppo({ titolo, voci }: { titolo: string; voci: Voce[] }) {
+  return (
+    <section className="mt-10">
+      <h2 className="mb-3 font-display text-lg font-bold">{titolo}</h2>
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {voci.map((v) => <Tessera key={v.href} voce={v} />)}
+      </div>
+    </section>
+  );
+}
+
+function Tessera({ voce }: { voce: Voce }) {
+  const t = useT();
+  const { Icona } = voce;
+  return (
+    <Link
+      href={voce.href}
+      className="group flex min-h-20 items-start gap-3 rounded-xl border border-border bg-card p-4 transition-colors hover:border-primary/40 hover:bg-primary/[0.03]"
+    >
+      <span
+        className={`flex size-10 shrink-0 items-center justify-center rounded-lg ${voce.fatta ? "bg-emerald-600/10 text-emerald-700 dark:text-emerald-400" : "bg-primary/10 text-primary"}`}
+        aria-hidden="true"
+      >
+        <Icona className="size-5" />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
+          <span className="font-semibold text-foreground">{voce.titolo}</span>
+          {voce.nuovo && <span className="rounded-full bg-gold/25 px-2 py-0.5 text-xs font-bold text-foreground">{t("Nuovo")}</span>}
+        </span>
+        <span className="mt-0.5 block text-sm text-muted-foreground text-pretty">{voce.descrizione}</span>
+      </span>
+      {voce.etichetta && (
+        <span className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-bold tabular-nums ${voce.fatta ? "bg-emerald-600/10 text-emerald-700 dark:text-emerald-400" : "bg-muted text-muted-foreground"}`}>
+          {voce.etichetta}
+        </span>
+      )}
+    </Link>
   );
 }
