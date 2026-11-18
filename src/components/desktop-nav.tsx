@@ -11,6 +11,8 @@ import { BookOpen, GraduationCap } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { STRUMENTI_LEZIONE } from "@/components/istruttori/strumenti-lezione";
 import { useEnrolledClasses } from "@/store/use-classes-store";
+import { homeDi } from "@/lib/lingua";
+import { LogOut } from "lucide-react";
 
 /**
  * L'area dell'insegnante, in cima al menù quando chi è collegato insegna.
@@ -159,7 +161,13 @@ export function DesktopNav({ variante = "barra" }: { variante?: "barra" | "panne
   const pathname = usePercorso();
   const t = useT();
   const pendingFriends = usePendingFriendRequests();
-  const { profile, user, loading: authLoading } = useSharedAuth();
+  const { profile, user, loading: authLoading, signOut } = useSharedAuth();
+  const nome = profile?.display_name?.trim() || user?.email || "";
+  async function esci() {
+    await signOut();
+    try { localStorage.removeItem("bq_guest"); } catch {}
+    window.location.href = homeDi(window.location.pathname);
+  }
   const { classes: iscrizioni } = useEnrolledClasses(!authLoading && !!user);
   const vociPrincipali = iscrizioni.length > 0 ? [...primaryNav.slice(0, 3), CLASSE, primaryNav[3]] : primaryNav;
   const insegna = profile?.role === "instructor" || profile?.role === "admin";
@@ -209,7 +217,7 @@ export function DesktopNav({ variante = "barra" }: { variante?: "barra" | "panne
       className={
         variante === "pannello"
           ? "flex flex-col w-full h-full bg-card"
-          : "hidden lg:flex flex-col w-[220px] shrink-0 h-screen sticky top-0 bg-card border-r border-border"
+          : "hidden lg:flex flex-col w-60 shrink-0 h-dvh sticky top-0 bg-card border-r border-border"
       }
       aria-label={t("Navigazione principale")}
     >
@@ -285,6 +293,25 @@ export function DesktopNav({ variante = "barra" }: { variante?: "barra" | "panne
             <span>{t("Impostazioni")}</span>
           </div>
         </Link>
+        {/* Chi è dentro e «Esci», in fondo alla barra: stavano nella colonna
+            destra, che non c'è più (18/11/2026). */}
+        {user && (
+          <div className="mt-2 flex items-center gap-3 border-t border-border px-2 pt-3">
+            <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary" aria-hidden="true">
+              {(nome.charAt(0) || "?").toUpperCase()}
+            </span>
+            <span className="min-w-0 flex-1 truncate text-sm font-semibold text-foreground">{nome}</span>
+            <button
+              type="button"
+              onClick={() => void esci()}
+              aria-label={t("Esci dal tuo account")}
+              title={t("Esci dal tuo account")}
+              className="flex size-9 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            >
+              <LogOut className="size-4" aria-hidden="true" />
+            </button>
+          </div>
+        )}
       </div>
     </nav>
   );

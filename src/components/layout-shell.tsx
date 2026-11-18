@@ -6,7 +6,6 @@ import { usePercorso } from "@/hooks/use-lingua";
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { DesktopNav } from "@/components/desktop-nav";
-import { DesktopSidebar } from "@/components/desktop-sidebar";
 import { BottomNav } from "@/components/bottom-nav";
 import { apertaAgliOspiti } from "@/lib/rotte-ospite";
 import { useSupabaseSync } from "@/hooks/use-supabase-sync";
@@ -28,6 +27,7 @@ import { configureStatusBar } from "@/lib/native-bridge";
 import { IscrizioneInSospeso } from "@/components/iscrizione-in-sospeso";
 import { IntestazioneCorso } from "@/components/intestazione-corso";
 import { useModalitaCorso } from "@/hooks/use-modalita-corso";
+import { haLarghezzaLettura } from "@/lib/larghezza-lettura";
 
 // Overlay one-shot presenti nel layout condiviso (quindi in TUTTE le route) ma
 // invisibili al primo paint: caricarli staticamente costava a ogni pagina il
@@ -305,7 +305,12 @@ function LayoutShellInner({ children }: { children: React.ReactNode }) {
               contenuto su OGNI schermata — "4 CORSI" nella landing, il titolo
               "Pratica" su Gioca, "Completa il mondo precedente" su Lezioni. */}
           <main id="main-content" className="flex-1 pb-28 lg:pb-6">
-            {ritornoEContenuto}
+            {/* Sempre lo stesso div, cambia solo la classe: con due rami
+                diversi il contenuto cambierebbe posto nell'albero e React lo
+                rimonterebbe (vedi «UNA CORNICE SOLA» qui sopra). */}
+            <div className={(user || ospite) && haLarghezzaLettura(pathname) ? "mx-auto w-full lg:max-w-[1200px]" : "contents"}>
+              {ritornoEContenuto}
+            </div>
           </main>
           <div className="hidden lg:block">
             <SiteFooter />
@@ -313,12 +318,11 @@ function LayoutShellInner({ children }: { children: React.ReactNode }) {
           {(user || ospite) && <BottomNav />}
         </div>
 
-        {/* Right sidebar - desktop only */}
-        {!modalitaCorso && (
-          <div className="hidden lg:block px-6 pt-6">
-            <DesktopSidebar />
-          </div>
-        )}
+        {/* LA COLONNA DESTRA NON C'È PIÙ (18/11/2026). Ripeteva su ogni pagina
+            livello, streak, «Riprendi», Esci e il box FIGB: un quarto dello
+            schermo sempre uguale, che stringeva il contenuto vero. Livello e
+            streak vivono nel Profilo, «Esci» in fondo alla barra di sinistra,
+            il box FIGB nel piè di pagina. */}
       </div>
 
       {sovrapposti}

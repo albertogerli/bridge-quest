@@ -59,7 +59,7 @@ export function CompitoInEvidenza({
         <h2 className="mt-1 font-display text-2xl font-bold text-balance">{assignment.title}</h2>
         <Ventaglio carte={carte} />
       </div>
-      <div className="grid gap-4 p-5">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-4 p-5">
         {totale > 0 && (
           <div className="grid gap-1.5">
             <div className="h-2 overflow-hidden rounded-full bg-muted">

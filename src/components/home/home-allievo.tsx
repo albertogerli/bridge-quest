@@ -167,9 +167,12 @@ export function HomeAllievo({ nome, onVaiAllaBacheca }: { nome: string | null; o
         </p>
       </header>
 
-      <div className="grid items-start gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:gap-10">
+      {/* minmax(0, …): una colonna di griglia senza minimo si allarga quanto la
+          sua parola più lunga, e sul telefono la home usciva di 140 pixel dallo
+          schermo (titoli dei compiti e del corso tagliati a destra). */}
+      <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-10">
         {/* ── Da fare adesso ─────────────────────────────────────────────── */}
-        <div className="grid gap-4">
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-4">
           <AvvisoInsegnante compiti={compiti} novita={novita} classi={piuCorsi ? attivi : []} />
           {!primo ? (
             <section className="rounded-3xl bg-card p-6 shadow-sm">
@@ -220,7 +223,7 @@ export function HomeAllievo({ nome, onVaiAllaBacheca }: { nome: string | null; o
           )}
         </div>
 
-        <div className="grid gap-8">
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-8">
           {!piuCorsi && attivi[0] && <BenvenutoCorso classe={attivi[0]} />}
 
           {/* ── Il percorso, un blocco per corso ───────────────────────── */}

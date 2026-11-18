@@ -3,8 +3,6 @@
 import { useSyncExternalStore } from "react";
 import { usePercorso } from "@/hooks/use-lingua";
 import { useSharedAuth } from "@/contexts/auth-provider";
-import { useEnrolledClasses } from "@/store/use-classes-store";
-import { corsiAttivi } from "@/lib/percorso-allievo";
 
 /**
  * La «modalità corso» della cornice: niente colonne laterali.
@@ -21,6 +19,14 @@ import { corsiAttivi } from "@/lib/percorso-allievo";
  * iscritto ad almeno una classe non archiviata — per tutti gli altri restano
  * quelle di sempre. Il materiale l'ha chiesto Trevissoi il 02/11/2026: dagli
  * esercizi «ricompaiono le bande laterali».
+ *
+ * SOLO PER CHI INSEGNA, dal 18/11/2026. Per l'allievo iscritto a un corso la
+ * modalità faceva più danni del rumore che toglieva: Home, Classe ed Esercizi
+ * avevano la barra in alto con il menù a panino, Percorso, Gioca e Profilo la
+ * barra laterale — due siti diversi per la stessa persona, a ogni clic. La
+ * richiesta di Trevissoi riguardava la colonna DESTRA (livello, streak, box
+ * FIGB), e quella non c'è più per nessuno: l'allievo ha ovunque la stessa
+ * barra a sinistra e il contenuto a tutta larghezza.
  */
 export function useModalitaCorso(): boolean {
   const percorso = usePercorso();
@@ -28,17 +34,16 @@ export function useModalitaCorso(): boolean {
   const sullaHome = percorso === "/";
   const sulMateriale = percorso.startsWith("/dispense") || percorso.startsWith("/esercizi");
   const dallaClasse = useSyncExternalStore(ascoltaIndirizzo, haClasse, () => false);
-  // Le classi servono solo per decidere la home e il materiale: altrove non si chiedono.
-  const { classes } = useEnrolledClasses(Boolean(user) && (sullaHome || sulMateriale));
   if (!user) return false;
+  const insegna = profile?.role === "instructor" || profile?.role === "admin";
+  // Chi segue un corso ha la cornice di tutti: vedi sopra, 18/11/2026.
+  if (!insegna) return false;
   if (percorso.startsWith("/istruttori") || percorso.startsWith("/classi")) return true;
   // Le dispense aperte DA UNA CLASSE sono materiale del corso: stessa cornice
   // della classe, non quella del percorso generale con livello e streak.
   if (percorso.startsWith("/dispense") && dallaClasse) return true;
   if (!sullaHome && !sulMateriale) return false;
-  const insegna = profile?.role === "instructor" || profile?.role === "admin";
-  // Un corso archiviato è finito: chi segue solo quello torna alla home di sempre.
-  return insegna || corsiAttivi(classes).length > 0;
+  return true;
 }
 
 /**

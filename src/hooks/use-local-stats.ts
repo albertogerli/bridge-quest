@@ -146,7 +146,7 @@ export function useLocalStats() {
 /**
  * Backwards-compat alias — `useStats` was a near-duplicate of
  * `useLocalStats` that lived in `use-stats.ts`. The hook has been merged;
- * this export keeps existing consumers (e.g. `desktop-sidebar.tsx`)
+ * this export keeps existing consumers
  * working without churn while the codebase converges on one name.
  */
 export const useStats = useLocalStats;

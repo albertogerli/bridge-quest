@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Bricolage_Grotesque } from "next/font/google";
+import { Atkinson_Hyperlegible_Next, Bricolage_Grotesque } from "next/font/google";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import { ToasterLazy } from "@/components/toaster-lazy";
@@ -14,10 +14,21 @@ import { ServiceWorkerRegistration } from "@/components/service-worker-registrat
 import { SaltaAlContenuto } from "@/components/salta-al-contenuto";
 import "./globals.css";
 
-const inter = Inter({
+/**
+ * Il testo è in Atkinson Hyperlegible Next (18/11/2026, al posto di Inter):
+ * disegnato dal Braille Institute per chi legge con fatica, e chi gioca a
+ * bridge ha in gran parte più di sessant'anni. Distingue 1, l e I, 0 e O,
+ * che nelle mani e nei punteggi contano. La variabile CSS resta quella di
+ * prima, così niente altro cambia.
+ */
+const testo = Atkinson_Hyperlegible_Next({
   variable: "--font-geist-sans",
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
   display: "swap",
+  // next/font non ha le metriche di questo carattere per il ripiego
+  // automatico e lo segnala come errore a ogni pagina: il ripiego si dà a mano.
+  adjustFontFallback: false,
+  fallback: ["Segoe UI", "system-ui", "-apple-system", "sans-serif"],
 });
 
 const bricolage = Bricolage_Grotesque({
@@ -225,7 +236,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${inter.variable} ${bricolage.variable} font-sans antialiased`} suppressHydrationWarning>
+      <body className={`${testo.variable} ${bricolage.variable} font-sans antialiased`} suppressHydrationWarning>
         {/* Allinea `lang` all'indirizzo: il layout è statico e da solo non
             saprebbe se la pagina è italiana o inglese. Non disegna niente. */}
         <LinguaDelDocumento />
