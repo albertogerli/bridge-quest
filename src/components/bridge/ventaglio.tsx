@@ -25,7 +25,7 @@ export function Ventaglio({
   const sovrapposizione = Math.round(larghezza * 0.6);
   return (
     <div
-      className="flex justify-center overflow-hidden px-4 pt-3"
+      className="flex justify-center overflow-hidden px-8 pt-3"
       style={{ height: Math.round(larghezza * 1.45) + 24 }}
       aria-hidden={!carte}
       aria-label={carte ? etichetta : undefined}
@@ -35,7 +35,7 @@ export function Ventaglio({
         <div
           key={`${c.suit}${c.rank}`}
           className="origin-[50%_150%]"
-          style={{ marginLeft: i === 0 ? 0 : -sovrapposizione, transform: `rotate(${(i - (carte.length - 1) / 2) * 3}deg)` }}
+          style={{ marginLeft: i === 0 ? 0 : -sovrapposizione, transform: `rotate(${(i - (carte.length - 1) / 2) * 2.5}deg)` }}
         >
           <PlayingCard card={c} cardWidth={larghezza} angolo noHover />
         </div>

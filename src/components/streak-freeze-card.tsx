@@ -103,20 +103,11 @@ export function StreakFreezeCard({ streak, xp, onFreeze }: StreakFreezeCardProps
 
   return (
     <motion.div
-      className="card-clean rounded-2xl p-6 relative overflow-hidden"
+      className="relative overflow-hidden rounded-2xl border border-border bg-card p-6"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
     >
-      {/* Gradient border effect */}
-      <div
-        className={`absolute inset-0 rounded-2xl opacity-20 blur-xl transition-colors duration-500 ${
-          isFrozen
-            ? "bg-gradient-to-br from-blue-400 via-cyan-400 to-blue-500"
-            : "bg-gradient-to-br from-orange-400 via-amber-400 to-orange-500"
-        }`}
-      />
-
       <div className="relative z-10">
         {/* Header */}
         <div className="flex items-center justify-between mb-4">

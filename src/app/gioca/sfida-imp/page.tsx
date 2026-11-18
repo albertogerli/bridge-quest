@@ -715,7 +715,7 @@ function SfidaIMPContent() {
               </div>
             </div>
             <FoglioMano
-              daSchermo="2xl"
+              daSchermo="xl"
               etichetta={
                 <span className="tabular-nums">
                   {contractDisplay(boardContract.contract)}
@@ -732,7 +732,7 @@ function SfidaIMPContent() {
             schermi larghi (la pagina ha anche la colonna destra del portale),
             prima lo apre la pillola. Nelle sfide solo l'ultima presa, come al tavolo.
           */}
-          <div className="grid items-start gap-4 2xl:grid-cols-[minmax(0,1fr)_18rem]">
+          <div className="grid items-start gap-4 xl:grid-cols-[minmax(0,1fr)_18rem]">
             <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }} className="relative w-full min-w-0">
             {hands ? (
               <BridgeTable ancora={declarer}
@@ -762,8 +762,8 @@ function SfidaIMPContent() {
             )}
             </motion.div>
 
-            <aside className="grid gap-4 2xl:sticky 2xl:top-4">
-              <div className="hidden overflow-hidden rounded-2xl border border-border bg-card 2xl:block">{pannello}</div>
+            <aside className="grid gap-4 xl:sticky xl:top-4">
+              <div className="hidden overflow-hidden rounded-2xl border border-border bg-card xl:block">{pannello}</div>
             </aside>
           </div>
 

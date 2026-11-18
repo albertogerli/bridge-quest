@@ -14,6 +14,7 @@ import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 import { CollegamentiSezione } from "@/components/collegamenti-sezione";
 import { Ventaglio } from "@/components/bridge/ventaglio";
 import { ordinaManoAlternata } from "@/lib/ordine-semi";
+import { toGamePosition } from "@/lib/bridge-engine";
 import { BarChart3, BookOpen, Brain, Calculator, CalendarDays, CheckCircle2, ChevronRight, Flame, Gavel, GraduationCap, Handshake, Hash, Link2, Megaphone, MessageCircle, MessagesSquare, Radio, Search, Spade, Swords, Target, Trophy, Users, Zap } from "lucide-react";
 
 /**
@@ -192,7 +193,7 @@ function ManoDelGiorno({ pool }: { pool: Parameters<typeof getSmazzataForDate>[1
         {mano ? (
           <>
             <p className="font-display text-5xl font-extrabold tabular-nums" aria-label={t("Contratto {c}", { c: contrattoMostrato })}>{contrattoMostrato}</p>
-            <Ventaglio carte={ordinaManoAlternata(mano.hands.south)} larghezza={44} etichetta={t("La tua mano (Sud)")} />
+            <Ventaglio carte={ordinaManoAlternata(mano.hands[toGamePosition("south", mano.declarer)])} larghezza={44} etichetta={t("La tua mano (Sud)")} />
           </>
         ) : (
           <div className="h-32" aria-hidden="true" />

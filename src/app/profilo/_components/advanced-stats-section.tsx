@@ -95,16 +95,16 @@ export function AdvancedStatsSection({
       {/* Bridge Wrapped link */}
       <Link
         href="/profilo/wrapped"
-        className="mt-3 w-full rounded-2xl bg-gradient-to-r from-gold-dark to-gold p-4 flex items-center gap-3 hover:shadow-lg transition-shadow"
+        className="mt-3 flex w-full items-center gap-3 rounded-2xl border border-border bg-card p-4 transition-colors hover:border-primary/40"
       >
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20">
-          <Sparkles className="w-5 h-5 text-white" />
+        <div className="flex size-10 items-center justify-center rounded-lg bg-gold/15 text-gold-dark dark:text-gold">
+          <Sparkles className="size-5" aria-hidden="true" />
         </div>
         <div className="flex-1">
-          <p className="text-sm font-bold text-white">{t("Bridge Wrapped")}</p>
-          <p className="text-[12px] text-white/70">{t("Le tue statistiche del mese")}</p>
+          <p className="font-semibold">{t("Bridge Wrapped")}</p>
+          <p className="text-sm text-muted-foreground">{t("Le tue statistiche del mese")}</p>
         </div>
-        <svg className="w-5 h-5 text-white/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><polyline points="9,6 15,12 9,18" /></svg>
+        <svg className="size-5 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true"><polyline points="9,6 15,12 9,18" /></svg>
       </Link>
     </motion.div>
   );

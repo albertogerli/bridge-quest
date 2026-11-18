@@ -3245,5 +3245,10 @@
   "Non ancora aperto": "Not open yet",
   "Si apre quando hai completato metà di «{mondo}».": "Opens when you have completed half of “{mondo}”.",
   "{fatti} di {totale} moduli": "{fatti} of {totale} modules",
-  "{n} mani pratiche disponibili": "{n} practice hands available"
+  "{n} mani pratiche disponibili": "{n} practice hands available",
+  "Livello {n} — {nome}": "Level {n} — {nome}",
+  "Prossimo livello: {nome}": "Next level: {nome}",
+  "{n} gg": "{n} d",
+  "Obiettivo: {n} prese": "Target: {n} tricks",
+  "Vulnerabilità: {v}": "Vulnerability: {v}"
 }

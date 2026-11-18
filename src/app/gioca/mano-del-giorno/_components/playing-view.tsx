@@ -111,7 +111,7 @@ export function PlayingView({
             <BenStatus available={game.benAvailable} aiLevel={game.aiLevel} />
           </span>
           <FoglioMano
-            daSchermo="2xl"
+            daSchermo="xl"
             etichetta={
               <span className="tabular-nums">
                 {contrattoLeggibile(smazzata.contract)}
@@ -156,7 +156,7 @@ export function PlayingView({
           pagina ha anche la colonna destra del portale: a lato del tavolo il
           pannello ci sta solo sugli schermi larghi; prima lo apre la pillola.
         */}
-        <div className="grid items-start gap-4 2xl:grid-cols-[minmax(0,1fr)_18rem]">
+        <div className="grid items-start gap-4 xl:grid-cols-[minmax(0,1fr)_18rem]">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -223,11 +223,11 @@ export function PlayingView({
             {game.phase === "playing" && <GameTutorial />}
           </motion.div>
 
-          <aside className="grid gap-4 2xl:sticky 2xl:top-4">
-            <div className="hidden overflow-hidden rounded-2xl border border-border bg-card 2xl:block">{pannello}</div>
+          <aside className="grid gap-4 xl:sticky xl:top-4">
+            <div className="hidden overflow-hidden rounded-2xl border border-border bg-card xl:block">{pannello}</div>
             {/* Prima di cominciare, finché il pannello non è affiancato (sotto 2xl), la licita si legge senza aprire il foglio. */}
             {smazzata.bidding && game.phase === "ready" && (
-              <div className="2xl:hidden">
+              <div className="xl:hidden">
                 <BiddingPanel bidding={smazzata.bidding} />
               </div>
             )}

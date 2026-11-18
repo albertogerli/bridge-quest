@@ -33,7 +33,7 @@ export function InviteFriendSection({
       transition={{ delay: 0.58 }}
       className="mb-6"
     >
-      <div className="rounded-2xl bg-gradient-to-r from-figb/5 to-indigo-50 dark:from-primary/10 dark:to-indigo-950/30 border-2 border-figb/20 dark:border-primary/30 shadow-sm p-5">
+      <div className="rounded-2xl border border-border bg-card p-5">
         <div className="flex items-center gap-3 mb-4">
           <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-figb text-white shadow-md shadow-figb/20">
             <UserPlus className="w-5 h-5" />

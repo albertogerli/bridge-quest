@@ -139,11 +139,13 @@ export function PannelloMano({ prese, presaInCorso, licita, intestazione, soloUl
  * Sul computer il pannello è già a lato, e la pillola resta solo da leggere.
  *
  * `daSchermo` è la larghezza da cui il pannello sta a lato: `lg` di norma,
- * `2xl` nelle pagine che hanno anche la colonna destra del portale. Le classi
- * sono scritte per intero perché Tailwind le trovi.
+ * `xl` nelle pagine con la barra sinistra del portale (era `2xl` finché c'era
+ * anche la colonna destra, tolta il 18/11/2026). Le classi sono scritte per
+ * intero perché Tailwind le trovi.
  */
 const CLASSI = {
   lg: { pillola: "lg:pointer-events-none lg:shadow-none", nascosto: "lg:hidden" },
+  xl: { pillola: "xl:pointer-events-none xl:shadow-none", nascosto: "xl:hidden" },
   "2xl": { pillola: "2xl:pointer-events-none 2xl:shadow-none", nascosto: "2xl:hidden" },
 } as const;
 

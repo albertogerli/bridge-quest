@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { toGamePosition } from "@/lib/bridge-engine";
@@ -10,7 +9,9 @@ import {
   formatVulnerability,
   positionLabelIt,
 } from "@/lib/daily-hand";
-import { HandFanPreview } from "./hand-fan-preview";
+import { Ventaglio } from "@/components/bridge/ventaglio";
+import { ordinaManoAlternata } from "@/lib/ordine-semi";
+import { useLingua } from "@/hooks/use-lingua";
 import { useT } from "@/contexts/traduzioni-provider";
 import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 
@@ -36,142 +37,65 @@ export function DailyHero({
   onPlay: () => void;
 }) {
   const t = useT();
+  const { lingua } = useLingua();
+  const contratto = contrattoLeggibile(todayHand.contract);
+  const sud = todayHand.hands[toGamePosition("south", todayHand.declarer)];
+  /*
+   * RIDISEGNATA IL 18/11/2026. Prima: un riquadro crema e arancio con due
+   * bagliori sfocati, la mano di Sud in un rettangolino a lato e un pulsante
+   * verde largo tutta la pagina. Adesso le carte stanno sul panno, grandi, e il
+   * pulsante è il blu di tutte le azioni principali del sito.
+   */
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.05 }}
-    >
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/40 dark:to-orange-950/30 border border-amber-200/60 dark:border-amber-900 p-6">
-        {/* Decorative circle */}
-        <div className="absolute -top-16 -right-16 h-48 w-48 rounded-full bg-amber-200/20 blur-3xl" />
-        <div className="absolute -bottom-12 -left-12 h-36 w-36 rounded-full bg-orange-200/15 blur-2xl" />
-
-        <div className="relative">
-          {/* Date + Calendar icon */}
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              {/* Calendar icon */}
-              <div className="flex flex-col items-center justify-center h-14 w-14 rounded-2xl bg-card shadow-md shadow-amber-200/50 dark:shadow-none border border-amber-100 dark:border-amber-900">
-                <span className="text-[12px] font-bold text-amber-600 uppercase tracking-widest leading-none">
-                  {mounted
-                    ? new Date().toLocaleDateString("it-IT", {
-                        weekday: "short",
-                      })
-                    : ""}
-                </span>
-                <span className="text-2xl font-bold text-foreground leading-none mt-0.5">
-                  {mounted ? new Date().getDate() : ""}
-                </span>
-              </div>
-              <div>
-                <h1 className="text-xl font-bold text-foreground font-display">
-                  {t("Mano del Giorno")}
-                </h1>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  {mounted ? formatDate(today) : ""}
-                </p>
-              </div>
-            </div>
-            {alreadyPlayed && (
-              <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300 text-[12px] font-bold border-0 shrink-0">
-                {t("Completata")}
-              </Badge>
-            )}
+    <section className="grid overflow-hidden rounded-2xl border border-border bg-card md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
+      <div className="panno-bg flex flex-col items-center justify-center gap-3 px-5 py-7 text-white">
+        <p className="text-xs font-semibold uppercase tracking-wider text-white/75">{t("La tua mano (Sud)")}</p>
+        <Ventaglio carte={ordinaManoAlternata(sud)} larghezza={46} etichetta={t("La tua mano (Sud)")} />
+      </div>
+      <div className="flex flex-col gap-4 p-6">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h1 className="font-display text-2xl font-bold">{t("Mano del Giorno")}</h1>
+            <p className="mt-0.5 text-sm text-muted-foreground">{mounted ? formatDate(today) : ""}</p>
           </div>
-
-          {/* Hand info + card preview */}
-          <div className="flex gap-5 mt-2">
-            {/* Contract and info */}
-            <div className="flex-1 space-y-3">
-              {/* Contract badge */}
-              <div className="inline-flex items-center gap-2 bg-card/80 backdrop-blur-sm rounded-xl px-3 py-2 border border-amber-100 dark:border-amber-900">
-                <div>
-                  <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
-                    {t("Contratto")}
-                  </p>
-                  <p className="text-lg font-bold text-emerald-dark leading-tight">
-                    {contrattoLeggibile(todayHand.contract)}
-                  </p>
-                </div>
-                <div className="h-8 w-px bg-amber-200/60" />
-                <div>
-                  <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider">
-                    {t("Dichiarante")}
-                  </p>
-                  <p className="text-lg font-bold text-foreground leading-tight">
-                    {positionLabelIt(todayHand.declarer)}
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                <span className="font-semibold">
-                  Obiettivo: {tricksNeeded} prese
-                </span>
-                <span>
-                  Vul: {formatVulnerability(todayHand.vulnerability)}
-                </span>
-              </div>
-
-              <p className="text-[13px] font-semibold text-foreground/80 leading-snug">
-                {todayHand.title}
-              </p>
-            </div>
-
-            {/* South hand preview */}
-            <div className="shrink-0 bg-card/70 backdrop-blur-sm rounded-2xl px-3.5 py-3 border border-amber-100 dark:border-amber-900 shadow-sm">
-              <p className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5 text-center">
-                {t("La tua mano (Sud)")}
-              </p>
-              <HandFanPreview
-                cards={
-                  todayHand.hands[
-                    toGamePosition("south", todayHand.declarer)
-                  ]
-                }
-              />
-            </div>
-          </div>
-
-          {/* XP Bonus badge */}
-          {!alreadyPlayed && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.3 }}
-              className="mt-4 flex items-center gap-2"
-            >
-              <div className="inline-flex items-center gap-1.5 bg-amber-100/80 rounded-full px-3 py-1">
-                <span className="text-xs">+50 {xpLabel}</span>
-                <span className="text-[12px] font-bold text-amber-700">
-                  {t("Bonus Giornaliero")}
-                </span>
-              </div>
-            </motion.div>
+          {alreadyPlayed && (
+            <Badge className="shrink-0 border-0 bg-emerald-100 text-xs font-bold text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">
+              {t("Completata")}
+            </Badge>
           )}
-
-          {/* CTA Button */}
-          <div className="mt-5">
-            {!alreadyPlayed ? (
-              <Button
-                onClick={onPlay}
-                className="w-full rounded-2xl bg-emerald hover:bg-emerald-dark text-base font-bold h-14 shadow-lg shadow-emerald/25 transition-all hover:shadow-xl hover:shadow-emerald/30"
-              >
-                {t("Gioca la Mano del Giorno")}
-              </Button>
-            ) : (
-              <Button
-                onClick={onPlay}
-                variant="outline"
-                className="w-full rounded-2xl text-sm font-bold h-12 border-emerald/30 text-emerald hover:bg-emerald-50"
-              >
-                {t("Rigioca la mano di oggi")}
-              </Button>
-            )}
+        </div>
+        <dl className="grid grid-cols-2 gap-3 rounded-xl border border-border p-3">
+          <div>
+            <dt className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t("Contratto")}</dt>
+            <dd className="font-display text-2xl font-bold tabular-nums">{lingua === "en" ? contratto.replace("SA", "NT") : contratto}</dd>
           </div>
+          <div>
+            <dt className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t("Dichiarante")}</dt>
+            <dd className="font-display text-2xl font-bold">{t(positionLabelIt(todayHand.declarer))}</dd>
+          </div>
+        </dl>
+        <p className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground tabular-nums">
+          <span className="font-semibold text-foreground">{t("Obiettivo: {n} prese", { n: tricksNeeded })}</span>
+          <span>{t("Vulnerabilità: {v}", { v: formatVulnerability(todayHand.vulnerability) })}</span>
+        </p>
+        <p className="font-semibold text-pretty">{todayHand.title}</p>
+        {!alreadyPlayed && (
+          <p className="text-sm text-muted-foreground">
+            <span className="rounded-full bg-gold/20 px-2 py-0.5 font-bold text-foreground">+50 {xpLabel}</span> {t("Bonus Giornaliero")}
+          </p>
+        )}
+        <div className="mt-auto">
+          {!alreadyPlayed ? (
+            <Button onClick={onPlay} className="h-12 w-full rounded-xl text-base font-bold sm:w-auto sm:px-8">
+              {t("Gioca la Mano del Giorno")}
+            </Button>
+          ) : (
+            <Button onClick={onPlay} variant="outline" className="h-12 w-full rounded-xl font-bold sm:w-auto sm:px-8">
+              {t("Rigioca la mano di oggi")}
+            </Button>
+          )}
         </div>
       </div>
-    </motion.div>
+    </section>
   );
 }

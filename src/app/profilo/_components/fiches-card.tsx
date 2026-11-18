@@ -14,7 +14,7 @@ export function FichesCard({ xp }: { xp: number }) {
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.55 }}
-      className="rounded-2xl bg-gradient-to-r from-amber-50 to-amber-100/50 dark:from-amber-950/40 dark:to-amber-900/20 border-2 border-amber-300 dark:border-amber-800 shadow-sm p-5 mb-6"
+      className="mb-6 rounded-2xl border border-border bg-card p-5"
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -32,7 +32,7 @@ export function FichesCard({ xp }: { xp: number }) {
       </div>
       <Link
         href="/negozio"
-        className="mt-4 flex items-center justify-center gap-2 w-full rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-semibold h-11 text-sm shadow-md shadow-amber-500/20 transition-all active:scale-[0.97]"
+        className="mt-4 flex items-center justify-center gap-2 w-full rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-semibold h-11 text-sm transition-all active:scale-[0.97]"
       >
         <svg className="w-4.5 h-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
           <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
