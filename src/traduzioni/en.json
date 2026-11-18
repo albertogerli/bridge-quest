@@ -3250,5 +3250,6 @@
   "Prossimo livello: {nome}": "Next level: {nome}",
   "{n} gg": "{n} d",
   "Obiettivo: {n} prese": "Target: {n} tricks",
-  "Vulnerabilità: {v}": "Vulnerability: {v}"
+  "Vulnerabilità: {v}": "Vulnerability: {v}",
+  "Livello {n}": "Level {n}"
 }

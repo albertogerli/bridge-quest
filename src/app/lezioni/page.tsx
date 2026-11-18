@@ -36,6 +36,12 @@ export default function LezioniPage() {
   const t = useT();
   // Le icone dei mondi arrivano dai dati: «NT» va scritto SA in italiano.
   const testoSA = useTestoSA();
+  const iconaMondo = (icona: unknown) => {
+    const testo = String(icona);
+    // «NT» da solo (l'icona del mondo della competizione) non è un contratto,
+    // e testoConSA non lo tocca: in italiano va scritto SA lo stesso.
+    return testo === "NT" ? testoSA("1NT").slice(1) : testoSA(testo);
+  };
   const completedMap = useGameStore((s) => s.completedModules);
   const { courses, isLoaded: catalogLoaded } = useCatalog();
   // Dove riprendere. Stessa funzione che usa l'eroe della home: se
@@ -251,7 +257,7 @@ export default function LezioniPage() {
                     scelto ? "border-primary bg-card shadow-sm" : "border-transparent hover:bg-card"
                   } ${chiuso && !scelto ? "opacity-60" : ""}`}
                 >
-                  <Anello fatti={fatti} totale={totale} icona={testoSA(String(world.icon))} />
+                  <Anello fatti={fatti} totale={totale} icona={iconaMondo(world.icon)} />
                   <span className="min-w-0 flex-1">
                     <span className="block truncate font-semibold">{world.name}</span>
                     <span className="block truncate text-sm text-muted-foreground tabular-nums">
@@ -278,7 +284,7 @@ export default function LezioniPage() {
                   className={`rounded-2xl border border-border bg-card p-5 lg:p-6 ${worldIdx === mondoScelto ? "" : "lg:hidden"}`}
                 >
                   <div className="flex items-start gap-3">
-                    <span className="lg:hidden"><Anello fatti={worldCompleted} totale={worldModules} icona={testoSA(String(world.icon))} /></span>
+                    <span className="lg:hidden"><Anello fatti={worldCompleted} totale={worldModules} icona={iconaMondo(world.icon)} /></span>
                     <div className="min-w-0 flex-1">
                       <h2 id={`mondo-${world.id}`} className="font-display text-xl font-bold text-balance lg:text-2xl">
                         {world.name}

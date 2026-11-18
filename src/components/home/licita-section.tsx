@@ -1,5 +1,7 @@
 "use client";
 
+import { Gavel, Trophy, Users } from "lucide-react";
+
 import Link from "@/components/link";
 import { useT } from "@/contexts/traduzioni-provider";
 
@@ -20,27 +22,24 @@ import { useT } from "@/contexts/traduzioni-provider";
 const PORTE = [
   {
     href: "/gioca/licita",
-    emoji: "🗣️",
+    Icona: Gavel,
     titolo: "Licita e vediamo",
     desc: "Vedi solo la tua mano: dichiara col compagno e prendi le stelle",
     nuovo: true,
-    cls: "from-figb to-figb-light",
   },
   {
     href: "/gioca/licita-amico",
-    emoji: "👥",
+    Icona: Users,
     titolo: "Licita con un amico",
     desc: "Ognuno vede la sua mano e dichiara quando può",
     nuovo: true,
-    cls: "from-[#1B5E3B] to-[#2A7A4F]",
   },
   {
     href: "/gioca/torneo-licita",
-    emoji: "🏆",
+    Icona: Trophy,
     titolo: "Tornei di licita",
     desc: "8 mani al giorno, 24 a settimana: stesse smazzate per tutti",
     nuovo: false,
-    cls: "from-[#c8a44e] to-[#a8842e]",
   },
 ];
 
@@ -54,21 +53,19 @@ export function LicitaSection() {
       <div className="grid gap-3 sm:grid-cols-3">
         {PORTE.map((p) => (
           <Link key={p.href} href={p.href} className="block">
-            <div
-              className={`flex h-full flex-col gap-1 rounded-2xl bg-gradient-to-br ${p.cls} p-4 text-white transition-all hover:translate-y-[-2px] hover:shadow-lg active:scale-[0.98]`}
-            >
+            <div className="flex h-full flex-col gap-1 rounded-2xl border border-border bg-card p-4 transition-colors hover:border-primary/40">
               <div className="flex items-center gap-2">
-                <span className="text-xl" aria-hidden="true">
-                  {p.emoji}
+                <span className="flex size-8 items-center justify-center rounded-lg bg-primary/10 text-primary" aria-hidden="true">
+                  <p.Icona className="size-4" />
                 </span>
-                <span className="text-sm font-bold">{t(p.titolo)}</span>
+                <span className="font-bold">{t(p.titolo)}</span>
                 {p.nuovo && (
-                  <span className="ml-auto rounded-full bg-white/20 px-2 py-0.5 text-[12px] font-bold uppercase tracking-wide">
+                  <span className="ml-auto rounded-full bg-gold/25 px-2 py-0.5 text-xs font-bold text-foreground">
                     {t("Nuovo")}
                   </span>
                 )}
               </div>
-              <span className="text-[12px] leading-snug text-white/80">{t(p.desc)}</span>
+              <span className="text-sm leading-snug text-muted-foreground">{t(p.desc)}</span>
             </div>
           </Link>
         ))}

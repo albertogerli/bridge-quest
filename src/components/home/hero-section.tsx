@@ -1,9 +1,9 @@
 "use client";
 
-import { motion } from "motion/react";
 import { useT } from "@/contexts/traduzioni-provider";
+import { useLingua } from "@/hooks/use-lingua";
 import Link from "@/components/link";
-import { Zap, Target } from "lucide-react";
+import { Play, Target, Zap } from "lucide-react";
 
 interface HeroStats {
   level: number;
@@ -29,6 +29,14 @@ interface HeroSectionProps {
   nextModule: NextModule | null;
 }
 
+/**
+ * La testata della home di chi non segue un corso.
+ *
+ * Era una banda di panno verde sfumato con il marchio, i numeri in bianco e un
+ * pulsante «squishy»: il panno senza carte, che dal 18/11/2026 si usa solo dove
+ * ci sono carte da guardare. Adesso è un foglio: il saluto, il livello in una
+ * pillola, i quattro numeri e un solo pulsante blu, «Riprendi» o «Inizia».
+ */
 export function HeroSection({
   stats,
   totalModulesCompleted,
@@ -37,111 +45,65 @@ export function HeroSection({
   nextModule,
 }: HeroSectionProps) {
   const t = useT();
+  const { lingua } = useLingua();
+  const numeri = [
+    { valore: stats.xp.toLocaleString(lingua === "en" ? "en-US" : "it-IT"), etichetta: "XP" },
+    { valore: String(stats.streak), etichetta: t("Streak") },
+    { valore: String(totalModulesCompleted), etichetta: t("Moduli") },
+    { valore: String(handsPlayed), etichetta: t("Mani") },
+  ];
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-[#1B5E3B] via-[#14472D] to-[#0D3321] px-4 sm:px-5 pb-20 pt-10 lg:pb-14 lg:pt-6">
-      <div className="relative mx-auto max-w-lg">
-        {/* Top row: brand + level badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="flex items-center justify-between"
-        >
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/15 border border-white/10 text-lg">🃏</div>
-            <div>
-              <h1 className="text-xl font-bold text-white tracking-tight font-display">{t("BridgeLab")}</h1>
-              <p className="text-[12px] font-semibold text-white/50 uppercase tracking-wider">FIGB</p>
+    <section className="px-4 pt-6 sm:px-5 lg:pt-10">
+      <div className="mx-auto grid max-w-6xl gap-4 rounded-2xl border border-border bg-card p-5 sm:p-6">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h1 className="font-display text-3xl font-extrabold tracking-tight">{t("Ciao")}</h1>
+          <span className="flex items-center gap-2 rounded-full border border-border px-3 py-1.5 text-sm">
+            <Zap className="size-4 text-gold" aria-hidden="true" />
+            <span className="font-bold tabular-nums">{t("Livello {n}", { n: stats.level })}</span>
+            <span className="text-muted-foreground">{stats.levelName}</span>
+          </span>
+        </div>
+
+        <dl className="grid grid-cols-4 gap-2">
+          {numeri.map((n) => (
+            <div key={n.etichetta} className="rounded-xl bg-muted/50 px-2 py-2.5 text-center">
+              <dd className="text-lg font-bold leading-none tabular-nums">{n.valore}</dd>
+              <dt className="mt-1 text-xs font-semibold uppercase text-muted-foreground">{n.etichetta}</dt>
             </div>
-          </div>
-          <div className="flex items-center gap-2 rounded-full bg-white/10 border border-white/10 px-3 py-1.5">
-            <Zap className="w-3.5 h-3.5 text-[#c8a44e]" aria-hidden="true" />
-            <span className="text-xs font-bold text-white">Lv. {stats.level}</span>
-            <span className="text-[12px] text-white/60">{stats.levelName}</span>
-          </div>
-        </motion.div>
+          ))}
+        </dl>
 
-        {/* Stats bar */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15, duration: 0.5 }}
-          className="mt-5 grid grid-cols-4 gap-2 lg:hidden"
-        >
-          <div className="rounded-xl bg-white/10 border border-white/8 px-3 py-2.5 text-center">
-            <p className="text-lg font-bold text-white leading-none">{stats.xp.toLocaleString()}</p>
-            <p className="text-[12px] font-semibold text-white/50 uppercase mt-1">XP</p>
+        <div>
+          <div className="mb-1 flex items-center justify-between text-xs">
+            <span className="font-semibold text-muted-foreground tabular-nums">{t("Livello {n}", { n: stats.level })} → {stats.level + 1}</span>
+            <span className="font-bold tabular-nums">{stats.xpInLevel} XP</span>
           </div>
-          <div className="rounded-xl bg-white/10 border border-white/8 px-3 py-2.5 text-center">
-            <p className="text-lg font-bold text-white leading-none">{stats.streak}</p>
-            <p className="text-[12px] font-semibold text-white/50 uppercase mt-1">{t("Streak")}</p>
+          <div className="h-1.5 overflow-hidden rounded-full bg-muted">
+            <div className="h-full rounded-full bg-primary" style={{ width: `${stats.levelProgress}%` }} />
           </div>
-          <div className="rounded-xl bg-white/10 border border-white/8 px-3 py-2.5 text-center">
-            <p className="text-lg font-bold text-white leading-none">{totalModulesCompleted}</p>
-            <p className="text-[12px] font-semibold text-white/50 uppercase mt-1">{t("Moduli")}</p>
-          </div>
-          <div className="rounded-xl bg-white/10 border border-white/8 px-3 py-2.5 text-center">
-            <p className="text-lg font-bold text-white leading-none">{handsPlayed}</p>
-            <p className="text-[12px] font-semibold text-white/50 uppercase mt-1">{t("Mani")}</p>
-          </div>
-        </motion.div>
+        </div>
 
-        {/* XP progress */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.25 }}
-          className="mt-3 lg:hidden"
-        >
-          <div className="flex items-center justify-between mb-1">
-            <p className="text-[12px] font-semibold text-white/60">Livello {stats.level} → {stats.level + 1}</p>
-            <p className="text-[12px] font-bold text-[#c8a44e]">{stats.xpInLevel} XP</p>
-          </div>
-          <div className="h-1.5 overflow-hidden rounded-full bg-white/10">
-            <motion.div
-              className="h-full rounded-full bg-gradient-to-r from-[#c8a44e] to-[#e8c86e]"
-              initial={{ width: 0 }}
-              animate={{ width: `${stats.levelProgress}%` }}
-              transition={{ delay: 0.4, duration: 0.8 }}
-            />
-          </div>
-        </motion.div>
-
-        {/* Main CTA — squishy button */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.35, duration: 0.5 }}
-          className="mt-5 lg:hidden"
-        >
-          {hasStarted && nextModule ? (
-            <Link href={`/lezioni/${nextModule.lessonId}/${nextModule.moduleId}`}>
-              <div className="btn-squishy btn-squishy-white w-full rounded-2xl bg-white px-5 py-3.5 cursor-pointer">
-                <div className="flex items-center gap-3 w-full">
-                  <span className="text-2xl">{nextModule.lessonIcon}</span>
-                  <div className="flex-1 text-left min-w-0">
-                    <p className="text-[12px] font-bold text-[#1B5E3B]/60 uppercase tracking-wider">{t("Riprendi")}</p>
-                    <p className="text-sm font-bold text-[#1B5E3B] truncate">{nextModule.moduleTitle}</p>
-                  </div>
-                  <svg className="h-5 w-5 text-[#1B5E3B]/40 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <path d="M8 5v14l11-7z" />
-                  </svg>
-                </div>
-              </div>
-            </Link>
-          ) : (
-            <Link href="/lezioni">
-              <div className="btn-squishy btn-squishy-white w-full h-14 rounded-2xl bg-white flex items-center justify-center gap-2 font-semibold text-base text-[#1B5E3B] cursor-pointer">
-                <Target className="w-5 h-5" aria-hidden="true" />
-                {t("Inizia il tuo viaggio")}
-              </div>
-            </Link>
-          )}
-        </motion.div>
+        {hasStarted && nextModule ? (
+          <Link
+            href={`/lezioni/${nextModule.lessonId}/${nextModule.moduleId}`}
+            className="flex min-h-14 items-center gap-3 rounded-xl bg-primary px-5 py-3 text-primary-foreground transition-colors hover:bg-primary/90"
+          >
+            <span className="min-w-0 flex-1">
+              <span className="block text-xs font-bold uppercase tracking-wider text-primary-foreground/75">{t("Riprendi")}</span>
+              <span className="block truncate font-bold">{nextModule.moduleTitle}</span>
+            </span>
+            <Play className="size-5 shrink-0" aria-hidden="true" />
+          </Link>
+        ) : (
+          <Link
+            href="/lezioni"
+            className="flex min-h-14 items-center justify-center gap-2 rounded-xl bg-primary px-5 font-bold text-primary-foreground transition-colors hover:bg-primary/90"
+          >
+            <Target className="size-5" aria-hidden="true" />
+            {t("Inizia il tuo viaggio")}
+          </Link>
+        )}
       </div>
-
-      {/* Smooth gradient fade to background */}
-      <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-b from-transparent to-background" aria-hidden="true" />
     </section>
   );
 }

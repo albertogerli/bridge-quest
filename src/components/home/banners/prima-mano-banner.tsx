@@ -15,7 +15,7 @@ export function PrimaManoBanner() {
     >
       <Link
         href="/prima-mano"
-        className="relative block overflow-hidden rounded-2xl border border-[#c8a44e]/25 bg-[linear-gradient(135deg,#fffaf0_0%,#f4ead5_100%)] p-4 hover:shadow-lg transition-all"
+        className="relative block overflow-hidden rounded-2xl border border-border bg-card p-4 transition-colors hover:border-primary/40"
       >
         <div className="absolute -right-6 -top-6 h-20 w-20 rounded-full bg-[#c8a44e]/10 blur-2xl" />
         <div className="relative flex items-center gap-3">

@@ -64,7 +64,7 @@ export function SuggestedNextStep({ nextModule }: SuggestedNextStepProps) {
             if (suggestPlay && manoPertinente) {
               return (
                 <Link href={`/gioca/smazzata?lesson=${manoPertinente.lessonId}`}>
-                  <div className="rounded-2xl border border-violet-200 dark:border-violet-900 bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-950/40 dark:to-purple-950/40 p-4 hover:shadow-md transition-all">
+                  <div className="rounded-2xl border border-border bg-card p-4 hover:shadow-md transition-all">
                     <div className="flex items-center gap-3">
                       <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100 border border-violet-200 dark:bg-violet-900/40 dark:border-violet-800">
                         <Gamepad2 className="w-5 h-5 text-violet-600 dark:text-violet-400" />
@@ -84,7 +84,7 @@ export function SuggestedNextStep({ nextModule }: SuggestedNextStepProps) {
             if (nextModule) {
               return (
                 <Link href={`/lezioni/${nextModule.lessonId}/${nextModule.moduleId}`}>
-                  <div className="rounded-2xl border border-emerald-200 dark:border-emerald-900 bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-950/40 dark:to-green-950/40 p-4 hover:shadow-md transition-all">
+                  <div className="rounded-2xl border border-border bg-card p-4 hover:shadow-md transition-all">
                     <div className="flex items-center gap-3">
                       <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 border border-emerald-200 dark:bg-emerald-900/40 dark:border-emerald-800">
                         <GraduationCap className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />

@@ -16,16 +16,16 @@ export function FindAsdBanner() {
           transition={{ delay: 0.6 }}
         >
           <Link href="/trova-circolo">
-            <div className="rounded-2xl bg-gradient-to-r from-figb to-figb-light p-4 cursor-pointer hover:translate-y-[-1px] hover:shadow-lg transition-all">
+            <div className="cursor-pointer rounded-2xl border border-border bg-card p-4 transition-colors hover:border-primary/40">
               <div className="flex items-center gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm shrink-0">
-                  <MapPin className="w-5 h-5 text-white" />
+                <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10">
+                  <MapPin className="size-5 text-primary" aria-hidden="true" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-bold text-white">{t("Non hai ancora un'associazione?")}</p>
-                  <p className="text-xs text-white/70">{t("Trova la tua ASD tra le 146 affiliate FIGB")}</p>
+                  <p className="font-bold">{t("Non hai ancora un'associazione?")}</p>
+                  <p className="text-sm text-muted-foreground">{t("Trova la tua ASD tra le 146 affiliate FIGB")}</p>
                 </div>
-                <svg className="w-5 h-5 text-white/50 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
+                <svg className="size-5 shrink-0 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
                   <path d="M9 18l6-6-6-6" />
                 </svg>
               </div>

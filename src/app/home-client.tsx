@@ -35,7 +35,7 @@ import { SuggestedNextStep } from "@/components/home/banners/suggested-next-step
 import { FindAsdBanner } from "@/components/home/banners/find-asd-banner";
 import { useLocalStats } from "@/hooks/use-local-stats";
 import { useGameStore, useHasHydrated } from "@/store/use-game-store";
-import { GraduationCap, Zap } from "lucide-react";
+import { BookOpen, GraduationCap, Spade, Zap } from "lucide-react";
 import { reportError, segnalaSalvoRete } from "@/lib/report-error";
 import {
   CHIAVE_VUOLE_INSEGNARE,
@@ -375,7 +375,7 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
   if (segueUnCorso && !vuoleLaBacheca) {
     return (
       <>
-        <AvvisoRichiesteAmicizia className="mx-4 mt-4 sm:mx-auto sm:max-w-3xl" />
+        <AvvisoRichiesteAmicizia className="mx-4 mt-4 sm:mx-auto sm:max-w-6xl" />
         <HomeAllievo
           nome={authProfile?.display_name ?? null}
           onVaiAllaBacheca={() => {
@@ -390,7 +390,7 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
   if (insegna && !vuoleLaBacheca) {
     return (
       <>
-      <AvvisoRichiesteAmicizia className="mx-4 mt-4 sm:mx-auto sm:max-w-3xl" />
+      <AvvisoRichiesteAmicizia className="mx-4 mt-4 sm:mx-auto sm:max-w-6xl" />
       <HomeInsegnante
         nome={authProfile?.display_name ?? null}
         onVaiAllaBacheca={() => {
@@ -416,7 +416,7 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
 
   return (
     <div>
-      <AvvisoRichiesteAmicizia className="mx-4 mt-4 sm:mx-auto sm:max-w-3xl" />
+      <AvvisoRichiesteAmicizia className="mx-4 mt-4 sm:mx-auto sm:max-w-6xl" />
       {/*
         In attesa dell'insegnante: la prima cosa da sapere, prima di tutto il
         resto della bacheca. Porta alla classe, dove si vede lo stato.
@@ -424,7 +424,7 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
       {!insegna && classiIscritte.length === 0 && richiesteInAttesa && richiesteInAttesa.length > 0 && (
         <Link
           href={`/classi/${richiesteInAttesa[0].class_id}`}
-          className="mx-4 mt-4 block rounded-2xl border border-amber-400/60 bg-card p-4 sm:mx-auto sm:max-w-3xl"
+          className="mx-4 mt-4 block rounded-2xl border border-amber-400/60 bg-card p-4 sm:mx-auto sm:max-w-6xl"
         >
           <span className="block text-sm font-semibold text-foreground">
             {t("La tua richiesta per «{nome}» è in attesa dell'insegnante", { nome: richiesteInAttesa[0].nome })}
@@ -564,7 +564,7 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
         <section className="px-4 sm:px-5 pt-4">
           <Link
             href="/classi"
-            className="mx-auto flex max-w-3xl items-center gap-3 rounded-2xl border border-border bg-card p-4 shadow-sm transition-colors hover:bg-muted/40"
+            className="mx-auto flex max-w-6xl items-center gap-3 rounded-2xl border border-border bg-card p-4 transition-colors hover:bg-muted/40"
           >
             <span className="text-2xl" aria-hidden="true">🎟️</span>
             <span className="min-w-0">
@@ -588,7 +588,7 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
         <section className="px-4 sm:px-5 pt-4">
           <Link
             href="/trova-circolo"
-            className="mx-auto flex max-w-3xl items-center gap-3 rounded-2xl border border-border bg-card p-4 shadow-sm transition-colors hover:bg-muted/40"
+            className="mx-auto flex max-w-6xl items-center gap-3 rounded-2xl border border-border bg-card p-4 transition-colors hover:bg-muted/40"
           >
             <span className="text-2xl" aria-hidden="true">📍</span>
             <span className="min-w-0">
@@ -607,17 +607,18 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
           /en uscivano in italiano. «Impara» diventa «Percorso» e punta a
           /lezioni, come la barra. */}
       <section className="px-4 sm:px-5 pt-4">
-        <div className="mx-auto grid max-w-3xl grid-cols-3 gap-3">
+        <div className="mx-auto grid max-w-6xl grid-cols-3 gap-3">
           {[
-            { href: "/lezioni", emoji: "🎓", label: "Percorso", desc: "Lezioni e corsi", cls: "from-[#1B5E3B] to-[#2A7A4F]" },
-            { href: "/gioca", emoji: "🎮", label: "Gioca", desc: "Pratica e sfide", cls: "from-figb to-figb-light" },
-            { href: "/scuola", emoji: "👨‍🏫", label: "Scuola", desc: "Le tue classi", cls: "from-[#c8a44e] to-[#a8842e]" },
+            { href: "/lezioni", Icona: BookOpen, label: "Percorso", desc: "Lezioni e corsi" },
+            { href: "/gioca", Icona: Spade, label: "Gioca", desc: "Pratica e sfide" },
+            { href: "/scuola", Icona: GraduationCap, label: "Scuola", desc: "Le tue classi" },
           ].map((h) => (
             <Link key={h.href} href={h.href} aria-label={t(h.label)} className="block">
-              <div className={`flex h-full flex-col items-center gap-1 rounded-2xl bg-gradient-to-br ${h.cls} p-4 text-center text-white transition-all hover:translate-y-[-2px] hover:shadow-lg active:scale-[0.98]`}>
-                <span className="text-2xl">{h.emoji}</span>
-                <span className="text-sm font-bold">{t(h.label)}</span>
-                <span className="text-[12px] text-white/75">{t(h.desc)}</span>
+              {/* Tre fogli uguali, non tre sfumature di colore diverso (18/11/2026). */}
+              <div className="flex h-full flex-col items-center gap-1 rounded-2xl border border-border bg-card p-4 text-center transition-colors hover:border-primary/40">
+                <span className="mb-1 flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary" aria-hidden="true"><h.Icona className="size-5" /></span>
+                <span className="font-bold">{t(h.label)}</span>
+                <span className="text-sm text-muted-foreground">{t(h.desc)}</span>
               </div>
             </Link>
           ))}
