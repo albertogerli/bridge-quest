@@ -284,6 +284,7 @@ export function CompitoLicitaMano({
 
       <div className="mb-4">
         <Asta
+          robot
           dealer={dealer}
           zona={vulnerability}
           bids={licita}

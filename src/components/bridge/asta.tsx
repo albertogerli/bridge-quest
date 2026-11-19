@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import { X } from "lucide-react";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
 import type { Suit } from "@/lib/bridge-engine";
 import {
@@ -9,6 +11,7 @@ import {
 } from "@/lib/asta";
 import { useT } from "@/contexts/traduzioni-provider";
 import type { Vulnerability } from "@/lib/catalog";
+import { significatoDichiarazione } from "@/lib/significato-dichiarazione";
 
 const ETICHETTA: Record<Posto, string> = {
   north: "Nord", east: "Est", south: "Sud", west: "Ovest",
@@ -77,6 +80,7 @@ export function Asta({
   disabilitato = false,
   vulnerabilita,
   zona,
+  robot = false,
 }: {
   dealer: Posto;
   bids: string[];
@@ -88,6 +92,8 @@ export function Asta({
   vulnerabilita?: string;
   /** Se c'è, i punti cardinali si colorano: rosso in zona, verde in prima. */
   zona?: Vulnerability;
+  /** Dichiarano i robot (BEN): la spiegazione lo dice, perché è il loro standard. */
+  robot?: boolean;
 }) {
   const t = useT();
   const righe = righeAsta(dealer, bids);
@@ -110,6 +116,17 @@ export function Asta({
    * ogni volta.
    */
   const mioTurno = ioSono === undefined || chiParla === ioSono;
+  /*
+   * CHE COSA VUOL DIRE. Si tocca una dichiarazione e sotto la griglia compare
+   * il significato: come sulle piattaforme di gioco, dove davanti a un 2♦ dei
+   * robot si può chiedere se è debole o multicolor (Lillo Irrera,
+   * 19/11/2026). L'indice si azzera quando l'asta va avanti, così non resta
+   * aperta la spiegazione di una dichiarazione ormai lontana.
+   */
+  const [chiesta, setChiesta] = useState<{ i: number; lunghezza: number } | null>(null);
+  const aperta = chiesta && chiesta.lunghezza === bids.length ? chiesta.i : null;
+  const significato = aperta === null ? null : significatoDichiarazione(bids, aperta, t);
+  const salto = COLONNE.indexOf(dealer);
   const posso = Boolean(onDichiara) && !disabilitato && mioTurno && lecite.passo;
 
   return (
@@ -151,17 +168,29 @@ export function Asta({
                 i === righe.length - 1 &&
                 bid !== null &&
                 COLONNE.indexOf(p) === COLONNE.indexOf(chiParla) - 1;
+              const indice = i * 4 + COLONNE.indexOf(p) - salto;
+              const scelta = aperta === indice;
               return (
                 <div
                   key={p}
-                  className={`py-2 text-base font-mono ${
+                  className={`text-base font-mono ${
                     p === ioSono ? "bg-figb/5" : ""
                   } ${ultimo ? "font-bold" : ""}`}
                 >
                   {bid === null ? (
-                    <span className="text-muted-foreground/40">·</span>
+                    <span className="block py-2 text-muted-foreground/40">·</span>
                   ) : (
-                    <Dichiarazione bid={bid} />
+                    <button
+                      type="button"
+                      onClick={() => setChiesta(scelta ? null : { i: indice, lunghezza: bids.length })}
+                      aria-expanded={scelta}
+                      aria-label={t("Che cosa vuol dire {bid} di {posto}?", { bid, posto: t(ETICHETTA[p]) })}
+                      className={`flex min-h-10 w-full items-center justify-center py-2 transition-colors hover:bg-primary/5 ${
+                        scelta ? "bg-primary/10 ring-2 ring-inset ring-primary" : ""
+                      }`}
+                    >
+                      <Dichiarazione bid={bid} />
+                    </button>
                   )}
                 </div>
               );
@@ -169,6 +198,30 @@ export function Asta({
           </div>
         ))}
       </div>
+
+      {significato ? (
+        <div role="status" className="mb-3 flex items-start gap-3 rounded-xl border border-primary/30 bg-primary/5 p-3 text-sm">
+          <div className="min-w-0 flex-1">
+            <p className="font-semibold">{significato.titolo}</p>
+            <p className="mt-0.5 text-pretty">{significato.testo}</p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              {robot
+                ? t("Così dichiarano di solito i robot; nel tuo corso gli accordi possono essere diversi.")
+                : t("È il significato più comune: gli accordi della coppia possono cambiarlo.")}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setChiesta(null)}
+            aria-label={t("Chiudi")}
+            className="-m-1 flex size-9 shrink-0 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted"
+          >
+            <X className="size-4" aria-hidden="true" />
+          </button>
+        </div>
+      ) : bids.some((b) => b !== PASSO) ? (
+        <p className="mb-3 text-center text-xs text-muted-foreground">{t("Tocca una dichiarazione per sapere che cosa vuol dire.")}</p>
+      ) : null}
 
       {vulnerabilita && (
         <p className="text-xs text-muted-foreground mb-3 text-center">

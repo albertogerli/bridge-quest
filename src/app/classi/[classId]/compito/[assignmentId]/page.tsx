@@ -389,10 +389,13 @@ export default function CompitoPage({
           <div className="h-3 overflow-hidden rounded-full bg-muted">
             <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${(risposte / ids.length) * 100}%` }} />
           </div>
-          <p className="mt-2 text-sm text-muted-foreground">
-            {t("{n} domande su {m}", { n: risposte, m: ids.length })}
-            {risposte > 0 && <> · {t("{g} giuste", { g: giuste })}</>}
-          </p>
+          {/* Finito il test, il punteggio grande qui sotto dice già tutto. */}
+          {primaSenza && (
+            <p className="mt-2 text-sm text-muted-foreground">
+              {t("{n} domande su {m}", { n: risposte, m: ids.length })}
+              {risposte > 0 && <> · {t("{g} giuste", { g: giuste })}</>}
+            </p>
+          )}
           {primaSenza ? (
             <Button asChild size="lg" className="mt-3 w-full">
               <Link href={`/classi/${classId}/esercizio/${primaSenza}?compito=${assignmentId}`}>

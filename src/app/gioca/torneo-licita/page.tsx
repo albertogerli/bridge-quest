@@ -404,6 +404,7 @@ export default function TorneoLicitaPage() {
 
           <div className="mb-4">
             <Asta
+              robot
               dealer={mano.dealer}
               zona={mano.vulnerability}
               bids={bids}

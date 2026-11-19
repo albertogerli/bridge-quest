@@ -331,7 +331,8 @@ export default function EsercizioPage({
                     ? "Giusto"
                     : "Non era questa"}
               </p>
-              {!dato.giusta && dato.risposte.length > 0 && (
+              {/* Nelle domande a scelta la giusta si vede già fra le opzioni qui sotto. */}
+              {!dato.giusta && dato.risposte.length > 0 && esercizio.consegna !== "scelta" && (
                 <p className="text-sm text-muted-foreground">
                   {dato.risposte.length === 1 ? "La risposta era" : "Andavano bene"}:{" "}
                   {dato.risposte.join(", ")}
@@ -390,7 +391,8 @@ export default function EsercizioPage({
               </Link>
             </Button>
           ) : <span />}
-          <Button asChild variant="ghost" size="sm">
+          {/* Sul telefono non ci sta, e «Gli esercizi» in cima fa la stessa cosa. */}
+          <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
             <Link href={alCompito}>{t("Tutte le domande")}</Link>
           </Button>
           {successiva ? (

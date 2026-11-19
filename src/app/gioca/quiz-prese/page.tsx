@@ -120,7 +120,7 @@ export default function QuizPresePage() {
           {t("Quante prese?")}
         </h1>
         <p className="text-sm text-muted-foreground mb-6">
-          {t("Vedi tutte e quattro le mani. Conta quante prese fa Nord-Sud con gioco perfetto di entrambe le linee.")}
+          {t("Vedi tutte e quattro le mani. Gioca Sud e attacca Ovest: conta quante prese fa Nord-Sud con gioco perfetto di entrambe le linee.")}
         </p>
         <div className="space-y-3">
           {QUIZ_LEVELS.map((l) => (
@@ -229,8 +229,16 @@ export default function QuizPresePage() {
             </div>
           </div>
 
+          {/*
+           * CHI GIOCA E CHI ATTACCA, DETTO. Il double dummy conta con Sud
+           * dichiarante e Ovest all'attacco: gli avversari incassano per primi
+           * e possono togliere a Nord-Sud prese che sembrano sicure. Senza
+           * dirlo, «come possono non esserci le due prese a picche?» (Lillo
+           * Irrera, 19/11/2026: ♠AK in linea, risposta 1 perché Est-Ovest ne
+           * fanno 12 attaccando).
+           */}
           <p className="text-sm font-semibold mb-3">
-            Quante prese fa Nord-Sud a {strainLabel(question.strain)}?
+            {t("Sud gioca a {denominazione} e attacca Ovest. Quante prese fa Nord-Sud?", { denominazione: t(strainLabel(question.strain)) })}
           </p>
 
           <div className="grid grid-cols-2 gap-2 mb-4">
@@ -265,7 +273,7 @@ export default function QuizPresePage() {
               >
                 <p className="font-semibold text-sm mb-1">{esito.message}</p>
                 <p className="text-xs text-muted-foreground mb-3">
-                  {t("Il conteggio è a carte scoperte, con gioco perfetto di entrambe le linee: al tavolo, senza vedere le mani avversarie, alcune di queste prese non sarebbero trovabili.")}
+                  {t("Attacca Ovest: con gioco perfetto gli avversari incassano prima le loro prese, e alcune di quelle di Nord-Sud possono non arrivare mai, anche gli assi. Il conteggio è a carte scoperte: al tavolo, senza vedere le mani avversarie, non tutte queste prese sarebbero trovabili.")}
                 </p>
                 <Button onClick={() => { registraSeFinita(); setRound((r) => r + 1); }}>
                   {round + 1 >= ROUNDS ? t("Vedi il risultato") : t("Prossima mano")}

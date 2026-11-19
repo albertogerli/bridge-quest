@@ -478,6 +478,7 @@ export default function LicitaPage() {
               solo le dichiarazioni lecite premibili. Vedi components/bridge/asta. */}
           <div className="mb-4">
             <Asta
+              robot
               // Il mazziere è quello della mano, non sempre Sud: le mani della
               // scorta lo ruotano. Con «south» fisso la griglia attribuiva
               // ogni dichiarazione al posto sbagliato — tre volte su quattro —

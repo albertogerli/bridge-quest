@@ -48,8 +48,8 @@ export function OpzioniCorrette({
             )}
             <span className={`text-pretty ${giusta || scelta ? "font-medium text-foreground" : ""}`}>
               {o}
-              {scelta && <span className="ml-1.5 text-xs font-semibold text-muted-foreground">· {t("la tua risposta")}</span>}
               {giusta && <span className="sr-only"> ({t("giusta")})</span>}
+              {scelta && <span className="block text-xs font-semibold text-muted-foreground">{t("la tua risposta")}</span>}
             </span>
           </li>
         );
