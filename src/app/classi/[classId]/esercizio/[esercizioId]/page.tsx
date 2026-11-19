@@ -2,7 +2,7 @@
 
 import { use, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { ArrowRight, CheckCircle2, XCircle } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle2, XCircle } from "lucide-react";
 import Link from "@/components/link";
 import { Button } from "@/components/ui/button";
 import { Briciole } from "@/components/briciole";
@@ -23,6 +23,7 @@ import { useT } from "@/contexts/traduzioni-provider";
 import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 import { leggiFigura } from "@/lib/figura-domanda";
 import { FiguraDomanda } from "@/components/figura-domanda";
+import { OpzioniCorrette } from "@/components/classi/opzioni-corrette";
 
 const SEMI: Suit[] = ["spade", "heart", "diamond", "club"];
 const ORDINE = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -89,7 +90,11 @@ export default function EsercizioPage({
         const data = fatte.get(esercizioId)?.details?.risposta;
         if (typeof data === "string") {
           const esito = await verificaEsercizio(esercizioId, data);
-          if (vivo && esito) setDato({ ...esito, testo: data });
+          if (vivo && esito) {
+            setDato({ ...esito, testo: data });
+            // Rivedendo, il «perché?» si è già avuto il tempo di chiederselo.
+            setSpiegazione(true);
+          }
         }
       } finally {
         if (vivo) setCaricando(false);
@@ -193,6 +198,8 @@ export default function EsercizioPage({
       ? null
       : ([...ordine.slice(posto + 1), ...ordine.slice(0, posto)].find((id) => !risposte.has(id)) ?? null);
   const alCompito = `/classi/${classId}/compito/${assignmentId}`;
+  const precedente = posto > 0 ? ordine[posto - 1] : null;
+  const successiva = posto >= 0 && posto < ordine.length - 1 ? ordine[posto + 1] : null;
 
   return (
     <div className="mx-auto w-full max-w-2xl px-4 py-8 sm:px-6">
@@ -200,7 +207,7 @@ export default function EsercizioPage({
         percorso={[
           { etichetta: "Le mie classi", href: "/classi" },
           { etichetta: "La classe", href: `/classi/${classId}` },
-          ...(assignmentId ? [{ etichetta: t("Il compito"), href: alCompito }] : []),
+          ...(assignmentId ? [{ etichetta: t("Gli esercizi"), href: alCompito }] : []),
           { etichetta: esercizio.titolo },
         ]}
       />
@@ -333,6 +340,11 @@ export default function EsercizioPage({
             </div>
           </div>
 
+          {/* Tutte le opzioni, non solo il verdetto: fra cosa si sceglieva. */}
+          {esercizio.consegna === "scelta" && (esercizio.opzioni?.length ?? 0) > 0 && (
+            <OpzioniCorrette opzioni={esercizio.opzioni!} data={dato.testo} risposte={dato.risposte} />
+          )}
+
           {dato.soluzione &&
             (spiegazione ? (
               <p className="rounded-xl border border-border bg-card p-4 text-sm leading-relaxed">
@@ -361,6 +373,35 @@ export default function EsercizioPage({
             )
           )}
         </div>
+      )}
+
+      {/*
+       * AVANTI E INDIETRO FRA LE DOMANDE. Prima da una domanda si poteva solo
+       * tornare alla classe: per rivederne tre di fila erano tre giri dal
+       * compito (utente, 19/11/2026: «è scomodissimo»).
+       */}
+      {assignmentId && posto >= 0 && ordine.length > 1 && (
+        <nav aria-label={t("Le domande del compito")} className="mt-8 flex items-center justify-between gap-2 border-t border-border pt-4">
+          {precedente ? (
+            <Button asChild variant="ghost" size="sm">
+              <Link href={`/classi/${classId}/esercizio/${precedente}?compito=${assignmentId}`}>
+                <ArrowLeft className="size-4" aria-hidden="true" />
+                {t("Precedente")}
+              </Link>
+            </Button>
+          ) : <span />}
+          <Button asChild variant="ghost" size="sm">
+            <Link href={alCompito}>{t("Tutte le domande")}</Link>
+          </Button>
+          {successiva ? (
+            <Button asChild variant="ghost" size="sm">
+              <Link href={`/classi/${classId}/esercizio/${successiva}?compito=${assignmentId}`}>
+                {t("Successiva")}
+                <ArrowRight className="size-4" aria-hidden="true" />
+              </Link>
+            </Button>
+          ) : <span />}
+        </nav>
       )}
     </div>
   );

@@ -67,6 +67,9 @@ export function destinazioneIndietro(percorso: string): Ritorno | null {
     if (parti.length === 1) return null;
     // `/classi/<id>` → l'elenco. Più sotto → la classe.
     if (parti.length === 2) return { href: "/classi", etichetta: "Torna alle mie classi" };
+    // La domanda di un compito ha il suo ritorno, al compito e non alla
+    // classe (le briciole nella pagina): da qui si rivedono gli esercizi.
+    if (parti[2] === "esercizio") return null;
     return { href: `/classi/${parti[1]}`, etichetta: "Torna alla classe" };
   }
 

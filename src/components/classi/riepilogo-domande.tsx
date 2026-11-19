@@ -7,6 +7,7 @@ import { useT } from "@/contexts/traduzioni-provider";
 import type { HandResult } from "@/lib/instructors";
 import { leggiFigura } from "@/lib/figura-domanda";
 import { FiguraDomanda } from "@/components/figura-domanda";
+import { OpzioniCorrette } from "@/components/classi/opzioni-corrette";
 import { verificaEsercizio, type EsercizioPerAllievo, type EsitoEsercizio } from "@/lib/esercizi-posizione";
 
 /**
@@ -78,30 +79,49 @@ export function RiepilogoDomande({
                 giusta === false ? "border-red-200 dark:border-red-900" : "border-emerald-200 dark:border-emerald-900"
               }`}
             >
-              <p className="text-xs font-semibold text-muted-foreground">
-                {d?.titolo ?? t("Domanda {n}", { n: i + 1 })}
-              </p>
+              <div className="flex items-baseline justify-between gap-3">
+                <p className="text-xs font-semibold text-muted-foreground">
+                  {d?.titolo ?? t("Domanda {n}", { n: i + 1 })}
+                </p>
+                {giusta !== undefined && (
+                  <span className={`shrink-0 text-xs font-bold ${giusta ? "text-emerald-700 dark:text-emerald-400" : "text-red-600"}`}>
+                    {giusta ? t("Giusta") : t("Sbagliata")}
+                  </span>
+                )}
+              </div>
               {figura && <div className="mt-2"><FiguraDomanda figura={figura} /></div>}
               {d?.domanda && <p className="mt-1 text-sm font-medium">{d.domanda}</p>}
 
-              <div className="mt-3 flex items-start gap-2 text-sm">
-                {giusta === false ? (
-                  <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-600" aria-hidden="true" />
-                ) : (
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" aria-hidden="true" />
+              {d?.consegna === "scelta" && (d.opzioni?.length ?? 0) > 0 ? (
+                <div className="mt-3">
+                  <OpzioniCorrette
+                    opzioni={d.opzioni!}
+                    data={typeof data === "string" ? data : null}
+                    risposte={esito?.risposte ?? []}
+                  />
+                </div>
+              ) : (
+                <>
+                <div className="mt-3 flex items-start gap-2 text-sm">
+                  {giusta === false ? (
+                    <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-600" aria-hidden="true" />
+                  ) : (
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" aria-hidden="true" />
+                  )}
+                  <p>
+                    <span className="text-muted-foreground">{t("La tua risposta:")}</span>{" "}
+                    <span className="font-semibold">{typeof data === "string" ? data : "—"}</span>
+                  </p>
+                </div>
+                {esito && !esito.giusta && esito.risposte.length > 0 && (
+                  <p className="mt-1 pl-6 text-sm">
+                    <span className="text-muted-foreground">
+                      {esito.risposte.length === 1 ? t("La risposta giusta:") : t("Andavano bene:")}
+                    </span>{" "}
+                    <span className="font-semibold">{esito.risposte.join(", ")}</span>
+                  </p>
                 )}
-                <p>
-                  <span className="text-muted-foreground">{t("La tua risposta:")}</span>{" "}
-                  <span className="font-semibold">{typeof data === "string" ? data : "—"}</span>
-                </p>
-              </div>
-              {esito && !esito.giusta && esito.risposte.length > 0 && (
-                <p className="mt-1 pl-6 text-sm">
-                  <span className="text-muted-foreground">
-                    {esito.risposte.length === 1 ? t("La risposta giusta:") : t("Andavano bene:")}
-                  </span>{" "}
-                  <span className="font-semibold">{esito.risposte.join(", ")}</span>
-                </p>
+                </>
               )}
               {esito?.soluzione && (
                 <p className="mt-3 rounded-lg bg-muted/50 p-3 text-sm leading-relaxed">{esito.soluzione}</p>

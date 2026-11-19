@@ -81,7 +81,8 @@ describe("destinazioneIndietro — area allievo", () => {
   it("dalle pagine di una classe si torna alla classe", () => {
     expect(destinazioneIndietro(`/classi/${CLASSE}/tavolo`)?.href).toBe(`/classi/${CLASSE}`);
     expect(destinazioneIndietro(`/classi/${CLASSE}/compito/x`)?.href).toBe(`/classi/${CLASSE}`);
-    expect(destinazioneIndietro(`/classi/${CLASSE}/esercizio/y`)?.href).toBe(`/classi/${CLASSE}`);
+    // La domanda torna al compito con le briciole sue, non alla classe.
+    expect(destinazioneIndietro(`/classi/${CLASSE}/esercizio/y`)).toBeNull();
   });
 
   it("dalla classe si torna alle proprie classi", () => {

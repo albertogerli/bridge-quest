@@ -401,7 +401,12 @@ export default function CompitoPage({
               </Link>
             </Button>
           ) : (
-            <p className="mt-2 font-semibold">{t("Hai risposto a tutte le domande. 🎉")}</p>
+            <div className="mt-3 flex items-baseline gap-3">
+              <p className="font-display text-4xl font-bold tabular-nums">
+                {giuste}<span className="text-2xl text-muted-foreground">/{ids.length}</span>
+              </p>
+              <p className="text-sm font-semibold text-pretty">{t("Hai risposto a tutte le domande. Sotto trovi ognuna con la risposta giusta.")}</p>
+            </div>
           )}
         </div>
       )}
