@@ -8,6 +8,8 @@ import { statisticheRisposte, type RigaRisultato } from "@/lib/statistiche-rispo
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
 import { segnalaSalvoRete } from "@/lib/report-error";
 import { useT } from "@/contexts/traduzioni-provider";
+import { normalizzaRisposta } from "@/lib/esercizi-posizione";
+import { OpzioniCorrette } from "@/components/classi/opzioni-corrette";
 
 const SEMI: Suit[] = ["spade", "heart", "diamond", "club"];
 const ORDINE = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -72,6 +74,57 @@ export function RisposteClasse({ esercizioIds, righe }: { esercizioIds: string[]
             const colore = v.giusta && (e.risposte ?? []).length > 0 ? VERDE : COLORI[i % COLORI.length];
             return { ...v, inizio, fine, colore };
           });
+          /*
+           * DOMANDE A SCELTA: tutte le opzioni, la giusta in verde, come le
+           * vede l'allievo rivedendo il test, e accanto quanti l'hanno scelta.
+           * L'anello resta per le risposte scritte (dichiarazioni, carte), dove
+           * le voci sono quelle che gli allievi hanno inventato.
+           */
+          const opzioni = e.consegna === "scelta" && (e.opzioni?.length ?? 0) > 0 ? e.opzioni! : null;
+          if (opzioni) {
+            const per = new Map<string, number>();
+            for (const v of s.voci) per.set(normalizzaRisposta(v.risposta), (per.get(normalizzaRisposta(v.risposta)) ?? 0) + v.n);
+            return (
+              <div key={e.id} className="rounded-xl border border-border bg-card p-4">
+                <div className="flex flex-wrap items-baseline justify-between gap-x-3">
+                  <p className="text-sm font-semibold">
+                    {t("Domanda {n}", { n: n + 1 })} · {e.titolo || t(ETICHETTE_CONSEGNA[e.consegna])}
+                  </p>
+                  {s.totale > 0 && (e.risposte ?? []).length > 0 && (
+                    <p className="text-sm text-muted-foreground tabular-nums">
+                      {t("Giuste: {g} su {n}", { g: s.giuste, n: s.totale })}
+                    </p>
+                  )}
+                </div>
+                {e.domanda && <p className="mt-1 text-pretty">{e.domanda}</p>}
+                {mano.length > 0 && (
+                <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 font-mono text-base">
+                  {SEMI.map((seme) => (
+                    <span key={seme} className="flex items-center gap-1">
+                      <SuitSymbol suit={seme} size="xs" />
+                      {mano
+                        .filter((c: Card) => c.suit === seme)
+                        .sort((a: Card, b: Card) => ORDINE.indexOf(a.rank) - ORDINE.indexOf(b.rank))
+                        .map((c: Card) => c.rank)
+                        .join(" ") || "—"}
+                    </span>
+                  ))}
+                </div>
+                )}
+                {e.bids?.length > 0 && (
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    {t("Licita finora")}: {e.bids.join(" – ")}
+                  </p>
+                )}
+                <div className="mt-3">
+                  <OpzioniCorrette opzioni={opzioni} data={null} risposte={e.risposte ?? []} voti={{ per, totale: s.totale }} />
+                </div>
+                {s.totale === 0 && (
+                  <p className="mt-2 text-sm text-muted-foreground">{t("Ancora nessuna risposta.")}</p>
+                )}
+              </div>
+            );
+          }
           const anello = fette.length
             ? `conic-gradient(${fette.map((f) => `${f.colore} ${f.inizio}% ${f.fine}%`).join(", ")})`
             : "conic-gradient(#e5e7eb 0 100%)";

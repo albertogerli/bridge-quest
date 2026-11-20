@@ -41,8 +41,6 @@ const POSITION_LABELS: Record<Position, string> = {
  * replay nella stessa pagina non può chiamare «Sud» quello che il tavolo
  * chiama «Est» — né far leggere un commento del maestro sulla mano sbagliata.
  */
-const INIZIALI: Record<Position, string> = { north: "N", south: "S", east: "E", west: "O" };
-
 function nomeVero(pos: Position): string {
   return POSITION_LABELS[pos];
 }
@@ -110,7 +108,7 @@ function CardChip({
 }) {
   return (
     <span
-      className={`inline-flex items-center gap-0.5 rounded-md px-1.5 py-0.5 text-sm font-bold leading-none
+      className={`inline-flex items-center gap-0.5 rounded-md px-1 py-0.5 text-sm font-bold leading-none
         ${highlight ? "bg-amber-100 dark:bg-amber-950/40 ring-1 ring-amber-300" : "bg-muted"}
         ${SUIT_COLORS[card.suit]}`}
       role="img"
@@ -151,7 +149,7 @@ function MiniHand({
       {semi.map((seme) => {
         const delSeme = cards.filter((c) => c.suit === seme);
         return (
-          <div key={seme} aria-hidden="true" className={`flex gap-1 text-xs font-bold leading-tight ${SUIT_COLORS[seme]}`}>
+          <div key={seme} aria-hidden="true" className={`flex flex-wrap gap-x-1 text-xs font-bold leading-tight ${SUIT_COLORS[seme]}`}>
             <span className="w-3 shrink-0">{suitSymbol(seme)}</span>
             {delSeme.length === 0 ? (
               <span className="text-muted-foreground">—</span>
@@ -172,73 +170,47 @@ function MiniHand({
   );
 }
 
-// ── trick table (2x2 compass layout) ────────────────────────────
+// ── la presa al centro del tavolo ───────────────────────────────
 
-function TrickTable({
+/**
+ * Le quattro carte della presa, ognuna dal lato di chi l'ha giocata, dentro la
+ * croce delle mani.
+ *
+ * PERCHÉ AL CENTRO. Fino al 20/11/2026 la presa stava in un tavolino sopra e
+ * le mani in un secondo schema sotto: sul telefono non entravano insieme, e
+ * per seguire la mano carta per carta si scorreva su e giù perdendo il filo
+ * (Trevisaoi). Al centro della croce si vede chi ha giocato cosa e cosa gli
+ * resta in mano, senza muoversi.
+ *
+ * Niente lettere dei posti qui: i nomi sono già sulle mani attorno.
+ */
+function PresaAlCentro({
   trick,
-  declarer,
+  ancora,
   trumpSuit,
 }: {
   trick: Trick;
-  declarer: Position;
+  ancora: Position;
   trumpSuit: Suit | null;
 }) {
   const t = useT();
-  // Map each play to a display position
-  const playByDisplay: Partial<Record<Position, TrickPlay>> = {};
-  for (const play of trick.plays) {
-    const dp = toDisplayPosition(play.position, declarer);
-    playByDisplay[dp] = play;
-  }
+  const perLato: Partial<Record<Position, TrickPlay>> = {};
+  for (const play of trick.plays) perLato[toDisplayPosition(play.position, ancora)] = play;
 
-  const winner = trick.winner;
-
-  // Funzione di render (non componente): evita di creare un tipo di componente nuovo a ogni render
-  function renderCell(pos: Position) {
-    const play = playByDisplay[pos];
-    if (!play) return <div />;
-    const isWinner = play.position === winner;
+  function casella(lato: Position, dove: string) {
+    const play = perLato[lato];
     return (
-      <div
-        className={`flex items-center justify-center gap-1 rounded-lg px-2 py-1.5 text-center transition-colors
-          ${isWinner ? "bg-emerald-100 dark:bg-emerald-950/40 ring-1 ring-emerald-300" : "bg-card"}`}
-      >
-        <CardChip card={play.card} highlight={isWinner} />
+      <div className={`flex items-center justify-center ${dove}`}>
+        {play && <CardChip card={play.card} highlight={play.position === trick.winner} />}
       </div>
-    );
-  }
-
-  /**
-   * La lettera accanto a ogni casella è quella del posto VERO che ci siede.
-   * Il tavolo può essere ruotato (chi gioca in basso), e fino al 19/10/2026 le
-   * lettere erano fisse: col dichiarante a Nord l'Asso di Nord compariva
-   * accanto alla «S» — segnalato da un insegnante, che leggeva la presa al
-   * contrario rispetto alle mani elencate sotto.
-   */
-  function etichetta(slot: Position) {
-    const vero = toGamePosition(slot, declarer);
-    return (
-      <span className="text-xs font-bold text-muted-foreground uppercase">
-        <span aria-hidden="true">{t(INIZIALI[vero])}</span>
-        <span className="sr-only">{t(POSITION_LABELS[vero])}</span>
-      </span>
     );
   }
 
   return (
-    <div className="grid grid-cols-3 grid-rows-3 gap-1 w-48 mx-auto">
-      <div />
-      <div className="flex flex-col items-center gap-0.5">
-        {etichetta("north")}
-        {renderCell("north")}
-      </div>
-      <div />
-
-      <div className="flex flex-col items-center gap-0.5 justify-center">
-        {etichetta("west")}
-        {renderCell("west")}
-      </div>
-      <div className="flex items-center justify-center">
+    <div className="grid h-full min-h-[7.5rem] grid-cols-3 grid-rows-3 rounded-xl bg-emerald-50/60 p-1 dark:bg-emerald-950/20">
+      {casella("north", "col-start-2 row-start-1")}
+      {casella("west", "col-start-1 row-start-2")}
+      <div className="col-start-2 row-start-2 flex items-center justify-center">
         <span
           className="text-xs font-bold text-muted-foreground"
           role="img"
@@ -247,17 +219,8 @@ function TrickTable({
           <span aria-hidden="true">{trumpSuit ? suitSymbol(trumpSuit) : t("SA")}</span>
         </span>
       </div>
-      <div className="flex flex-col items-center gap-0.5 justify-center">
-        {etichetta("east")}
-        {renderCell("east")}
-      </div>
-
-      <div />
-      <div className="flex flex-col items-center gap-0.5">
-        {etichetta("south")}
-        {renderCell("south")}
-      </div>
-      <div />
+      {casella("east", "col-start-3 row-start-2")}
+      {casella("south", "col-start-2 row-start-3")}
     </div>
   );
 }
@@ -351,9 +314,7 @@ export function HandReplay({
 
   if (!trick) return null;
 
-  const positions: Position[] = ["north", "east", "south", "west"];
-
-  return (
+    return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -405,109 +366,93 @@ export function HandReplay({
           </button>
         </div>
 
-        {/* Corpo scorrevole: l'intestazione resta visibile mentre si scorre. */}
-        <div className="flex-1 overflow-y-auto overscroll-contain">
+        {/* Corpo scorrevole: l'intestazione e i pulsanti restano fermi. */}
+        <div className="flex-1 overflow-y-auto overscroll-contain px-4 pb-3 sm:px-5">
 
         {/* Trick number + score bar */}
-        <div className="px-5 pb-3 flex items-center justify-between">
+        <div className="pb-3 flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center justify-center h-7 min-w-[28px] rounded-lg bg-emerald-50 dark:bg-emerald-950/40 px-2 text-xs font-bold text-emerald-700 dark:text-emerald-300">
+            <span className="inline-flex items-center justify-center h-7 min-w-[28px] rounded-lg bg-emerald-50 dark:bg-emerald-950/40 px-2 text-xs font-bold tabular-nums text-emerald-700 dark:text-emerald-300">
               {currentTrickIdx + 1}/{totalTricks}
             </span>
             <span className="text-xs font-bold text-muted-foreground">{t("Presa")}</span>
           </div>
-          <div className="flex items-center gap-2 text-xs font-bold">
+          <div className="flex items-center gap-1.5 text-xs font-bold">
             <span className="text-muted-foreground">{t("Dichiarante")}</span>
-            <span className="text-emerald-700 bg-emerald-50 dark:text-emerald-300 dark:bg-emerald-950/40 rounded-md px-1.5 py-0.5">
+            <span className="text-emerald-700 bg-emerald-50 dark:text-emerald-300 dark:bg-emerald-950/40 rounded-md px-1.5 py-0.5 tabular-nums">
               {runningScore.dichiarante}
             </span>
             <span className="text-muted-foreground/40">-</span>
-            <span className="text-red-700 bg-red-50 dark:text-red-400 dark:bg-red-950/40 rounded-md px-1.5 py-0.5">
+            <span className="text-red-700 bg-red-50 dark:text-red-400 dark:bg-red-950/40 rounded-md px-1.5 py-0.5 tabular-nums">
               {runningScore.difesa}
             </span>
             <span className="text-muted-foreground">{t("Difesa")}</span>
           </div>
         </div>
 
-        {/* Trick compass display */}
-        <div className="px-5 py-3">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentTrickIdx}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.2 }}
-            >
-              <TrickTable
-                trick={trick}
-                declarer={ancora}
-                trumpSuit={gameState.trumpSuit}
-              />
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
-        {/* Commentary */}
-        <div className="px-5 pb-3">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentTrickIdx}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="rounded-xl bg-muted px-4 py-2.5 text-center"
-            >
-              <p className="text-sm font-semibold text-foreground/80">
-                {trickCommentary(trick, t)}
-              </p>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                {t("Attacco: {posto}", { posto: t(nomeVero(trick.leader)) })}
-              </p>
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
-        {/* Hands at this point */}
-        <div className="px-5 pb-4">
-          <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">
-            {t("Carte in mano (prima della presa)")}
-          </p>
-          {/* Cross layout: Nord top, Ovest/Est sides, Sud bottom — like the table. */}
-          <div className="grid grid-cols-3 grid-rows-3 gap-1.5">
-            {(["north", "west", "east", "south"] as Position[]).map((slot) => {
-              const pos = positions.find(
-                (p) => toDisplayPosition(p, ancora) === slot
-              )!;
-              const hand = remainingHand(originalHands[pos], playedBefore);
-              const cellClass =
-                slot === "north"
-                  ? "col-start-2 row-start-1"
-                  : slot === "west"
-                    ? "col-start-1 row-start-2"
-                    : slot === "east"
-                      ? "col-start-3 row-start-2"
-                      : "col-start-2 row-start-3";
-              return (
-                <div key={slot} className={`rounded-lg bg-muted px-2.5 py-1.5 ${cellClass}`}>
-                  <span className="text-xs font-bold text-muted-foreground uppercase">
-                    {t(POSITION_LABELS[pos])}
-                  </span>
-                  <MiniHand cards={hand} playedCard={playedInTrick[pos]} />
-                </div>
-              );
-            })}
+        {/*
+         * Il tavolo: le mani come erano PRIMA della presa (la carta giocata è
+         * sottolineata) e la presa al centro. Un solo schema, che sul telefono
+         * sta tutto nello schermo.
+         */}
+        <div className="grid grid-cols-[minmax(0,1fr)_7rem_minmax(0,1fr)] sm:grid-cols-[minmax(0,1fr)_8rem_minmax(0,1fr)] grid-rows-[auto_auto_auto] gap-1.5">
+          {(["north", "west", "east", "south"] as Position[]).map((slot) => {
+            const pos = toGamePosition(slot, ancora);
+            const hand = remainingHand(originalHands[pos], playedBefore);
+            const cellClass =
+              slot === "north"
+                ? "col-start-2 row-start-1"
+                : slot === "west"
+                  ? "col-start-1 row-start-2 self-center"
+                  : slot === "east"
+                    ? "col-start-3 row-start-2 self-center"
+                    : "col-start-2 row-start-3";
+            return (
+              <div key={slot} className={`min-w-0 rounded-lg bg-muted px-1.5 py-1.5 sm:px-2 ${cellClass}`}>
+                <span className="text-xs font-bold text-muted-foreground uppercase">
+                  {t(POSITION_LABELS[pos])}
+                </span>
+                <MiniHand cards={hand} playedCard={playedInTrick[pos]} />
+              </div>
+            );
+          })}
+          <div className="col-start-2 row-start-2">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentTrickIdx}
+                className="h-full"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.15 }}
+              >
+                <PresaAlCentro trick={trick} ancora={ancora} trumpSuit={gameState.trumpSuit} />
+              </motion.div>
+            </AnimatePresence>
           </div>
         </div>
 
-        {/* Navigation */}
-        <div className="flex items-center justify-between border-t border-border px-5 py-4">
+        {/* Chi ha vinto la presa, sotto il tavolo. */}
+        <p className="mt-3 rounded-xl bg-muted px-4 py-2 text-center text-sm font-semibold text-foreground/80" aria-live="polite">
+          {trickCommentary(trick, t)}
+          <span className="block text-xs font-normal text-muted-foreground">
+            {t("Attacco: {posto}", { posto: t(nomeVero(trick.leader)) })}
+          </span>
+        </p>
+        </div>
+
+        {/*
+         * I pulsanti FUORI dalla parte che scorre: prima stavano in fondo allo
+         * scorrimento e sul telefono bisognava scendere per passare alla presa
+         * dopo, e poi risalire per vederla.
+         */}
+        <div className="shrink-0 grid grid-cols-[1fr_auto_1fr] items-center gap-2 border-t border-border px-4 py-3 sm:px-5">
           <Button
             variant="outline"
             size="sm"
             disabled={currentTrickIdx === 0}
             onClick={() => setCurrentTrickIdx((i) => Math.max(0, i - 1))}
-            className="rounded-xl text-xs font-bold h-9 px-4"
+            className="rounded-xl text-xs font-bold h-11 px-3 justify-self-start"
           >
             <svg className="h-3.5 w-3.5 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
               <polyline points="15,18 9,12 15,6" />
@@ -516,10 +461,10 @@ export function HandReplay({
           </Button>
 
           <Button
-            variant="outline"
+            variant="ghost"
             size="sm"
             onClick={onClose}
-            className="rounded-xl text-xs font-bold h-9 px-4 text-muted-foreground"
+            className="rounded-xl text-xs font-bold h-11 px-3 text-muted-foreground"
           >
             {t("Chiudi")}
           </Button>
@@ -531,14 +476,13 @@ export function HandReplay({
             onClick={() =>
               setCurrentTrickIdx((i) => Math.min(totalTricks - 1, i + 1))
             }
-            className="rounded-xl text-xs font-bold h-9 px-4"
+            className="rounded-xl text-xs font-bold h-11 px-3 justify-self-end"
           >
             {t("Successiva")}
             <svg className="h-3.5 w-3.5 ml-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
               <polyline points="9,6 15,12 9,18" />
             </svg>
           </Button>
-        </div>
         </div>
       </motion.div>
     </motion.div>

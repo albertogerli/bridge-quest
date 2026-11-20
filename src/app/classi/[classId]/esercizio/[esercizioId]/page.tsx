@@ -200,6 +200,9 @@ export default function EsercizioPage({
   const alCompito = `/classi/${classId}/compito/${assignmentId}`;
   const precedente = posto > 0 ? ordine[posto - 1] : null;
   const successiva = posto >= 0 && posto < ordine.length - 1 ? ordine[posto + 1] : null;
+  // Opzioni con la giusta nota: il verdetto lo dicono già i colori.
+  const conOpzioni =
+    esercizio.consegna === "scelta" && (esercizio.opzioni?.length ?? 0) > 0 && (dato?.risposte.length ?? 0) > 0;
 
   return (
     <div className="mx-auto w-full max-w-2xl px-4 py-8 sm:px-6">
@@ -311,6 +314,12 @@ export default function EsercizioPage({
         </div>
       ) : (
         <div className="mt-6 space-y-4">
+          {/*
+           * Nelle domande a scelta il riquadro «Giusto / Non era questa» non
+           * c'è: le opzioni qui sotto dicono già quale era giusta e quale si è
+           * scelta (Trevisaoi, 20/11/2026: «ridondante»).
+           */}
+          {!conOpzioni && (
           <div
             className={`flex items-center gap-3 rounded-xl border p-4 ${
               dato.giusta
@@ -340,6 +349,7 @@ export default function EsercizioPage({
               )}
             </div>
           </div>
+          )}
 
           {/* Tutte le opzioni, non solo il verdetto: fra cosa si sceglieva. */}
           {esercizio.consegna === "scelta" && (esercizio.opzioni?.length ?? 0) > 0 && (

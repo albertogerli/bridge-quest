@@ -11,17 +11,26 @@ import { normalizzaRisposta } from "@/lib/esercizi-posizione";
  * PERCHÉ. Rivedendo il test si leggeva solo «La tua risposta: …»: senza le
  * altre opzioni accanto non si capiva fra cosa si era scelto, e riaprendo la
  * domanda restava solo «Giusto» (utente, 19/11/2026).
+ *
+ * LA STESSA LISTA PER L'INSEGNANTE, con `voti`: accanto a ogni opzione quanti
+ * l'hanno scelta, in rosso le sbagliate che qualcuno ha preso. Trevisaoi
+ * (20/11/2026) voleva proiettare in aula la stessa schermata che vede
+ * l'allievo, «allineate»: due disegni diversi per la stessa domanda
+ * obbligherebbero a spiegare due legende.
  */
 export function OpzioniCorrette({
   opzioni,
   data,
   risposte,
+  voti,
 }: {
   opzioni: string[];
   /** La risposta data dall'allievo. */
   data: string | null;
   /** Le risposte giuste; vuoto finché il responso non è arrivato. */
   risposte: string[];
+  /** Per l'insegnante: quante prime risposte per opzione (chiave normalizzata) e il totale. */
+  voti?: { per: Map<string, number>; totale: number };
 }) {
   const t = useT();
   const giuste = new Set(risposte.map(normalizzaRisposta));
@@ -31,7 +40,9 @@ export function OpzioniCorrette({
       {opzioni.map((o) => {
         const n = normalizzaRisposta(o);
         const giusta = giuste.has(n);
-        const scelta = mia === n;
+        const quanti = voti?.per.get(n) ?? 0;
+        // Per l'insegnante «scelta» vuol dire: qualcuno della classe l'ha presa.
+        const scelta = voti ? quanti > 0 : mia === n;
         const stile = giusta
           ? "border-emerald-300 bg-emerald-50 dark:border-emerald-900 dark:bg-emerald-950/30"
           : scelta
@@ -49,8 +60,18 @@ export function OpzioniCorrette({
             <span className={`text-pretty ${giusta || scelta ? "font-medium text-foreground" : ""}`}>
               {o}
               {giusta && <span className="sr-only"> ({t("giusta")})</span>}
-              {scelta && <span className="block text-xs font-semibold text-muted-foreground">{t("la tua risposta")}</span>}
+              {scelta && !voti && <span className="block text-xs font-semibold text-muted-foreground">{t("la tua risposta")}</span>}
             </span>
+            {voti && voti.totale > 0 && (
+              <span className={`ml-auto flex shrink-0 items-baseline gap-2 tabular-nums ${quanti ? "" : "opacity-60"}`}>
+                {quanti > 0 && (
+                  <span className="text-xs text-muted-foreground">
+                    {quanti === 1 ? t("1 allievo") : t("{n} allievi", { n: quanti })}
+                  </span>
+                )}
+                <span className="w-10 text-right text-sm font-bold text-foreground">{Math.round((quanti / voti.totale) * 100)}%</span>
+              </span>
+            )}
           </li>
         );
       })}
