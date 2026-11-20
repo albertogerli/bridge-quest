@@ -38,7 +38,7 @@ import { SuggestedNextStep } from "@/components/home/banners/suggested-next-step
 import { FindAsdBanner } from "@/components/home/banners/find-asd-banner";
 import { useLocalStats } from "@/hooks/use-local-stats";
 import { useGameStore, useHasHydrated } from "@/store/use-game-store";
-import { GraduationCap, Hourglass, MapPin, Ticket, Zap } from "lucide-react";
+import { BookOpen, GraduationCap, Hourglass, MapPin, Ticket, Zap } from "lucide-react";
 import { reportError, segnalaSalvoRete } from "@/lib/report-error";
 import {
   CHIAVE_VUOLE_INSEGNARE,
@@ -571,6 +571,15 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
             />
           )}
           {richiesta === "trova-asd" && <FindAsdBanner />}
+          {/* Le guide stavano solo dentro /classi e /istruttori: chi non sapeva
+              di dover passare di lì non le trovava (utente, 20/11/2026). */}
+          <RigaLink
+            href="/guida-allievi"
+            statica
+            Icona={BookOpen}
+            titolo={t("Guida per l'allievo")}
+            testo={t("Come funziona, passo passo, con le schermate.")}
+          />
 
           {!isGuidedMode && (
             <section className="grid gap-3">

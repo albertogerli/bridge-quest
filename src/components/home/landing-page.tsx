@@ -260,6 +260,11 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
           {t("Sviluppo e hosting: Alberto Giovanni Gerli / Tourbillon Tech S.r.l.")}
         </p>
         <p className="text-xs text-muted-foreground">
+          <a href="/guida-allievi" target="_blank" rel="noopener" className="underline hover:text-foreground transition-colors">{t("Guida per l'allievo")}</a>
+          {" · "}
+          <a href="/guida-insegnanti" target="_blank" rel="noopener" className="underline hover:text-foreground transition-colors">{t("Guida per l'insegnante")}</a>
+        </p>
+        <p className="text-xs text-muted-foreground">
           <a href="/privacy" className="underline hover:text-foreground transition-colors">{t("Privacy e Cookie Policy")}</a>
         </p>
       </footer>

@@ -16,7 +16,7 @@ import { novitaDeiCompiti } from "@/lib/novita-insegnante";
 import { BenvenutoCorso } from "@/components/classi/benvenuto-corso";
 import { useT } from "@/contexts/traduzioni-provider";
 import { useLingua } from "@/hooks/use-lingua";
-import { ChevronRight, FileText, MessageSquareText, Users } from "lucide-react";
+import { BookOpen, ChevronRight, FileText, MessageSquareText, Users } from "lucide-react";
 import { CompitoInEvidenza } from "@/components/home/compito-in-evidenza";
 
 /**
@@ -295,6 +295,14 @@ export function HomeAllievo({ nome, onVaiAllaBacheca }: { nome: string | null; o
                   {piuCorsi ? c.name : t("La tua classe")}
                 </RigaLink>
               ))}
+              {/* Pagina statica in `public/`: `<a>`, non `Link`. */}
+              <li>
+                <a href="/guida-allievi" target="_blank" rel="noopener" className="flex min-h-14 items-center gap-3 py-3 font-medium">
+                  <span className="text-muted-foreground"><BookOpen className="h-5 w-5" aria-hidden="true" /></span>
+                  <span className="min-w-0 flex-1 truncate">{t("Guida per l'allievo")}</span>
+                  <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground" aria-hidden="true" />
+                </a>
+              </li>
             </ul>
             {piuCorsi && (
               <p className="mt-2 text-xs text-muted-foreground">

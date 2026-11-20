@@ -3,7 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "@/components/link";
 import { motion } from "motion/react";
-import { GraduationCap, Users, ArrowRight, Sparkles } from "lucide-react";
+import { GraduationCap, Users, ArrowRight, Sparkles, BookOpen, BookOpenCheck } from "lucide-react";
+import { RigaLink } from "@/components/home/riga-link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { STRUMENTI_LEZIONE } from "@/components/istruttori/strumenti-lezione";
@@ -208,6 +209,27 @@ export function HomeInsegnante({
               </span>
             </Link>
           ))}
+        </div>
+      </section>
+
+      {/* Le guide in home: prima stavano solo in /istruttori e /classi (utente, 20/11/2026). */}
+      <section className="mb-8">
+        <h2 className="mb-3 font-display text-lg font-semibold">{t("Le guide")}</h2>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <RigaLink
+            href="/guida-insegnanti"
+            statica
+            Icona={BookOpenCheck}
+            titolo={t("Guida per l'insegnante")}
+            testo={t("Classi, compiti, aula: passo passo, con le schermate.")}
+          />
+          <RigaLink
+            href="/guida-allievi"
+            statica
+            Icona={BookOpen}
+            titolo={t("Guida per l'allievo")}
+            testo={t("Da girare alla classe: come entrare, fare i compiti, rivedere le mani.")}
+          />
         </div>
       </section>
 

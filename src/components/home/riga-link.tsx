@@ -14,18 +14,23 @@ export function RigaLink({
   titolo,
   testo,
   extra,
+  statica,
 }: {
   href: string;
   Icona: LucideIcon;
   titolo: string;
   testo?: string;
   extra?: React.ReactNode;
+  /**
+   * Una pagina statica di `public/` (le guide): `<a>` in una scheda nuova, non
+   * `Link`, che proverebbe a navigarci come a una rotta dell'app.
+   */
+  statica?: boolean;
 }) {
-  return (
-    <Link
-      href={href}
-      className="flex min-h-16 items-center gap-3 rounded-2xl border border-border bg-card p-4 transition-colors hover:border-primary/40"
-    >
+  const classe =
+    "flex min-h-16 items-center gap-3 rounded-2xl border border-border bg-card p-4 transition-colors hover:border-primary/40";
+  const dentro = (
+    <>
       <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary" aria-hidden="true">
         <Icona className="size-5" />
       </span>
@@ -35,6 +40,15 @@ export function RigaLink({
       </span>
       {extra}
       <ChevronRight className="size-5 shrink-0 text-muted-foreground" aria-hidden="true" />
+    </>
+  );
+  return statica ? (
+    <a href={href} target="_blank" rel="noopener" className={classe}>
+      {dentro}
+    </a>
+  ) : (
+    <Link href={href} className={classe}>
+      {dentro}
     </Link>
   );
 }
