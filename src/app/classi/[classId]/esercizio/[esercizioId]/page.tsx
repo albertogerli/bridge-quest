@@ -197,7 +197,8 @@ export default function EsercizioPage({
     posto < 0
       ? null
       : ([...ordine.slice(posto + 1), ...ordine.slice(0, posto)].find((id) => !risposte.has(id)) ?? null);
-  const alCompito = `/classi/${classId}/compito/${assignmentId}`;
+  // `elenco=1`: senza, la pagina del compito rimanderebbe subito alla domanda da fare.
+  const alCompito = `/classi/${classId}/compito/${assignmentId}?elenco=1`;
   const precedente = posto > 0 ? ordine[posto - 1] : null;
   const successiva = posto >= 0 && posto < ordine.length - 1 ? ordine[posto + 1] : null;
   // Opzioni con la giusta nota: il verdetto lo dicono già i colori.

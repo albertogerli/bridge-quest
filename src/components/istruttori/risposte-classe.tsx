@@ -10,6 +10,8 @@ import { segnalaSalvoRete } from "@/lib/report-error";
 import { useT } from "@/contexts/traduzioni-provider";
 import { normalizzaRisposta } from "@/lib/esercizi-posizione";
 import { OpzioniCorrette } from "@/components/classi/opzioni-corrette";
+import { FiguraDomanda } from "@/components/figura-domanda";
+import { leggiFigura } from "@/lib/figura-domanda";
 
 const SEMI: Suit[] = ["spade", "heart", "diamond", "club"];
 const ORDINE = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -83,6 +85,7 @@ export function RisposteClasse({ esercizioIds, righe }: { esercizioIds: string[]
           const opzioni = e.consegna === "scelta" && (e.opzioni?.length ?? 0) > 0 ? e.opzioni! : null;
           if (opzioni) {
             const per = new Map<string, number>();
+            const figura = leggiFigura(e.figura);
             for (const v of s.voci) per.set(normalizzaRisposta(v.risposta), (per.get(normalizzaRisposta(v.risposta)) ?? 0) + v.n);
             return (
               <div key={e.id} className="rounded-xl border border-border bg-card p-4">
@@ -97,7 +100,15 @@ export function RisposteClasse({ esercizioIds, righe }: { esercizioIds: string[]
                   )}
                 </div>
                 {e.domanda && <p className="mt-1 text-pretty">{e.domanda}</p>}
-                {mano.length > 0 && (
+                {/* LA DOMANDA INTERA, CON LA FIGURA: proiettata in aula si
+                    commenta da qui, senza riaprire il foglio (Trevisaoi,
+                    21/11/2026: lo faceva con i risultati di Google Form). */}
+                {figura && (
+                  <div className="mt-3">
+                    <FiguraDomanda figura={figura} />
+                  </div>
+                )}
+                {!figura && mano.length > 0 && (
                 <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 font-mono text-base">
                   {SEMI.map((seme) => (
                     <span key={seme} className="flex items-center gap-1">

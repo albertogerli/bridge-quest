@@ -5,6 +5,8 @@ import { Briciole } from "@/components/briciole";
 import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "motion/react";
 import Link from "@/components/link";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "@/hooks/use-router-lingua";
 import { Button } from "@/components/ui/button";
 import { BridgeTable } from "@/components/bridge/bridge-table";
 import { GameActions } from "@/components/bridge/game-actions";
@@ -179,7 +181,25 @@ export default function CompitoPage({
         .filter((s): s is Smazzata => s !== undefined)
     : [];
 
-  if (loading || !smazzateLoaded) {
+  /*
+   * UN COMPITO DI SOLE DOMANDE SI APRE SULLA DOMANDA DA FARE. L'elenco con
+   * «Continua dalla domanda n» era una pagina in più da attraversare ogni volta
+   * (Trevisaoi, 21/11/2026). Ci si torna da «Gli esercizi» e «Tutte le domande»
+   * della domanda, che passano `?elenco=1`. Resta l'elenco quando il test è
+   * finito (lì c'è il punteggio) e quando l'insegnante ha scritto una nota,
+   * che altrimenti non si leggerebbe mai.
+   */
+  const router = useRouter();
+  const vuoleElenco = useSearchParams().get("elenco") === "1";
+  const daAprire =
+    !loading && smazzateLoaded && assignment && !vuoleElenco && hands.length === 0 && !assignment.instructor_note
+      ? (assignment.esercizio_ids.find((id) => !doneIds.has(id)) ?? null)
+      : null;
+  useEffect(() => {
+    if (daAprire) router.replace(`/classi/${classId}/esercizio/${daAprire}?compito=${assignmentId}`);
+  }, [daAprire, classId, assignmentId, router]);
+
+  if (loading || !smazzateLoaded || daAprire) {
     return (
       <div className="flex justify-center py-20">
         <div className="h-8 w-8 animate-spin rounded-full border-[3px] border-border border-t-primary" />

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Plus, Printer, Send, Trash2 } from "lucide-react";
+import { Eye, Plus, Printer, Send, Trash2 } from "lucide-react";
 import { Briciole } from "@/components/briciole";
 import { Button } from "@/components/ui/button";
 import { useT } from "@/contexts/traduzioni-provider";
@@ -158,6 +158,12 @@ export default function DomandePage() {
                       {giaAggiunti.has(gruppoTest(test)) && <> · {t("fra le tue domande")}</>}
                     </p>
                   </div>
+                  <Button size="sm" variant="outline" asChild>
+                    <Link href={`/istruttori/domande/vedi?test=${test.numero}`}>
+                      <Eye className="h-4 w-4" aria-hidden="true" />
+                      {t("Vedi")}
+                    </Link>
+                  </Button>
                   <Button size="sm" variant="outline" asChild>
                     <Link href={`/istruttori/domande/stampa?test=${test.numero}`} target="_blank">
                       <Printer className="h-4 w-4" aria-hidden="true" />

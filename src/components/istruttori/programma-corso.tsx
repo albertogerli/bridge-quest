@@ -183,7 +183,7 @@ export function ProgrammaCorso({ classId: classeFissa, onCambio }: { classId?: s
                             key={x.numero}
                             nome={t("Esercizi")}
                             titolo={`${t("Lezione {n}", { n: siglaTest(x) })} · ${t(x.titolo)}`}
-                            vedi={`/istruttori/domande#lezione-${siglaTest(x)}`}
+                            vedi={`/istruttori/domande/vedi?test=${x.numero}`}
                             vediInterno
                             stampa={`/istruttori/domande/stampa?test=${x.numero}`}
                             link={classId && idCompito ? assoluto(`/classi/${classId}/compito/${idCompito}`) : null}
