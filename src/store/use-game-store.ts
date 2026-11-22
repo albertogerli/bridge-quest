@@ -187,13 +187,24 @@ export const useGameStore = create<GameState>()(
 export function useHasHydrated(): boolean {
   const [hydrated, setHydrated] = useState(false);
   useEffect(() => {
-    // If hydration already finished before this effect ran, sync immediately.
-    if (useGameStore.persist.hasHydrated()) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- sync del flag di idratazione zustand-persist dopo il mount: pattern anti hydration mismatch
+    // SENZA localStorage NON C'È `persist`. Se leggere `window.localStorage`
+    // lancia un errore (Safari con i dati dei siti bloccati, alcuni browser
+    // interni alle app), createJSONStorage restituisce undefined e zustand
+    // crea lo store senza `.persist`. Il 21/11/2026 la home su iPhone finiva
+    // nella pagina d'errore (Sentry BRIDGELAB-2Y). Lo store resta in memoria:
+    // non c'è niente da aspettare.
+    const persistApi = (useGameStore as Partial<typeof useGameStore>).persist;
+    if (!persistApi) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- niente da idratare senza storage: il flag va alzato subito dopo il mount
       setHydrated(true);
       return;
     }
-    const unsub = useGameStore.persist.onFinishHydration(() => setHydrated(true));
+    // If hydration already finished before this effect ran, sync immediately.
+    if (persistApi.hasHydrated()) {
+      setHydrated(true);
+      return;
+    }
+    const unsub = persistApi.onFinishHydration(() => setHydrated(true));
     return () => unsub();
   }, []);
   return hydrated;
