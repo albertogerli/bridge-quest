@@ -592,13 +592,35 @@ export default function ClassDetailPage({
       </div>
 
       {/*
+        I RISULTATI DEI COMPITI, IN CIMA ANCHE LORO.
+        Al telefono la scheda Compiti stava a quattromila pixel dalla cima,
+        sotto il programma aperto con le sue venti lezioni: un'insegnante
+        (24/11/2026) ha letto nella guida «vai sulla scheda Compiti» e non
+        l'ha trovata. Il pulsante apre la scheda e ci porta la pagina.
+      */}
+      <div className="mb-6">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t("Dopo la lezione")}</p>
+        <Button
+          variant="outline"
+          onClick={() => {
+            setScheda("compiti");
+            document.getElementById("schede-classe")?.scrollIntoView({ behavior: "smooth", block: "start" });
+          }}
+        >
+          {t("Compiti e risultati ({n})", { n: assignments.length })}
+        </Button>
+      </div>
+
+      {/*
         IL PROGRAMMA AL POSTO DI «DOPO LA LEZIONE». Le quattro voci (dispensa,
         nuovo compito, smazzate, materiali) erano quattro strade verso le
         stesse cose; il programma le mette sotto la lezione a cui servono, con
         in verde quello che la classe ha già (Trevissoi, 06/11/2026). «Nuovo
         compito» e i materiali propri restano nella scheda Compiti.
       */}
-      <details className="mb-6 rounded-xl border border-border bg-card p-4" open>
+      {/* Aperto finché la classe non ha compiti: poi chi apre la pagina cerca
+          soprattutto i risultati, e venti lezioni aperte li spingono giù. */}
+      <details className="mb-6 rounded-xl border border-border bg-card p-4" open={assignments.length === 0}>
         <summary className="cursor-pointer font-display text-lg font-semibold">
           {t("Dal programma del corso")}
         </summary>
