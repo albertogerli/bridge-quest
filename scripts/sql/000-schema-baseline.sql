@@ -16,7 +16,7 @@
 -- Rigenerare e committare dopo OGNI modifica allo schema, insieme allo script
 -- che l'ha causata.
 --
--- Estratto il: 2026-11-16
+-- Estratto il: 2026-11-24
 -- ============================================================================
 
 SET check_function_bodies = false;
@@ -101,6 +101,19 @@ CREATE TABLE IF NOT EXISTS public.aste_torneo_in_corso (
   user_id uuid NOT NULL,
   asta text[] NOT NULL,
   aggiornata_at timestamp with time zone NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS public.backup_commentary_nt_2026_11 (
+  id text,
+  commentary text
+);
+
+CREATE TABLE IF NOT EXISTS public.backup_sa_2026_11 (
+  tabella text,
+  chiave text,
+  colonna text,
+  valore text,
+  salvato_il timestamp with time zone
 );
 
 CREATE TABLE IF NOT EXISTS public.badges (
@@ -248,6 +261,33 @@ CREATE TABLE IF NOT EXISTS public.completed_modules (
   lesson_id text NOT NULL,
   module_id text NOT NULL,
   completed_at timestamp with time zone
+);
+
+CREATE TABLE IF NOT EXISTS public.corsi (
+  id uuid NOT NULL,
+  user_id uuid,
+  stato text NOT NULL,
+  tipo text NOT NULL,
+  asd_code text NOT NULL,
+  livello text NOT NULL,
+  maestro text NOT NULL,
+  prima_lezione date NOT NULL,
+  orari jsonb NOT NULL,
+  telefono text NOT NULL,
+  email text,
+  whatsapp boolean NOT NULL,
+  locandina_path text,
+  programma text,
+  programma_path text,
+  costo text,
+  note text,
+  consenso boolean NOT NULL,
+  ha_classe_bridgelab boolean NOT NULL,
+  messaggio_admin text,
+  sostituisce uuid,
+  approvato_il timestamp with time zone,
+  created_at timestamp with time zone NOT NULL,
+  updated_at timestamp with time zone NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.course_worlds (
@@ -5093,6 +5133,7 @@ ALTER TABLE public.assignments ALTER COLUMN stelle_insegnante SET DEFAULT false;
 ALTER TABLE public.assignments ALTER COLUMN licita_gioca SET DEFAULT true;
 ALTER TABLE public.aste_torneo_in_corso ALTER COLUMN asta SET DEFAULT '{}'::text[];
 ALTER TABLE public.aste_torneo_in_corso ALTER COLUMN aggiornata_at SET DEFAULT now();
+ALTER TABLE public.backup_sa_2026_11 ALTER COLUMN salvato_il SET DEFAULT now();
 ALTER TABLE public.badges ALTER COLUMN id SET DEFAULT nextval('badges_id_seq'::regclass);
 ALTER TABLE public.badges ALTER COLUMN earned_at SET DEFAULT now();
 ALTER TABLE public.bbo_username_cleanup_2026_08 ALTER COLUMN cleared_at SET DEFAULT now();
@@ -5138,6 +5179,13 @@ ALTER TABLE public.commenti_compito ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.commenti_compito ALTER COLUMN updated_at SET DEFAULT now();
 ALTER TABLE public.completed_modules ALTER COLUMN id SET DEFAULT nextval('completed_modules_id_seq'::regclass);
 ALTER TABLE public.completed_modules ALTER COLUMN completed_at SET DEFAULT now();
+ALTER TABLE public.corsi ALTER COLUMN id SET DEFAULT gen_random_uuid();
+ALTER TABLE public.corsi ALTER COLUMN stato SET DEFAULT 'in-attesa'::text;
+ALTER TABLE public.corsi ALTER COLUMN orari SET DEFAULT '[]'::jsonb;
+ALTER TABLE public.corsi ALTER COLUMN whatsapp SET DEFAULT false;
+ALTER TABLE public.corsi ALTER COLUMN ha_classe_bridgelab SET DEFAULT false;
+ALTER TABLE public.corsi ALTER COLUMN created_at SET DEFAULT now();
+ALTER TABLE public.corsi ALTER COLUMN updated_at SET DEFAULT now();
 ALTER TABLE public.course_worlds ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE public.course_worlds ALTER COLUMN updated_at SET DEFAULT now();
 ALTER TABLE public.courses ALTER COLUMN created_at SET DEFAULT now();
@@ -5341,6 +5389,7 @@ ALTER TABLE public.coda_sfide_coppie ADD CONSTRAINT coda_sfide_coppie_pkey PRIMA
 ALTER TABLE public.collectible_cards ADD CONSTRAINT collectible_cards_pkey PRIMARY KEY (id);
 ALTER TABLE public.commenti_compito ADD CONSTRAINT commenti_compito_pkey PRIMARY KEY (id);
 ALTER TABLE public.completed_modules ADD CONSTRAINT completed_modules_pkey PRIMARY KEY (id);
+ALTER TABLE public.corsi ADD CONSTRAINT corsi_pkey PRIMARY KEY (id);
 ALTER TABLE public.course_worlds ADD CONSTRAINT course_worlds_pkey PRIMARY KEY (id);
 ALTER TABLE public.courses ADD CONSTRAINT courses_pkey PRIMARY KEY (id);
 ALTER TABLE public.elenco_allievi ADD CONSTRAINT elenco_allievi_pkey PRIMARY KEY (id);
@@ -5443,6 +5492,11 @@ ALTER TABLE public.collectible_cards ADD CONSTRAINT collectible_cards_category_c
 ALTER TABLE public.collectible_cards ADD CONSTRAINT collectible_cards_rarity_check CHECK ((rarity = ANY (ARRAY['comune'::text, 'rara'::text, 'epica'::text, 'leggendaria'::text])));
 ALTER TABLE public.collectible_cards ADD CONSTRAINT collectible_cards_unlock_check CHECK ((jsonb_typeof(unlock) = 'object'::text));
 ALTER TABLE public.commenti_compito ADD CONSTRAINT commenti_compito_testo_check CHECK (((char_length(testo) >= 1) AND (char_length(testo) <= 4000)));
+ALTER TABLE public.corsi ADD CONSTRAINT corsi_consenso_check CHECK (consenso);
+ALTER TABLE public.corsi ADD CONSTRAINT corsi_livello_check CHECK ((livello = ANY (ARRAY['principianti'::text, 'secondo-anno'::text, 'perfezionamento'::text, 'lezione-di-prova'::text])));
+ALTER TABLE public.corsi ADD CONSTRAINT corsi_lunghezze_check CHECK (((length(maestro) <= 120) AND (length(telefono) <= 40) AND (COALESCE(length(email), 0) <= 200) AND (COALESCE(length(programma), 0) <= 6000) AND (COALESCE(length(costo), 0) <= 300) AND (COALESCE(length(note), 0) <= 1500) AND (COALESCE(length(messaggio_admin), 0) <= 2000) AND (jsonb_typeof(orari) = 'array'::text) AND (jsonb_array_length(orari) <= 10)));
+ALTER TABLE public.corsi ADD CONSTRAINT corsi_stato_check CHECK ((stato = ANY (ARRAY['in-attesa'::text, 'pubblicato'::text, 'da-modificare'::text, 'rifiutato'::text, 'sostituito'::text, 'ritirato'::text])));
+ALTER TABLE public.corsi ADD CONSTRAINT corsi_tipo_check CHECK ((tipo = ANY (ARRAY['bridge-5'::text, 'tradizionale'::text])));
 ALTER TABLE public.courses ADD CONSTRAINT courses_level_check CHECK ((level = ANY (ARRAY['base'::text, 'intermedio'::text, 'avanzato'::text])));
 ALTER TABLE public.esercizi_posizione ADD CONSTRAINT esercizi_posizione_consegna_check CHECK ((consegna = ANY (ARRAY['dichiara'::text, 'carta'::text, 'piano'::text, 'scelta'::text])));
 ALTER TABLE public.eserciziario_exercises ADD CONSTRAINT eserciziario_exercises_content_check CHECK ((jsonb_typeof(content) = 'array'::text));
@@ -5536,6 +5590,8 @@ ALTER TABLE public.coda_sfide_coppie ADD CONSTRAINT coda_sfide_coppie_a2_fkey FO
 ALTER TABLE public.commenti_compito ADD CONSTRAINT commenti_compito_assignment_id_fkey FOREIGN KEY (assignment_id) REFERENCES assignments(id) ON DELETE CASCADE;
 ALTER TABLE public.commenti_compito ADD CONSTRAINT commenti_compito_student_id_fkey FOREIGN KEY (student_id) REFERENCES auth.users(id) ON DELETE CASCADE;
 ALTER TABLE public.completed_modules ADD CONSTRAINT completed_modules_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
+ALTER TABLE public.corsi ADD CONSTRAINT corsi_sostituisce_fkey FOREIGN KEY (sostituisce) REFERENCES corsi(id) ON DELETE SET NULL;
+ALTER TABLE public.corsi ADD CONSTRAINT corsi_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE SET NULL;
 ALTER TABLE public.course_worlds ADD CONSTRAINT course_worlds_course_id_fkey FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE;
 ALTER TABLE public.elenco_allievi ADD CONSTRAINT elenco_allievi_class_id_fkey FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE;
 ALTER TABLE public.email_events ADD CONSTRAINT email_events_user_id_fkey FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;
@@ -5652,6 +5708,8 @@ CREATE INDEX idx_class_members_student ON public.class_members USING btree (stud
 CREATE INDEX idx_class_messages_class ON public.class_messages USING btree (class_id, created_at);
 CREATE INDEX idx_classes_instructor ON public.classes USING btree (instructor_id);
 CREATE INDEX idx_classes_invite_code ON public.classes USING btree (invite_code);
+CREATE INDEX idx_corsi_stato ON public.corsi USING btree (stato, prima_lezione);
+CREATE INDEX idx_corsi_utente ON public.corsi USING btree (user_id, created_at DESC);
 CREATE INDEX idx_elenco_classe ON public.elenco_allievi USING btree (class_id, tavolo, posto);
 CREATE INDEX idx_email_events_user_type ON public.email_events USING btree (user_id, email_type, sent_at DESC);
 CREATE INDEX idx_esercizi_autore ON public.esercizi_posizione USING btree (autore_id, created_at DESC);
@@ -5758,6 +5816,8 @@ ALTER TABLE public.asd ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.asd_clubs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.assignments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.aste_torneo_in_corso ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.backup_commentary_nt_2026_11 ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.backup_sa_2026_11 ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.badges ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.bbo_username_cleanup_2026_08 ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.bidding_sessions ENABLE ROW LEVEL SECURITY;
@@ -5771,6 +5831,7 @@ ALTER TABLE public.coda_sfide_coppie ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.collectible_cards ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.commenti_compito ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.completed_modules ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.corsi ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.course_worlds ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.courses ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.elenco_allievi ENABLE ROW LEVEL SECURITY;
@@ -5869,6 +5930,9 @@ CREATE POLICY "Allievo legge i commenti per lui" ON public.commenti_compito AS P
   WHERE ((a.id = commenti_compito.assignment_id) AND is_member_of_class(a.class_id))))));
 CREATE POLICY "Insegnante legge i commenti del compito" ON public.commenti_compito AS PERMISSIVE FOR SELECT TO authenticated USING (is_instructor_of_assignment(assignment_id));
 CREATE POLICY "Own modules" ON public.completed_modules AS PERMISSIVE FOR ALL TO public USING ((auth.uid() = user_id));
+CREATE POLICY "Autore e amministratori leggono" ON public.corsi AS PERMISSIVE FOR SELECT TO authenticated USING ((is_admin() OR (user_id = auth.uid())));
+CREATE POLICY "Chi ha un account propone un corso" ON public.corsi AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK (((user_id = auth.uid()) AND (stato = 'in-attesa'::text) AND (messaggio_admin IS NULL) AND (approvato_il IS NULL) AND (ha_classe_bridgelab = false)));
+CREATE POLICY "Solo gli amministratori aggiornano" ON public.corsi AS PERMISSIVE FOR UPDATE TO authenticated USING (is_admin()) WITH CHECK (is_admin());
 CREATE POLICY course_worlds_public_read ON public.course_worlds AS PERMISSIVE FOR SELECT TO public USING (true);
 CREATE POLICY courses_public_read ON public.courses AS PERMISSIVE FOR SELECT TO public USING (true);
 CREATE POLICY "L'elenco è della classe" ON public.elenco_allievi AS PERMISSIVE FOR SELECT TO authenticated USING ((is_instructor_of_class(class_id) OR is_member_of_class(class_id)));
@@ -6007,6 +6071,8 @@ REVOKE ALL ON TABLE public.asd_clubs FROM PUBLIC, anon, authenticated, service_r
 REVOKE ALL ON SEQUENCE public.asd_id_seq FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.assignments FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.aste_torneo_in_corso FROM PUBLIC, anon, authenticated, service_role;
+REVOKE ALL ON TABLE public.backup_commentary_nt_2026_11 FROM PUBLIC, anon, authenticated, service_role;
+REVOKE ALL ON TABLE public.backup_sa_2026_11 FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.badges FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON SEQUENCE public.badges_id_seq FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.bbo_username_cleanup_2026_08 FROM PUBLIC, anon, authenticated, service_role;
@@ -6022,6 +6088,7 @@ REVOKE ALL ON TABLE public.collectible_cards FROM PUBLIC, anon, authenticated, s
 REVOKE ALL ON TABLE public.commenti_compito FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.completed_modules FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON SEQUENCE public.completed_modules_id_seq FROM PUBLIC, anon, authenticated, service_role;
+REVOKE ALL ON TABLE public.corsi FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.course_worlds FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.courses FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON TABLE public.elenco_allievi FROM PUBLIC, anon, authenticated, service_role;
@@ -6197,6 +6264,22 @@ GRANT SELECT ON TABLE public.aste_torneo_in_corso TO service_role;
 GRANT TRIGGER ON TABLE public.aste_torneo_in_corso TO service_role;
 GRANT TRUNCATE ON TABLE public.aste_torneo_in_corso TO service_role;
 GRANT UPDATE ON TABLE public.aste_torneo_in_corso TO service_role;
+GRANT DELETE ON TABLE public.backup_commentary_nt_2026_11 TO service_role;
+GRANT INSERT ON TABLE public.backup_commentary_nt_2026_11 TO service_role;
+GRANT MAINTAIN ON TABLE public.backup_commentary_nt_2026_11 TO service_role;
+GRANT REFERENCES ON TABLE public.backup_commentary_nt_2026_11 TO service_role;
+GRANT SELECT ON TABLE public.backup_commentary_nt_2026_11 TO service_role;
+GRANT TRIGGER ON TABLE public.backup_commentary_nt_2026_11 TO service_role;
+GRANT TRUNCATE ON TABLE public.backup_commentary_nt_2026_11 TO service_role;
+GRANT UPDATE ON TABLE public.backup_commentary_nt_2026_11 TO service_role;
+GRANT DELETE ON TABLE public.backup_sa_2026_11 TO service_role;
+GRANT INSERT ON TABLE public.backup_sa_2026_11 TO service_role;
+GRANT MAINTAIN ON TABLE public.backup_sa_2026_11 TO service_role;
+GRANT REFERENCES ON TABLE public.backup_sa_2026_11 TO service_role;
+GRANT SELECT ON TABLE public.backup_sa_2026_11 TO service_role;
+GRANT TRIGGER ON TABLE public.backup_sa_2026_11 TO service_role;
+GRANT TRUNCATE ON TABLE public.backup_sa_2026_11 TO service_role;
+GRANT UPDATE ON TABLE public.backup_sa_2026_11 TO service_role;
 GRANT DELETE ON TABLE public.badges TO anon;
 GRANT INSERT ON TABLE public.badges TO anon;
 GRANT MAINTAIN ON TABLE public.badges TO anon;
@@ -6501,6 +6584,30 @@ GRANT USAGE ON SEQUENCE public.completed_modules_id_seq TO authenticated;
 GRANT SELECT ON SEQUENCE public.completed_modules_id_seq TO service_role;
 GRANT UPDATE ON SEQUENCE public.completed_modules_id_seq TO service_role;
 GRANT USAGE ON SEQUENCE public.completed_modules_id_seq TO service_role;
+GRANT DELETE ON TABLE public.corsi TO anon;
+GRANT INSERT ON TABLE public.corsi TO anon;
+GRANT MAINTAIN ON TABLE public.corsi TO anon;
+GRANT REFERENCES ON TABLE public.corsi TO anon;
+GRANT SELECT ON TABLE public.corsi TO anon;
+GRANT TRIGGER ON TABLE public.corsi TO anon;
+GRANT TRUNCATE ON TABLE public.corsi TO anon;
+GRANT UPDATE ON TABLE public.corsi TO anon;
+GRANT DELETE ON TABLE public.corsi TO authenticated;
+GRANT INSERT ON TABLE public.corsi TO authenticated;
+GRANT MAINTAIN ON TABLE public.corsi TO authenticated;
+GRANT REFERENCES ON TABLE public.corsi TO authenticated;
+GRANT SELECT ON TABLE public.corsi TO authenticated;
+GRANT TRIGGER ON TABLE public.corsi TO authenticated;
+GRANT TRUNCATE ON TABLE public.corsi TO authenticated;
+GRANT UPDATE ON TABLE public.corsi TO authenticated;
+GRANT DELETE ON TABLE public.corsi TO service_role;
+GRANT INSERT ON TABLE public.corsi TO service_role;
+GRANT MAINTAIN ON TABLE public.corsi TO service_role;
+GRANT REFERENCES ON TABLE public.corsi TO service_role;
+GRANT SELECT ON TABLE public.corsi TO service_role;
+GRANT TRIGGER ON TABLE public.corsi TO service_role;
+GRANT TRUNCATE ON TABLE public.corsi TO service_role;
+GRANT UPDATE ON TABLE public.corsi TO service_role;
 GRANT DELETE ON TABLE public.course_worlds TO anon;
 GRANT INSERT ON TABLE public.course_worlds TO anon;
 GRANT MAINTAIN ON TABLE public.course_worlds TO anon;
