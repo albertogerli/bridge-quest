@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import Link from "@/components/link";
-import { MapPin, Navigation, School, Filter, ChevronDown, ExternalLink } from "lucide-react";
+import { MapPin, Navigation, School, Filter, ChevronDown, ChevronRight, ExternalLink } from "lucide-react";
 import { useAsdClubs } from "@/store/use-asd-store";
 import type { AsdClub } from "@/lib/catalog";
 import { asdNameToSlug } from "@/lib/asd-utils";
@@ -118,6 +118,10 @@ export default function TrovaCircoloPage() {
             <p className="text-muted-foreground text-base">
               {filteredClubs.length} associazioni FIGB in tutta Italia{filter === "scuola" ? " con scuola bridge" : ""}
             </p>
+            <Link href="/corsi" className="mt-2 inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-primary hover:underline">
+              {t("Cerchi un corso? Guarda i corsi in partenza")}
+              <ChevronRight className="size-4" aria-hidden="true" />
+            </Link>
           </motion.div>
 
           {/* Location Status */}

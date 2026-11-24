@@ -2,7 +2,8 @@
 
 import { motion } from "motion/react";
 import Image from "next/image";
-import { GraduationCap, Spade, Brain, Trophy, BarChart3, Flame } from "lucide-react";
+import { ChevronRight, GraduationCap, Spade, Brain, Trophy, BarChart3, Flame } from "lucide-react";
+import Link from "@/components/link";
 import { SuitSymbol } from "@/components/bridge/suit-symbol";
 import { useT } from "@/contexts/traduzioni-provider";
 
@@ -164,6 +165,22 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
               </motion.div>
             ))}
           </div>
+
+          {/* I corsi nei circoli (24/11/2026): chi arriva qui spesso cerca
+              un maestro, non solo un'app. */}
+          <Link
+            href="/corsi"
+            className="mt-4 flex items-center gap-4 rounded-2xl border border-border bg-card p-4 shadow-sm transition-colors hover:border-primary/40"
+          >
+            <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+              <GraduationCap className="size-5" aria-hidden="true" />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block font-semibold text-foreground">{t("Corsi di bridge vicino a te")}</span>
+              <span className="block text-sm text-muted-foreground">{t("Con un maestro, in un circolo: Bridge 5.0 e tradizionali.")}</span>
+            </span>
+            <ChevronRight className="size-5 shrink-0 text-muted-foreground" aria-hidden="true" />
+          </Link>
         </div>
       </section>
 
@@ -260,6 +277,8 @@ export function LandingPage({ onContinueAsGuest }: LandingPageProps) {
           {t("Sviluppo e hosting: Alberto Giovanni Gerli / Tourbillon Tech S.r.l.")}
         </p>
         <p className="text-xs text-muted-foreground">
+          <Link href="/corsi" className="underline hover:text-foreground transition-colors">{t("Corsi di bridge")}</Link>
+          {" · "}
           <a href="/guida-allievi" target="_blank" rel="noopener" className="underline hover:text-foreground transition-colors">{t("Guida per l'allievo")}</a>
           {" · "}
           <a href="/guida-insegnanti" target="_blank" rel="noopener" className="underline hover:text-foreground transition-colors">{t("Guida per l'insegnante")}</a>

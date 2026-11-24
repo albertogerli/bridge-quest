@@ -230,6 +230,12 @@ export function HomeInsegnante({
             titolo={t("Guida per l'allievo")}
             testo={t("Da girare alla classe: come entrare, fare i compiti, rivedere le mani.")}
           />
+          <RigaLink
+            href="/corsi/nuovo"
+            Icona={GraduationCap}
+            titolo={t("Pubblica il tuo corso")}
+            testo={t("Nella pagina dei corsi di bridge, con locandina e telefono. Gratis.")}
+          />
         </div>
       </section>
 

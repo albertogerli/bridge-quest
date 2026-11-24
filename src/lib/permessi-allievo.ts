@@ -99,7 +99,7 @@ const LUDICI: Record<Gruppo, string[]> = {
  * resto, quindi non sono nemmeno disattivabili dall'insegnante.
  */
 export const SEMPRE_VISIBILI = [
-  "/trova-circolo", "/trova-compagno",
+  "/trova-circolo", "/trova-compagno", "/corsi",
   "/profilo", "/impostazioni", "/accessibilita",
   "/glossario", "/guida", "/classi", "/privacy", "/termini", "/elimina-account",
 ] as const;

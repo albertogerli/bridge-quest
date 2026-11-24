@@ -69,9 +69,12 @@ const FULL_SCREEN_ROUTES = ["/login", "/admin", "/istruttori/lavagna", "/istrutt
 // `/esercizi` è pubblica come i PDF da cui viene: l'insegnante manda il link
 // alla classe, e chi non ha ancora l'account deve trovare gli esercizi, non
 // il login.
+// `/corsi` è la vetrina dei corsi di bridge (24/11/2026): la apre chi arriva
+// da Google o dal QR di una locandina. `/corsi/nuovo` chiede l'account da sé,
+// dopo aver detto cosa succede.
 // `/elimina-account` è pubblica per Google Play: chi ha tolto l'app o non
 // ricorda la password deve poter leggere come chiedere la cancellazione.
-const PUBLIC_ROUTES = ["/", "/login", "/registrati", "/auth", "/reset-password", "/privacy", "/termini", "/elimina-account", "/accessibilita", "/glossario", "/esercizi", "/istruttori/proiezione", "/aula", "/evento", "/stampa-mano"];
+const PUBLIC_ROUTES = ["/", "/login", "/registrati", "/auth", "/reset-password", "/privacy", "/termini", "/elimina-account", "/accessibilita", "/glossario", "/corsi", "/esercizi", "/istruttori/proiezione", "/aula", "/evento", "/stampa-mano"];
 
 export function LayoutShell({ children }: { children: React.ReactNode }) {
   return (

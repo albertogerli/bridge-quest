@@ -7,7 +7,7 @@
  */
 const LARGHEZZA_LETTURA = {
   esatte: ["/", "/gioca", "/lezioni"],
-  sotto: ["/profilo", "/classifica", "/amici", "/forum", "/negozio", "/obiettivi", "/collezione", "/classi", "/esercizi", "/dispense", "/ripasso", "/impostazioni", "/trova-circolo", "/scopri", "/glossario"],
+  sotto: ["/profilo", "/classifica", "/amici", "/forum", "/negozio", "/obiettivi", "/collezione", "/classi", "/esercizi", "/dispense", "/ripasso", "/impostazioni", "/trova-circolo", "/scopri", "/glossario", "/corsi"],
 };
 export function haLarghezzaLettura(percorso: string): boolean {
   return LARGHEZZA_LETTURA.esatte.includes(percorso) || LARGHEZZA_LETTURA.sotto.some((r) => percorso === r || percorso.startsWith(`${r}/`));

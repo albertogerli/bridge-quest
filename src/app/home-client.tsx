@@ -571,6 +571,15 @@ export function HomeClient({ serverAuthed }: { serverAuthed: boolean }) {
             />
           )}
           {richiesta === "trova-asd" && <FindAsdBanner />}
+          {/* Chi studia da solo: un maestro vicino a casa è il passo dopo. */}
+          {classiIscritte.length === 0 && (
+            <RigaLink
+              href="/corsi"
+              Icona={GraduationCap}
+              titolo={t("Corsi di bridge vicino a te")}
+              testo={t("Con un maestro, in un circolo: Bridge 5.0 e tradizionali.")}
+            />
+          )}
           {/* Le guide stavano solo dentro /classi e /istruttori: chi non sapeva
               di dover passare di lì non le trovava (utente, 20/11/2026). */}
           <RigaLink

@@ -53,6 +53,7 @@ const moreNav = [
   { href: "/classifica", icon: "trophy", label: "Classifica" },
   { href: "/forum", icon: "forum", label: "Forum" },
   { href: "/negozio", icon: "shop", label: "Negozio" },
+  { href: "/corsi", icon: "corsi", label: "Corsi di bridge" },
   { href: "/trova-circolo", icon: "circolo", label: "Trova ASD" },
   { href: "/scopri", icon: "scopri", label: "Scopri" },
 ];
@@ -129,6 +130,12 @@ const icons: Record<string, (active: boolean) => React.ReactNode> = {
     <svg viewBox="0 0 24 24" fill={a ? "currentColor" : "none"} stroke="currentColor" strokeWidth={a ? 0 : 2} className="h-5 w-5">
       <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
       <circle cx="12" cy="10" r="3" />
+    </svg>
+  ),
+  corsi: (a) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={a ? 2.5 : 2} strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+      <path d="M22 10 12 5 2 10l10 5 10-5z" />
+      <path d="M6 12v5c3 3 9 3 12 0v-5" />
     </svg>
   ),
   scopri: (a) => (

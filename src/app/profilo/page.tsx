@@ -36,7 +36,7 @@ import { FichesCard } from "./_components/fiches-card";
 import { InviteFriendSection } from "./_components/invite-friend-section";
 import { AccountActions } from "./_components/account-actions";
 import { CollegamentiSezione } from "@/components/collegamenti-sezione";
-import { Globe, Layers, MapPin, Settings, ShoppingBag } from "lucide-react";
+import { Globe, GraduationCap, Layers, MapPin, Settings, ShoppingBag } from "lucide-react";
 import { AvvisoRichiesteAmicizia } from "@/components/avviso-richieste-amicizia";
 import { homeDi } from "@/lib/lingua";
 
@@ -330,6 +330,7 @@ export default function ProfiloPage() {
           voci={[
             { href: "/collezione", icona: Layers, etichetta: "Collezione", descrizione: "Le carte che hai raccolto" },
             { href: "/negozio", icona: ShoppingBag, etichetta: "Negozio", descrizione: "Spendi le monete guadagnate" },
+            { href: "/corsi", icona: GraduationCap, etichetta: "Corsi di bridge", descrizione: "I corsi vicino a te, 5.0 e tradizionali" },
             { href: "/trova-circolo", icona: MapPin, etichetta: "Trova un circolo", descrizione: "Le ASD vicino a te" },
             { href: "/scopri", icona: Globe, etichetta: "Scopri la FIGB", descrizione: "Tornei, federazione, bridge vero" },
             { href: "/impostazioni", icona: Settings, etichetta: "Impostazioni", descrizione: "Lingua, aspetto, notifiche, account" },
