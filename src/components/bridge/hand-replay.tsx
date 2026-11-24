@@ -24,7 +24,7 @@ import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 const SUIT_COLORS: Record<Suit, string> = {
   spade: "text-[#1B2631] dark:text-slate-200",
   heart: "text-[#D32F2F] dark:text-red-400",
-  diamond: "text-[#FF6F00] dark:text-orange-400",
+  diamond: "text-[#C2410C] dark:text-orange-400",
   club: "text-[#2E7D32] dark:text-emerald-400",
 };
 

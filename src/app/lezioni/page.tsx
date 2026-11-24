@@ -255,11 +255,14 @@ export default function LezioniPage() {
                   aria-current={scelto ? "true" : undefined}
                   className={`flex items-center gap-3 rounded-xl border p-3 text-left transition-colors ${
                     scelto ? "border-primary bg-card shadow-sm" : "border-transparent hover:bg-card"
-                  } ${chiuso && !scelto ? "opacity-60" : ""}`}
+                  }`}
                 >
                   <Anello fatti={fatti} totale={totale} icona={iconaMondo(world.icon)} />
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate font-semibold">{world.name}</span>
+                    {/* Un mondo non ancora aperto si distingue dal colore del nome, non da
+                        un'opacità sul bottone: al 60% il grigio sul fondo avorio
+                        scendeva sotto il contrasto minimo (verifiche notturne, axe). */}
+                    <span className={`block truncate font-semibold ${chiuso && !scelto ? "text-muted-foreground" : ""}`}>{world.name}</span>
                     <span className="block truncate text-sm text-muted-foreground tabular-nums">
                       {chiuso ? t("Non ancora aperto") : t("{fatti} di {totale} moduli", { fatti, totale })}
                     </span>

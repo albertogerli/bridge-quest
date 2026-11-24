@@ -51,7 +51,7 @@ export function ManoDelGiornoTessera({ pool }: { pool: Parameters<typeof getSmaz
           <CalendarDays className="size-4" aria-hidden="true" />
           {t("Mano del Giorno")}
         </p>
-        <h2 className="font-display text-xl font-bold text-balance">{mano?.title ?? t("Una mano al giorno, uguale per tutti")}</h2>
+        <h2 className="font-display text-xl font-bold text-balance">{mano?.title ? t(mano.title) : t("Una mano al giorno, uguale per tutti")}</h2>
         <p className="text-sm text-muted-foreground text-pretty">
           {mano ? t("Dichiarante {posto}. Una mano al giorno, uguale per tutti, con la classifica.", { posto: posti[mano.declarer] ?? mano.declarer }) : t("Una mano al giorno, uguale per tutti. Classifica!")}
         </p>

@@ -50,8 +50,12 @@ export function Ventaglio({
       role={carte ? "img" : undefined}
     >
       {carte?.map((c, i) => (
+        // `inert`: le carte sono pulsanti, ma qui sono un disegno dentro
+        // role="img". Senza, axe segnala comandi annidati (nested-interactive)
+        // e la tastiera si fermava su tredici carte che non fanno niente.
         <div
           key={`${c.suit}${c.rank}`}
+          inert
           className="origin-[50%_150%]"
           style={{ marginLeft: i === 0 ? 0 : -sovrapposizione, transform: `rotate(${(i - (carte.length - 1) / 2) * 2.5}deg)` }}
         >

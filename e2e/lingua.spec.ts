@@ -123,15 +123,17 @@ test.describe("le stringhe tradotte", () => {
 
 test("l'hub dei giochi è tradotto, e in italiano resta italiano", async ({ page }) => {
   await login(page);
+  // Dal 18/11/2026 l'hub è a tessere per gruppi: il riquadro «Inizia da
+  // qui» non c'è più, il titolo del gruppo «Sfide» c'è sempre.
   await page.goto("/en/gioca");
-  await expect(page.getByText("Start here").first(), "l'hub deve essere in inglese").toBeVisible({
+  await expect(page.getByText("Challenges", { exact: true }).first(), "l'hub deve essere in inglese").toBeVisible({
     timeout: 45_000,
   });
   await expect(page.getByText("Bid and See").first()).toBeVisible();
 
   await page.goto("/gioca");
-  await expect(page.getByText("Inizia da qui").first()).toBeVisible({ timeout: 45_000 });
-  await expect(page.getByText("Start here")).toHaveCount(0);
+  await expect(page.getByText("Sfide", { exact: true }).first()).toBeVisible({ timeout: 45_000 });
+  await expect(page.getByText("Challenges", { exact: true })).toHaveCount(0);
 });
 
 test("una partita di licita si gioca in inglese", async ({ page }) => {

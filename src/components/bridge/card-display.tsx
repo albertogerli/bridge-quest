@@ -20,7 +20,7 @@ interface SuitGroup {
 const SUIT_MAP: Record<string, { symbol: string; color: string; bgColor: string }> = {
   "\u2660": { symbol: "\u2660", color: "text-[#1B2631] dark:text-slate-200", bgColor: "bg-slate-50 dark:bg-slate-800/40" },
   "\u2665": { symbol: "\u2665", color: "text-[#D32F2F] dark:text-red-400", bgColor: "bg-red-50 dark:bg-red-950/40" },
-  "\u2666": { symbol: "\u2666", color: "text-[#FF6F00] dark:text-orange-400", bgColor: "bg-orange-50 dark:bg-orange-950/40" },
+  "\u2666": { symbol: "\u2666", color: "text-[#C2410C] dark:text-orange-400", bgColor: "bg-orange-50 dark:bg-orange-950/40" },
   "\u2663": { symbol: "\u2663", color: "text-[#2E7D32] dark:text-emerald-400", bgColor: "bg-green-50 dark:bg-green-950/40" },
 };
 

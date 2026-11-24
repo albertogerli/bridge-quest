@@ -73,7 +73,7 @@ const suitSymbol: Record<string, string> = {
 const suitColorClass: Record<string, string> = {
   spade: "text-[#1B2631]",
   heart: "text-[#D32F2F]",
-  diamond: "text-[#FF6F00]",
+  diamond: "text-[#C2410C]",
   club: "text-[#2E7D32]",
 };
 

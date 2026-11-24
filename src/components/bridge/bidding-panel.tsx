@@ -74,7 +74,7 @@ function BidCell({ bid, delay }: { bid: string; delay: number }) {
   const suitDisplay: Record<string, { symbol: string; color: string }> = {
     S: { symbol: "\u2660", color: "text-[#1B2631] dark:text-slate-200" },
     H: { symbol: "\u2665", color: "text-[#D32F2F] dark:text-red-400" },
-    D: { symbol: "\u2666", color: "text-[#FF6F00] dark:text-orange-400" },
+    D: { symbol: "\u2666", color: "text-[#C2410C] dark:text-orange-400" },
     C: { symbol: "\u2663", color: "text-[#2E7D32] dark:text-emerald-400" },
     NT: { symbol: "SA", color: "text-foreground" },
     SA: { symbol: "SA", color: "text-foreground" },

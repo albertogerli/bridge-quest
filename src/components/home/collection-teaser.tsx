@@ -60,7 +60,7 @@ export function CollectionTeaser({ xp, streak, handsPlayed, completedModules }: 
       </div>
       {nextCard && (
         <p className="mt-2 text-sm text-muted-foreground text-pretty">
-          {t("Prossima:")} <span className="font-semibold text-foreground">{nextCard.name}</span> — {nextCard.unlockCondition}
+          {t("Prossima:")} <span className="font-semibold text-foreground">{t(nextCard.name)}</span> — {t(nextCard.unlockCondition)}
         </p>
       )}
     </Link>

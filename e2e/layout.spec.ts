@@ -145,8 +145,11 @@ test.describe("impaginazione — niente contenuto nascosto", () => {
   test("pagine autenticate: nessun contenuto tagliato né coperto dalla barra", async ({ page }) => {
     test.setTimeout(180_000);
     await login(page);
+    // Classifica e Amici aperte «da fuori» (senza referrer del sito) tornano
+    // alla home apposta (`rientroAllaHome`): qui si arriva come chi naviga.
+    const daQui = new URL("/", page.url()).href;
     for (const url of PAGINE_PRIVATE) {
-      await page.goto(url);
+      await page.goto(url, { referer: daQui });
       await page.waitForTimeout(2200);
 
       expect(await contenutoTagliato(page), `${url}: contenuto tagliato`).toEqual([]);
