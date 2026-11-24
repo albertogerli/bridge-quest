@@ -204,6 +204,15 @@ export default function AdminClassesPage() {
                             <p className="text-sm text-muted-foreground">{t("Caricamento…")}</p>
                           )}
                         </div>
+                        {/* Dal 24/11/2026 l'amministratore entra in ogni classe
+                            come un collega (scripts/sql/admin-vede-classi-2026-11.sql),
+                            senza comparire fra gli insegnanti. */}
+                        <Link
+                          href={`/istruttori/${c.id}`}
+                          className="inline-flex min-h-11 items-center text-sm font-semibold text-primary hover:underline sm:col-span-2"
+                        >
+                          {t("Apri la classe: compiti, risultati, allievi e chat")}
+                        </Link>
                       </CardContent>
                     )}
                   </Card>
