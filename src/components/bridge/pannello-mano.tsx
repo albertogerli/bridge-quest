@@ -186,7 +186,7 @@ export function FoglioMano({
       {aperto && (
         <div className={`fixed inset-0 z-[70] ${c.nascosto}`} role="dialog" aria-modal="true" aria-label={t("Prese e licita")}>
           <button type="button" className="absolute inset-0 bg-black/40" aria-label={t("Chiudi")} onClick={() => setAperto(false)} />
-          <div className="absolute inset-x-0 bottom-0 mx-auto max-h-[80vh] w-full max-w-lg overflow-y-auto rounded-t-3xl bg-card pb-[env(safe-area-inset-bottom)] shadow-lg">
+          <div className="absolute inset-x-0 bottom-0 mx-auto max-h-[80vh] w-full max-w-lg overflow-y-auto rounded-t-3xl bg-card pb-[var(--margine-basso)] shadow-lg">
             <button
               ref={chiudi}
               type="button"

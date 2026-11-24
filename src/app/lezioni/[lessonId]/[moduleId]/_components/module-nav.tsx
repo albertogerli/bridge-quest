@@ -37,7 +37,7 @@ export function ModuleNav({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: 0.3 }}
-      className="fixed bottom-0 left-0 right-0 px-5 pb-[calc(env(safe-area-inset-bottom,0px)+5rem)] lg:pb-6 z-40"
+      className="fixed bottom-0 left-0 right-0 px-5 pb-[calc(var(--margine-basso)+5rem)] lg:pb-6 z-40"
     >
       <div className="mx-auto max-w-6xl">
         {currentStep > 0 && !isLastStep && (

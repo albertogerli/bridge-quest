@@ -307,7 +307,7 @@ function LayoutShellInner({ children }: { children: React.ReactNode }) {
               (-mt-6), piu' la sua ombra. Con pb-20 copriva l'ultima riga di
               contenuto su OGNI schermata — "4 CORSI" nella landing, il titolo
               "Pratica" su Gioca, "Completa il mondo precedente" su Lezioni. */}
-          <main id="main-content" className="flex-1 pb-28 lg:pb-6">
+          <main id="main-content" className="flex-1 pb-[calc(7rem+var(--margine-basso))] lg:pb-6">
             {/* Sempre lo stesso div, cambia solo la classe: con due rami
                 diversi il contenuto cambierebbe posto nell'albero e React lo
                 rimonterebbe (vedi «UNA CORNICE SOLA» qui sopra). */}
