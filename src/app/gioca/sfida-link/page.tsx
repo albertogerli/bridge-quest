@@ -22,6 +22,10 @@ import { awardGameXp } from "@/lib/xp-utils";
 import { generateSeed, dealFromSeed, encodeChallengeUrl } from "@/lib/hand-encoder";
 import { useT } from "@/contexts/traduzioni-provider";
 import { useGameResults } from "@/hooks/use-game-results";
+import { calcTableAndPar, type DdsTable } from "@/lib/dds-table";
+import { contrattoDallaMano } from "@/lib/contratto-sfida";
+import { calculateRawScore, type SuitChar } from "@/lib/bridge-scoring";
+import { reportError } from "@/lib/report-error";
 
 // ──────────────────────────────────────────────
 // localStorage challenge results
@@ -102,8 +106,12 @@ function SfidaLinkContent() {
     }
   }, [seedParam]);
 
-  // Contract: 3NT (simple for challenges)
-  const contract = "3NT";
+  // Il contratto viene dalle CARTE, come nella sfida IMP: fino al 26/11/2026
+  // era sempre 3SA, anche su mani da 15 punti in linea o con un colore lungo
+  // degli avversari. Sud resta il dichiarante (la pagina mostra la sua mano):
+  // si sceglie il miglior contratto che Sud può giocare. È deterministico
+  // (doppio morto sul seme), quindi chi crea e chi accetta giocano lo stesso.
+  const [contrattoCalcolato, setContrattoCalcolato] = useState<{ seed: string; contract: string } | null>(null);
   const declarer: Position = "south";
   const dummyGamePos = toGamePosition("north", declarer);
 
@@ -117,6 +125,27 @@ function SfidaLinkContent() {
       west: deal.west as Card[],
     };
   }, [deal]);
+
+  useEffect(() => {
+    if (!hands || !seed) return;
+    let vivo = true;
+    calcTableAndPar(hands, "south", "none")
+      .then(({ table }) => {
+        if (!vivo) return;
+        // Solo le prese di Sud: si copia la sua colonna su Nord, così
+        // `contrattoDallaMano` non sceglie Nord come dichiarante.
+        const soloSud: DdsTable = { tricks: { ...table.tricks } };
+        for (const k of Object.keys(soloSud.tricks) as (keyof DdsTable["tricks"])[]) {
+          soloSud.tricks[k] = { ...table.tricks[k], north: table.tricks[k].south };
+        }
+        setContrattoCalcolato({ seed, contract: contrattoDallaMano(soloSud).contract });
+      })
+      .catch((err) => reportError("sfida-link:contratto", err));
+    return () => { vivo = false; };
+  }, [hands, seed]);
+
+  const contrattoPronto = contrattoCalcolato?.seed === seed ? contrattoCalcolato.contract : null;
+  const contract = contrattoPronto ?? "3NT";
 
   // Bridge game hook
   const game = useBridgeGame({
@@ -142,7 +171,17 @@ function SfidaLinkContent() {
 
       const tricksMade = game.result.tricksMade;
       const contractMade = game.result.result >= 0;
-      const score = contractMade ? 100 + game.result.result * 30 : -50 * Math.abs(game.result.result);
+      // Punteggio vero del bridge, con la zona della mano: prima era
+      // «100 + 30 a presa», lo stesso per un parziale e per uno slam.
+      const vul = deal?.vulnerability === "ns" || deal?.vulnerability === "both";
+      const score = calculateRawScore({
+        level: parseContract(contract).level,
+        suitChar: contract.slice(1) as SuitChar,
+        doubled: false,
+        redoubled: false,
+        vulnerable: vul,
+        tricksMade,
+      });
 
       // Save result
       // `saveChallengeResult` scrive in localStorage e basta: resta su un
@@ -166,7 +205,7 @@ function SfidaLinkContent() {
     }
     // `xpSaved` è il guard: l'effetto può rigirare quanto vuole, il corpo
     // entra una volta sola.
-  }, [game.phase, game.result, seed, saveGameResult]);
+  }, [game.phase, game.result, seed, saveGameResult, contract, deal?.vulnerability]);
 
   // Copy challenge link
   const handleCopyLink = useCallback(async () => {
@@ -347,9 +386,9 @@ function SfidaLinkContent() {
                   {mode === "create" ? "La tua mano" : "Sfida"}
                 </h2>
                 <p className="text-sm text-white/70">
-                  {t("Contratto:")} <span className="font-bold text-white">{contrattoLeggibile(contract)}</span>
+                  {t("Contratto:")} <span className="font-bold text-white">{contrattoPronto ? contrattoLeggibile(contract) : "…"}</span>
                   <span className="mx-2">{"\u00B7"}</span>
-                  {t("Obiettivo:")} <span className="font-bold text-white">9 prese</span>
+                  {t("Obiettivo:")} <span className="font-bold text-white">{contrattoPronto ? t("{n} prese", { n: parseContract(contract).tricksNeeded }) : "…"}</span>
                 </p>
                 <div className="mt-4 inline-flex items-center gap-2 bg-white/20 rounded-xl px-4 py-2">
                   <span className="text-xs text-white/80 font-mono">Seed: {seed}</span>
@@ -389,6 +428,7 @@ function SfidaLinkContent() {
           >
             <Button
               onClick={handleStartGame}
+              disabled={!contrattoPronto}
               className="w-full rounded-xl bg-figb hover:bg-figb-dark text-base font-bold h-14 shadow-lg"
             >
               {mode === "create" ? "Gioca questa mano" : "Accetta Sfida"}

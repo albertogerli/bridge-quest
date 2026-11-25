@@ -26,6 +26,7 @@
 
 import type { Position } from "./bridge-engine";
 import type { DdsTable, TableStrain } from "./dds-table";
+import { punteggio } from "./quale-contratto";
 
 /** Le denominazioni nell'ordine in cui si preferiscono a parità di prese. */
 const DENOMINAZIONI: { chiave: TableStrain; sigla: string }[] = [
@@ -39,6 +40,15 @@ const DENOMINAZIONI: { chiave: TableStrain; sigla: string }[] = [
   { chiave: "club", sigla: "C" },
 ];
 
+/** Il livello della manche in ogni denominazione. */
+const LIVELLO_MANCHE: Record<TableStrain, number> = {
+  notrump: 3,
+  spade: 4,
+  heart: 4,
+  diamond: 5,
+  club: 5,
+};
+
 export interface ContrattoSfida {
   /** Come `4S`, `3NT`: il formato che usa il motore di gioco. */
   contract: string;
@@ -50,6 +60,9 @@ export interface ContrattoSfida {
 /**
  * Il contratto che la linea Nord-Sud può davvero giocare su questa mano.
  *
+ * Vince la denominazione che rende di più (in prima, senza contro), a
+ * parità quella che viene prima in `DENOMINAZIONI`.
+ *
  * Il dichiarante è quello dei due compagni che fa più prese in quella
  * denominazione: l'attacco arriva dalla sua sinistra, e una carta in meno da
  * girare può valere due prese.
@@ -60,20 +73,39 @@ export interface ContrattoSfida {
  * e comunque entrambi gli sfidanti hanno davanti la stessa.
  */
 export function contrattoDallaMano(table: DdsTable): ContrattoSfida {
-  let migliore: { sigla: string; prese: number; declarer: Position } | null = null;
+  let migliore: { sigla: string; prese: number; declarer: Position; punti: number; livello: number } | null = null;
 
   for (const d of DENOMINAZIONI) {
     const nord = table.tricks[d.chiave].north;
     const sud = table.tricks[d.chiave].south;
     const declarer: Position = sud >= nord ? "south" : "north";
     const prese = Math.max(nord, sud);
-    if (!migliore || prese > migliore.prese) {
-      migliore = { sigla: d.sigla, prese, declarer };
+    // Si confronta il PUNTEGGIO, non le prese: 10 prese a fiori (4♣, 130)
+    // valgono meno di 9 a senza (3SA, 400), e 11 a quadri (5♦, 400) meno di
+    // 10 a cuori (4♥, 420). Fino al 26/11/2026 vinceva la denominazione con
+    // più prese, lo stesso errore corretto in `quale-contratto.ts`.
+    // Il livello: quello che le prese consentono, ma fra manche e slam si
+    // ferma al più basso che rende lo stesso: con 11 prese a senza si gioca
+    // 3SA (460), non 5SA (460) — nessuno al tavolo dichiara 5SA per questo.
+    const massimo = Math.min(7, Math.max(1, prese - 6));
+    const daQui = Math.min(massimo, LIVELLO_MANCHE[d.chiave]);
+    let livello = massimo;
+    let punti = punteggio(d.chiave, massimo, prese);
+    for (let l = daQui; l < massimo; l++) {
+      const p = punteggio(d.chiave, l, prese);
+      if (p >= punti) {
+        livello = l;
+        punti = p;
+        break;
+      }
+    }
+    if (!migliore || punti > migliore.punti) {
+      migliore = { sigla: d.sigla, prese, declarer, punti, livello };
     }
   }
 
   const scelta = migliore!;
-  const livello = Math.min(7, Math.max(1, scelta.prese - 6));
+  const livello = scelta.livello;
   return {
     contract: `${livello}${scelta.sigla}`,
     declarer: scelta.declarer,

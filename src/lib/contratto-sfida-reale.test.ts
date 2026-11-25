@@ -27,7 +27,7 @@ const CHIAVE: Record<string, TableStrain> = { S: "spade", H: "heart", D: "diamon
  * conteggi qui sotto la ricalcolano a ogni esecuzione e la stampano.
  */
 describe("sfida IMP: il contratto viene dalle carte", () => {
-  it("il contratto chiede esattamente le prese che ci sono", async () => {
+  it("il contratto non chiede più prese di quelle che ci sono", async () => {
     let scartoVecchio = 0, scartoNuovo = 0, disastriVecchi = 0, minime = 0;
     const N = 15;
     for (let i = 0; i < N; i++) {
@@ -44,14 +44,16 @@ describe("sfida IMP: il contratto viene dalle carte", () => {
       /**
        * L'INVARIANTE, e vale su qualunque mano.
        *
-       * Con sette prese o più il livello è `prese - 6`, quindi il contratto
-       * chiede esattamente le prese disponibili e lo scarto è zero. Sotto le
+       * Con sette prese o più il contratto non chiede mai più prese di quelle
+       * disponibili: il livello è `prese - 6`, o più basso quando fra manche
+       * e slam rende lo stesso (11 prese a senza → 3SA, dal 26/11/2026). Sotto le
        * sette il livello uno è il pavimento — non esiste un contratto più
        * basso — e lo scarto è quello che manca ad arrivarci: né una presa di
        * più, né una di meno. Qualsiasi altro valore vuol dire che il livello
        * non viene più dalle carte.
        */
-      expect(cadutaNuova).toBe(Math.max(0, 7 - nuovo.prese));
+      if (nuovo.prese < 7) expect(cadutaNuova).toBe(7 - nuovo.prese);
+      else expect(cadutaNuova).toBeLessThanOrEqual(0);
       if (nuovo.prese < 7) minime++;
 
       const vecchio = VECCHI[seed.charCodeAt(0) % VECCHI.length];

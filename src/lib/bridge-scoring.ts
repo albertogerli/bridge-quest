@@ -184,11 +184,14 @@ function calculateUndertrickPenalty(
 
   for (let i = 1; i <= undertricks; i++) {
     if (!vulnerable) {
-      // Non vulnerabile contrato: -100, -200, -200, -200, ...
+      // Non vulnerabile contrato: 100, poi 200 la seconda e la terza, poi
+      // 300 dalla quarta (4 sotto = 800, non 700: tabella WBF).
       if (i === 1) {
         penalty += 100 * multiplier;
-      } else {
+      } else if (i <= 3) {
         penalty += 200 * multiplier;
+      } else {
+        penalty += 300 * multiplier;
       }
     } else {
       // Vulnerabile contrato: -200, -300, -300, -300, ...

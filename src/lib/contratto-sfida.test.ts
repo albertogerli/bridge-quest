@@ -33,8 +33,22 @@ describe("contrattoDallaMano — il contratto viene dalle carte", () => {
   });
 
   it("sceglie la denominazione che rende di più", () => {
-    expect(contrattoDallaMano(tavola({ spade: 8, heart: 11, notrump: 9 })).contract).toBe("5H");
+    // 11 prese a cuori: si gioca 4♥ (450, come 5♥ fatto), non 5♥.
+    expect(contrattoDallaMano(tavola({ spade: 8, heart: 11, notrump: 9 })).contract).toBe("4H");
     expect(contrattoDallaMano(tavola({ notrump: 9, spade: 8 })).contract).toBe("3NT");
+  });
+
+  it("confronta i punti, non le prese (26/11/2026)", () => {
+    // 10 prese a fiori (4♣, 130) contro 9 a senza (3SA, 400).
+    expect(contrattoDallaMano(tavola({ club: 10, notrump: 9, spade: 6 })).contract).toBe("3NT");
+    // 11 a quadri (5♦, 400) contro 10 a cuori (4♥, 420).
+    expect(contrattoDallaMano(tavola({ diamond: 11, heart: 10, notrump: 8 })).contract).toBe("4H");
+  });
+
+  it("con 11 prese a senza gioca 3SA, con 12 lo slam", () => {
+    expect(contrattoDallaMano(tavola({ notrump: 11, spade: 7 })).contract).toBe("3NT");
+    expect(contrattoDallaMano(tavola({ notrump: 12, spade: 7 })).contract).toBe("6NT");
+    expect(contrattoDallaMano(tavola({ diamond: 9, notrump: 6 })).contract).toBe("3D");
   });
 
   it("a parità di prese preferisce il senza atout, poi le nobili", () => {

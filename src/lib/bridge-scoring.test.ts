@@ -75,6 +75,12 @@ describe("calculateRawScore — sottoprese", () => {
     expect(score("4Sx", 7, false)).toBe(-500);
   });
 
+  it("4 e 5 down contrato non vulnerabile = -800 e -1100 (dalla quarta 300)", () => {
+    expect(score("4Sx", 6, false)).toBe(-800);
+    expect(score("4Sx", 5, false)).toBe(-1100);
+    expect(score("4Sxx", 6, false)).toBe(-1600);
+  });
+
   it("1 down surcontrato non vulnerabile = -200", () => {
     expect(score("2Hxx", 7, false)).toBe(-200);
   });

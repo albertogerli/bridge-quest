@@ -2358,7 +2358,7 @@
   "Quale carta giochi per dare il conto al compagno?": "Which card do you play to give partner the count?",
   "Hai {n} carte (numero PARI): inizia con la carta alta ({carta}{sym}), poi la più bassa. Alto-basso = pari.": "You have {n} cards (an EVEN number): start with the high card ({carta}{sym}), then the lowest. High-low = even.",
   "Hai {n} carte (numero DISPARI): inizia con la carta più bassa ({carta}{sym}). Basso-alto = dispari.": "You have {n} cards (an ODD number): start with the lowest card ({carta}{sym}). Low-high = odd.",
-  "Attacchi con l'A{sym} da A-K-7-3-2.": "You lead the A{sym} from A-K-7-3-2.",
+  "Attacchi con l'A{sym} da A-K-7-6-5.": "You lead the A{sym} from A-K-7-6-5.",
   "Il compagno gioca il {card}{sym}, il dichiarante segue basso.": "Partner plays the {card}{sym}, declarer follows low.",
   "Come continui la difesa?": "How do you continue the defense?",
   "Continuo con il K{sym}": "I continue with the K{sym}",

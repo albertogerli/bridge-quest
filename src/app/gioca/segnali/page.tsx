@@ -158,7 +158,7 @@ function genLettura(tr: Traduttore): DrillRound {
     return {
       kind: "lettura",
       scenario: [
-        tr("Attacchi con l'A{sym} da A-K-7-3-2.", { sym }),
+        tr("Attacchi con l'A{sym} da A-K-7-6-5.", { sym }),
         tr("Il compagno gioca il {card}{sym}, il dichiarante segue basso.", { card, sym }),
       ],
       question: tr("Come continui la difesa?"),
