@@ -16,7 +16,7 @@
 -- Rigenerare e committare dopo OGNI modifica allo schema, insieme allo script
 -- che l'ha causata.
 --
--- Estratto il: 2026-11-24
+-- Estratto il: 2026-11-25
 -- ============================================================================
 
 SET check_function_bodies = false;
@@ -3391,14 +3391,14 @@ CREATE OR REPLACE FUNCTION public.is_instructor_of_class(p_class_id uuid)
  STABLE SECURITY DEFINER
  SET search_path TO 'public'
 AS $function$
-  SELECT EXISTS (
-    SELECT 1 FROM classes c
-    WHERE c.id = p_class_id AND c.instructor_id = auth.uid()
-  ) OR EXISTS (
-    SELECT 1 FROM classe_insegnanti ci
-    WHERE ci.class_id = p_class_id AND ci.insegnante_id = auth.uid()
-  );
-$function$
+    select exists (
+      select 1 from classes c
+      where c.id = p_class_id and c.instructor_id = auth.uid()
+    ) or exists (
+      select 1 from classe_insegnanti ci
+      where ci.class_id = p_class_id and ci.insegnante_id = auth.uid()
+    ) or public.is_admin();
+  $function$
 ;
 
 CREATE OR REPLACE FUNCTION public.is_member_of_class(p_class_id uuid)
