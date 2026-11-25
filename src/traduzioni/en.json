@@ -2346,7 +2346,6 @@
   "Ne fa {n}, tu hai risposto {risposta}.": "It makes {n}; you answered {risposta}.",
   "Vedi il risultato": "See the result",
   "Esatto.": "Exactly.",
-  "Le carte reggono il livello {livello}.": "The cards support level {livello}.",
   "{n} prese": "{n} tricks",
   "Par della mano: {par}. Il conteggio è a carte scoperte: al tavolo qualche presa in più o in meno dipende dall'attacco.": "Par for the hand: {par}. The count is double dummy: at the table a trick more or less depends on the opening lead.",
   "Difendi contro 4{palo}.": "Defend against 4{palo}.",
@@ -3518,5 +3517,6 @@
   "I corsi vicino a te, 5.0 e tradizionali": "Courses near you, 5.0 and traditional",
   "Senza locandina: la scheda mostrerà il nome del circolo": "No flyer: the card will show the club's name",
   "Compiti e risultati ({n})": "Assignments and results ({n})",
-  "Apri la classe: compiti, risultati, allievi e chat": "Open the class: assignments, results, students and chat"
+  "Apri la classe: compiti, risultati, allievi e chat": "Open the class: assignments, results, students and chat",
+  "Il contratto che rende di più è {contratto}.": "The contract that scores best is {contratto}."
 }

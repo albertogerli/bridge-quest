@@ -11,6 +11,9 @@ import { reportError } from "@/lib/report-error";
 import type { Card, Position, Suit } from "@/lib/bridge-engine";
 import { DEAL_TEMPLATES, generateDeals, handHcp } from "@/lib/deal-generator";
 import { calcTableAndPar, strainOf, type DdsTable } from "@/lib/dds-table";
+import { preseNs as preseNsTabella, valutaScelte, type SceltaId } from "@/lib/quale-contratto";
+import { useTestoSA } from "@/hooks/use-testo-sa";
+import { contrattoLeggibile } from "@/lib/contratto-leggibile";
 import { useT } from "@/contexts/traduzioni-provider";
 import { useGameResults } from "@/hooks/use-game-results";
 
@@ -21,13 +24,13 @@ const ROUNDS = 8;
 /** I modelli in cui la domanda «fin dove arrivate?» ha davvero un senso. */
 const MODELLI = ["invito-manche", "invito-slam", "manche-sicura", "apertura-1nt"];
 
-/** Le risposte: il livello che conta, nei semi che si dichiarano davvero. */
-const SCELTE: { label: string; strain: Suit | null; level: number }[] = [
-  { label: "Parziale", strain: null, level: 2 },
-  { label: "3SA", strain: null, level: 3 },
-  { label: "4♥/4♠", strain: "heart", level: 4 },
-  { label: "5♦/5♣", strain: "diamond", level: 5 },
-  { label: "Slam (6)", strain: null, level: 6 },
+/** Le risposte: le famiglie di contratto, valutate in `lib/quale-contratto`. */
+const SCELTE: { id: SceltaId; label: string }[] = [
+  { id: "parziale", label: "Parziale" },
+  { id: "3sa", label: "3SA" },
+  { id: "nobile", label: "4♥/4♠" },
+  { id: "minore", label: "5♦/5♣" },
+  { id: "slam", label: "Slam (6)" },
 ];
 
 interface Domanda {
@@ -55,6 +58,7 @@ interface Domanda {
  */
 export default function QualeContrattoPage() {
   const t = useT();
+  const testoSA = useTestoSA();
   const [seed] = useState(() => Math.floor(Date.now() % 1_000_000));
   const [round, setRound] = useState(0);
   // La domanda si conserva INSIEME alla mano per cui vale: così «sto
@@ -97,30 +101,18 @@ export default function QualeContrattoPage() {
   const domanda = preparata?.round === round ? preparata.dati : null;
 
   /** Prese che Nord-Sud fa davvero nel seme scelto, a carte scoperte. */
-  const preseNs = (strain: Suit | null): number => {
-    if (!domanda) return 0;
-    const t = domanda.table.tricks[strainOf(strain)];
-    return Math.max(t.north, t.south);
-  };
+  const preseNs = (strain: Suit | null): number =>
+    domanda ? preseNsTabella(domanda.table, strainOf(strain)) : 0;
 
-  /** Il livello più alto che Nord-Sud mantiene, fra tutte le denominazioni. */
-  const livelloMassimo = (): number => {
-    if (!domanda) return 0;
-    let best = 0;
-    for (const s of [null, ...SUITS] as (Suit | null)[]) {
-      best = Math.max(best, preseNs(s) - 6);
-    }
-    return best;
-  };
+  // Giusta è la scelta che rende di più, non il livello più alto: vedi
+  // `lib/quale-contratto.ts`.
+  const valutazione = domanda ? valutaScelte(domanda.table) : null;
+  const giusta = (i: number) => valutazione?.giuste.includes(SCELTE[i].id) ?? false;
 
   const rispondi = (i: number) => {
     if (risposta !== null || !domanda) return;
     setRisposta(i);
-    const scelto = SCELTE[i];
-    // Giusto se il livello scelto è quello che le carte reggono davvero.
-    if (scelto.level === Math.min(6, Math.max(2, livelloMassimo()))) {
-      setPunti((p) => p + 1);
-    }
+    if (giusta(i)) setPunti((p) => p + 1);
   };
 
   if (round >= ROUNDS) {
@@ -140,8 +132,6 @@ export default function QualeContrattoPage() {
       </div>
     );
   }
-
-  const atteso = domanda ? Math.min(6, Math.max(2, livelloMassimo())) : 0;
 
   return (
     <div className="min-h-screen px-4 py-6 max-w-lg mx-auto">
@@ -191,14 +181,14 @@ export default function QualeContrattoPage() {
           <div className="grid grid-cols-2 gap-2 mb-4">
             {SCELTE.map((s, i) => {
               const scelta = risposta === i;
-              const giusta = risposta !== null && s.level === atteso;
+              const evidenzia = risposta !== null && giusta(i);
               return (
                 <button
                   key={s.label}
                   disabled={risposta !== null}
                   onClick={() => rispondi(i)}
                   className={`h-14 rounded-xl border text-base font-bold transition-colors ${
-                    giusta
+                    evidenzia
                       ? "border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300"
                       : scelta
                         ? "border-red-400 bg-red-50 text-red-600 dark:bg-red-950/40 dark:text-red-300"
@@ -219,9 +209,11 @@ export default function QualeContrattoPage() {
                 className="rounded-2xl border border-border bg-card p-4"
               >
                 <p className="font-semibold text-sm mb-2">
-                  {SCELTE[risposta].level === atteso
+                  {giusta(risposta)
                     ? t("Esatto.")
-                    : t("Le carte reggono il livello {livello}.", { livello: atteso })}
+                    : t("Il contratto che rende di più è {contratto}.", {
+                        contratto: testoSA(contrattoLeggibile(valutazione?.migliore).replace("SA", "NT")),
+                      })}
                 </p>
                 <ul className="text-xs text-muted-foreground space-y-0.5 mb-3">
                   {([null, ...SUITS] as (Suit | null)[]).map((s) => (
@@ -232,7 +224,7 @@ export default function QualeContrattoPage() {
                   ))}
                 </ul>
                 <p className="text-xs text-muted-foreground mb-3">
-                  {t("Par della mano: {par}. Il conteggio è a carte scoperte: al tavolo qualche presa in più o in meno dipende dall'attacco.", { par: domanda.parContracts.join(", ") })}
+                  {t("Par della mano: {par}. Il conteggio è a carte scoperte: al tavolo qualche presa in più o in meno dipende dall'attacco.", { par: testoSA(domanda.parContracts.join(", ")) })}
                 </p>
                 <Button onClick={() => { registraSeFinita(); setRisposta(null); setRound((r) => r + 1); }}>
                   {round + 1 >= ROUNDS ? t("Vedi il risultato") : t("Prossima mano")}
