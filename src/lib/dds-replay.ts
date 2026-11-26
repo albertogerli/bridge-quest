@@ -19,7 +19,7 @@
  */
 
 import type { Card, Position, Rank, Suit } from "./bridge-engine";
-import { solveBoard } from "./dds-table";
+import { cardOptions, solveBoard } from "./dds-table";
 
 const SUIT_ORDER: Suit[] = ["spade", "heart", "diamond", "club"];
 const RANK_ORDER: Rank[] = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -58,6 +58,15 @@ export interface TurningPoint {
   potential: number;
   /** Variazione rispetto alla presa precedente: negativa = si è perso qualcosa. */
   delta: number;
+  /**
+   * Prese perse dalle carte della linea del dichiarante in questa presa,
+   * carta per carta (≥ 0). Il `delta` è il saldo della presa: un errore del
+   * dichiarante e un regalo della difesa nella stessa presa si annullavano,
+   * e il pannello diceva «senza sbandamenti» (revisione 26/11/2026).
+   */
+  calo: number;
+  /** Prese regalate dalle carte della difesa in questa presa (≥ 0). */
+  regalo: number;
 }
 
 export interface ReplayAnalysis {
@@ -113,16 +122,29 @@ export async function analyseReplay(
   let previous = initialPotential;
 
   for (const [index, trick] of tricks.entries()) {
+    const leader = trick.cards[0]?.player as Position;
+    const giocate: Card[] = [];
+    let calo = 0;
+    let regalo = 0;
     for (const { player, card } of trick.cards) {
       const seat = player as Position;
+      // Quanto costa questa carta rispetto alla migliore, per chi la gioca.
+      const opzioni = await cardOptions(remaining, strain, leader, giocate);
+      const sua = opzioni.find((o) => sameCard(o.card, card));
+      if (sua && opzioni.length > 0) {
+        const costo = Math.max(...opzioni.map((o) => o.tricks)) - sua.tricks;
+        if (isDeclarerSide(seat, declarer)) calo += costo;
+        else regalo += costo;
+      }
       const pos = remaining[seat].findIndex((c) => sameCard(c, card));
       if (pos >= 0) remaining[seat].splice(pos, 1);
+      giocate.push(card);
     }
     if (isDeclarerSide(trick.winner as Position, declarer)) won++;
 
     const left = 13 - (index + 1);
     const potential = won + (await potentialFrom(trick.winner as Position, left));
-    points.push({ trick: index + 1, won, potential, delta: potential - previous });
+    points.push({ trick: index + 1, won, potential, delta: potential - previous, calo, regalo });
     previous = potential;
   }
 
@@ -135,5 +157,7 @@ export async function analyseReplay(
  * momenti che contano sotto tredici righe indistinguibili.
  */
 export function significantMoments(analysis: ReplayAnalysis): TurningPoint[] {
-  return analysis.points.filter((p) => p.delta !== 0).sort((a, b) => a.delta - b.delta);
+  return analysis.points
+    .filter((p) => p.calo > 0 || p.regalo > 0)
+    .sort((a, b) => b.calo - a.calo || b.regalo - a.regalo);
 }

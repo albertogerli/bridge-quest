@@ -24,7 +24,8 @@ import {
   partnerOf,
 } from "@/lib/bridge-engine";
 import type { CardData } from "@/components/bridge/playing-card";
-import { classifyPlayErrors } from "@/lib/play-error-classifier";
+import { classifyPlayErrors, presePerse } from "@/lib/play-error-classifier";
+import { analyseReplay } from "@/lib/dds-replay";
 import { BiddingPanel } from "@/components/bridge/bidding-panel";
 import { FoglioMano, PannelloMano } from "@/components/bridge/pannello-mano";
 import { soloObiettivo } from "@/lib/gioco-della-carta";
@@ -1001,23 +1002,58 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
         : 30 + (res.result >= 0 ? 20 : 0) + Math.max(0, res.result) * 10;
       awardGameXp(`compito-${smazzata.id}`, xp);
 
+      // Fissati ora: il calcolo a carte viste qui sotto richiede qualche secondo
+      // e non deve finire nei tempi dell'allievo.
+      const durationMs = Date.now() - startRef.current;
+      const tempi = ripulisci(cronometro.current.grezzi());
+      const statoFinale = game.gameState;
+
       // Classify the student's play errors (rule-based, best-effort) so the
       // instructor portal can aggregate them into a per-student taxonomy.
-      let errors: { category: string; trick?: number }[] = [];
-      try {
-        if (game.gameState) {
-          errors = classifyPlayErrors({
-            tricks: game.gameState.tricks,
+      //
+      // CON IL FILTRO A CARTE VISTE, come nella smazzata. Senza, uno sblocco o
+      // uno scarto perdente su perdente da manuale finivano negli «errori
+      // tipici» dell'allievo che l'insegnante vede (revisione 26/11/2026).
+      // Se il calcolo non riesce si torna alle sole regole, come prima.
+      const classifica = async (): Promise<{ category: string; trick?: number }[]> => {
+        if (!statoFinale) return [];
+        const trumpSuit = parseContract(contratto).trumpSuit;
+        let ddTricks: number | null = null;
+        let perse: Set<number> | undefined;
+        try {
+          const analisi = await analyseReplay(
+            smazzata.hands,
+            statoFinale.tricks.map((tr) => ({
+              cards: tr.plays.map((p) => ({ player: p.position, card: p.card })),
+              winner: tr.winner ?? tr.plays[0].position,
+            })),
+            trumpSuit,
+            declarer,
+          );
+          ddTricks = analisi.initialPotential;
+          perse = presePerse(analisi.points, giocatori.includes(declarer));
+        } catch (err) {
+          segnalaSalvoRete("compito:analisi-prese", err);
+        }
+        try {
+          return classifyPlayErrors({
+            tricks: statoFinale.tricks,
             originalHands: smazzata.hands,
-            trumpSuit: parseContract(contratto).trumpSuit,
+            trumpSuit,
             playerPositions: giocatori,
             declarer,
+            ddTricks,
+            tricksMade: res.tricksMade,
+            presePerse: perse,
           }).map((e) => ({ category: e.category, trick: e.trickNumber }));
+        } catch {
+          return [];
         }
-      } catch {}
+      };
 
       // score = bridge result (e.g. +1, 0, -2); details power the heatmap.
-      setTimeout(
+      const avvio = Date.now();
+      void classifica().then((errors) => setTimeout(
         () =>
           onFinish(res.result, {
             tricksMade: res.tricksMade,
@@ -1026,19 +1062,21 @@ function CompitoHandGame({ smazzata, handNumber, totalHands, onFinish, onBack, m
             made: res.result >= 0,
             contract: contratto,
             ...(difesa ? { difesa: true, declarer } : {}),
-            durationMs: Date.now() - startRef.current,
+            durationMs,
             // I tempi già ripuliti: il difetto da evitare è che un intervallo
             // di quaranta minuti — scheda in secondo piano, telefono in tasca —
             // entri nelle medie di classe come se fosse riflessione.
-            tempi: ripulisci(cronometro.current.grezzi()),
+            tempi,
             errors,
             // Full card-by-card play so the instructor can replay the hand.
-            play: game.gameState
-              ? { hands: game.gameState.hands, tricks: game.gameState.tricks }
+            play: statoFinale
+              ? { hands: statoFinale.hands, tricks: statoFinale.tricks }
               : undefined,
           }),
-        2200
-      );
+        // La celebrazione dura 2,2 secondi: se il calcolo ne ha già presi, non
+        // si aspetta due volte.
+        Math.max(0, 2200 - (Date.now() - avvio))
+      ));
     }
   }, [game.phase, game.result, game.gameState, declarer, difesa, giocatori, smazzata, contratto, onFinish, play]);
 

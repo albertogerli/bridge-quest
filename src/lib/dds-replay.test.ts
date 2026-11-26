@@ -88,6 +88,16 @@ describe("analyseReplay", () => {
     }
   }, 200000);
 
+  it("le perdite carta per carta tornano col risultato", async () => {
+    // Ogni carta sposta il totale ottenibile esattamente del suo costo: la
+    // somma dei regali meno quella dei cali è il risultato meno il potenziale.
+    const tricks = playRandomly(deals[0], null, "west");
+    const a = await analyseReplay(deals[0], tricks, null, "south");
+    const saldo = a.points.reduce((s, p) => s + p.regalo - p.calo, 0);
+    expect(saldo).toBe(a.finalTricks - a.initialPotential);
+    for (const p of a.points) expect(p.regalo - p.calo).toBe(p.delta);
+  }, 200000);
+
   it("funziona anche a colore", async () => {
     const tricks = playRandomly(deals[0], "spade", "west");
     const a = await analyseReplay(deals[0], tricks, "spade", "south");
@@ -100,23 +110,34 @@ describe("significantMoments", () => {
     const tricks = playRandomly(deals[0], null, "west");
     const a = await analyseReplay(deals[0], tricks, null, "south");
     const momenti = significantMoments(a);
-    expect(momenti.every((m) => m.delta !== 0)).toBe(true);
+    expect(momenti.every((m) => m.calo > 0 || m.regalo > 0)).toBe(true);
     expect(momenti.length).toBeLessThanOrEqual(a.points.length);
   }, 200000);
 
   it("mette per primo il calo maggiore", async () => {
     const finto = {
       points: [
-        { trick: 1, won: 0, potential: 9, delta: 0 },
-        { trick: 2, won: 1, potential: 8, delta: -1 },
-        { trick: 3, won: 1, potential: 6, delta: -2 },
-        { trick: 4, won: 2, potential: 7, delta: 1 },
+        { trick: 1, won: 0, potential: 9, delta: 0, calo: 0, regalo: 0 },
+        { trick: 2, won: 1, potential: 8, delta: -1, calo: 1, regalo: 0 },
+        { trick: 3, won: 1, potential: 6, delta: -2, calo: 2, regalo: 0 },
+        { trick: 4, won: 2, potential: 7, delta: 1, calo: 0, regalo: 1 },
       ],
       initialPotential: 9,
       finalTricks: 7,
     };
     const m = significantMoments(finto);
     expect(m[0].trick).toBe(3);
-    expect(m[0].delta).toBe(-2);
+    expect(m[0].calo).toBe(2);
+  });
+
+  it("un errore compensato da un regalo nella stessa presa resta visibile", () => {
+    // Ovest attacca sotto il Re (+1 per il dichiarante), il dichiarante poi
+    // sbaglia la carta (−1): saldo zero, ma due momenti da rivedere.
+    const finto = {
+      points: [{ trick: 1, won: 1, potential: 9, delta: 0, calo: 1, regalo: 1 }],
+      initialPotential: 9,
+      finalTricks: 9,
+    };
+    expect(significantMoments(finto)).toHaveLength(1);
   });
 });

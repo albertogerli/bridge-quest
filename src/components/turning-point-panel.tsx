@@ -80,8 +80,8 @@ export function TurningPointPanel({
   }
 
   const momenti = significantMoments(analysis);
-  const cali = momenti.filter((m) => m.delta < 0);
-  const regali = momenti.filter((m) => m.delta > 0);
+  const cali = momenti.filter((m) => m.calo > 0);
+  const regali = momenti.filter((m) => m.regalo > 0);
 
   return (
     <div className="rounded-2xl border border-border bg-card p-5">
@@ -113,8 +113,8 @@ export function TurningPointPanel({
               <TrendingDown className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" aria-hidden="true" />
               <p className="text-sm text-amber-900 dark:text-amber-200">
                 <span className="font-bold">Presa {m.trick}:</span> qui il
-                risultato ottenibile è sceso di {Math.abs(m.delta)}{" "}
-                {Math.abs(m.delta) === 1 ? "presa" : "prese"}. Vale la pena
+                risultato ottenibile è sceso di {m.calo}{" "}
+                {m.calo === 1 ? "presa" : "prese"}. Vale la pena
                 rivedere questa presa.
               </p>
             </motion.li>
@@ -129,8 +129,8 @@ export function TurningPointPanel({
               <TrendingUp className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" aria-hidden="true" />
               <p className="text-sm text-emerald-900 dark:text-emerald-200">
                 <span className="font-bold">Presa {m.trick}:</span> qui il
-                dichiarante ha guadagnato {m.delta}{" "}
-                {m.delta === 1 ? "presa" : "prese"}: è la difesa ad aver
+                dichiarante ha guadagnato {m.regalo}{" "}
+                {m.regalo === 1 ? "presa" : "prese"}: è la difesa ad aver
                 lasciato qualcosa.
               </p>
             </motion.li>

@@ -85,4 +85,9 @@ describe("presePerse", () => {
   it("per la difesa sono quelle in cui il totale del dichiarante sale", () => {
     expect([...presePerse(punti, false)]).toEqual([5]);
   });
+  it("carta per carta: un errore compensato nella stessa presa conta", () => {
+    const compensata = [{ trick: 3, delta: 0, calo: 1, regalo: 1 }];
+    expect([...presePerse(compensata, true)]).toEqual([3]);
+    expect([...presePerse(compensata, false)]).toEqual([3]);
+  });
 });

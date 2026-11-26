@@ -109,8 +109,9 @@ export async function misura(
     }
 
     const a = await analyseReplay(deal, tricks, trumpSuit as Suit | null, scelta.declarer);
-    const perse = a.points.filter((p) => p.delta < 0).reduce((s, p) => s - p.delta, 0);
-    const donate = a.points.filter((p) => p.delta > 0).reduce((s, p) => s + p.delta, 0);
+    // Carta per carta: il saldo della presa compensava un errore con un regalo.
+    const perse = a.points.reduce((s, p) => s + p.calo, 0);
+    const donate = a.points.reduce((s, p) => s + p.regalo, 0);
     m.dalDichiarante += perse;
     m.dallaDifesa += donate;
     if (perse + donate > 0) m.maniConErrori++;

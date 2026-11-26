@@ -105,10 +105,16 @@ export interface ClassifyOptions {
  * if the human defends.
  */
 export function presePerse(
-  points: readonly { trick: number; delta: number }[],
+  points: readonly { trick: number; delta: number; calo?: number; regalo?: number }[],
   umanoDichiara: boolean,
 ): Set<number> {
-  return new Set(points.filter((p) => (umanoDichiara ? p.delta < 0 : p.delta > 0)).map((p) => p.trick));
+  // Carta per carta quando c'è: il saldo della presa nasconde un errore
+  // compensato da un regalo degli avversari nella stessa presa.
+  const persa = (p: (typeof points)[number]) =>
+    umanoDichiara
+      ? (p.calo ?? Math.max(0, -p.delta)) > 0
+      : (p.regalo ?? Math.max(0, p.delta)) > 0;
+  return new Set(points.filter(persa).map((p) => p.trick));
 }
 
 export function classifyPlayErrors(opts: ClassifyOptions): PlayError[] {
