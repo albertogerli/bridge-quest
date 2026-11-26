@@ -27,6 +27,9 @@ export function saveGameForAnalysis(
    * Assente per le mani che nessun altro ha giocato uguali.
    */
   confronto?: { tipo: string; chiave: string },
+  /** I posti dell'allievo; senza, dichiarante e morto. In difesa va passato:
+   *  la pagina di analisi giudicava ogni mano come se l'allievo dichiarasse. */
+  giocatori?: Position[],
 ) {
   try {
     const data = {
@@ -44,6 +47,7 @@ export function saveGameForAnalysis(
       tricksNeeded: result.tricksNeeded,
       result: result.result,
       confronto: confronto ?? null,
+      giocatori: giocatori ?? null,
     };
     localStorage.setItem("bq_last_game_for_analysis", JSON.stringify(data));
   } catch {}

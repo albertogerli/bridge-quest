@@ -156,7 +156,7 @@ export default function PraticaLicitaPage() {
   const shuffledOptions = useMemo(() => {
     if (!scenarios[roundIdx]) return [];
     const s = scenarios[roundIdx];
-    const all = [s.correctBid, ...s.wrongBids];
+    const all = [s.correctBid, ...(s.alsoCorrect ?? []), ...s.wrongBids];
     // eslint-disable-next-line react-hooks/purity -- shuffle memoizzato delle opzioni (una volta per scenario): casualità intenzionale
     return all.sort(() => Math.random() - 0.5);
   }, [scenarios, roundIdx]);
@@ -165,7 +165,7 @@ export default function PraticaLicitaPage() {
     if (showFeedback) return;
     if (timerRef.current) clearInterval(timerRef.current);
     const scenario = scenarios[roundIdx];
-    const isCorrect = bid === scenario.correctBid;
+    const isCorrect = bid === scenario.correctBid || (scenario.alsoCorrect ?? []).includes(bid);
     setSelectedAnswer(bid);
     setLastCorrect(isCorrect);
     setShowFeedback(true);
@@ -598,7 +598,7 @@ export default function PraticaLicitaPage() {
               {shuffledOptions.map((bid) => {
                 let btnClass = `${bidBgGradient(bid)} border-2 border-border hover:shadow-lg hover:border-figb/30 dark:hover:border-primary/40`;
                 if (showFeedback) {
-                  if (bid === scenario.correctBid) {
+                  if (bid === scenario.correctBid || scenario.alsoCorrect?.includes(bid)) {
                     btnClass =
                       "bg-emerald-50 dark:bg-emerald-950/30 border-2 border-emerald-400 shadow-lg dark:shadow-none";
                   } else if (bid === selectedAnswer && !lastCorrect) {

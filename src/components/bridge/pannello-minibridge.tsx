@@ -53,7 +53,7 @@ export function PannelloMinibridge({
   compatto?: boolean;
 }) {
   const analisi = useMemo(() => analyzeDeal(mani), [mani]);
-  const consigliato = suggestStrain(analisi.fits);
+  const consigliato = suggestStrain(analisi.fits, analisi.expectedTricks);
   const scelte = strainChoices(analisi.fits);
 
   const linea = analisi.declaringSide === "ns" ? "Nord-Sud" : "Est-Ovest";

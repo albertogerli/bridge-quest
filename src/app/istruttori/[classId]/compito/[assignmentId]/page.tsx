@@ -39,6 +39,7 @@ import { NotaSmazzata } from "@/components/istruttori/nota-smazzata";
 import { soloObiettivo } from "@/lib/gioco-della-carta";
 import { useT } from "@/contexts/traduzioni-provider";
 import { contrattoLeggibile } from "@/lib/contratto-leggibile";
+import { useTestoSA } from "@/hooks/use-testo-sa";
 import { useAlRitorno } from "@/hooks/use-al-ritorno";
 import { segnalaSalvoRete } from "@/lib/report-error";
 import { classificaCompito } from "@/lib/riepiloghi-classe";
@@ -113,6 +114,7 @@ export default function AssignmentResultsPage({
   params: Promise<{ classId: string; assignmentId: string }>;
 }) {
   const t = useT();
+  const testoSA = useTestoSA();
   const { classId, assignmentId } = use(params);
   const validated = useValidatedSmazzate();
 
@@ -394,7 +396,18 @@ export default function AssignmentResultsPage({
       assignment.custom_hands?.find((sm) => sm.id === id);
     if (!s) return id;
     const livello = parseInt(s.contract, 10);
-    return soloGioco && !Number.isNaN(livello) ? t("{n} prese", { n: livello + 6 }) : s.contract;
+    return soloGioco && !Number.isNaN(livello)
+      ? t("{n} prese", { n: livello + 6 })
+      : testoSA(contrattoLeggibile(s.contract).replace("SA", "NT"));
+  };
+  /**
+   * La mano con il suo numero: «Mano 3 · 3SA». Fuori dalla griglia il
+   * contratto da solo non basta — due mani giocate a 3SA nello stesso compito
+   * non si distinguono (segnalato il 26/11/2026).
+   */
+  const nomeMano = (id: string) => {
+    const mano = t("Mano {n}", { n: smazzataIds.indexOf(id) + 1 });
+    return assignment.licita ? mano : `${mano} · ${colLabel(id)}`;
   };
 
   /** La finestra della licita di un allievo su una mano; `null` se non l'ha dichiarata. */
@@ -404,7 +417,7 @@ export default function AssignmentResultsPage({
     const gioco = cella.licita.gioco;
     const nome = members.find((m) => m.student_id === studentId)?.display_name ?? t("Allievo");
     return {
-      titolo: `${nome} · ${colLabel(smazzataId)}`,
+      titolo: `${nome} · ${nomeMano(smazzataId)}`,
       studentId,
       smazzataId,
       cella: cella.licita,
@@ -827,7 +840,7 @@ export default function AssignmentResultsPage({
               const mani = assignment.licita ? maniDi(id) : null;
               return (
               <div key={id} className="px-4 py-3">
-                <p className="mb-1 font-mono text-xs text-muted-foreground">{colLabel(id)}</p>
+                <p className="mb-1 font-mono text-xs text-muted-foreground">{nomeMano(id)}</p>
                 {/* Nel compito di licita la casella non porta il contratto: le
                     carte restano raggiungibili da qui, una mano alla volta. */}
                 {mani && (
@@ -858,9 +871,11 @@ export default function AssignmentResultsPage({
 
           {tempoPerMano.length > 1 && (
             <p className="mb-3 rounded-lg border border-border bg-muted/40 p-3 text-sm">
-              La mano che ha richiesto più tempo alla classe è la{" "}
-              <strong>{colLabel(tempoPerMano[0].id)}</strong> ({formattaDurata(tempoPerMano[0].mediana)}{" "}
-              di mediana): è quella da rivedere per prima.
+              {t("La mano che ha richiesto più tempo alla classe è la")}{" "}
+              <strong>{nomeMano(tempoPerMano[0].id)}</strong>{" "}
+              {t("({durata} di mediana): è quella da rivedere per prima.", {
+                durata: formattaDurata(tempoPerMano[0].mediana),
+              })}
             </p>
           )}
 
@@ -890,7 +905,7 @@ export default function AssignmentResultsPage({
                             : "Ha giocato di getto e la mano è caduta: non si è accorto che c'era una scelta."
                         }
                       >
-                        {colLabel(v.smazzataId)}:{" "}
+                        {nomeMano(v.smazzataId)}:{" "}
                         {v.segnale === "lento-e-sbagliato" ? "ci ha pensato" : "di getto"}
                       </span>
                     ))}

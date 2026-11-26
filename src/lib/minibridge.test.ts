@@ -73,25 +73,48 @@ describe("analyzeDeal", () => {
     expect(analysis.fits).toEqual([{ suit: "spade", count: 8 }]);
   });
 
-  it("contratto atteso: 9 prese + fit a picche -> 3♠", () => {
-    const strain = suggestStrain(analysis.fits);
+  it("contratto atteso: 26 punti + fit a picche -> manche 4♠", () => {
+    const strain = suggestStrain(analysis.fits, analysis.expectedTricks);
     expect(strain).toBe("spade");
-    expect(buildContract(analysis.expectedTricks, strain)).toBe("3♠");
+    expect(buildContract(analysis.expectedTricks, strain)).toBe("4♠");
   });
 });
 
 describe("suggestStrain / strainChoices / buildContract", () => {
   it("senza fit suggerisce Senza Atout", () => {
-    expect(suggestStrain([])).toBe("nt");
+    expect(suggestStrain([], 9)).toBe("nt");
     expect(buildContract(9, "nt")).toBe("3NT");
+  });
+
+  it("con i punti per la manche e solo un fit minore suggerisce 3SA, non 3♦", () => {
+    expect(suggestStrain([{ suit: "diamond", count: 9 }], 9)).toBe("nt");
+    expect(suggestStrain([{ suit: "club", count: 8 }], 10)).toBe("nt");
+  });
+
+  it("sotto la manche con un fit minore gioca il minore", () => {
+    expect(suggestStrain([{ suit: "diamond", count: 9 }], 8)).toBe("diamond");
+    expect(buildContract(8, "diamond")).toBe("2♦");
+  });
+
+  it("la manche al livello giusto, non più in alto", () => {
+    expect(buildContract(10, "nt")).toBe("3NT");
+    expect(buildContract(11, "nt")).toBe("3NT");
+    expect(buildContract(10, "heart")).toBe("4♥");
+    expect(buildContract(11, "spade")).toBe("4♠");
+    expect(buildContract(10, "club")).toBe("4♣");
+    expect(buildContract(11, "diamond")).toBe("5♦");
+    expect(buildContract(12, "nt")).toBe("6NT");
   });
 
   it("preferisce il fit nobile a parita di lunghezza", () => {
     expect(
-      suggestStrain([
-        { suit: "club", count: 9 },
-        { suit: "heart", count: 8 },
-      ])
+      suggestStrain(
+        [
+          { suit: "club", count: 9 },
+          { suit: "heart", count: 8 },
+        ],
+        9,
+      )
     ).toBe("heart");
   });
 

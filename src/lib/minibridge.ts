@@ -124,10 +124,19 @@ export function analyzeDeal(hands: Record<Position, Card[]>): DealAnalysis {
   };
 }
 
-/** Recommended strain: best major fit, else best fit, else No Trump. */
-export function suggestStrain(fits: DealFit[]): Strain {
+/**
+ * Recommended strain, by the WBF MiniBridge rule: a major fit first; with
+ * game values (9+ expected tricks) and no major fit, No Trump — 3NT scores
+ * 400 where 3♦ scores 110 and 4♣ 130; below game, a minor fit; else NT.
+ *
+ * The first version took any fit before NT and suggested «3♦» with 26 points
+ * and no major fit: a contract chosen by the fit, not by the score — the same
+ * error a teacher reported in «Fin dove potete arrivare?» (26/11/2026).
+ */
+export function suggestStrain(fits: DealFit[], expectedTricks: number): Strain {
   const major = fits.find((f) => MAJORS.includes(f.suit));
   if (major) return major.suit;
+  if (expectedTricks >= 9 && expectedTricks < 12) return "nt";
   if (fits.length > 0) return fits[0].suit;
   return "nt";
 }
@@ -144,10 +153,21 @@ const SUIT_SYMBOL: Record<Suit, string> = {
   club: "♣",
 };
 
-/** Build a contract string (e.g. "3NT", "4♠") from expected tricks + strain.
- *  Level = tricks - 6. Output matches the catalog/engine contract format. */
+/**
+ * Build a contract string (e.g. "3NT", "4♠") from expected tricks + strain.
+ * Below game the level is tricks - 6. With game values the contract is the
+ * game, not a higher level that scores the same: 10 tricks at NT is 3NT, not
+ * 4NT; with 25+ points and a major fit it is 4♥/4♠ (WBF: the fit is worth a
+ * trick); a minor needs 11 tricks for 5♣/5♦. 12+ tricks: slam.
+ * Output matches the catalog/engine contract format.
+ */
 export function buildContract(expectedTricks: number, strain: Strain): string {
-  const level = Math.max(1, Math.min(7, expectedTricks - 6));
+  let level = Math.max(1, Math.min(7, expectedTricks - 6));
+  if (expectedTricks >= 9 && expectedTricks < 12) {
+    if (strain === "nt") level = 3;
+    else if (MAJORS.includes(strain)) level = 4;
+    else if (expectedTricks >= 11) level = 5;
+  }
   return strain === "nt" ? `${level}NT` : `${level}${SUIT_SYMBOL[strain]}`;
 }
 

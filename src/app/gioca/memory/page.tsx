@@ -23,23 +23,25 @@ interface GamePair {
   concept: string;
 }
 
+// Revisione 26/11/2026: A-K-Q-J-10 sono 5 vincenti, non 2; il 2SA su 1SA
+// (15-17) invita con 8-9, non 11-12; da K-J-10-9 si attacca col J.
 const ALL_PAIRS: GamePair[] = [
-  { card: "A♠ K♠ Q♠ J♠", concept: "100 Onori" },
+  { card: "A♠ K♠ Q♠ J♠", concept: "100 d'onori con atout picche" },
   { card: "1SA", concept: "15-17 PC bilanciata" },
   { card: "2♣", concept: "Apertura forte" },
   { card: "4♠", concept: "Manche a colore M" },
   { card: "3SA", concept: "Manche a SA" },
-  { card: "A K Q J 10", concept: "10 PC + 2 vincenti" },
+  { card: "A K Q J 10", concept: "10 PC + 5 vincenti" },
   { card: "Stayman", concept: "Risposta 2♣ a 1SA" },
   { card: "x x x x x", concept: "Colore affrancabile" },
   { card: "A Q", concept: "Impasse" },
-  { card: "Pass", concept: "0-5 PC" },
+  { card: "Passo", concept: "Risposta con 0-5 PC" },
   { card: "1♥", concept: "Apertura 12+ PC 5+ cuori" },
-  { card: "Contre", concept: "Punitivo o informativo" },
+  { card: "Contro", concept: "Punitivo o informativo" },
   { card: "6SA", concept: "Piccolo Slam" },
   { card: "7♠", concept: "Grande Slam" },
-  { card: "K J 10 9", concept: "Sequenza da K" },
-  { card: "2SA", concept: "Risposta 11-12 PC a 1SA" },
+  { card: "K J 10 9", concept: "Sequenza interna: si attacca col J" },
+  { card: "2SA", concept: "Invito su 1SA: 8-9 PC" },
 ];
 
 type GamePhase = "menu" | "playing" | "gameover";

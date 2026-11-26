@@ -9,6 +9,12 @@ interface HandAnalysisPanelProps {
   hands: { north: Card[]; east: Card[]; south: Card[]; west: Card[] };
   contract: { level: number; suit: string; declarer: string };
   currentTrick: number;
+  /**
+   * I posti dell'allievo. Si commentano solo le sue carte: prima erano
+   * giudicate anche quelle dei robot, e il voto dell'allievo ne dipendeva.
+   * Assente nelle analisi salvate prima del 26/11/2026: dichiarante e morto.
+   */
+  giocatori?: string[];
 }
 
 const SUIT_SYMBOLS: Record<string, string> = {
@@ -53,9 +59,18 @@ function isHonor(card: Card): boolean {
   return ["A", "K", "Q", "J"].includes(card.rank);
 }
 
+/**
+ * L'atout del contratto. I giochi salvano il seme come «spade»/«heart»…:
+ * la prima versione conosceva solo «♠»/«S», trattava ogni contratto a colore
+ * come Senza e non riconosceva un taglio (revisione 26/11/2026).
+ */
 function getTrumpSuit(contractSuit: string): string | null {
   if (contractSuit === "NT" || contractSuit === "SA") return null;
   const suitMap: Record<string, string> = {
+    spade: "spade",
+    heart: "heart",
+    diamond: "diamond",
+    club: "club",
     "♠": "spade",
     "♥": "heart",
     "♦": "diamond",
@@ -74,9 +89,39 @@ function analyzePlay(
   playIndex: number,
   trumpSuit: string | null,
   declarer: string,
-  trickNumber: number
+  trickNumber: number,
+  /** Le carte che il giocatore aveva in mano prima di giocare questa. */
+  inMano: Card[]
 ): PlayAnalysis {
   const { player, card } = play;
+  const leadSuit = trickCards[0].card.suit;
+  const stessoSeme = inMano.filter((c) => c.suit === leadSuit);
+
+  // Una sola carta nel seme: non c'era niente da scegliere.
+  if (playIndex > 0 && stessoSeme.length === 1) {
+    return {
+      trickNumber,
+      playNumber: playIndex,
+      player,
+      card,
+      grade: "good",
+      commentary: `Carta obbligata: l'unica a ${SUIT_SYMBOLS[leadSuit]}`,
+    };
+  }
+  // Senza carte nel seme: un taglio o uno scarto, non «alta» o «bassa».
+  if (playIndex > 0 && stessoSeme.length === 0) {
+    const taglio = trumpSuit !== null && card.suit === trumpSuit;
+    return {
+      trickNumber,
+      playNumber: playIndex,
+      player,
+      card,
+      grade: "good",
+      commentary: taglio
+        ? `Taglio con ${card.rank}${SUIT_SYMBOLS[card.suit]}`
+        : `Scarto ${card.rank}${SUIT_SYMBOLS[card.suit]}: niente ${SUIT_SYMBOLS[leadSuit]} in mano`,
+    };
+  }
   const isLeader = playIndex === 0;
   const isSecondHand = playIndex === 1;
   const isThirdHand = playIndex === 2;
@@ -87,7 +132,7 @@ function analyzePlay(
 
   // Opening lead analysis (trick 1, first card)
   if (trickNumber === 0 && isLeader) {
-    if (hasSequence(card)) {
+    if (hasSequence(card, inMano)) {
       grade = "good";
       commentary = `Ottima uscita dalla sequenza con ${card.rank}${SUIT_SYMBOLS[card.suit]}`;
     } else if (isHonor(card) && card.rank !== "A") {
@@ -105,7 +150,7 @@ function analyzePlay(
     const leaderCard = trickCards[0].card;
     const playedLow = cardValue(card) <= 9;
 
-    if (isHonor(leaderCard) && isHonor(card) && cardValue(card) > cardValue(leaderCard)) {
+    if (isHonor(leaderCard) && isHonor(card) && card.suit === leaderCard.suit && cardValue(card) > cardValue(leaderCard)) {
       grade = "good";
       commentary = `Giusto coprire l'onore con l'onore`;
     } else if (isHonor(leaderCard) && !isHonor(card)) {
@@ -123,8 +168,12 @@ function analyzePlay(
 
   // Third hand analysis
   if (isThirdHand) {
-    const partnerLeading = trickCards[0].player === getPartner(player);
-    const highestPlayed = Math.max(...trickCards.slice(0, 2).map((p) => cardValue(p.card)));
+    // Chi attacca è sempre il compagno del terzo di mano: conta chi sta
+    // vincendo la presa dopo il secondo, non chi l'ha aperta.
+    const partnerLeading = getCurrentWinner(trickCards.slice(0, 2), trumpSuit) === getPartner(player);
+    const highestPlayed = Math.max(
+      ...trickCards.slice(0, 2).filter((p) => p.card.suit === leadSuit).map((p) => cardValue(p.card))
+    );
 
     if (partnerLeading && cardValue(card) <= 9) {
       grade = "good";
@@ -177,9 +226,15 @@ function analyzePlay(
   };
 }
 
-function hasSequence(card: Card): boolean {
-  // Simplified: check if rank is J or higher (sequence indicator)
-  return isHonor(card) && cardValue(card) >= 11;
+/**
+ * Attacco da sequenza: l'onore attaccato con la carta subito sotto nello
+ * stesso seme (K da K-Q, Q da Q-J, J da J-10). Prima bastava un onore
+ * qualunque: il K da K-7-3 era «ottima uscita dalla sequenza».
+ */
+function hasSequence(card: Card, inMano: Card[]): boolean {
+  if (!isHonor(card)) return false;
+  const sotto = cardValue(card) - 1;
+  return inMano.some((c) => c.suit === card.suit && cardValue(c) === sotto);
 }
 
 function getPartner(position: string): string {
@@ -243,30 +298,49 @@ function canWin(
 
 export function HandAnalysisPanel({
   tricks,
+  hands,
   contract,
   currentTrick,
+  giocatori,
 }: HandAnalysisPanelProps) {
   const t = useT();
   const trumpSuit = getTrumpSuit(contract.suit);
   const declarer = contract.declarer;
+  const mieiPosti = useMemo(
+    () => giocatori ?? [declarer, getPartner(declarer)],
+    [giocatori, declarer]
+  );
+  const difende = !mieiPosti.includes(declarer);
 
   const analyses = useMemo(() => {
     const results: PlayAnalysis[] = [];
+    // Le mani di partenza: quelle salvate, più le carte già giocate se il
+    // gioco le ha salvate a fine mano (vuote).
+    const giocate = tricks.flatMap((tr) => tr.cards);
+    const inMano: Record<string, Card[]> = {};
+    for (const pos of ["north", "east", "south", "west"] as const) {
+      const salvate = hands[pos] ?? [];
+      const mancanti = giocate
+        .filter((p) => p.player === pos)
+        .map((p) => p.card)
+        .filter((c) => !salvate.some((x) => x.suit === c.suit && x.rank === c.rank));
+      inMano[pos] = [...salvate, ...mancanti];
+    }
     tricks.forEach((trick, trickIdx) => {
       trick.cards.forEach((play, playIdx) => {
-        const analysis = analyzePlay(
-          play,
-          trick.cards,
-          playIdx,
-          trumpSuit,
-          declarer,
-          trickIdx
+        const mano = inMano[play.player] ?? [];
+        if (mieiPosti.includes(play.player)) {
+          results.push(
+            analyzePlay(play, trick.cards, playIdx, trumpSuit, declarer, trickIdx, mano)
+          );
+        }
+        inMano[play.player] = mano.filter(
+          (c) => !(c.suit === play.card.suit && c.rank === play.card.rank)
         );
-        results.push(analysis);
       });
     });
     return results;
-  }, [tricks, trumpSuit, declarer]);
+  }, [tricks, hands, trumpSuit, declarer, mieiPosti]);
 
   const overallGrade = useMemo(() => {
     if (analyses.length === 0) return "N/A";
@@ -298,14 +372,23 @@ export function HandAnalysisPanel({
     // Add strategic insight
     const declarerTricks = tricks.filter((t) => t.winner === declarer || t.winner === getPartner(declarer)).length;
     const tricksNeeded = contract.level + 6;
-    if (declarerTricks >= tricksNeeded) {
+    // In difesa il successo è il contrario: far cadere il contratto.
+    if (difende) {
+      if (declarerTricks < tricksNeeded) {
+        takeaways.push(`Contratto battuto di ${tricksNeeded - declarerTricks}`);
+      } else {
+        takeaways.push(
+          `Il dichiarante ha mantenuto: serviva ${declarerTricks - tricksNeeded + 1 === 1 ? "una presa" : `${declarerTricks - tricksNeeded + 1} prese`} in più alla difesa`
+        );
+      }
+    } else if (declarerTricks >= tricksNeeded) {
       takeaways.push("Contratto mantenuto con successo");
     } else {
       takeaways.push(`Servivano ${tricksNeeded - declarerTricks} prese in più`);
     }
 
     return takeaways;
-  }, [analyses, tricks, contract, declarer]);
+  }, [analyses, tricks, contract, declarer, difende]);
 
   const gradeIcon = (grade: Grade) => {
     switch (grade) {

@@ -402,7 +402,10 @@ function PlayingView({
   // Anchor = the seat shown at the bottom (the human). Declaring → declarer;
   // defending → the opening leader (the defender to declarer's left).
   const anchor: Position = mode === "declare" ? declarer : nextPlayer(declarer);
-  const playerPositions = mode === "declare" ? [declarer, dummy] : [anchor];
+  const playerPositions = useMemo<Position[]>(
+    () => (mode === "declare" ? [declarer, dummy] : [anchor]),
+    [mode, declarer, dummy, anchor],
+  );
 
   const game = useBridgeGame({
     hands: smazzata.hands,
@@ -521,7 +524,7 @@ function PlayingView({
 
       // Save game data for AI analysis page
       const parsed = parseContract(smazzata.contract);
-      saveGameForAnalysis(smazzata.hands, game.gameState?.tricks || [], { level: parsed.level, suit: parsed.trumpSuit, declarer: smazzata.declarer }, game.result, { tipo: "smazzata", chiave: smazzata.id });
+      saveGameForAnalysis(smazzata.hands, game.gameState?.tricks || [], { level: parsed.level, suit: parsed.trumpSuit, declarer: smazzata.declarer }, game.result, { tipo: "smazzata", chiave: smazzata.id }, playerPositions);
 
       // Sync to Supabase
       saveGameResult({
@@ -540,7 +543,14 @@ function PlayingView({
         },
       });
     }
-  }, [game.phase, game.result, game.gameState?.tricks, mode, xpSaved, smazzata, saveGameResult]);
+  }, [game.phase, game.result, game.gameState?.tricks, mode, xpSaved, smazzata, saveGameResult, playerPositions]);
+
+  /**
+   * L'attacco davvero giocato. In difesa lo sceglie l'allievo: misurare il
+   * gioco «ottimale» e le stelle sull'attacco registrato nella smazzata
+   * confrontava la sua difesa con un'altra mano (revisione 26/11/2026).
+   */
+  const attaccoGiocato = game.gameState?.tricks?.[0]?.plays?.[0]?.card ?? smazzata.openingLead;
 
   // Run DDS analysis when game finishes
   useEffect(() => {
@@ -550,7 +560,7 @@ function PlayingView({
         smazzata.hands,
         smazzata.contract,
         smazzata.declarer,
-        smazzata.openingLead,
+        attaccoGiocato,
       ).then((result) => {
         setDdsResult(result);
         setDdsLoading(false);
@@ -558,7 +568,7 @@ function PlayingView({
         setDdsLoading(false);
       });
     }
-  }, [game.phase, ddsResult, ddsLoading, dds, smazzata]);
+  }, [game.phase, ddsResult, ddsLoading, dds, smazzata, attaccoGiocato]);
 
   // Classify the human's play errors and feed the spaced-repetition queue
   // (/ripasso). Runs once per hand, after the DD analysis is available.
@@ -1230,7 +1240,7 @@ function PlayingView({
                   </div>
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-muted-foreground">{t("Attacco")}</span>
-                    <span className="font-bold text-foreground">{cardToString(smazzata.openingLead)}</span>
+                    <span className="font-bold text-foreground">{cardToString(attaccoGiocato)}</span>
                   </div>
                   {ddTricks !== null && (
                     <div className="flex items-center justify-between text-sm">

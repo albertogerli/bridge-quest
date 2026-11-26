@@ -19,6 +19,12 @@ export type BiddingScenario = {
   position: "N" | "S" | "E" | "W";
   vulnerability: "Nessuna" | "NS" | "EW" | "Tutti";
   correctBid: string;
+  /**
+   * Altre risposte giuste quanto `correctBid`. Senza, un'alternativa buona
+   * finiva fra le sbagliate e l'allievo si sentiva dire «Sbagliato!»
+   * (revisione 26/11/2026: 4♠ nel n. 15, 4♥ nel n. 17).
+   */
+  alsoCorrect?: string[];
   wrongBids: string[];
   explanation: string;
   /** 1 = easy, 2 = medium, 3 = hard */
@@ -325,9 +331,10 @@ export const biddingScenarios: BiddingScenario[] = [
     position: "S",
     vulnerability: "NS",
     correctBid: "3♦",
-    wrongBids: ["3♠", "4♠", "Contro"],
+    alsoCorrect: ["4♠"],
+    wrongBids: ["3♠", "Contro"],
     explanation:
-      "Con 16 HCP e fit a picche (4 carte), fai una cue bid (3♦) sul seme avversario. Mostra forza e fit senza definire ancora il livello finale.",
+      "Con 16 HCP, 4 picche e il singolo a quadri la mano vale la manche: la cue bid 3♦ sul seme avversario mostra fit e forza e lascia spazio allo slam; anche 4♠ diretto è giusto. 3♠ sarebbe solo un invito, troppo poco.",
     difficulty: 3,
     topic: "Cue Bid",
   },
@@ -347,7 +354,7 @@ export const biddingScenarios: BiddingScenario[] = [
     correctBid: "4♦",
     wrongBids: ["3♠", "4♠", "2♥"],
     explanation:
-      "Con 14 HCP, 4 carte di appoggio a picche e singolo a quadri, usa lo Splinter (4♦). Mostra fit, forza da manche, e singolo nel seme nominato. Invita allo slam se il compagno non ha perdenti a quadri.",
+      "Con 14 HCP, 4 carte di appoggio a picche e singolo a quadri, usa lo Splinter (4♦). Mostra fit, forza da manche, e singolo nel seme nominato. Lo slam è buono se il compagno non ha onori sprecati a quadri: le sue piccole quadri le taglia il morto.",
     difficulty: 3,
     topic: "Convenzioni avanzate",
   },
@@ -364,10 +371,11 @@ export const biddingScenarios: BiddingScenario[] = [
     partnerBid: "1♥",
     position: "S",
     vulnerability: "EW",
-    correctBid: "2♥",
-    wrongBids: ["3♥", "Passo", "Contro"],
+    correctBid: "3♥",
+    alsoCorrect: ["4♥"],
+    wrongBids: ["2♥", "Passo"],
     explanation:
-      "Con 8 HCP e 5 cuori di appoggio, rialza a 2♥ anche dopo l'intervento. Il rialzo semplice (2♥) è competitivo e mostra il fit, impedendo al campo avversario di giocare comodi a 2♣.",
+      "Con 5 cuori di appoggio la linea ha 10 atout: per la Legge delle prese totali si può arrivare a 4♥, e 3♥ è il minimo per togliere spazio agli avversari. 2♥ mostrerebbe un appoggio di 3 carte e lascerebbe a Ovest il livello 2 per entrare con le picche.",
     difficulty: 3,
     topic: "Dichiarazione competitiva",
   },
@@ -392,7 +400,7 @@ export const biddingScenarios: BiddingScenario[] = [
     topic: "Texas Transfer",
   },
 
-  // 19. Contro punitivo dopo apertura debole
+  // 19. Contro informativo dopo apertura debole
   {
     id: 19,
     system: "due-deboli",
@@ -412,7 +420,7 @@ export const biddingScenarios: BiddingScenario[] = [
     topic: "Dichiarazione competitiva",
   },
 
-  // 20. Risposte dopo Stayman — compagno dice 2♥
+  // 20. Stayman: noi apriamo 1NT e rispondiamo 2♠
   {
     id: 20,
     hand: { spades: "AJ73", hearts: "Q84", diamonds: "KQ5", clubs: "K92" },

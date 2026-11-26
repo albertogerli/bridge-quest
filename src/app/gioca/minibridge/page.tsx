@@ -104,7 +104,7 @@ export default function MiniBridgePage() {
   const { analysis, role, deal } = prepared;
 
   function startAsDefender() {
-    const strain = suggestStrain(analysis.fits);
+    const strain = suggestStrain(analysis.fits, analysis.expectedTricks);
     setChosenStrain(strain);
     setChosenContract(buildContract(analysis.expectedTricks, strain));
     setStep("play");
@@ -223,7 +223,7 @@ function DecideStep({
   const youDeclare = role === "declare";
   const yourHcp = analysis.partnershipHcp.ns; // human is always South (N/S)
   const oppHcp = analysis.partnershipHcp.ew;
-  const suggested = suggestStrain(analysis.fits);
+  const suggested = suggestStrain(analysis.fits, analysis.expectedTricks);
   const choices = strainChoices(analysis.fits);
 
   return (
@@ -275,7 +275,7 @@ function DecideStep({
         <div className="mt-5 text-center">
           <p className="mb-4 text-sm text-muted-foreground">
             Gli avversari giocheranno{" "}
-            <span className="font-semibold text-foreground">{buildContract(analysis.expectedTricks, suggested)}</span>.
+            <span className="font-semibold text-foreground">{contrattoLeggibile(buildContract(analysis.expectedTricks, suggested))}</span>.
             Il tuo obiettivo: farli cadere!
           </p>
           <div className="mb-4">

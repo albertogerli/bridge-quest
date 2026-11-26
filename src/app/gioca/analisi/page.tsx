@@ -23,6 +23,8 @@ interface GameData {
   result: number;
   /** Per il confronto con gli altri: assente nelle analisi salvate prima del 28/09/2026. */
   confronto?: { tipo: string; chiave: string } | null;
+  /** I posti dell'allievo: assente prima del 26/11/2026 (allora dichiarava sempre). */
+  giocatori?: string[] | null;
 }
 
 const SUIT_SYMBOLS: Record<string, string> = {
@@ -93,6 +95,12 @@ function AnalisiPage() {
   const overallGrade = useMemo(() => {
     if (!gameData) return "N/A";
     const percentage = (gameData.tricksMade / 13) * 100;
+    // In difesa vince chi fa cadere il contratto: il voto si rovescia.
+    const giocatori = gameData.giocatori ?? null;
+    if (giocatori && !giocatori.includes(gameData.contract.declarer)) {
+      if (gameData.result < 0) return gameData.result <= -2 ? "A" : "B";
+      return gameData.result === 0 ? "C" : "D";
+    }
 
     if (gameData.result >= 0) {
       if (percentage >= 70) return "A";
@@ -328,6 +336,7 @@ Gioca su bridgelab.it`;
             hands={gameData.hands}
             contract={gameData.contract}
             currentTrick={currentTrick}
+            giocatori={gameData.giocatori ?? undefined}
           />
         </div>
 
